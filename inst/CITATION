@@ -1,0 +1,13 @@
+citHeader("To cite outbreaker:")
+
+citEntry(
+entry="Article",
+title = "Bayesian reconstruction of disease outbreaks by combining epidemiologic and genomic data",
+journal= "PLoS Computational Biology",
+year = "accepted",
+author = "Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson N",
+volume = "",
+pages = "",
+doi = "",
+textVersion = "Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson N (accepted).  Bayesian reconstruction of disease outbreaks by combining epidemiologic and genomic data. PLoS Computational Biology."
+)

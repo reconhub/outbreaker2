@@ -1,0 +1,10 @@
+# Kindly supplied by Dirk Eddelbuettel
+# set by configure
+GSL_CFLAGS = @GSL_CFLAGS@
+GSL_LIBS   = @GSL_LIBS@
+
+# combine to standard arguments for R
+PKG_CPPFLAGS =  $(GSL_CFLAGS) -I.
+PKG_LIBS = $(GSL_LIBS)
+
+

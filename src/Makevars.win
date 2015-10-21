@@ -1,0 +1,9 @@
+# PKG_LIBS=-LF:/MinGW/usr/local/lib -lgsl -lgslcblas
+# CPPFLAGS=-I$(R_HOME)/include -IF:/MinGW/usr/local/include
+# PKG_CPPFLAGS=-IF:/MinGW/usr/local/include
+
+# lines below supplied by Brian Ripley and Uwe Ligges
+
+PKG_CPPFLAGS=-I$(LIB_GSL)/include
+PKG_LIBS=-L$(LIB_GSL)/lib -lgsl -lgslcblas
+

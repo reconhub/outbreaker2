@@ -1,0 +1,36 @@
+
+## Import all packages listed as Imports or Depends
+importFrom(utils, "packageDescription", "read.table")
+
+importFrom(ape, "as.character.DNAbin", "as.DNAbin", "as.DNAbin.alignment", "as.DNAbin.character",
+           "as.DNAbin.list", "as.list.DNAbin", "as.matrix.DNAbin", "cbind.DNAbin", "c.DNAbin",
+           "[.DNAbin", "labels.DNAbin", "print.DNAbin", "rbind.DNAbin", "dist.dna")
+
+importFrom(igraph, "graph.data.frame", "V", "V<-", "E", "E<-", "layout.fruchterman.reingold",
+           "as.igraph", "plot.igraph", "print.igraph")
+
+importFrom(adegenet, "bluepal", "redpal", "greenpal", "seasun", "spectral", "funky",
+           "num2col", "fac2col", "any2col", "transp", "findMutations", "findMutations.DNAbin")
+
+importFrom(parallel, "detectCores", "makeCluster", "clusterEvalQ", "clusterExport", "parLapply", "stopCluster")
+
+importFrom(stats, "dexp", "dist", "rnorm", "median", "runif", "density", "anova", "lm", "rbinom", "rpois")
+
+importFrom(graphics, "plot", "boxplot", "matplot", "lines", "points", "arrows", "segments", "text")
+
+importFrom(grDevices, "grey", "colorRampPalette")
+
+
+
+## Export all names
+exportPattern("^[^\\.]")
+
+## register S3 methods
+S3method(labels, simOutbreak)
+S3method(plot, simOutbreak)
+S3method(print, simOutbreak)
+S3method(plot, tTree)
+
+
+## Load DLL
+useDynLib(outbreaker)

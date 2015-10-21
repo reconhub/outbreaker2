@@ -61,13 +61,120 @@ disperse <- function(xy, disp=.1, area.size=10){
 
 
 
-###############
-## simOutbreak
-###############
-##
-## R0: basic repro number
-## infec.curve: generation time distribution
-## disp: mean distance for host movement
+#' Simulation of pathogen genotypes during disease outbreaks
+#'
+#' The function \code{simOutbreak} implements simulations of disease outbreaks.
+#' The infectivity of cases is defined by a generation time distribution. The
+#' function \code{as.igraph} allows to convert simulated transmission trees
+#' into \code{igraph} objects.
+#'
+#' @export
+#'
+#' @rdname simOutbreak
+#'
+#' @aliases simOutbreak print.simOutbreak [.simOutbreak labels.simOutbreak
+#' simOutbreak-class as.igraph.simOutbreak plot.simOutbreak disperse
+#'
+#' @param R0 the basic reproduction number; to use several groups, provide a
+#' vector with several values.
+#' @param infec.curve a \code{numeric} vector describing the individual
+#' infectiousness at time t=0, 1, \dots{}
+#' @param n.hosts the number of susceptible hosts at the begining of the
+#' outbreak
+#' @param duration the number of time steps for which simulation is run
+#' @param seq.length an integer indicating the length of the simulated
+#' haplotypes, in number of nucleotides.
+#' @param mu.transi the rate of transitions, in number of mutation per site and
+#' per time unit.
+#' @param mu.transv the rate of transversions, in number of mutation per site
+#' and per time unit.
+#' @param rate.import.case the rate at which cases are imported at each time
+#' step.
+#' @param diverg.import the number of time steps to the MRCA of all imported
+#' cases.
+#' @param spatial a logical indicating if a spatial model should be used.
+#' @param disp the magnitude of dispersal (standard deviation of a normal
+#' distribution).
+#' @param area.size the size of the square area to be used for spatial
+#' simulations.
+#' @param reach the mean of the exponential kernel used to determine new
+#' infections.
+#' @param plot a logical indicating whether an animated plot of the outbreak
+#' should be displayed; only available with the spatial model.
+#' @param group.freq the frequency of the different groups; to use several
+#' groups, provide a vector with several values.
+#' @param x,object \code{simOutbreak} objects.
+#' @param i,j,drop \code{i} is a vector used for subsetting the object. For
+#' instance, \code{i=1:3} will retain only the first three haplotypes of the
+#' outbreak. \code{j} and \code{drop} are only provided for compatibility, but
+#' not used.
+#' @param y present for compatibility with the generic 'plot' method. Currently
+#' not used.
+#' @param col the color of the vertices of the plotted graph.
+#' @param edge.col the color of the edges of the plotted graph; overridden by
+#' \code{col.edge.by}.
+#' @param col.edge.by a character indicating the type of information to be used
+#' to color the edges; currently, the only valid value is "dist" (distances, in
+#' number of mutations). Other values are ignored.
+#' @param vertex.col the colors to be used for the vertices (i.e., cases).
+#' @param edge.col.pal the color palette to be used for the edges; if NULL, a
+#' grey scale is used, with darker shades representing larger values.
+#' @param annot a character indicating the information to be used to annotate
+#' the edges; currently accepted values are "dist" (genetic distances, in
+#' number of mutations), and "n.gen" (number of generations between cases).
+#' @param sep a character used to separate fields used to annotate the edges,
+#' whenever more than one type of information is used for annotation.
+#' @param \dots further arguments to be passed to other methods
+#' @return === simOutbreak class ===\cr \code{simOutbreak} objects are lists
+#' containing the following slots:\cr \itemize{ \item n: the number of cases in
+#' the outbreak\cr \item dna: DNA sequences in the DNAbin matrix format\cr
+#' \item dates: infection dates\cr \item dynam: a data.frame containing, for
+#' each time step (row), the number of susceptible, infected, or recovered in
+#' the population. \cr \item id: a vector of integers identifying the cases\cr
+#' \item ances: a vector of integers identifying infectors ('ancestor')\cr
+#' \item nmut: the number of mutations corresponding to each ancestry\cr \item
+#' ngen: the number of generations corresponding to each ancestry\cr \item
+#' call: the matched call }
+#' @author Implementation by Thibaut Jombart \email{t.jombart@@imperial.ac.uk}.
+#'
+#' Epidemiological model designed by Anne Cori and Thibaut Jombart.
+#' @examples
+#'
+#' \dontrun{
+#' dat <- list(n=0)
+#'
+#' ## simulate data with at least 30 cases
+#' while(dat$n < 30){
+#'    dat <- simOutbreak(R0 = 2, infec.curve = c(0, 1, 1, 1), n.hosts = 100)
+#' }
+#' dat
+#'
+#' ## plot first 30 cases
+#' N <- dat$n
+#' plot(dat[1:(min(N,30))], main="First 30 cases")
+#' mtext(side=3, text="nb mutations / nb generations")
+#'
+#' ## plot a random subset (n=10) of the first cases
+#' x <- dat[sample(1:min(N,30), 10, replace=FALSE)]
+#' plot(x, main="Random sample of 10 of the first 30 cases")
+#' mtext(side=3, text="nb mutations / nb generations")
+#'
+#' ## plot population dynamics
+#' head(dat$dynam,15)
+#' matplot(dat$dynam[1:max(dat$onset),],xlab="time",
+#'    ylab="nb of individuals", pch=c("S","I","R"), type="b")
+#'
+#'
+#' ## spatial model
+#' w <-  exp(-sqrt((1:40)))
+#' x <- simOutbreak(2, w, spatial=TRUE,
+#'                  duration=500, disp=0.1, reach=.2)
+#'
+#' ## spatial model, no dispersal
+#' x <- simOutbreak(.5, w, spatial=TRUE,
+#'                  duration=500, disp=0, reach=5)
+#' }
+#'
 simOutbreak <- function(R0, infec.curve, n.hosts=200, duration=50,
                         seq.length=1e4, mu.transi=1e-4, mu.transv=mu.transi/2,
                         rate.import.case=0.01, diverg.import=10, group.freq=1,
@@ -360,10 +467,9 @@ simOutbreak <- function(R0, infec.curve, n.hosts=200, duration=50,
 
 
 
-
-##################
-## print.simOutbreak
-##################
+#' @rdname simOutbreak
+#' @export
+#'
 print.simOutbreak <- function(x, ...){
 
     cat("\t\n=========================")
@@ -389,9 +495,9 @@ print.simOutbreak <- function(x, ...){
 
 
 
-##############
-## [.simOutbreak
-##############
+#' @rdname simOutbreak
+#' @export
+#'
 "[.simOutbreak" <- function(x,i,j,drop=FALSE){
     res <- x
     ## trivial subsetting ##
@@ -440,6 +546,9 @@ print.simOutbreak <- function(x, ...){
 ##################
 ## labels.simOutbreak
 ##################
+#' @rdname simOutbreak
+#' @export
+#'
 labels.simOutbreak <- function(object, ...){
     return(object$id)
 }
@@ -448,10 +557,9 @@ labels.simOutbreak <- function(object, ...){
 
 
 
-
-#########################
-## as.igraph.simOutbreak
-#########################
+#' @rdname simOutbreak
+#' @export
+#'
 as.igraph.simOutbreak <- function(x, edge.col="black", col.edge.by="dist", vertex.col="gold",
                                   edge.col.pal=NULL, annot=c("dist","n.gen"), sep="/", ...){
     ## if(!require(igraph)) stop("package igraph is required for this operation")
@@ -528,9 +636,9 @@ as.igraph.simOutbreak <- function(x, edge.col="black", col.edge.by="dist", verte
 
 
 
-#####################
-## plot.simOutbreak
-#####################
+#' @rdname simOutbreak
+#' @export
+#'
 plot.simOutbreak <- function(x, y=NULL, edge.col="black", col.edge.by="dist", vertex.col="gold",
                               edge.col.pal=NULL, annot=c("dist","n.gen"), sep="/", ...){
     ## if(!require(igraph)) stop("igraph is required")

@@ -1,6 +1,51 @@
-##########
-## get.Rt
-##########
+
+#' Derive reproduction numbers from outbreak's outputs
+#'
+#' These functions are used to compute reproduction numbers and derive
+#' incidence curves from outbreaker's ouptput (functions \code{outbreaker} and
+#' \code{outbreaker.parallel}). They all rely on the entire outbreak having
+#' been sampled.  \itemize{ \item \code{get.R} derive distributions of
+#' individual effective reproduction numbers.  \item \code{get.Rt} derives
+#' effective reproduction numbers averaged for each time step.  \item
+#' \code{get.incid} derives incidence curves for each time step.  }
+#'
+#' @export
+#'
+#' @aliases get.R get.Rt get.incid
+#'
+#' @rdname repro
+#'
+#' @param x the output of \code{outbreaker} or \code{outbreaker.parallel}.
+#' @param burnin an integer indicating the number of steps of the MCMC to be
+#' discarded as burnin period. Defaults to 20,000.
+#' @param plot a logical indicating whether a plot should be displayed.
+#' @param type a character indicating the type of plot to be used.
+#' @param lines a logical indicating whether individual lines should be added
+#' to the plot.
+#' @param fill.col the color to be used for the boxplot.
+#' @param lines.col the color to be used to the lines.
+#' @param \dots further arguments to be passed to other functions.
+#' @return These functions return a \code{data.frame} containing the plotted
+#' information.
+#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
+#' @examples
+#'
+#' ## load data
+#' data(fakeOutbreak)
+#' attach(fakeOutbreak)
+#'
+#' ## individual R
+#' barplot(table(get.R(res)), main="Individual effective reproduction numbers")
+#'
+#' ## R(t)
+#' get.Rt(res)
+#'
+#' ## incidence
+#' get.incid(res)
+#'
+#' detach(fakeOutbreak)
+#'
+#'
 get.Rt <- function(x, burnin=2e4, plot=TRUE, type=c("boxplot", "lines"), lines=FALSE,
                    fill.col="gold", lines.col=transp("grey"), ...){
     ## if(!require(adegenet)) stop("the adegenet package is required.")
@@ -90,12 +135,9 @@ get.Rt <- function(x, burnin=2e4, plot=TRUE, type=c("boxplot", "lines"), lines=F
 
 
 
-
-
-##########
-## get.R
-##########
-## effective reproduction number per case
+#' @rdname repro
+#' @export
+#'
 get.R <- function(x, burnin=2e4, ...){
 
     ## GET DATA ##
@@ -121,10 +163,9 @@ get.R <- function(x, burnin=2e4, ...){
 
 
 
-
-#############
-## get.incid
-#############
+#' @rdname repro
+#' @export
+#'
 get.incid <- function(x, burnin=2e4, plot=TRUE, type=c("boxplot", "lines"), lines=FALSE,
                       fill.col="gold", lines.col=transp("grey"), ...){
     ## if(!require(adegenet)) stop("the adegenet package is required.")

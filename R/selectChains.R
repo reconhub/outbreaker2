@@ -1,6 +1,41 @@
-################
-## selectChains
-################
+
+#' Select 'good' runs from independent MCMC chains
+#'
+#' The function \code{selectChains} is used to discard 'bad' MCMC chains from
+#' outbreaker's ouptput (functions \code{outbreaker} and
+#' \code{outbreaker.parallel}). This is useful whenever several chains were run
+#' and converged towards different posterior modes or distributions.  This can
+#' happen for instance when imported cases are hard to disentangle, resulting
+#' in different runs identifying different imports and therefore having
+#' different likelihood.
+#'
+#' Three modes are available, depending on the argument \code{select} (see also
+#' arguments below): \itemize{ \item \code{visual}: (default) interactive mode
+#' plotting the log-posterior values for the different chains and asking the
+#' user to identify runs to be discarded.  \item \code{auto}: an automatic
+#' procedure is used to discard 'bad' runs; see details.  \item
+#' \code{[numbers]}: numbers indicating the runs to be discarded.  }
+#'
+#' The automatic procedure relies on the following recursive process: \itemize{
+#' \item 1. Make the ANOVA of the log-posterior values as a function of the run
+#' identifier.  \item 2a. If the P-value is greater than alpha
+#' (non-significant), exit.  \item 2b. Otherwise, discard the run with the
+#' lowest mean log-posterior value, and go back to 1.  }
+#'
+#' @aliases selectChains
+#'
+#' @export
+#'
+#' @param x the output of \code{outbreaker} or \code{outbreaker.parallel}.
+#' @param select a character string matching \code{visual} or \code{auto}, or a
+#' vector of integers indicating the runs to be discarded.
+#' @param alpha the alpha threshold to be used to the automatic procedure (see
+#' details)
+#' @param \dots further arguments to be passed to \code{\link{plotChains}}.
+#' @return These functions similar objects to the inputs, from which 'bad' runs
+#' have been discarded.
+#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
+#'
 selectChains <- function(x, select="visual", alpha=0.001, ...){
     ## CHECKS ##
     if(!is.list(x)) stop("x should be a list as output by outbreaker / outbreaker.parallel")

@@ -1,32 +1,100 @@
-#####################
-## plot.tTree
-#####################
-plot.tTree <- function(x, y=NULL, edge.col="black", col.edge.by="prob",
-                              col.pal=NULL, annot=c("dist","n.gen","prob"), sep="/", ...){
-    ## if(!require(igraph)) stop("igraph is required")
-    ## if(!require(adegenet)) stop("adegenet is required")
-    if(!inherits(x,"tTree")) stop("x is not a tTree object")
-    if(!col.edge.by %in% c("dist","n.gen","prob")) stop("unknown col.edge.by specified")
-
-    ## get graph ##
-    g <- as.igraph(x, edge.col=edge.col, col.edge.by=col.edge.by, col.pal=col.pal, annot=annot, sep=sep)
-
-     ## make plot ##
-    plot(g, layout=attr(g,"layout"), ...)
-
-    ## return graph invisibly ##
-    return(invisible(g))
-
-} # end plot.tTree
 
 
-
-
-
-
-##############
-## plotChains
-##############
+#' Plot outbreaker's results
+#'
+#' These are the main functions used for generating graphics from the raw
+#' output of \code{outbreaker} and \code{outbreaker.parallel}.
+#'
+#' \itemize{ \item \code{plotChains} is used for plotting MCMCs
+#'
+#' \item \code{transGraph} plots a graph of inferred ancestries
+#'
+#' \item \code{plotOutbreak} attempts to synthetize the reconstruction of small
+#' outbreaks }
+#'
+#'
+#' @aliases plotChains transGraph plotOutbreak
+#'
+#' @rdname plot
+#'
+#' @export
+#'
+#' @param x the output of \code{outbreaker} or \code{outbreaker.parallel}.
+#' @param what a character chains giving the name of the item to be plotted.
+#' See \code{names(x$chains)} for possible values. By default, log-posterior
+#' values are plotted
+#' @param type a character indicating if the chains should be plotted as time
+#' series ("series"), or as density ("density").
+#' @param burnin an integer indicating the number of MCMC steps to discard
+#' before plotting chains.
+#' @param dens.all a logical indicating if, in the case of multiple runs, the
+#' overall density of the different chains should be plotted in addition to
+#' individual densities.
+#' @param col a vector of colors to be used to plot different chains.
+#' @param lty a vector of integers specifying line types for the different
+#' chains.
+#' @param lwd same as \code{lty}, but for line width.
+#' @param main the title to be added to the plot.
+#' @param labels the labels to be used to name the nodes of the graph (cases).
+#' @param threshold the minimum support for ancestries to be plotted; 'support'
+#' is defined as the frequency of a given ancestor in the posterior
+#' distribution; defaults to 0.2.
+#' @param thres.hide a threshold of posterior support for displaying
+#' ancestries; ancestries with less than this frequency in the posterior are
+#' hidden.
+#' @param col.pal,edge.col.pal the color palette to be used for the edges
+#' (ancestries).
+#' @param curved.edges a logical indicating whether edges should be curved.
+#' @param col.edge.by a character string indicating which information should be
+#' used to color the edges ('dist': genetic distance; 'prob': support for the
+#' ancestry)
+#' @param annot a character indicating which information should be used to
+#' annotate the edges; this can be the distances between ancestors and
+#' descendents ("dist") and the posterior support for ancestries ("support");
+#' if both are requested, fields will be concatenated.
+#' @param sep a character indicating the separator to be used when
+#' concatenating several types of annotation.
+#' @param cex.bubble a numeric value indicating the size factor for the bubbles
+#' representing the generation time distribution.
+#' @param edge.max.dist a number indicating the threshold distance bounding the
+#' color palette used for the edges; useful to avoid showing edges
+#' corresponding to distances larger than a given number.
+#' @param lwd.arrow a numeric value indicating the size factor for the arrows.
+#' @param xlim the limits of the X axis; if NULL, determined from the data.
+#' @param legend a logical indicating if a legend should be plotted for the
+#' different runs.
+#' @param posi a character string indicating the position of the legend (see
+#' \code{?legend}).
+#' @param \dots further arguments to be passed to other functions.
+#'
+#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
+#'
+#' @examples
+#'
+#' data(fakeOutbreak)
+#' attach(fakeOutbreak)
+#'
+#' ## examine MCMC
+#' plotChains(res)
+#' plotChains(res,type="dens")
+#' plotChains(res,type="dens", what="mu1", burnin=2e4)
+#'
+#' ## represent posterior ancestries
+#' transGraph(res, annot="", main="Posterior ancestries")
+#' transGraph(res, annot="", main="Posterior ancestries - support > 0.5",
+#'    threshold=0.5)
+#' if(require(adegenet)){
+#' transGraph(res, annot="", main="Posterior ancestries - support > 0.01",
+#'    threshold=0.01, col.pal=spectral)
+#' }
+#' ## summary plot
+#' plotOutbreak(res,cex.bubble=0.5, thres.hide=0.5,
+#'    main="Outbreak reconstruction")
+#'
+#'
+#' detach(fakeOutbreak)
+#'
+#'
 plotChains <- function(x, what="post", type=c("series","density"), burnin=0, dens.all=TRUE,
                        col=funky(x$n.runs), lty=1, lwd=1, main=what,
                        legend=TRUE, posi="bottomleft", ...){
@@ -81,9 +149,8 @@ plotChains <- function(x, what="post", type=c("series","density"), burnin=0, den
 
 
 
-##############
-## transGraph
-##############
+#' @rdname plot
+#' @export
 transGraph <- function(x, labels=NULL, burnin=x$burnin, threshold=0.2, col.pal=NULL, curved.edges=TRUE,
                        annot=c("dist","support"), sep="/", ...){
     ## CHECKS ##
@@ -193,6 +260,9 @@ transGraph <- function(x, labels=NULL, burnin=x$burnin, threshold=0.2, col.pal=N
     return(-sum(p*log(p), na.rm=TRUE))
 }
 
+
+#' @rdname plot
+#' @export
 plotOutbreak <- function(x, burnin=x$burnin, thres.hide=0.2, col=NULL,
                          col.pal=colorRampPalette(c("blue","lightgrey")), edge.col.pal=NULL,
                          col.edge.by="prob", annot=c("dist","prob"), sep="/", cex.bubble=1,

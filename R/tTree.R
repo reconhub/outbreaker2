@@ -1,9 +1,101 @@
-#############
-## get.tTree
-#############
-##
-## consensus: tree is defined as a set of best supported ancestries
-## best: tree is the most frequent tree; note that this may exist only for small datasets
+
+#' Simple transmission tree from outreaber's output
+#'
+#' The S3 class \code{tTree} is used for storing simplified transmission trees,
+#' obtained from outbreaker's ouptput (functions \code{outbreaker} and
+#' \code{outbreaker.parallel}) using \code{get.tTree}. Some additional features
+#' are available for \code{tTree} objects, including plotting (\code{plot}),
+#' conversion to \code{igraph} graphs (\code{as.igraph}), and identification of
+#' mutations on the branches of the tree (\code{findMutations}).
+#'
+#'
+#' @aliases tTree get.tTree plot.tTree as.igraph.tTree findMutations.tTree
+#'
+#' @export
+#'
+#' @rdname tTree
+#'
+#' @param x for \code{get.tTree}, the output of \code{outbreaker} or
+#' \code{outbreaker.parallel}. For other functions, a \code{tTree} object.
+#' @param burnin an integer indicating the number of steps of the MCMC to be
+#' discarded as burnin period. Defaults to 20,000.
+#' @param best a character string matching "ancestries" or "tree", indicating
+#' which criterion is used to define the consensus tree; "ancestries" retains,
+#' for each case, the most supported ancestor; "tree" retains the most
+#' supported tree; note that the latter may exist only in the case of very
+#' small epidemics.
+#' @param y unused - there for compatibility with the generic of \code{plot}.
+#' @param edge.col the color used for the edges; overriden if
+#' \code{col.edge.by} is provided.
+#' @param col.edge.by a character string indicating how edges should be
+#' colored. Can be "dist" (by number of mutations), "n.gen" (by number of
+#' generations), or "prob" (by posterior support for the ancestries).
+#' @param col.pal the palette of colors to be used for edges; if NULL, a grey
+#' palette is used, with larger values in darker shades.
+#' @param annot same as \code{col.edge.by}, but specifies the information used
+#' to annotated the edges; several values can be provided, in which case
+#' different fields will be concatenated to generate the annotation.
+#' @param sep a character indicating the separator for different field (see
+#' \code{annot}).
+#' @param dna a DNAbin object containing the aligned sequences of the isolates
+#' in the tree.
+#' @param \dots further arguments to be passed to other functions.
+#' @return \code{tTree} objects are lists with the following components:
+#' \itemize{ \item idx: integer, the index of the cases
+#'
+#' \item collec.dates: the collection dates of the isolates
+#'
+#' \item idx.dna: the index of the cases to which each DNA sequence corresponds
+#'
+#' \item ances: the index of the inferred ancestor, for each case
+#'
+#' \item inf.dates: the inferred infection date, for each case
+#'
+#' \item p.ances: the posterior probability of the inferred ancestor (i.e.,
+#' proportion in the posterior distribution of ancestors)
+#'
+#' \item nb.mut: the number of mutations between isolates and their inferred
+#' ancestor, for each isolate
+#'
+#' \item n.gen: the number of generations between isolates and their inferred
+#' ancestor, for each isolate
+#'
+#' \item p.gen: the posterior probability of the inferred number of generations
+#' between each case and its inferred ancestor
+#'
+#' \item inf.curves: the infectivity curves for each case }
+#'
+#' The plot function invisibly returns the conversion of the \code{tTree}
+#' object into a \code{igraph} graph.
+#'
+#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
+#'
+#' @keywords classes
+#'
+#' @examples
+#'
+#' data(fakeOutbreak)
+#' attach(fakeOutbreak)
+#'
+#' ## represent posterior ancestries
+#' if(require(adegenet)){
+#' transGraph(res, annot="", main="Posterior ancestries - support > 0.01",
+#'    threshold=0.01, col.pal=spectral)
+#' }
+#' ## get consensus ancestries
+#' tre <- get.tTree(res)
+#' plot(tre, annot="", main="Consensus ancestries")
+#'
+#' ## show match data/consensus ancestries
+#' col <- rep("lightgrey", 30)
+#' col[which(dat$ances != tre$ances)] <- "pink"
+#' plot(tre, annot="", vertex.color=col, main="Consensus ancestries")
+#' mtext(side=3, text="cases with erroneous ancestries in pink")
+#'
+#'
+#' detach(fakeOutbreak)
+#'
+#'
 get.tTree <- function(x, burnin=2e4, best=c("ancestries","tree")){
 
     ## HANDLE ARGUMENTS ##
@@ -83,9 +175,9 @@ get.tTree <- function(x, burnin=2e4, best=c("ancestries","tree")){
 
 
 
-#############
-## as.igraph
-#############
+#' @rdname tTree
+#' @export
+#'
 as.igraph.tTree <- function(x, edge.col="black", col.edge.by="prob",
                               col.pal=NULL, annot=c("dist","n.gen","prob"), sep="/", ...){
     ## if(!require(igraph)) stop("package igraph is required for this operation")
@@ -169,10 +261,9 @@ as.igraph.tTree <- function(x, edge.col="black", col.edge.by="prob",
 
 
 
-
-#################
-## findMutations
-#################
+#' @rdname tTree
+#' @export
+#'
 findMutations.tTree <- function(x, dna, ...){
     ## CHECKS ##
     ## if(!require(ape)) stop("the ape package is needed")
@@ -217,6 +308,28 @@ findMutations.tTree <- function(x, dna, ...){
 
 
 
+
+
+#' @rdname tTree
+#' @export
+#'
+plot.tTree <- function(x, y=NULL, edge.col="black", col.edge.by="prob",
+                              col.pal=NULL, annot=c("dist","n.gen","prob"), sep="/", ...){
+    ## if(!require(igraph)) stop("igraph is required")
+    ## if(!require(adegenet)) stop("adegenet is required")
+    if(!inherits(x,"tTree")) stop("x is not a tTree object")
+    if(!col.edge.by %in% c("dist","n.gen","prob")) stop("unknown col.edge.by specified")
+
+    ## get graph ##
+    g <- as.igraph(x, edge.col=edge.col, col.edge.by=col.edge.by, col.pal=col.pal, annot=annot, sep=sep)
+
+     ## make plot ##
+    plot(g, layout=attr(g,"layout"), ...)
+
+    ## return graph invisibly ##
+    return(invisible(g))
+
+} # end plot.tTree
 
 
 

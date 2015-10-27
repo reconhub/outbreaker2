@@ -8,7 +8,9 @@
 #'
 #' @param times a vector of integers indicating dates of infections of the cases
 #' @param ances a vector of indices of ancestors
-#' @param w a vector of log probabilities of time intervals, starting at p(T=0)
+#' @param log.w a vector of log probabilities of time intervals, starting at p(T=0)
+#'
+#' @export
 ll.timing.infections <- function(times, ances, log.w){
     ## find indices in w (delay + 1 day)
     T <- (times-times[ances])+1
@@ -22,5 +24,15 @@ ll.timing.infections <- function(times, ances, log.w){
 
 
 
-ll.genet <- function(){}
+
+
+#' @rdname internals
+#' @export
+#'
+#' @param D a matrix of pairwise genetic distances
+#' @param mu a mutation rate
+ll.genetic <- function(D, ances, mu, gen.length){
+    nmut <- diag(D[,ances])
+    return(sum(log(mu)*nmut + log(1-mu)*(gen.length-nmut), na.rm=TRUE))
+} # end ll.genetic
 

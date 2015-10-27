@@ -248,35 +248,31 @@
 #'
 outbreaker <- function(dates, dna=NULL,
                        w.dens, f.dens=w.dens,
-                       init.tree=c("seqTrack","random","star"),
+                       init.tree=c("seqTrack","star","random"),
                        init.mu=NULL,
-                       move.mut=TRUE, move.ances=TRUE, move.Tinf=TRUE,
+                       move.ances=TRUE, move.Tinf=TRUE, move.mut=TRUE,
                        n.iter=1e5, sample.every=500, tune.every=500){
 
     ## CHECKS / PROCESS DATA ##
-
-    ## DNA SEQUENCES ##
-    ## handle missing dna ##
-    useDna <- !is.null(dna)
-    if(is.null(dna)){
-        dna <- as.DNAbin(matrix('a',ncol=10,nrow=length(dates)))
-        move.mut <- FALSE
-        mut.model <- 0L
-        if(is.character(init.tree) && match.arg(init.tree)=="seqTrack") init.tree <- "star"
-        init.mu1 <- init.mu2 <-0
-        init.gamma <- 1
-    }
-
-    ## check type of input ##
-    if(!inherits(dna, "DNAbin")) stop("dna is not a DNAbin object.")
-    if(!is.matrix(dna)) dna <- as.matrix(dna)
-    if(is.character(dates)) stop("dates are characters; they must be integers or dates with Date format (see ?as.Date)")
-
 
     ## DATES ##
     ## conversions
     if(inherits(dates, "Date")) dates <- dates-min(dates)
     if(inherits(dates, "POSIXct")) dates <- difftime(dates, min(dates), units="days")
+    dates <- as.integer(round(dates))
+
+    ## global variable (nb of cases)
+    N <- length(dates)
+
+    ## DNA SEQUENCES ##
+    ## check type of input ##
+    if(!inherits(dna, "DNAbin")) stop("dna is not a DNAbin object.")
+    if(!is.matrix(dna)) dna <- as.matrix(dna)
+    if(is.character(dates)) stop("dates are characters; they must be integers or dates with Date format (see ?as.Date)")
+
+    ## global variables
+    L <- ncol(dna) #  (genome length)
+    D <- as.matrix(dist.dna(dna, model="N")) # distance matrix
 
 
     ## DENSITIES ##
@@ -309,6 +305,10 @@ outbreaker <- function(dates, dna=NULL,
         w.dens <- w.dens/sum(w.dens)
     }
 
+    ## get log-densities
+    log.w.dens <- log(w.dens)
+    log.f.dens <- log(f.dens)
+
 
     ## INITIAL PARAMETER VALUES ##
     ## TREE ##
@@ -316,19 +316,12 @@ outbreaker <- function(dates, dna=NULL,
         init.tree <- match.arg(init.tree)
     } else {
         if(length(init.tree) != length(dates)) stop("inconvenient length for init.tree")
-        init.tree[is.na(init.tree)|init.tree<1] <- 0
-        if(max(init.tree)>length(dates)) stop("inconvenient values in init.tree (some indices > n)")
+        init.tree[init.tree<1 | init.tree>N] <- NA
     }
 
     ## MUTATION RATE 'MU' ##
-    if(sum(w.dens) <= 1e-14) stop("w.dens is zero everywhere")
-    if(!is.null(init.mu1) && init.mu1<0) stop("init.mu1 < 0")
-    if(!is.null(init.mu2) && init.mu2<0) stop("init.mu2 < 0")
+    if(!is.null(init.mu) && init.mu1<0) stop("init.mu1 < 0")
 
-
-
-
-    dates <- as.integer(dates)
 
     ## complete w.dens ##
     max.range <- diff(range(dates))
@@ -343,100 +336,6 @@ outbreaker <- function(dates, dna=NULL,
         w.dens <- w.dens/sum(w.dens)
     }
 
-    ## w.trunc and f.trunc ##
-    w.trunc <- length(w.dens)
-    f.trunc <- length(f.dens)
-
-    ## handle idx.dna ##
-    ## need to go from: id of case for each sequence (idx.dna)
-    ## to: position of the sequence in DNA matrix for each case
-    ## -1 is used for missing sequences
-    if(is.null(idx.dna)) {
-        idx.dna <- 1:nrow(dna)
-    }
-
-    if(any(!idx.dna %in% 1:n.ind)) stop("DNA sequences provided for unknown cases (some idx.dna not in 1:n.ind)")
-    if(length(idx.dna)!=nrow(dna)) stop("length of idx.dna does not match the number of DNA sequences")
-
-    idx.dna.for.cases <- match(1:n.ind, idx.dna)
-    idx.dna.for.cases[is.na(idx.dna.for.cases)] <- 0
-    idx.dna.for.cases <- as.integer(idx.dna.for.cases-1) # for C
-
-    ## check mutational model ##
-    ## check model
-    mut.model <- as.integer(mut.model)
-    if(!mut.model %in% c(0L,1L,2L)) stop("unknown mutational model requested; accepted values are: 0, 1, 2")
-    ## model 0: no evolution model
-    if(mut.model==0L){
-        init.gamma <- 1
-        init.mu1 <- 1
-        move.mut <- FALSE
-    }
-    ## determine gamma
-    if(!is.null(init.mu1) && !is.null(init.mu2)){
-        init.gamma <- init.mu2/init.mu1
-        if(is.na(init.gamma) || is.infinite(init.gamma)) init.gamma <- 1 # in case rates are both 0
-    } else{
-        init.gamma <- 1
-    }
-    ## force gamma to 1 for model 1
-    if(mut.model==1L){
-        init.gamma <- 1
-    }
-
-    ## check generation time function ##
-    w.dens <- as.double(w.dens)
-    w.dens <- w.dens/sum(w.dens)
-    if(any(is.na(w.dens))) stop("NAs in w.dens after normalization")
-    w.trunc <- as.integer(w.trunc)
-
-    ## check collection time function ##
-    f.dens <- as.double(f.dens)
-    f.dens <- f.dens/sum(f.dens)
-    if(any(is.na(f.dens))) stop("NAs in f.dens after normalization")
-    f.trunc <- as.integer(f.trunc)
-
-    ## check spatial distances ##
-    if(!is.null(dist.mat)){
-        if(!inherits(dist.mat,"matrix")) dist.mat <- as.matrix(dist.mat)
-        if(nrow(dist.mat) != ncol(dist.mat)) stop("matrix of distances (dist.mat) is not square")
-        if(nrow(dist.mat) != length(dates)) stop("wrong dimension for the matrix of distances")
-        if(any(is.na(dist.mat))) stop("NAs in the distance matrix")
-    } else {
-        if(spa.model>0) stop("spatial model requested but dist.mat not provided")
-        dist.mat <- matrix(0, ncol=length(dates), nrow=length(dates))
-        spa.model <- 0L
-    }
-
-    ## check spatial model ##
-    spa.model <- as.integer(spa.model)
-    if(!spa.model %in% c(0L, 1L, 2L)) stop("unknown spatial model requested; accepted values are: 0, 1, 2")
-    ## model 0: no spatial info
-    if(spa.model == 0L) {
-        dist.mat <- matrix(0, ncol=length(dates), nrow=length(dates))
-        init.spa1 <- init.spa2 <- 0
-    }
-    ## model 1: normal dispersal
-    if(spa.model > 0L) {
-        if(is.null(init.spa1)) init.spa1 <- 1
-        ## if(is.null(init.spa2)) init.spa2 <- 0
-        init.spa2 <- 0
-        spa1.prior <- max(0.0, spa1.prior)
-    }
-    ## model 2: stratified dispersal
-    if(spa.model == 2L){
-        stop("Only available spatial models are 0 (none) and 1 (exponential diffusion)")
-        ## if(is.null(locations)) stop("Spatial model 2 needs locations for stratified dispersal")
-        ## if(length(locations)!=length(dates)) stop("wrong length for argument 'locations'")
-        ## if(is.character(locations)) locations <- factor(locations)
-        ## locations <- as.integer(locations)
-    }
-
-
-    ## init.kappa ##
-    ## if NULL, will be ML assigned (code is kappa_i<0)
-    if(is.null(init.kappa)) init.kappa <- rep(0L,n.ind)
-    init.kappa <- as.integer(rep(init.kappa, length=n.ind)) #recycle
 
 
     ## find initial tree ##
@@ -454,18 +353,10 @@ outbreaker <- function(dates, dna=NULL,
 
         ## seqTrack init
         if(init.tree=="seqTrack"){
-            D <- as.matrix(dist.dna(dna, model="TN93"))
-            D[!canBeAnces] <- 1e15
-            ances <- apply(D,2,which.min)-1 # -1 for compatibility with C
-            ances[dates==min(dates)] <- -1 # unknown ancestor
-            ances <- as.integer(ances)
-        }
-
-        ## random init
-        if(init.tree=="random"){
-            ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
-            ances <- ances-1
-            ances[is.na(ances)] <- -1L
+            D.temp <- D
+            D.temp[!canBeAnces] <- 1e30
+            ances <- apply(D.temp,2,which.min)
+            ances[dates==min(dates)] <- NA
             ances <- as.integer(ances)
         }
 
@@ -476,42 +367,27 @@ outbreaker <- function(dates, dna=NULL,
             ances <- as.integer(ances-1) # put on C scale
         }
 
-        ## ## no ancestry init
-        ## if(init.tree=="none"){
-        ##     ances <- as.integer(rep(-1,length(dates)))
-        ## }
-    }
-
-    ## handle seed ##
-    if(is.null(seed)){
-        seed <- as.integer(runif(1,min=0,max=2e9))
-    }
-
-    ## handle import.method ##
-    if(mut.model==0L && import.method==1L) import.method <- 2L
-
-    ## handle find.import ##
-    find.import <- import.method > 0L
-    if(find.import){
-        find.import.n <- max(find.import.n,30) # import at least based on 30 values
-        find.import.at <- as.integer(round(burnin + find.import.n*sample.every))
-        if(find.import.at>=n.iter) stop(paste("n.iter (", n.iter, ") is less than find.import.at (", find.import.at,")", sep=""))
-    } else {
-        find.import.at <- as.integer(0)
+        ## random init
+        if(init.tree=="random"){
+            ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
+            ances <- ances-1
+            ances[is.na(ances)] <- -1L
+            ances <- as.integer(ances)
+        }
     }
 
 
-    ## BUILD OUTPUT ##
-    ## read table
-    chains <- read.table(res.file.name, header=TRUE, stringsAsFactors=FALSE,
-                         colClasses=c("integer", rep("numeric",7+n.ind*2)))
+    ## MCMC ##
+    ## create output templates ##
+    out.post <- out.prior <- out.ll <- double(n.iter)
+    mu <- init.mu
 
-    chains$run <- rep(1, nrow(chains))
-    call <- match.call()
-    res <- list(chains=chains, collec.dates=dates, w=w.dens[1:w.trunc], f=f.dens[1:f.trunc], D=D, idx.dna=idx.dna, tune.end=stopTuneAt,
-                burnin=burnin, import.method=import.method, find.import.at=find.import.at, n.runs=1, call=call)
 
-    return(res)
+    ## initialize algorithm ##
+    out.ll[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=mu, gen.length=L)
+
+    out <- NULL
+    return(out)
 } # end outbreaker
 
 

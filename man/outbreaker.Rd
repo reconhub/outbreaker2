@@ -5,40 +5,58 @@
 \alias{outbreaker.parallel}
 \title{Outbreaker: disease outbreak reconstruction using genetic data}
 \usage{
-outbreaker(dna = NULL, dates, idx.dna = NULL, mut.model = 1,
-  spa.model = 0, w.dens, f.dens = w.dens, dist.mat = NULL,
-  init.tree = c("seqTrack", "random", "star"), init.kappa = NULL,
-  init.mu1 = NULL, init.mu2 = init.mu1, init.spa1 = NULL,
-  n.iter = 1e+05, sample.every = 500, tune.every = 500, burnin = 20000,
-  import.method = c("genetic", "full", "none"), find.import.n = 50,
-  pi.prior1 = 10, pi.prior2 = 1, spa1.prior = 1, move.mut = TRUE,
-  move.ances = TRUE, move.kappa = TRUE, move.Tinf = TRUE,
-  move.pi = TRUE, move.spa = TRUE, outlier.threshold = 5,
-  max.kappa = 10, quiet = TRUE, res.file.name = "chains.txt",
-  tune.file.name = "tuning.txt", seed = NULL)
-
-outbreaker.parallel(n.runs, parallel = TRUE, n.cores = NULL, dna = NULL,
-  dates, idx.dna = NULL, mut.model = 1, spa.model = 0, w.dens,
-  f.dens = w.dens, dist.mat = NULL, init.tree = c("seqTrack", "random",
-  "star"), init.kappa = NULL, init.mu1 = NULL, init.mu2 = init.mu1,
-  init.spa1 = NULL, n.iter = 1e+05, sample.every = 500,
-  tune.every = 500, burnin = 20000, import.method = c("genetic", "full",
-  "none"), find.import.n = 50, pi.prior1 = 10, pi.prior2 = 1,
-  spa1.prior = 1, move.mut = TRUE, move.ances = TRUE, move.kappa = TRUE,
-  move.Tinf = TRUE, move.pi = TRUE, move.spa = TRUE,
-  outlier.threshold = 5, max.kappa = 10, quiet = TRUE,
-  res.file.name = "chains.txt", tune.file.name = "tuning.txt",
-  seed = NULL)
+outbreaker(dates, dna = NULL, w.dens, f.dens = w.dens,
+  init.tree = c("seqTrack", "random", "star"), init.mu = NULL,
+  move.mut = TRUE, move.ances = TRUE, move.Tinf = TRUE, n.iter = 1e+05,
+  sample.every = 500, tune.every = 500)
 }
 \arguments{
+\item{dates}{a vector indicating the collection dates, provided either as
+integer numbers or in a usual date format such as \code{Date} or
+\code{POSIXct} format. By convention, zero will indicate the oldest date.}
+
 \item{dna}{the DNA sequences in \code{DNAbin} format (see
 \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
 fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 \link[adegenet]{fasta2DNAbin}.}
 
-\item{dates}{a vector indicating the collection dates, provided either as
-integer numbers or in a usual date format such as \code{Date} or
-\code{POSIXct} format. By convention, zero will indicate the oldest date.}
+\item{w.dens}{a vector of numeric values indicating the generation time
+distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
+time steps after infection. By convention, w.dens[1]=0, meaning that an
+newly infected patient cannot be instantaneously infectious. If not
+standardized, this distribution is rescaled to sum to 1.}
+
+\item{f.dens}{similar to \code{w.dens}, except that this is the distribution
+of the colonization time, i.e. time interval during which the pathogen can
+be sampled from the patient.}
+
+\item{init.tree}{the tree used to initialize the MCMC. Can be either a
+character string indicating how this tree should be computed, or a vector of
+integers corresponding to the tree itself, where the i-th value corresponds
+to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
+ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
+seqTrack output as initialize tree), "random" (ancestor randomly selected
+from preceding cases), and "star" (all cases coalesce to the first case).
+Note that for SeqTrack, all cases should have been sequenced.}
+
+\item{move.mut,move.pi,move.spa}{logicals indicating whether the named items
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.
+\code{move.mut} handles both mutation rates.}
+
+\item{move.ances,move.kappa,move.Tinf}{vectors of logicals of length 'n'
+indicating for which cases different components should be moved during the
+MCMC.}
+
+\item{n.iter}{an integer indicating the number of iterations in the MCMC,
+including the burnin period; defaults to \code{100,000}.}
+
+\item{sample.every}{an integer indicating the frequency at which to sample
+from the MCMC, defaulting to 500 (i.e., output to file every 500
+iterations).}
+
+\item{tune.every}{an integer indicating the frequency at which proposal
+distributions are tuned, defaulting to 500 (i.e., tune proposal distribution
+every 500 iterations).}
 
 \item{idx.dna}{an optional integer vector indicating to which case each dna
 sequence in \code{dna} corresponds. Not required if each case has a
@@ -51,45 +69,10 @@ one single mutation rate; 2: two rates, transitions (mu1) / transversions
 \item{spa.model}{an integer indicating the spatial model to be used. 0: no
 spatial model (default). 1: exponential kernel (under development).}
 
-\item{w.dens}{a vector of numeric values indicating the generation time
-distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
-time steps after infection. By convention, w.dens[1]=0, meaning that an
-newly infected patient cannot be instantaneously infectious. If not
-standardized, this distribution is rescaled to sum to 1.}
-
-\item{f.dens}{similar to \code{w.dens}, except that this is the distribution
-of the colonization time, i.e. time interval during which the pathogen can
-be sampled from the patient.}
-
 \item{dist.mat}{a matrix of pairwise spatial distances between the cases.}
-
-\item{init.tree}{the tree used to initialize the MCMC. Can be either a
-character string indicating how this tree should be computed, or a vector of
-integers corresponding to the tree itself, where the i-th value corresponds
-to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
-ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
-seqTrack output as initialize tree), "random" (ancestor randomly selected
-from preceding cases), and "star" (all cases coalesce to the first case).
-Note that for SeqTrack, all cases should have been sequenced.}
 
 \item{init.kappa}{as \code{init.tree}, but values indicate the number of
 generations between each case and its most recent sampled ancestor.}
-
-\item{init.mu1,init.mu2}{initial values for the mutation rates (mu1:
-transitions; mu2: transversions).}
-
-\item{init.spa1}{initial values of the spatial parameter.}
-
-\item{n.iter}{an integer indicating the number of iterations in the MCMC,
-including the burnin period; defaults to \code{100,000}.}
-
-\item{sample.every}{an integer indicating the frequency at which to sample
-from the MCMC, defaulting to 500 (i.e., output to file every 500
-iterations).}
-
-\item{tune.every}{an integer indicating the frequency at which proposal
-distributions are tuned, defaulting to 500 (i.e., tune proposal distribution
-every 500 iterations).}
 
 \item{burnin}{an integer indicating the number of iterations for the burnin
 period, after which the chains are supposed to have mixed; estimated values
@@ -112,17 +95,14 @@ Beta distribution used as a prior for \eqn{\pi}. This prior is Beta(10,1) by
 default, indicating that a majority of cases are likely to have been
 observed. Use Beta(1,1) for a flat prior.}
 
+\item{init.mu1,init.mu2}{initial values for the mutation rates (mu1:
+transitions; mu2: transversions).}
+
+\item{init.spa1}{initial values of the spatial parameter.}
+
 \item{spa1.prior}{parameters of the prior distribution for the spatial
 parameters. In the spatial model 1, \code{spa1.prior} is the mean of an
 exponential distribution.}
-
-\item{move.mut,move.pi,move.spa}{logicals indicating whether the named items
-should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.
-\code{move.mut} handles both mutation rates.}
-
-\item{move.ances,move.kappa,move.Tinf}{vectors of logicals of length 'n'
-indicating for which cases different components should be moved during the
-MCMC.}
 
 \item{outlier.threshold}{a numeric value indicating the threshold for
 detecting low likelihood values corresponding to imported cases. Outliers

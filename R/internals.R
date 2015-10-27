@@ -11,7 +11,7 @@
 #' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #'
 #' @export
-ll.timing.infections <- function(times, ances, log.w){
+ll.timing.infections <- function(times, log.w, ances){
     ## find indices in w (delay + 1 day)
     T <- (times-times[ances])+1
 
@@ -32,7 +32,7 @@ ll.timing.infections <- function(times, ances, log.w){
 #' @param sampling.time a vector of integers indicating dates of sampling/observation/reporting of the cases
 #' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
 #'
-ll.timing.sampling <- function(times, sampling.times, log.f){
+ll.timing.sampling <- function(times, log.f, sampling.times){
     ## find indices in w (delay + 1 day)
     T <- (sampling.times-times)+1
 
@@ -53,7 +53,7 @@ ll.timing.sampling <- function(times, sampling.times, log.f){
 #' @param D a matrix of pairwise genetic distances
 #' @param mu a mutation rate
 #' @param gen.length length of the genetic sequences
-ll.genetic <- function(D, ances, mu, gen.length){
+ll.genetic <- function(D, gen.length, ances, mu){
     nmut <- diag(D[,ances])
     return(sum(log(mu)*nmut + log(1-mu)*(gen.length-nmut), na.rm=TRUE))
 } # end ll.genetic
@@ -65,7 +65,7 @@ ll.genetic <- function(D, ances, mu, gen.length){
 #' @rdname internals
 #' @export
 #'
-ll.all <- function(times, ances, log.w, D, mu, gen.length){
+ll.all <- function(times, D, gen.length, log.w, ances, mu){
     return(ll.timing.infections(times=times, ances=ances, log.w=log.w) +
            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length))
 }

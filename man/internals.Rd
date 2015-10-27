@@ -19,6 +19,8 @@ ll.genetic(D, ances, mu, gen.length)
 \item{D}{a matrix of pairwise genetic distances}
 
 \item{mu}{a mutation rate}
+
+\item{gen.length}{length of the genetic sequences}
 }
 \description{
 These functions represent the internal machinary behind outbreaker2: priors, likelihood functions, movements of parameters and augmented data.

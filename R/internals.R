@@ -25,14 +25,24 @@ ll.timing.infections <- function(times, ances, log.w){
 
 
 
-
 #' @rdname internals
 #' @export
 #'
 #' @param D a matrix of pairwise genetic distances
 #' @param mu a mutation rate
+#' @param gen.length length of the genetic sequences
 ll.genetic <- function(D, ances, mu, gen.length){
     nmut <- diag(D[,ances])
     return(sum(log(mu)*nmut + log(1-mu)*(gen.length-nmut), na.rm=TRUE))
 } # end ll.genetic
 
+
+
+
+#' @rdname internals
+#' @export
+#'
+ll.all <- function(times, ances, log.w, D, mu, gen.length){
+    return(ll.timing.infections(times=times, ances=ances, log.w=log.w) +
+           ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length))
+}

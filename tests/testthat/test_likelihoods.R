@@ -1,4 +1,4 @@
-context("Test internal functions")
+context("Test likelihood functions")
 
 
 ## test ll.timing.infections ##

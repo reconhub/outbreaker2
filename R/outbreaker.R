@@ -384,18 +384,28 @@ outbreaker <- function(dates, dna=NULL,
     out.post <- out.prior <- out.like <- out.mu <- double(n.iter)
     mu <- init.mu
 
-
     ## initialize algorithm and outputs ##
     out.like[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=mu, gen.length=L)
     out.post[1] <- out.like[1] + out.prior[1]
-
     out.mu[1] <- mu
+    out.ances <- as.list(integer(n.iter))
 
-    ## shape results ##
+    ## run MCMC ##
+    for(i in 2:n.iter){
+        ## move ancestries ##
+
+        ## move infection dates ##
+
+        ## move mu ##
+
+    } # end of the chain
+
+
+    ## SHAPE RESULTS ##
     out <- data.frame(post=out.post, like=out.like, prior=out.prior)
     out <- coda::mcmc(out)
 
-    ## return ##
+    ## RETURN ##
     return(out)
 } # end outbreaker
 

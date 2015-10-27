@@ -1,10 +1,10 @@
 #' Internal functions for outbreaker2
 #'
-#' These functions represent the internal machinary behind outbreaker2: priors, likelihood functions, movements of parameters and augmented data.
+#' These functions compute various likelihoods used in outbreaker.
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
-#' @rdname internals
+#' @rdname likelihoods
 #'
 #' @param times a vector of integers indicating dates of infections of the cases
 #' @param ances a vector of indices of ancestors
@@ -26,7 +26,7 @@ ll.timing.infections <- function(times, log.w, ances){
 
 
 
-#' @rdname internals
+#' @rdname likelihoods
 #' @export
 #'
 #' @param sampling.time a vector of integers indicating dates of sampling/observation/reporting of the cases
@@ -47,7 +47,7 @@ ll.timing.sampling <- function(times, log.f, sampling.times){
 
 
 
-#' @rdname internals
+#' @rdname likelihoods
 #' @export
 #'
 #' @param D a matrix of pairwise genetic distances
@@ -62,7 +62,7 @@ ll.genetic <- function(D, gen.length, ances, mu){
 
 
 
-#' @rdname internals
+#' @rdname likelihoods
 #' @export
 #'
 ll.all <- function(times, D, gen.length, log.w, ances, mu){

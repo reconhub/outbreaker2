@@ -1,7 +1,7 @@
 context("Test posterior functions")
 
 
-## test ll.timing.infections ##
+## test posterior computation ##
 test_that("post = like + prior", {
     ## skip on CRAN
     skip_on_cran()

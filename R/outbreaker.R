@@ -12,21 +12,21 @@
 #' \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 #' \link[adegenet]{fasta2DNAbin}.
-#' 
+#'
 #' @param dates a vector indicating the collection dates, provided either as
 #' integer numbers or in a usual date format such as \code{Date} or
 #' \code{POSIXct} format. By convention, zero will indicate the oldest date.
-#' 
+#'
 #' @param w.dens a vector of numeric values indicating the generation time
 #' distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
 #' time steps after infection. By convention, w.dens[1]=0, meaning that an
 #' newly infected patient cannot be instantaneously infectious. If not
 #' standardized, this distribution is rescaled to sum to 1.
-#' 
+#'
 #' @param f.dens similar to \code{w.dens}, except that this is the distribution
 #' of the colonization time, i.e. time interval during which the pathogen can
 #' be sampled from the patient.
-#' 
+#'
 #' @param init.tree the tree used to initialize the MCMC. Can be either a
 #' character string indicating how this tree should be computed, or a vector of
 #' integers corresponding to the tree itself, where the i-th value corresponds
@@ -35,21 +35,21 @@
 #' seqTrack output as initialize tree), "random" (ancestor randomly selected
 #' from preceding cases), and "star" (all cases coalesce to the first case).
 #' Note that for SeqTrack, all cases should have been sequenced.
-#' 
+#'
 #' @param n.iter an integer indicating the number of iterations in the MCMC,
 #' including the burnin period; defaults to \code{100,000}.
-#' 
+#'
 #' @param init.mu initial values for the mutation rates
-#' 
+#'
 #' @param move.mut logical indicating whether the mutation rates
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.
-#' 
+#'
 #' @param move.ances,move.kappa,move.Tinf vectors of logicals of length 'n'
 #' indicating for which cases different components should be moved during the
 #' MCMC.
-#' 
+#'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
-#' 
+#'
 #' @references Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 #' N (2014).  Bayesian reconstruction of disease outbreaks by combining
 #' epidemiologic and genomic data. PLoS Computational Biology.
@@ -121,7 +121,7 @@
 #' detach(fakeOutbreak)
 #'
 #'
-#' @importFrom stats dexp
+#' @importFrom stats dexp rnorm runif
 #' @importFrom coda mcmc
 #'
 outbreaker <- function(dates, dna=NULL,
@@ -201,22 +201,7 @@ outbreaker <- function(dates, dna=NULL,
     if(!is.null(init.mu) && init.mu<0) stop("init.mu < 0")
 
 
-    ## complete w.dens ##
-    max.range <- diff(range(dates))
-    ## add an exponential tail summing to 1e-4 to 'w'
-    ## to cover the span of the outbreak
-    ## (avoids starting with -Inf temporal loglike)
-    if(length(w.dens)<max.range) {
-        length.to.add <- (max.range-length(w.dens)) + 10 # +10 to be on the safe side
-        val.to.add <- dexp(1:length.to.add, 1)
-        val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
-        w.dens <- c(w.dens, val.to.add)
-        w.dens <- w.dens/sum(w.dens)
-    }
-
-
-
-    ## find initial tree ##
+    ## FIND INITIAL TREE ##
     ## get temporal ordering constraint:
     ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
     canBeAnces <- outer(dates,dates,FUN="<") # strict < is needed as we impose w(0)=0
@@ -262,9 +247,14 @@ outbreaker <- function(dates, dna=NULL,
 
     ## initialize algorithm and outputs ##
     out.like[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=mu, gen.length=L)
+    out.prior[1] <- prior.all(mu)
     out.post[1] <- out.like[1] + out.prior[1]
     out.mu[1] <- mu
     out.ances <- as.list(integer(n.iter))
+
+    ## initialize pre-drawn random arrays ##
+    RAND.MU <- rnorm(n.iter, sd.mu=0.0001)
+    RAND.ACC.MU <- log(runif(n.iter))
 
     ## run MCMC ##
     for(i in 2:n.iter){

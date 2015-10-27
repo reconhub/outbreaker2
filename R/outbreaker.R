@@ -129,7 +129,7 @@ outbreaker <- function(dates, dna=NULL,
                        init.tree=c("seqTrack","star","random"),
                        init.mu=1e-4,
                        move.ances=TRUE, move.Tinf=TRUE, move.mut=TRUE,
-                       n.iter=10){
+                       n.iter=10, sd.mu=0.0001){
 
     ## CHECKS / PROCESS DATA ##
 
@@ -243,17 +243,16 @@ outbreaker <- function(dates, dna=NULL,
     ## MCMC ##
     ## create output templates ##
     out.post <- out.prior <- out.like <- out.mu <- double(n.iter)
-    mu <- init.mu
 
     ## initialize algorithm and outputs ##
     out.like[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=mu, gen.length=L)
     out.prior[1] <- prior.all(mu)
     out.post[1] <- out.like[1] + out.prior[1]
-    out.mu[1] <- mu
+    out.mu[1] <- init.mu
     out.ances <- as.list(integer(n.iter))
 
     ## initialize pre-drawn random arrays ##
-    RAND.MU <- rnorm(n.iter, sd.mu=0.0001)
+    RAND.MU <- rnorm(n.iter, sd=sd.mu)
     RAND.ACC.MU <- log(runif(n.iter))
 
     ## run MCMC ##
@@ -263,12 +262,13 @@ outbreaker <- function(dates, dna=NULL,
         ## move infection dates ##
 
         ## move mu ##
+        out.mu[i] <- move.mu(D=D, gen.length=L, ances=ances[i], mu=out.mu[i-1], dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
 
     } # end of the chain
 
 
     ## SHAPE RESULTS ##
-    out <- data.frame(post=out.post, like=out.like, prior=out.prior)
+    out <- data.frame(post=out.post, like=out.like, prior=out.prior, mu=out.mu)
     out <- coda::mcmc(out)
 
     ## RETURN ##

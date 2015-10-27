@@ -10,3 +10,4 @@ Depends: R (>= 3.0.0), parallel
 Imports: utils, stats, graphics, grDevices, ape, igraph, adegenet, coda
 Description: Bayesian reconstruction of disease outbreaks using epidemiological and genetic information.
 License: GPL (>=2)
+LazyData: true

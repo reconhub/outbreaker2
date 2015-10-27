@@ -177,6 +177,7 @@
 #' @references Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 #' N (accepted).  Bayesian reconstruction of disease outbreaks by combining
 #' epidemiologic and genomic data. PLoS Computational Biology.
+#'
 #' @examples
 #'
 #'
@@ -245,13 +246,14 @@
 #'
 #'
 #' @importFrom stats dexp
+#' @importFrom coda mcmc
 #'
 outbreaker <- function(dates, dna=NULL,
                        w.dens, f.dens=w.dens,
                        init.tree=c("seqTrack","star","random"),
-                       init.mu=NULL,
+                       init.mu=1e-4,
                        move.ances=TRUE, move.Tinf=TRUE, move.mut=TRUE,
-                       n.iter=1e5, sample.every=500, tune.every=500){
+                       n.iter=10){
 
     ## CHECKS / PROCESS DATA ##
 
@@ -277,10 +279,10 @@ outbreaker <- function(dates, dna=NULL,
 
     ## DENSITIES ##
     ## checks
-    if(any(w.dens)<0) {
+    if(any(w.dens<0)) {
         stop("w.dens has negative entries (these should be probabilities!)")
     }
-    if(any(f.dens)<0) {
+    if(any(f.dens<0)) {
         stop("f.dens has negative entries (these should be probabilities!)")
     }
 
@@ -320,7 +322,7 @@ outbreaker <- function(dates, dna=NULL,
     }
 
     ## MUTATION RATE 'MU' ##
-    if(!is.null(init.mu) && init.mu1<0) stop("init.mu1 < 0")
+    if(!is.null(init.mu) && init.mu<0) stop("init.mu < 0")
 
 
     ## complete w.dens ##
@@ -346,7 +348,7 @@ outbreaker <- function(dates, dna=NULL,
 
     if(is.character(init.tree)){
         ## check init
-        if(init.tree=="seqTrack" && !all(1:n.ind %in% idx.dna)) {
+        if(init.tree=="seqTrack" && is.null(dna)) {
             warning("Can't use seqTrack initialization with missing DNA sequences - using a star-like tree")
             init.tree <- "star"
         }
@@ -379,145 +381,21 @@ outbreaker <- function(dates, dna=NULL,
 
     ## MCMC ##
     ## create output templates ##
-    out.post <- out.prior <- out.ll <- double(n.iter)
+    out.post <- out.prior <- out.like <- out.mu <- double(n.iter)
     mu <- init.mu
 
 
-    ## initialize algorithm ##
-    out.ll[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=mu, gen.length=L)
+    ## initialize algorithm and outputs ##
+    out.like[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=mu, gen.length=L)
+    out.post[1] <- out.like[1] + out.prior[1]
 
-    out <- NULL
+    out.mu[1] <- mu
+
+    ## shape results ##
+    out <- data.frame(post=out.post, like=out.like, prior=out.prior)
+    out <- coda::mcmc(out)
+
+    ## return ##
     return(out)
 } # end outbreaker
-
-
-
-
-
-
-
-## #' @rdname outbreaker
-## #' @export
-## outbreaker.parallel <- function(n.runs, parallel=TRUE, n.cores=NULL,
-##                                 dna=NULL, dates, idx.dna=NULL, mut.model=1, spa.model=0,
-##                                 w.dens, f.dens=w.dens,
-##                                 dist.mat=NULL,
-##                                 init.tree=c("seqTrack","random","star"),
-##                                 init.kappa=NULL,
-##                                 init.mu1=NULL, init.mu2=init.mu1, init.spa1=NULL,
-##                                 n.iter=1e5, sample.every=500, tune.every=500,
-##                                 burnin=2e4, import.method=c("genetic","full","none"),
-##                                 find.import.n=50,
-##                                 pi.prior1=10, pi.prior2=1, spa1.prior=1,
-##                                 move.mut=TRUE, move.ances=TRUE, move.kappa=TRUE,
-##                                 move.Tinf=TRUE, move.pi=TRUE, move.spa=TRUE,
-##                                 outlier.threshold = 5, max.kappa=10,
-##                                 quiet=TRUE, res.file.name="chains.txt", tune.file.name="tuning.txt", seed=NULL){
-
-##     ## SOME CHECKS ##
-##     if(parallel && is.null(n.cores)){
-##         n.cores <- detectCores()
-##         n.cores <- min(n.cores, 6)
-##     }
-
-
-##     ## GET FILE NAMES ##
-##     res.file.names <- paste("run", 1:n.runs, "-", res.file.name, sep="")
-##     tune.file.names <- paste("run", 1:n.runs, "-", tune.file.name, sep="")
-
-
-##     ## HANDLE SEED ##
-##     if(is.null(seed)){
-##         seed <- as.integer(runif(n.runs,min=0,max=2e9))
-##     } else {
-##         seed <- rep(seed, length=n.runs)
-##     }
-
-
-##     ## COMPUTATIONS ##
-##     if(parallel){
-##         ## create cluster ##
-##         clust <- makeCluster(n.cores)
-
-##         ## load outbreaker for each child ##
-##         clusterEvalQ(clust, library(outbreaker))
-
-##         ## transfer data onto each child ##
-##         listArgs <- c("dna", "dates", "idx.dna", "mut.model", "spa.model", "w.dens", "f.dens", "dist.mat", "init.tree", "init.kappa", "n.iter",
-##                       "sample.every", "tune.every", "burnin", "import.method", "find.import.n", "pi.prior1", "pi.prior2", "init.mu1", "init.mu2",
-##                       "init.spa1", "move.mut", "spa1.prior", "move.mut", "move.ances", "move.kappa", "move.Tinf", "move.pi", "move.spa",
-##                       "outlier.threshold", "max.kappa", "res.file.names", "tune.file.names", "seed")
-
-##         clusterExport(clust, listArgs, envir=environment())
-
-##         ## set calls to outbreaker on each child ##
-##         res <- parLapply(clust, 1:n.runs, function(i)  outbreaker(dna=dna, dates=dates, idx.dna=idx.dna,
-##                                                                   mut.model=mut.model, spa.model=spa.model,
-##                                                                   w.dens=w.dens,
-##                                                                   f.dens=f.dens,
-##                                                                   dist.mat=dist.mat, ## locations=locations,
-##                                                                   init.tree=init.tree, init.kappa=init.kappa,
-##                                                                   n.iter=n.iter, sample.every=sample.every,
-##                                                                   tune.every=tune.every, burnin=burnin,
-##                                                                   import.method=import.method,
-##                                                                   find.import.n=find.import.n,
-##                                                                   pi.prior1=pi.prior1, pi.prior2=pi.prior2,
-##                                                                   spa1.prior=spa1.prior,
-##                                                                   init.mu1=init.mu1, init.mu2=init.mu2, init.spa1=init.spa1,
-##                                                                   move.mut=move.mut, move.ances=move.ances, move.kappa=move.kappa,
-##                                                                   move.Tinf=move.Tinf, move.pi=move.pi, move.spa=move.spa,
-##                                                                   outlier.threshold = outlier.threshold, max.kappa=max.kappa,
-##                                                                   quiet=TRUE, res.file.name=res.file.names[i],
-##                                                                   tune.file.name=tune.file.names[i], seed=seed[i]))
-
-##         ## close parallel processes ##
-##         stopCluster(clust)
-
-##         ## Version with mclapply - doesn't work on windows ##
-##         ## res <- mclapply(1:n.runs, function(i)  outbreaker(dna=dna, dates=dates, idx.dna=idx.dna, w.dens=w.dens, w.trunc=w.trunc,
-##         ##                                                     init.tree=init.tree, init.kappa=init.kappa,
-##         ##                                                     n.iter=n.iter, sample.every=sample.every,
-##         ##                                                     tune.every=tune.every, burnin=burnin,
-##         ##                                                     find.import=find.import, find.import.n=find.import.n,
-##         ##                                                     pi.prior1=pi.prior1, pi.prior2=pi.prior2,
-##         ##                                                     init.mu1=init.mu1, init.mu2=init.mu2,
-##         ##                                                     move.mut=move.mut, move.ances=move.ances, move.kappa=move.kappa,
-##         ##                                                     move.Tinf=move.Tinf, move.pi=move.pi,
-##         ##                                                     quiet=TRUE, res.file.name=res.file.names[i],
-##         ##                                                     tune.file.name=tune.file.names[i], seed=seed[i]),
-##         ##                   mc.cores=n.cores, mc.silent=FALSE, mc.cleanup=TRUE, mc.preschedule=TRUE, mc.set.seed=TRUE)
-##     } else {
-##         res <- lapply(1:n.runs, function(i)  outbreaker(dna=dna, dates=dates, idx.dna=idx.dna,
-##                                                         mut.model=mut.model, spa.model=spa.model,
-##                                                         w.dens=w.dens,
-##                                                         f.dens=f.dens,
-##                                                         dist.mat=dist.mat,
-##                                                         init.tree=init.tree, init.kappa=init.kappa,
-##                                                         n.iter=n.iter, sample.every=sample.every,
-##                                                         tune.every=tune.every, burnin=burnin,
-##                                                         import.method=import.method,
-##                                                         find.import.n=find.import.n,
-##                                                         pi.prior1=pi.prior1, pi.prior2=pi.prior2,
-##                                                         spa1.prior=spa1.prior,
-##                                                         init.mu1=init.mu1, init.mu2=init.mu2, init.spa1=init.spa1,
-##                                                         move.mut=move.mut, move.ances=move.ances, move.kappa=move.kappa,
-##                                                         move.Tinf=move.Tinf, move.pi=move.pi, move.spa=move.spa,
-##                                                         outlier.threshold = outlier.threshold, max.kappa=max.kappa,
-##                                                         quiet=TRUE, res.file.name=res.file.names[i],
-##                                                         tune.file.name=tune.file.names[i], seed=seed[i]))
-##     }
-
-
-##     ## MERGE RESULTS ##
-##     res.old <- res
-##     res <- res[[1]]
-##     res$tune.end <- max(sapply(res.old, function(e) e$tune.end))
-##     res$chains <- Reduce(rbind, lapply(res.old, function(e) e$chains))
-##     res$chains$run <- factor(rep(1:n.runs, each=nrow(res.old[[1]]$chains)))
-##     res$n.runs <- n.runs
-##     res$call <- match.call()
-
-##     ## RETURN RESULTS ##
-##     return(res)
-## } # end outbreaker.parallel
 

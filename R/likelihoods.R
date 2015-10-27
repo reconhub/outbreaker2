@@ -41,7 +41,19 @@ ll.timing.sampling <- function(times, log.f, sampling.times){
 
     ## return
     return(sum(log.f[T], na.rm=TRUE))
-} # end ll.timing.infections
+} # end ll.timing.sampling
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
+ll.timing <- function(times, log.w, log.f, ances, sampling.times){
+    return(ll.timing.infections(times=times, log.w=log.w, ances=ances) +
+           ll.timing.sampling(times=times, log.f=log.f, sampling.times=sampling.times))
+} # end ll.timing
 
 
 

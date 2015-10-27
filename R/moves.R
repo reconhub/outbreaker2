@@ -29,17 +29,25 @@ move.mu <- function(D, gen.length, ances, mu, dev, lunif){ # assumes symmetric p
     ## accept/reject
     if(logratio >= lunif) return(new.mu)
     return(mu)
-} # end post.genetic
+} # end move.mu
 
 
 
+#' @rdname moves
+#' @export
+#'
+move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # assumes symmetric proposal
+    ## propose new t.inf
+    new.t.inf <- t.inf + sample(-1:1, size=length(t.inf), replace=TRUE, prob=c(.1,8,.1))
+
+    ## compute log ratio
+    logratio <- ll.timing(times=new.t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) -
+        ll.timing(times=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times)
+
+    ## accept/reject
+    if(logratio >= lunif) return(new.t.inf)
+    return(t.inf)
+} # end move.mu
 
 
-## #' @rdname posteriors
-## #' @export
-## #'
-## move.all <- function(times, D, gen.length, log.w, ances, mu){
-##     return(ll.timing.infections(times=times, ances=ances, log.w=log.w) +
-##            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length) +
-##            prior.mu(mu))
-## }
+

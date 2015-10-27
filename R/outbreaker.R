@@ -244,25 +244,31 @@ outbreaker <- function(dates, dna=NULL,
     ## create output templates ##
     out.post <- out.prior <- out.like <- out.mu <- double(n.iter)
     out.ances <- as.list(integer(n.iter))
+    out.t.inf <- as.list(integer(n.iter))
 
     ## initialize algorithm and outputs ##
     out.like[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=init.mu, gen.length=L)
     out.prior[1] <- prior.all(init.mu)
     out.post[1] <- out.like[1] + out.prior[1]
     out.mu[1] <- init.mu
+    out.ances[[1]] <- ances
+    out.t.inf[[1]] <- dates - which.max(f.dens) + 1
 
     ## initialize pre-drawn random arrays ##
     RAND.MU <- rnorm(n.iter, mean=0, sd=sd.mu)
     RAND.ACC.MU <- log(runif(n.iter))
+    RAND.ACC.T.INF <- log(runif(n.iter))
 
     ## run MCMC ##
     for(i in 2:n.iter){
         ## move ancestries ##
 
         ## move infection dates ##
+        out.t.inf[[i]] <- move.t.inf(out.t.inf[[i-1]], log.w=log.w.dens, log.f=log.f.dens, out.ances[[i]],
+                                     sampling.times=dates, lunif=RAND.ACC.T.INF[i])
 
         ## move mu ##
-        out.mu[i] <- move.mu(D=D, gen.length=L, ances=ances[i], mu=out.mu[i-1], dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
+        out.mu[i] <- move.mu(D=D, gen.length=L, ances=ances[[i]], mu=out.mu[i-1], dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
 
     } # end of the chain
 

@@ -1,5 +1,7 @@
 context("Test internal functions")
 
+
+## test ll.timing.infections ##
 test_that("ll.timing.infections gives expected results", {
     ## skip on CRAN
     skip_on_cran()
@@ -17,7 +19,28 @@ test_that("ll.timing.infections gives expected results", {
 
 
 
-test_that("ll.genetics gives expected results", {
+
+## test ll.timing.sampling ##
+test_that("ll.timing.sampling gives expected results", {
+    ## skip on CRAN
+    skip_on_cran()
+
+    ## generate data
+    times <- 0:4
+    samp.times <- times + c(1, 1, 2, 3, 4)
+    f <- c(0, .1, .2, .5, .2, .1)
+
+    ## tests
+    out <- ll.timing.sampling(times=times, sampling.times=samp.times, log.f=log(f))
+    expect_is(out, "numeric")
+    expect_equal(out, -8.51719319142)
+})
+
+
+
+
+## test ll.genetic ##
+test_that("ll.genetic gives expected results", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -37,6 +60,7 @@ test_that("ll.genetics gives expected results", {
 
 
 
+## test ll.all ##
 test_that("ll.all gives expected results", {
     ## skip on CRAN
     skip_on_cran()

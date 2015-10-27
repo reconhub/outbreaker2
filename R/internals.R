@@ -8,7 +8,7 @@
 #'
 #' @param times a vector of integers indicating dates of infections of the cases
 #' @param ances a vector of indices of ancestors
-#' @param log.w a vector of log probabilities of time intervals, starting at p(T=0)
+#' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #'
 #' @export
 ll.timing.infections <- function(times, ances, log.w){
@@ -25,6 +25,28 @@ ll.timing.infections <- function(times, ances, log.w){
 
 
 
+
+#' @rdname internals
+#' @export
+#'
+#' @param sampling.time a vector of integers indicating dates of sampling/observation/reporting of the cases
+#' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
+#'
+ll.timing.sampling <- function(times, sampling.times, log.f){
+    ## find indices in w (delay + 1 day)
+    T <- (sampling.times-times)+1
+
+    ## avoid over-shooting
+    T[T>length(log.f)] <- 0
+
+    ## return
+    return(sum(log.f[T], na.rm=TRUE))
+} # end ll.timing.infections
+
+
+
+
+
 #' @rdname internals
 #' @export
 #'
@@ -35,6 +57,7 @@ ll.genetic <- function(D, ances, mu, gen.length){
     nmut <- diag(D[,ances])
     return(sum(log(mu)*nmut + log(1-mu)*(gen.length-nmut), na.rm=TRUE))
 } # end ll.genetic
+
 
 
 

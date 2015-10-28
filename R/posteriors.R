@@ -29,6 +29,5 @@ post.all <- function(sampling.times, D, gen.length, log.w, log.f, t.inf, ances, 
     return(ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D,
                   gen.length=gen.length, log.w=log.w, log.f=log.f,
                   ances=ances, mu=mu) +
-           ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length) +
            prior.all(mu=mu))
 }

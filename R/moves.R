@@ -46,8 +46,30 @@ move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # ass
 
     ## accept/reject
     if(logratio >= lunif) return(new.t.inf)
+
     return(t.inf)
-} # end move.mu
+} # end move.t.inf
+
+
+
+
+
+## function to propose new random trees
+## which are time consistent
+## (not exported, not documented)
+## this one needs to be optimized
+rances <- function(t.inf){
+    ## find possible ancestors
+    canBeAnces <- outer(dates,dates,FUN="<") # strict < is needed as we impose w(0)=0
+    diag(canBeAnces) <- FALSE
+
+    ## pick possible ancestors at random
+    ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
+
+    ## return
+    return(ances)
+} # end rances
+
 
 
 
@@ -56,5 +78,13 @@ move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # ass
 #' @export
 #'
 move.ances <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu, lunif){
+    ## propose new ances
 
-}
+    ## compute log ratio
+
+
+    ## accept/reject
+    if(logratio >= lunif) return(new.ances)
+
+    return(ances)
+} # end move.ances

@@ -231,8 +231,7 @@ outbreaker <- function(dates, dna=NULL,
 
         ## random init
         if(init.tree=="random"){
-            ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
-            ances <- as.integer(ances)
+            ances <- rances(dates)
         }
     }
 

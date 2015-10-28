@@ -297,7 +297,7 @@ outbreaker <- function(dates, dna=NULL,
 
             ## parameters and augmented data
             out.mu[OUT.COUNTER] <- current.mu
-            out.alpha[[OUT.COUNTER]] <- current.alpha
+            out.ances[[OUT.COUNTER]] <- current.ances
             out.t.inf[[OUT.COUNTER]] <- current.t.inf
         }
 

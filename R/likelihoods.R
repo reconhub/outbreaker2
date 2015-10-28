@@ -6,14 +6,14 @@
 #'
 #' @rdname likelihoods
 #'
-#' @param times a vector of integers indicating dates of infections of the cases
+#' @param t.inf a vector of integers indicating dates of infections of the cases
 #' @param ances a vector of indices of ancestors
 #' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #'
 #' @export
-ll.timing.infections <- function(times, log.w, ances){
+ll.timing.infections <- function(t.inf, log.w, ances){
     ## find indices in w (delay + 1 day)
-    T <- (times-times[ances])+1
+    T <- (t.inf-t.inf[ances])+1
 
     ## avoid over-shooting
     T[T>length(log.w)] <- 0
@@ -32,9 +32,9 @@ ll.timing.infections <- function(times, log.w, ances){
 #' @param sampling.time a vector of integers indicating dates of sampling/observation/reporting of the cases
 #' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
 #'
-ll.timing.sampling <- function(times, log.f, sampling.times){
+ll.timing.sampling <- function(t.inf, log.f, sampling.times){
     ## find indices in w (delay + 1 day)
-    T <- (sampling.times-times)+1
+    T <- (sampling.times-t.inf)+1
 
     ## avoid over-shooting
     T[T>length(log.f)] <- 0
@@ -50,9 +50,9 @@ ll.timing.sampling <- function(times, log.f, sampling.times){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing <- function(times, log.w, log.f, ances, sampling.times){
-    return(ll.timing.infections(times=times, log.w=log.w, ances=ances) +
-           ll.timing.sampling(times=times, log.f=log.f, sampling.times=sampling.times))
+ll.timing <- function(t.inf, log.w, log.f, ances, sampling.times){
+    return(ll.timing.infections(t.inf=t.inf, log.w=log.w, ances=ances) +
+           ll.timing.sampling(t.inf=t.inf, log.f=log.f, sampling.times=sampling.times))
 } # end ll.timing
 
 
@@ -77,7 +77,7 @@ ll.genetic <- function(D, gen.length, ances, mu){
 #' @rdname likelihoods
 #' @export
 #'
-ll.all <- function(times, sampling.times, D, gen.length, log.w, log.f, ances, mu){
-    return(ll.timing(times=times, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) +
+ll.all <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu){
+    return(ll.timing(t.inf=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) +
            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length))
 }

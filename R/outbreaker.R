@@ -270,7 +270,7 @@ outbreaker <- function(dates, dna=NULL,
         out.ances[[i]] <- move.ances(sampling.times=dates, D=D,
                                      gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
                                      t.inf=out.t.inf[[i]], ances=out.ances[[i-1]], mu=out.mu[i-1],
-                                     lunif=RAND.ACC.ANCES)
+                                     lunif=RAND.ACC.ANCES[i])
 
         ## move mu ##
         out.mu[i] <- move.mu(D=D, gen.length=L, ances=out.ances[[i]], mu=out.mu[i-1],

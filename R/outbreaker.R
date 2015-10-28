@@ -243,12 +243,15 @@ outbreaker <- function(dates, dna=NULL,
     out.t.inf <- as.list(integer(n.iter))
 
     ## initialize algorithm and outputs ##
-    out.like[1] <- ll.all(times=dates, ances=ances, log.w=log.w.dens, D=D, mu=init.mu, gen.length=L)
-    out.prior[1] <- prior.all(init.mu)
-    out.post[1] <- out.like[1] + out.prior[1]
     out.mu[1] <- init.mu
     out.ances[[1]] <- ances
     out.t.inf[[1]] <- dates - which.max(f.dens) + 1
+    out.like[1] <- ll.all(t.inf=out.t.inf[[1]], ances=out.ances[[1]],
+                          log.w=log.w.dens, log.f=log.f.dens,
+                          sampling.times=dates,
+                          D=D, mu=init.mu, gen.length=L)
+    out.prior[1] <- prior.all(init.mu)
+    out.post[1] <- out.like[1] + out.prior[1]
 
     ## initialize pre-drawn random arrays ##
     RAND.MU <- rnorm(n.iter, mean=0, sd=sd.mu)

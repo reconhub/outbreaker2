@@ -60,7 +60,7 @@ move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # ass
 ## this one needs to be optimized
 rances <- function(t.inf){
     ## find possible ancestors
-    canBeAnces <- outer(dates,dates,FUN="<") # strict < is needed as we impose w(0)=0
+    canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
     diag(canBeAnces) <- FALSE
 
     ## pick possible ancestors at random

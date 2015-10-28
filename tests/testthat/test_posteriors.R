@@ -16,9 +16,9 @@ test_that("post = like + prior", {
     gen.length <- 2e4
 
     ## tests
-    like <- ll.all(times=times, ances=ances, log.w=log(w), D=D, mu=mu, gen.length=gen.length)
+    like <- ll.all(t.inf=times, ances=ances, log.w=log(w), D=D, mu=mu, gen.length=gen.length)
     prior <- prior.all(mu=mu)
-    post <- post.all(times=times, D=D, gen.length=gen.length, log.w=log(w), ances=ances, mu=mu)
+    post <- post.all(t.inf=times, D=D, gen.length=gen.length, log.w=log(w), log.f=log(w), ances=ances, mu=mu, sampling.times=times+2)
     post.check <- like+prior
     expect_equal(post, post.check)
 })

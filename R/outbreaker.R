@@ -238,7 +238,7 @@ outbreaker <- function(dates, dna=NULL,
 
     ## MCMC ##
     ## create output templates ##
-    out.size <- round(n.iter/sample.every)
+    out.size <- round(n.iter/sample.every) + 1 # +1 because initial state is always there
     out.post <- out.prior <- out.like <- out.mu <- double(out.size)
     out.ances <- as.list(integer(out.size))
     out.t.inf <- as.list(integer(out.size))

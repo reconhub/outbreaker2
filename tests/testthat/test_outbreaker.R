@@ -10,13 +10,13 @@ test_that("test: outbreaker's output have expected format", {
     skip_on_cran()
 
     ## run outbreaker
-    out <- outbreaker(dna=dat$dna, dates=dat$onset, w.dens=w, n.iter=10)
+    out <- outbreaker(dna=dat$dna, dates=dat$onset, w.dens=w, n.iter=100, sample.every=10)
     out.df <- as.data.frame(out)
 
     ## check output
     expect_is(out, "mcmc")
     expect_is(out.df, "data.frame")
-    expect_equal(nrow(out), 10)
+    expect_equal(nrow(out), 11)
     expect_true(!any(is.na(out.df$post)))
     expect_true(all(out.df$post> -1e30))
 })

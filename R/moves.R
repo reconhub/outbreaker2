@@ -79,9 +79,13 @@ rances <- function(t.inf){
 #'
 move.ances <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu, lunif){
     ## propose new ances
+    new.ances <- rances(t.inf)
 
     ## compute log ratio
-
+    logratio <- ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D, gen.length=gen.length,
+                       log.w=log.w, log.f=log.f, ances=new.ances, mu=mu) -
+                           ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D, gen.length=gen.length,
+                                  log.w=log.w, log.f=log.f, ances=ances, mu=mu)
 
     ## accept/reject
     if(logratio >= lunif) return(new.ances)

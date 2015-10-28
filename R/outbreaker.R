@@ -254,11 +254,14 @@ outbreaker <- function(dates, dna=NULL,
     RAND.MU <- rnorm(n.iter, mean=0, sd=sd.mu)
     RAND.ACC.MU <- log(runif(n.iter))
     RAND.ACC.T.INF <- log(runif(n.iter))
+    RAND.ACC.ANCES <- log(runif(n.iter))
 
     ## run MCMC ##
     for(i in 2:n.iter){
         ## move ancestries ##
-        out.ances[[i]] <- out.ances[[i-1]]
+        out.ances[[i]] <- move.ances(t.inf=t.inf, sampling.times=sampling.times, D=D,
+                                     gen.length=gen.length, log.w=log.w, log.f=log.f,
+                                     ances=out.ances[[i-1]], mu=mu, lunif=RAND.ACC.ANCES)
 
         ## move infection dates ##
         out.t.inf[[i]] <- move.t.inf(t.inf=out.t.inf[[i-1]], log.w=log.w.dens, log.f=log.f.dens,

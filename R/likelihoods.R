@@ -16,7 +16,7 @@ ll.timing.infections <- function(t.inf, log.w, ances){
     T <- (t.inf-t.inf[ances])+1
 
     ## avoid over-shooting
-    T[T>length(log.w)] <- 0
+    if(any(T<1 | T>length(log.w))) return(-Inf)
 
     ## return
     return(sum(log.w[T], na.rm=TRUE))
@@ -37,7 +37,7 @@ ll.timing.sampling <- function(t.inf, log.f, sampling.times){
     T <- (sampling.times-t.inf)+1
 
     ## avoid over-shooting
-    T[T>length(log.f)] <- 0
+    if(any(T<1 | T>length(log.f))) return(-Inf)
 
     ## return
     return(sum(log.f[T], na.rm=TRUE))

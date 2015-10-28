@@ -54,10 +54,9 @@ move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # ass
 
 
 
-## function to propose new random trees
-## which are time consistent
-## (not exported, not documented)
-## this one needs to be optimized
+#' @rdname moves
+#' @export
+#'
 rances <- function(t.inf){
     ## find possible ancestors
     canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0

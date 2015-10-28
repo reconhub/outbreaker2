@@ -25,7 +25,7 @@ post.genetic <- function(D, gen.length, ances, mu){
 #' @rdname posteriors
 #' @export
 #'
-post.all <- function(t.inf, D, gen.length, log.w, ances, mu){
+post.all <- function(sampling.times, D, gen.length, log.w, log.f, t.inf, ances, mu){
     return(ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D,
                   gen.length=gen.length, log.w=log.w, log.f=log.f,
                   ances=ances, mu=mu) +

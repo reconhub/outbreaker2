@@ -3,20 +3,23 @@
 \name{ll.timing.infections}
 \alias{ll.all}
 \alias{ll.genetic}
+\alias{ll.timing}
 \alias{ll.timing.infections}
 \alias{ll.timing.sampling}
 \title{Internal functions for outbreaker2}
 \usage{
-ll.timing.infections(times, log.w, ances)
+ll.timing.infections(t.inf, log.w, ances)
 
-ll.timing.sampling(times, log.f, sampling.times)
+ll.timing.sampling(t.inf, log.f, sampling.times)
+
+ll.timing(t.inf, log.w, log.f, ances, sampling.times)
 
 ll.genetic(D, gen.length, ances, mu)
 
-ll.all(times, D, gen.length, log.w, ances, mu)
+ll.all(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu)
 }
 \arguments{
-\item{times}{a vector of integers indicating dates of infections of the cases}
+\item{t.inf}{a vector of integers indicating dates of infections of the cases}
 
 \item{log.w}{a vector of log probabilities of time intervals (between infections), starting at p(T=0)}
 

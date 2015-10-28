@@ -6,8 +6,8 @@
 \usage{
 outbreaker(dates, dna = NULL, w.dens, f.dens = w.dens,
   init.tree = c("seqTrack", "star", "random"), init.mu = 1e-04,
-  move.ances = TRUE, move.Tinf = TRUE, move.mut = TRUE,
-  prior.mu = function(x) dexp(x, 1000, log = TRUE), n.iter = 10)
+  move.ances = TRUE, move.Tinf = TRUE, move.mut = TRUE, n.iter = 10,
+  sd.mu = 1e-04)
 }
 \arguments{
 \item{dates}{a vector indicating the collection dates, provided either as

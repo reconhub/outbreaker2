@@ -259,13 +259,14 @@ outbreaker <- function(dates, dna=NULL,
     ## run MCMC ##
     for(i in 2:n.iter){
         ## move ancestries ##
+        out.ances[[i]] <- out.ances[[i-1]]
 
         ## move infection dates ##
         out.t.inf[[i]] <- move.t.inf(out.t.inf[[i-1]], log.w=log.w.dens, log.f=log.f.dens, out.ances[[i]],
                                      sampling.times=dates, lunif=RAND.ACC.T.INF[i])
 
         ## move mu ##
-        out.mu[i] <- move.mu(D=D, gen.length=L, ances=ances[[i]], mu=out.mu[i-1], dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
+        out.mu[i] <- move.mu(D=D, gen.length=L, ances=out.ances[[i]], mu=out.mu[i-1], dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
 
     } # end of the chain
 

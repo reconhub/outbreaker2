@@ -129,7 +129,7 @@ outbreaker <- function(dates, dna=NULL,
                        init.tree=c("seqTrack","star","random"),
                        init.mu=1e-4,
                        move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
-                       n.iter=10, sd.mu=0.0001){
+                       n.iter=100, sample.every=10, sd.mu=0.0001){
 
     ## CHECKS / PROCESS DATA ##
 
@@ -238,20 +238,22 @@ outbreaker <- function(dates, dna=NULL,
 
     ## MCMC ##
     ## create output templates ##
-    out.post <- out.prior <- out.like <- out.mu <- double(n.iter)
-    out.ances <- as.list(integer(n.iter))
-    out.t.inf <- as.list(integer(n.iter))
+    out.size <- round(n.iter/sample.every)
+    out.post <- out.prior <- out.like <- out.mu <- double(out.size)
+    out.ances <- as.list(integer(out.size))
+    out.t.inf <- as.list(integer(out.size))
 
     ## initialize algorithm and outputs ##
-    out.mu[1] <- init.mu
-    out.ances[[1]] <- ances
-    out.t.inf[[1]] <- dates - which.max(f.dens) + 1
+    current.mu <- out.mu[1] <- init.mu
+    current.ances <- out.ances[[1]] <- ances
+    current.t.inf <- out.t.inf[[1]] <- dates - which.max(f.dens) + 1
     out.like[1] <- ll.all(t.inf=out.t.inf[[1]], ances=out.ances[[1]],
                           log.w=log.w.dens, log.f=log.f.dens,
                           sampling.times=dates,
                           D=D, mu=init.mu, gen.length=L)
     out.prior[1] <- prior.all(init.mu)
     out.post[1] <- out.like[1] + out.prior[1]
+    OUT.COUNTER <- 1
 
     ## initialize pre-drawn random arrays ##
     RAND.MU <- rnorm(n.iter, mean=0, sd=sd.mu)
@@ -263,32 +265,41 @@ outbreaker <- function(dates, dna=NULL,
     for(i in 2:n.iter){
         ## move infection dates ##
         if(move.t.inf){
-            out.t.inf[[i]] <- move.t.inf(log.w=log.w.dens, log.f=log.f.dens,
-                                         t.inf=out.t.inf[[i-1]], ances=out.ances[[i-1]], sampling.times=dates,
+            current.t.inf <- move.t.inf(log.w=log.w.dens, log.f=log.f.dens,
+                                         t.inf=out.t.inf[[i-1]], ances=current.ances, sampling.times=dates,
                                          lunif=RAND.ACC.T.INF[i])
         }
 
         ## move ancestries ##
         if(move.ances){
-            out.ances[[i]] <- move.ances(sampling.times=dates, D=D,
+            current.ances <- move.ances(sampling.times=dates, D=D,
                                          gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
-                                         t.inf=out.t.inf[[i]], ances=out.ances[[i-1]], mu=out.mu[i-1],
+                                         t.inf=current.t.inf, ances=current.ances, mu=current.mu,
                                          lunif=RAND.ACC.ANCES[i])
         }
 
         ## move mu ##
         if(move.mu){
-            out.mu[i] <- move.mu(D=D, gen.length=L, ances=out.ances[[i]], mu=out.mu[i-1],
+            current.mu <- move.mu(D=D, gen.length=L, ances=current.ances, mu=current.mu,
                                  dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
         }
 
-        ## store like, prior, post
-        out.like[i] <- ll.all(t.inf=out.t.inf[[i]], ances=out.ances[[i]],
-                          log.w=log.w.dens, log.f=log.f.dens,
-                          sampling.times=dates,
-                          D=D, mu=init.mu, gen.length=L)
-        out.prior[i] <- prior.all(init.mu)
-        out.post[i] <- out.like[i] + out.prior[i]
+        ## store outputs if needed
+        if((i %% sample.every) == 0){
+            OUT.COUNTER <- OUT.COUNTER + 1
+            ## store like, prior, post
+            out.like[OUT.COUNTER] <- ll.all(t.inf=current.t.inf, ances=current.ances,
+                                  log.w=log.w.dens, log.f=log.f.dens,
+                                  sampling.times=dates,
+                                  D=D, mu=init.mu, gen.length=L)
+            out.prior[OUT.COUNTER] <- prior.all(current.mu)
+            out.post[OUT.COUNTER] <- out.like[OUT.COUNTER] + out.prior[OUT.COUNTER]
+
+            ## parameters and augmented data
+            out.mu[OUT.COUNTER] <- current.mu
+            out.alpha[[OUT.COUNTER]] <- current.alpha
+            out.t.inf[[OUT.COUNTER]] <- current.t.inf
+    }
 
     } # end of the chain
 

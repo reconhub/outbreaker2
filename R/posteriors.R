@@ -10,7 +10,7 @@
 #' @param gen.length length of the genetic sequences
 #' @param ances a vector of indices of ancestors
 #' @param mu a mutation rate
-#' @param times a vector of integers indicating dates of infections of the cases
+#' @param t.inf a vector of integers indicating dates of infections of the cases
 #' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #'
 post.genetic <- function(D, gen.length, ances, mu){
@@ -25,8 +25,10 @@ post.genetic <- function(D, gen.length, ances, mu){
 #' @rdname posteriors
 #' @export
 #'
-post.all <- function(times, D, gen.length, log.w, ances, mu){
-    return(ll.timing.infections(times=times, ances=ances, log.w=log.w) +
+post.all <- function(t.inf, D, gen.length, log.w, ances, mu){
+    return(ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D,
+                  gen.length=gen.length, log.w=log.w, log.f=log.f,
+                  ances=ances, mu=mu) +
            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length) +
            prior.all(mu=mu))
 }

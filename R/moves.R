@@ -10,7 +10,7 @@
 #' @param gen.length length of the genetic sequences
 #' @param ances a vector of indices of ancestors
 #' @param mu a mutation rate
-#' @param times a vector of integers indicating dates of infections of the cases
+#' @param t.inf a vector of integers indicating dates of infections of the cases
 #' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #' @param dev a deviation from the previous mu
 #' @param lunif a logged random variate from Unif(0,1)
@@ -41,8 +41,8 @@ move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # ass
     new.t.inf <- t.inf + sample(-1:1, size=length(t.inf), replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
-    logratio <- ll.timing(times=new.t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) -
-        ll.timing(times=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times)
+    logratio <- ll.timing(t.inf=new.t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) -
+        ll.timing(t.inf=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times)
 
     ## accept/reject
     if(logratio >= lunif) return(new.t.inf)
@@ -51,3 +51,10 @@ move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # ass
 
 
 
+
+#' @rdname moves
+#' @export
+#'
+move.ances <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu, lunif){
+
+}

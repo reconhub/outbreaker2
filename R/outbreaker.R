@@ -227,14 +227,11 @@ outbreaker <- function(dates, dna=NULL,
         if(init.tree=="star"){
             ances <- rep(which.min(dates), length(dates))
             ances[dates==min(dates)] <- 0
-            ances <- as.integer(ances-1) # put on C scale
         }
 
         ## random init
         if(init.tree=="random"){
             ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
-            ances <- ances-1
-            ances[is.na(ances)] <- -1L
             ances <- as.integer(ances)
         }
     }

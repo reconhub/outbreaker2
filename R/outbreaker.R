@@ -44,7 +44,7 @@
 #' @param move.mut logical indicating whether the mutation rates
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.
 #'
-#' @param move.ances,move.kappa,move.Tinf vectors of logicals of length 'n'
+#' @param move.ances,move.kappa,move.T.inf vectors of logicals of length 'n'
 #' indicating for which cases different components should be moved during the
 #' MCMC.
 #'
@@ -128,7 +128,7 @@ outbreaker <- function(dates, dna=NULL,
                        w.dens, f.dens=w.dens,
                        init.tree=c("seqTrack","star","random"),
                        init.mu=1e-4,
-                       move.ances=TRUE, move.Tinf=TRUE, move.mut=TRUE,
+                       move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                        n.iter=10, sd.mu=0.0001){
 
     ## CHECKS / PROCESS DATA ##
@@ -262,25 +262,43 @@ outbreaker <- function(dates, dna=NULL,
     ## run MCMC ##
     for(i in 2:n.iter){
         ## move infection dates ##
-        out.t.inf[[i]] <- move.t.inf(log.w=log.w.dens, log.f=log.f.dens,
-                                     t.inf=out.t.inf[[i-1]], ances=out.ances[[i-1]], sampling.times=dates,
-                                     lunif=RAND.ACC.T.INF[i])
+        if(move.t.inf){
+            out.t.inf[[i]] <- move.t.inf(log.w=log.w.dens, log.f=log.f.dens,
+                                         t.inf=out.t.inf[[i-1]], ances=out.ances[[i-1]], sampling.times=dates,
+                                         lunif=RAND.ACC.T.INF[i])
+        }
 
         ## move ancestries ##
-        out.ances[[i]] <- move.ances(sampling.times=dates, D=D,
-                                     gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
-                                     t.inf=out.t.inf[[i]], ances=out.ances[[i-1]], mu=out.mu[i-1],
-                                     lunif=RAND.ACC.ANCES[i])
+        if(move.ances){
+            out.ances[[i]] <- move.ances(sampling.times=dates, D=D,
+                                         gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
+                                         t.inf=out.t.inf[[i]], ances=out.ances[[i-1]], mu=out.mu[i-1],
+                                         lunif=RAND.ACC.ANCES[i])
+        }
 
         ## move mu ##
-        out.mu[i] <- move.mu(D=D, gen.length=L, ances=out.ances[[i]], mu=out.mu[i-1],
-                             dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
+        if(move.mu){
+            out.mu[i] <- move.mu(D=D, gen.length=L, ances=out.ances[[i]], mu=out.mu[i-1],
+                                 dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
+        }
+
+        ## store like, prior, post
+        out.like[i] <- ll.all(t.inf=out.t.inf[[i]], ances=out.ances[[i]],
+                          log.w=log.w.dens, log.f=log.f.dens,
+                          sampling.times=dates,
+                          D=D, mu=init.mu, gen.length=L)
+        out.prior[i] <- prior.all(init.mu)
+        out.post[i] <- out.like[i] + out.prior[i]
 
     } # end of the chain
 
 
     ## SHAPE RESULTS ##
-    out <- data.frame(post=out.post, like=out.like, prior=out.prior, mu=out.mu)
+    out.ances <- matrix(unlist(out.ances), ncol=N, byrow=TRUE)
+    colnames(out.ances) <- paste("alpha",1:N, sep=".")
+    out.t.inf <- matrix(unlist(out.t.inf), ncol=N, byrow=TRUE)
+    colnames(out.t.inf) <- paste("t.inf",1:N, sep=".")
+    out <- data.frame(post=out.post, like=out.like, prior=out.prior, mu=out.mu, out.ances, out.t.inf)
     out <- coda::mcmc(out)
 
     ## RETURN ##

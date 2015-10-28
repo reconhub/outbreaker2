@@ -266,7 +266,7 @@ outbreaker <- function(dates, dna=NULL,
         ## move infection dates ##
         if(move.t.inf){
             current.t.inf <- move.t.inf(sampling.times=dates, log.w=log.w.dens, log.f=log.f.dens,
-                                        t.inf=current.t.inf, ances=current.ances
+                                        t.inf=current.t.inf, ances=current.ances,
                                         lunif=RAND.ACC.T.INF[i])
         }
 

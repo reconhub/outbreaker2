@@ -265,23 +265,23 @@ outbreaker <- function(dates, dna=NULL,
     for(i in 2:n.iter){
         ## move infection dates ##
         if(move.t.inf){
-            current.t.inf <- move.t.inf(log.w=log.w.dens, log.f=log.f.dens,
-                                         t.inf=out.t.inf[[i-1]], ances=current.ances, sampling.times=dates,
-                                         lunif=RAND.ACC.T.INF[i])
+            current.t.inf <- move.t.inf(sampling.times=dates, log.w=log.w.dens, log.f=log.f.dens,
+                                        t.inf=current.t.inf, ances=current.ances
+                                        lunif=RAND.ACC.T.INF[i])
         }
 
         ## move ancestries ##
         if(move.ances){
             current.ances <- move.ances(sampling.times=dates, D=D,
-                                         gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
-                                         t.inf=current.t.inf, ances=current.ances, mu=current.mu,
-                                         lunif=RAND.ACC.ANCES[i])
+                                        gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
+                                        t.inf=current.t.inf, ances=current.ances, mu=current.mu,
+                                        lunif=RAND.ACC.ANCES[i])
         }
 
         ## move mu ##
         if(move.mu){
             current.mu <- move.mu(D=D, gen.length=L, ances=current.ances, mu=current.mu,
-                                 dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
+                                  dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
         }
 
         ## store outputs if needed
@@ -289,9 +289,9 @@ outbreaker <- function(dates, dna=NULL,
             OUT.COUNTER <- OUT.COUNTER + 1
             ## store like, prior, post
             out.like[OUT.COUNTER] <- ll.all(t.inf=current.t.inf, ances=current.ances,
-                                  log.w=log.w.dens, log.f=log.f.dens,
-                                  sampling.times=dates,
-                                  D=D, mu=init.mu, gen.length=L)
+                                            log.w=log.w.dens, log.f=log.f.dens,
+                                            sampling.times=dates,
+                                            D=D, mu=init.mu, gen.length=L)
             out.prior[OUT.COUNTER] <- prior.all(current.mu)
             out.post[OUT.COUNTER] <- out.like[OUT.COUNTER] + out.prior[OUT.COUNTER]
 
@@ -299,7 +299,7 @@ outbreaker <- function(dates, dna=NULL,
             out.mu[OUT.COUNTER] <- current.mu
             out.alpha[[OUT.COUNTER]] <- current.alpha
             out.t.inf[[OUT.COUNTER]] <- current.t.inf
-    }
+        }
 
     } # end of the chain
 

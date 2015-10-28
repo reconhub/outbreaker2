@@ -77,7 +77,7 @@ ll.genetic <- function(D, gen.length, ances, mu){
 #' @rdname likelihoods
 #' @export
 #'
-ll.all <- function(times, D, gen.length, log.w, ances, mu){
-    return(ll.timing.infections(times=times, ances=ances, log.w=log.w) +
+ll.all <- function(times, sampling.times, D, gen.length, log.w, log.f, ances, mu){
+    return(ll.timing(times=times, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) +
            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length))
 }

@@ -15,7 +15,7 @@
 #'
 post.genetic <- function(D, gen.length, ances, mu){
     return(ll.genetic(D=D, gen.length=gen.length, ances=ances, mu=mu) +
-           prior.mu(mu))
+           prior.mu(mu=mu))
 } # end post.genetic
 
 
@@ -28,5 +28,5 @@ post.genetic <- function(D, gen.length, ances, mu){
 post.all <- function(times, D, gen.length, log.w, ances, mu){
     return(ll.timing.infections(times=times, ances=ances, log.w=log.w) +
            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length) +
-           prior.mu(mu))
+           prior.all(mu=mu))
 }

@@ -49,6 +49,10 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
     dates <- as.integer(round(dates))
     N <- length(dates)
     MAX.RANGE <- diff(range(dates))
+    ## get temporal ordering constraint:
+    ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
+    CAN.BE.ANCES <- outer(dates,dates,FUN="<") # strict < is needed as we impose w(0)=0
+    diag(CAN.BE.ANCES) <- FALSE
 
 
     ## CHECK W.DENS ##
@@ -74,7 +78,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
         stop("f.dens has negative entries (these should be probabilities!)")
     }
     f.dens[1] <- 0
-        log.f.dens <- log(f.dens)
+    log.f.dens <- log(f.dens)
 
 
     ## CHECK DNA ##
@@ -90,7 +94,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 
     ## RETURN DATA ##
     return(list(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens,
-                N=N, L=L, D=D, MAX.RANGE=MAX.RANGE,
+                N=N, L=L, D=D, MAX.RANGE=MAX.RANGE, CAN.BE.ANCES=CAN.BE.ANCES,
                 log.w.dens=log.w.dens, log.f.dens=log.f.dens))
 
 } # end outbreaker.data
@@ -108,7 +112,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' Acceptables arguments are:
 #' \describe{
 #'
-#' \item{data}{a list of data items as returned by \code{outbreaker.data}}
+#' \item{data}{an opitonal list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.}
 #'
 #' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
@@ -142,7 +146,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' ## change defaults
 #' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
 #'
-outbreaker.config <- function(data, ...) {
+outbreaker.config <- function(data=NULL, ...) {
     config <- list(...)
 
     ## SET DEFAULTS ##
@@ -156,7 +160,9 @@ outbreaker.config <- function(data, ...) {
 
     ## CHECK CONFIG ##
     ## check init.tree
-    config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
+    if(is.character(config$init.tree)){
+        config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
+    }
 
     ## check init.mu
     if(!is.numeric(config$init.mu)) stop("init.mu is not a numeric value")
@@ -183,6 +189,45 @@ outbreaker.config <- function(data, ...) {
     ## check sd.mu
     if(!is.numeric(config$sd.mu)) stop("sd.mu is not a numeric value")
     if(config$sd.mu < 0) stop("sd.mu is negative")
+
+
+    ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
+    if(!is.null(data)){
+        ## check initial tree
+        if(is.character(config$init.tree)){
+            if(config$init.tree=="seqTrack" && is.null(data$dna)) {
+                warning("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
+                config$init.tree <- "star"
+            }
+
+            ## seqTrack init
+            if(config$init.tree=="seqTrack"){
+                D.temp <- data$D
+                D.temp[!data$CAN.BE.ANCES] <- 1e30
+                config$ances <- apply(D.temp,2,which.min)
+                config$ances[data$dates==min(data$dates)] <- NA
+                config$ances <- as.integer(config$ances)
+            } else if(config$init.tree=="star"){
+                config$ances <- rep(which.min(data$dates), length(data$dates))
+                config$ances[data$dates==min(data$dates)] <- 0
+            } else if(config$init.tree=="random"){
+                config$ances <- rconfig$ances(data$dates)
+            }
+        } else { ## if ancestries are provided
+            if(length(config$init.tree) != data$N) stop("inconvenient length for init.tree")
+            unknownAnces <- config$init.tree<1 | config$init.tree>data$N
+            if(any(unknownAnces)){
+                warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
+                config$init.tree[unknownAnces] <- NA
+            }
+        }
+
+        ## recycle move.ances
+        config$move.ances <- rep(config$move.ances, lenth=data$N)
+
+        ## recycle move.t.inf
+        config$move.t.inf <- rep(config$move.t.inf, lenth=data$N)
+    }
 
     ## RETURN CONFIG ##
     return(config)

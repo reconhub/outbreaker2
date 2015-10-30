@@ -25,8 +25,13 @@ test_that("test: settings are processed fine", {
     ## skip on CRAN
     skip_on_cran()
 
+    ## get data
+    x <- fakeOutbreak
+    dat <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
+
     ## check output
     expect_is(outbreaker.config(), "list")
+    expect_is(outbreaker.config(data=dat), "list")
     expect_error(outbreaker.config(unknownArg))
     expect_error(outbreaker.config(init.tree="wrongtreeinit"))
     expect_error(outbreaker.config(init.mu=-5))

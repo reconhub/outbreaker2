@@ -146,7 +146,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' ## change defaults
 #' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
 #'
-outbreaker.config <- function(data=NULL, ...) {
+outbreaker.config <- function(..., data=NULL) {
     config <- list(...)
 
     ## SET DEFAULTS ##

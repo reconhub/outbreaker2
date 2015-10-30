@@ -150,7 +150,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #'
 outbreaker.config <- function(..., data=NULL, config=NULL) {
     ## process ... only if no config is passed
-    if(is.null(config){
+    if(is.null(config)){
         config <- list(...)
     }
 

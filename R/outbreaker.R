@@ -94,13 +94,21 @@ outbreaker <- function(dates, dna=NULL,
                        config=outbreaker.config()){
 
     ## CHECKS / PROCESS DATA ##
-    data <- check.data(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens)
-    config <- outbreaker.config(config, data=data)
+    data <- outbreaker.data(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens)
+    config <- outbreaker.config(data=data, config=config)
 
+    ## ATTACH OBJECTS
+    current.env <- environment()
 
+    ## attach data items
+    for(i in 1:length(data)){
+        assign(names(data)[i], data[[i]], envir=env)
+    }
 
-
-
+    ## attach config items
+    for(i in 1:length(config)){
+        assign(names(config)[i], config[[i]], envir=env)
+    }
 
 
     ## MCMC ##

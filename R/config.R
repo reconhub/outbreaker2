@@ -216,7 +216,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
                 config$ances <- rep(which.min(data$dates), length(data$dates))
                 config$ances[data$dates==min(data$dates)] <- NA
             } else if(config$init.tree=="random"){
-                config$ances <- rconfig(data$dates)
+                config$ances <- rances(data$dates)
             }
         } else { ## if ancestries are provided
             if(length(config$init.tree) != data$N) stop("inconvenient length for init.tree")
@@ -243,7 +243,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
 
 
 
-## NON EXPORTED FUNCTION
+
+
+## NON EXPORTED FUNCTIONS ##
+
+## append arguments to defaults ##
 modify.defaults <- function(defaults, x) {
     extra <- setdiff(names(x), names(defaults))
     if (length(extra) > 0L) {
@@ -251,8 +255,3 @@ modify.defaults <- function(defaults, x) {
     }
     modifyList(defaults, x)
 } # end modify.defaults
-
-
-
-
-

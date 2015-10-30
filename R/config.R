@@ -1,7 +1,8 @@
-#' Set and check parameters of outbreaker
+#' Set and check parameter settings of outbreaker
 #'
 #' This function defines settings for outbreaker.
 #' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
+#'
 #' Acceptables arguments are:
 #' \describe{
 #'
@@ -22,8 +23,8 @@
 #' \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 #'
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
+#'}
 #'
-
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
 #' @export
@@ -92,3 +93,77 @@ modify.defaults <- function(defaults, x) {
     }
     modifyList(defaults, x)
 } # end modify.defaults
+
+
+
+
+
+
+
+#' Checks input data for outbreaker
+#'
+#' This function performs various checks on input data given to outbreaker.
+#'
+#' Acceptables arguments are:
+#' \describe{
+#'
+#' \item{}{}
+#'
+
+#'}
+#'
+#' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
+#'
+#' @export
+#'
+#' @examples
+#' ## see default settings
+#' outbreaker.config()
+#'
+#' ## change defaults
+#' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
+#'
+outbreaker.data <- function(dates, dna, w.dens, f.dens) {
+    ## CHECK DATES ##
+    if(inherits(dates, "Date")) dates <- dates-min(dates)
+    if(inherits(dates, "POSIXct")) dates <- difftime(dates, min(dates), units="days")
+    dates <- as.integer(round(dates))
+    N <- length(dates)
+    MAX.RANGE <- diff(range(dates))
+
+    ## CHECK DNA ##
+    if(!inherits(dna, "DNAbin")) stop("dna is not a DNAbin object.")
+    if(!is.matrix(dna)) dna <- as.matrix(dna)
+    L <- ncol(dna) #  (genome length)
+    D <- as.matrix(dist.dna(dna, model="N")) # distance matrix
+
+    ## CHECK W.DENS ##
+    if(any(w.dens<0)) {
+        stop("w.dens has negative entries (these should be probabilities!)")
+    }
+    w.dens[1] <- 0
+    ## add an exponential tail summing to 1e-4 to 'w'
+    ## to cover the span of the outbreak
+    ## (avoids starting with -Inf temporal loglike)
+    if(length(w.dens)<MAX.RANGE) {
+        length.to.add <- (MAX.RANGE-length(w.dens)) + 10 # +10 to be on the safe side
+        val.to.add <- dexp(1:length.to.add, 1)
+        val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
+        w.dens <- c(w.dens, val.to.add)
+        w.dens <- w.dens/sum(w.dens)
+    }
+    log.w.dens <- log(w.dens)
+
+    ## CHECK F.DENS ##
+    if(any(f.dens<0)) {
+        stop("f.dens has negative entries (these should be probabilities!)")
+    }
+    f.dens[1] <- 0
+        log.f.dens <- log(f.dens)
+
+    ## RETURN DATA ##
+    return(list(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens,
+                N=N, L=L, D=D, MAX.RANGE=MAX.RANGE,
+                log.w.dens=log.w.dens, log.f.dens=log.f.dens))
+
+} # end outbreaker.data

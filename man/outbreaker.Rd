@@ -5,55 +5,14 @@
 \title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
 \usage{
 outbreaker(dates, dna = NULL, w.dens, f.dens = w.dens,
-  init.tree = c("seqTrack", "star", "random"), init.mu = 1e-04,
-  move.ances = TRUE, move.t.inf = TRUE, move.mu = TRUE, n.iter = 100,
-  sample.every = 10, sd.mu = 1e-04)
-}
-\arguments{
-\item{dates}{a vector indicating the collection dates, provided either as
-integer numbers or in a usual date format such as \code{Date} or
-\code{POSIXct} format. By convention, zero will indicate the oldest date.}
-
-\item{dna}{the DNA sequences in \code{DNAbin} format (see
-\code{\link[ape]{read.dna}} in the ape package); this can be imported from a
-fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
-\link[adegenet]{fasta2DNAbin}.}
-
-\item{w.dens}{a vector of numeric values indicating the generation time
-distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
-time steps after infection. By convention, w.dens[1]=0, meaning that an
-newly infected patient cannot be instantaneously infectious. If not
-standardized, this distribution is rescaled to sum to 1.}
-
-\item{f.dens}{similar to \code{w.dens}, except that this is the distribution
-of the colonization time, i.e. time interval during which the pathogen can
-be sampled from the patient.}
-
-\item{init.tree}{the tree used to initialize the MCMC. Can be either a
-character string indicating how this tree should be computed, or a vector of
-integers corresponding to the tree itself, where the i-th value corresponds
-to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
-ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
-seqTrack output as initialize tree), "random" (ancestor randomly selected
-from preceding cases), and "star" (all cases coalesce to the first case).
-Note that for SeqTrack, all cases should have been sequenced.}
-
-\item{init.mu}{initial values for the mutation rates}
-
-\item{move.ances,move.kappa,move.T.inf}{vectors of logicals of length 'n'
-indicating for which cases different components should be moved during the
-MCMC.}
-
-\item{n.iter}{an integer indicating the number of iterations in the MCMC,
-including the burnin period; defaults to \code{100,000}.}
-
-\item{move.mut}{logical indicating whether the mutation rates
-should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+  config = outbreaker.config())
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
 }
 \examples{
+\dontrun{
+
 ## EXAMPLE USING TOYOUTBREAK ##
 ## LOAD DATA, SET RANDOM SEED
 data(fakeOutbreak)
@@ -116,6 +75,8 @@ hist(mu, border="lightgrey", col="grey", xlab="Mutation per day and nucleotide",
      main="Posterior distribution of mutation rate")
 
 detach(fakeOutbreak)
+
+}
 }
 \author{
 Thibaut Jombart (\email{t.jombart@imperial.ac.uk})
@@ -124,5 +85,10 @@ Thibaut Jombart (\email{t.jombart@imperial.ac.uk})
 Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 N (2014).  Bayesian reconstruction of disease outbreaks by combining
 epidemiologic and genomic data. PLoS Computational Biology.
+}
+\seealso{
+\code{outbreaker.data} to process input data, and \code{outbreaker.config} to process/set up parameters
+
+outbreaker.config to see default parameters / set parameters
 }
 

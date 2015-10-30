@@ -33,11 +33,13 @@
 #' from preceding cases), and "star" (all cases coalesce to the first case).
 #' Note that for SeqTrack, all cases should have been sequenced.}
 #'
-#'}
+#' }
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
 #' @export
+#'
+#' @examples
 #'
 #' x <- fakeOutbreak
 #' outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
@@ -103,7 +105,6 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 
 
 
-
 #' #' Set and check parameter settings of outbreaker
 #'
 #' This function defines settings for outbreaker.
@@ -129,7 +130,7 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 #'
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
-#'}
+#' }
 #'
 #' @param data an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.
 #'
@@ -243,8 +244,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
 
 
 
-#' This function is not exported
-#'
+## NON EXPORTED FUNCTION
 modify.defaults <- function(defaults, x) {
     extra <- setdiff(names(x), names(defaults))
     if (length(extra) > 0L) {

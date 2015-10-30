@@ -2,16 +2,21 @@
 % Please edit documentation in R/config.R
 \name{outbreaker.config}
 \alias{outbreaker.config}
-\title{Set and check parameter settings of outbreaker}
+\title{#' Set and check parameter settings of outbreaker}
 \usage{
-outbreaker.config(...)
+outbreaker.config(..., data = NULL, config = NULL)
+}
+\arguments{
+\item{data}{an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.}
+
+\item{config}{a previous set of settings, as returned by \code{outbreaker.config}}
 }
 \description{
 This function defines settings for outbreaker.
 It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
 }
 \details{
-Acceptables arguments are:
+Acceptables arguments for ... are:
 \describe{
 
 \item{n.iter}{an integer indicating the number of iterations in the MCMC,
@@ -42,5 +47,8 @@ outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
 }
 \author{
 Thibaut Jombart (\email{t.jombart@imperial.ac.uk})
+}
+\seealso{
+outbreaker.data to check and process data for outbreaker
 }
 

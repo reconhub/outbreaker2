@@ -2,30 +2,42 @@
 #'
 #' This function defines settings for outbreaker.
 #' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
+#' Acceptables arguments are:
+#' \describe{
 #'
-#' @param n.iter an integer indicating the number of iterations in the MCMC,
-#' including the burnin period.
+#' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
+#' including the burnin period}
 #'
-#' @param init.mu initial values for the mutation rates
+#' \item{init.mu}{initial values for the mutation rates}
 #'
-#' @param move.ances a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.
+#' \item{move.ances}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 #'
-#' @param  move.t.inf a vector of logicals indicating, for each case, if the dates of infection should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.
+#' \item{move.t.inf}{a vector of logicals indicating, for each case, if the dates of infection should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 #'
-#' @param move.mu a logical indicating whether the mutation rates
-#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.
+#' \item{move.mu}{a logical indicating whether the mutation rates
+#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
-#' @param n.iter the number of iterations of the MCMC
+#' \item{n.iter}{the number of iterations of the MCMC}
 #'
-#' @param sample.every the frequency at which MCMC samples are retained for the output
+#' \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 #'
-#' @param sd.mu the standard deviation for the Normal proposal for the mutation rates
+#' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
 #'
+
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
 #' @export
 #'
-outbreaker.config <- function(config) {
+#' @examples
+#' ## see default settings
+#' outbreaker.config()
+#'
+#' ## change defaults
+#' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
+#'
+outbreaker.config <- function(...) {
+    config <- list(...)
+
     ## SET DEFAULTS ##
     defaults <- list(init.tree=c("seqTrack","star","random"),
                      init.mu=1e-4,
@@ -42,7 +54,7 @@ outbreaker.config <- function(config) {
     ## check init.mu
     if(!is.numeric(config$init.mu)) stop("init.mu is not a numeric value")
     if(config$init.mu < 0) stop("init.mu is negative")
-    if(config$init.mu > 0) stop("init.mu is greater than 1")
+    if(config$init.mu > 1) stop("init.mu is greater than 1")
 
     ## check move.ances
     if(!is.logical(config$move.ances)) stop("move.ances is not a logical")

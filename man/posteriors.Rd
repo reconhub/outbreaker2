@@ -7,7 +7,7 @@
 \usage{
 post.genetic(D, gen.length, ances, mu)
 
-post.all(t.inf, D, gen.length, log.w, ances, mu)
+post.all(sampling.times, D, gen.length, log.w, log.f, t.inf, ances, mu)
 }
 \arguments{
 \item{D}{a matrix of pairwise genetic distances}
@@ -18,9 +18,9 @@ post.all(t.inf, D, gen.length, log.w, ances, mu)
 
 \item{mu}{a mutation rate}
 
-\item{t.inf}{a vector of integers indicating dates of infections of the cases}
-
 \item{log.w}{a vector of log probabilities of time intervals (between infections), starting at p(T=0)}
+
+\item{t.inf}{a vector of integers indicating dates of infections of the cases}
 }
 \description{
 These functions compute various posteriors used in outbreaker.

@@ -1,13 +1,14 @@
 context("Test outbreaker")
 
-data(fakeOutbreak)
-dat <- fakeOutbreak$dat
-w <- fakeOutbreak$w
-
 ## test output format ##
 test_that("test: outbreaker's output have expected format", {
     ## skip on CRAN
     skip_on_cran()
+
+    ## get data
+    data(fakeOutbreak)
+    dat <- fakeOutbreak$dat
+    w <- fakeOutbreak$w
 
     ## run outbreaker
     out <- outbreaker(dna=dat$dna, dates=dat$onset, w.dens=w, n.iter=100, sample.every=10)

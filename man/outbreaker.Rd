@@ -6,8 +6,8 @@
 \usage{
 outbreaker(dates, dna = NULL, w.dens, f.dens = w.dens,
   init.tree = c("seqTrack", "star", "random"), init.mu = 1e-04,
-  move.ances = TRUE, move.Tinf = TRUE, move.mut = TRUE, n.iter = 10,
-  sd.mu = 1e-04)
+  move.ances = TRUE, move.t.inf = TRUE, move.mu = TRUE, n.iter = 100,
+  sample.every = 10, sd.mu = 1e-04)
 }
 \arguments{
 \item{dates}{a vector indicating the collection dates, provided either as
@@ -40,15 +40,15 @@ Note that for SeqTrack, all cases should have been sequenced.}
 
 \item{init.mu}{initial values for the mutation rates}
 
-\item{move.ances,move.kappa,move.Tinf}{vectors of logicals of length 'n'
+\item{move.ances,move.kappa,move.T.inf}{vectors of logicals of length 'n'
 indicating for which cases different components should be moved during the
 MCMC.}
 
-\item{move.mut}{logical indicating whether the mutation rates
-should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
-
 \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 including the burnin period; defaults to \code{100,000}.}
+
+\item{move.mut}{logical indicating whether the mutation rates
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data

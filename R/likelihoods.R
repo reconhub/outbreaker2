@@ -80,4 +80,4 @@ ll.genetic <- function(D, gen.length, ances, mu){
 ll.all <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu){
     return(ll.timing(t.inf=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) +
            ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length))
-}
+} # end ll.all

@@ -4,16 +4,22 @@
 #' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
 #'
 #' @param n.iter an integer indicating the number of iterations in the MCMC,
-#' including the burnin period; defaults to \code{100,000}.
+#' including the burnin period.
 #'
 #' @param init.mu initial values for the mutation rates
 #'
-#' @param move.mut logical indicating whether the mutation rates
+#' @param move.ances a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.
+#'
+#' @param  move.t.inf a vector of logicals indicating, for each case, if the dates of infection should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.
+#'
+#' @param move.mu a logical indicating whether the mutation rates
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.
 #'
-#' @param move.ances,move.kappa,move.T.inf vectors of logicals of length 'n'
-#' indicating for which cases different components should be moved during the
-#' MCMC.
+#' @param n.iter the number of iterations of the MCMC
+#'
+#' @param sample.every the frequency at which MCMC samples are retained for the output
+#'
+#' @param sd.mu the standard deviation for the Normal proposal for the mutation rates
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'

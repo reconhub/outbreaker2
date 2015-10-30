@@ -12,12 +12,6 @@
 #'
 #' @importFrom utils packageDescription
 #'
-#' @importFrom graphics plot barplot lines mtext matplot legend
-#'
-#' @import igraph
-#'
-#' @importFrom adegenet num2col transp funky findMutations
-#'
 #' @importFrom ape dist.dna as.DNAbin
 #'
 NULL

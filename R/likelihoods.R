@@ -14,6 +14,7 @@
 ll.timing.infections <- function(t.inf, log.w, ances){
     ## find indices in w (delay + 1 day)
     T <- (t.inf-t.inf[ances])+1
+    T <- T[!is.na(T)]
 
     ## avoid over-shooting
     if(any(T<1 | T>length(log.w))) return(-Inf)
@@ -35,6 +36,7 @@ ll.timing.infections <- function(t.inf, log.w, ances){
 ll.timing.sampling <- function(t.inf, log.f, sampling.times){
     ## find indices in w (delay + 1 day)
     T <- (sampling.times-t.inf)+1
+    T <- T[!is.na(T)]
 
     ## avoid over-shooting
     if(any(T<1 | T>length(log.f))) return(-Inf)

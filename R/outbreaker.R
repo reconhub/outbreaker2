@@ -102,12 +102,12 @@ outbreaker <- function(dates, dna=NULL,
 
     ## attach data items
     for(i in 1:length(data)){
-        assign(names(data)[i], data[[i]], envir=env)
+        assign(names(data)[i], data[[i]], envir=current.env)
     }
 
     ## attach config items
     for(i in 1:length(config)){
-        assign(names(config)[i], config[[i]], envir=env)
+        assign(names(config)[i], config[[i]], envir=current.env)
     }
 
 

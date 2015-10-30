@@ -227,6 +227,9 @@ outbreaker.config <- function(data=NULL, ...) {
 
         ## recycle move.t.inf
         config$move.t.inf <- rep(config$move.t.inf, lenth=data$N)
+    } else {
+        ## set ances to NULL
+        config$ances <- NULL
     }
 
     ## RETURN CONFIG ##

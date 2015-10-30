@@ -109,10 +109,8 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' This function defines settings for outbreaker.
 #' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
 #'
-#' Acceptables arguments are:
+#' Acceptables arguments for ... are:
 #' \describe{
-#'
-#' \item{data}{an opitonal list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.}
 #'
 #' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
@@ -133,6 +131,10 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
 #'}
 #'
+#' @param data an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.
+#'
+#' @param config a previous set of settings, as returned by \code{outbreaker.config}
+#'
 #' @seealso outbreaker.data to check and process data for outbreaker
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
@@ -146,8 +148,11 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' ## change defaults
 #' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
 #'
-outbreaker.config <- function(..., data=NULL) {
-    config <- list(...)
+outbreaker.config <- function(..., data=NULL, config=NULL) {
+    ## process ... only if no config is passed
+    if(is.null(config){
+        config <- list(...)
+    }
 
     ## SET DEFAULTS ##
     defaults <- list(init.tree=c("seqTrack","star","random"),

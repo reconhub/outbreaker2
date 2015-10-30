@@ -94,7 +94,8 @@ outbreaker <- function(dates, dna=NULL,
                        config=outbreaker.config()){
 
     ## CHECKS / PROCESS DATA ##
-    data <- check.data(dates, dna, w.dens, f.dens)
+    data <- check.data(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens)
+    config <- outbreaker.config(config, data=data)
 
 
 

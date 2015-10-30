@@ -95,6 +95,10 @@
 #' detach(fakeOutbreak)
 #'
 #'
+#' @importFrom grDevices colorRampPalette grey
+#' @importFrom graphics arrows boxplot points text
+#' @importFrom stats D anova density dist lm median rbinom rpois
+#'
 plotChains <- function(x, what="post", type=c("series","density"), burnin=0, dens.all=TRUE,
                        col=funky(x$n.runs), lty=1, lwd=1, main=what,
                        legend=TRUE, posi="bottomleft", ...){

@@ -27,13 +27,13 @@ ll.all(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu)
 
 \item{log.f}{a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)}
 
+\item{sampling.times}{a vector of integers indicating dates of sampling/observation/reporting of the cases}
+
 \item{D}{a matrix of pairwise genetic distances}
 
 \item{gen.length}{length of the genetic sequences}
 
 \item{mu}{a mutation rate}
-
-\item{sampling.time}{a vector of integers indicating dates of sampling/observation/reporting of the cases}
 }
 \description{
 These functions compute various likelihoods used in outbreaker.

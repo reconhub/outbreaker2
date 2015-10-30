@@ -30,7 +30,7 @@ ll.timing.infections <- function(t.inf, log.w, ances){
 #' @rdname likelihoods
 #' @export
 #'
-#' @param sampling.time a vector of integers indicating dates of sampling/observation/reporting of the cases
+#' @param sampling.times a vector of integers indicating dates of sampling/observation/reporting of the cases
 #' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
 #'
 ll.timing.sampling <- function(t.inf, log.f, sampling.times){

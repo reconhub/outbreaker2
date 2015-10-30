@@ -18,7 +18,11 @@ post.all(sampling.times, D, gen.length, log.w, log.f, t.inf, ances, mu)
 
 \item{mu}{a mutation rate}
 
+\item{sampling.times}{a vector of integers indicating dates of sampling/observation/reporting of the cases}
+
 \item{log.w}{a vector of log probabilities of time intervals (between infections), starting at p(T=0)}
+
+\item{log.f}{a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)}
 
 \item{t.inf}{a vector of integers indicating dates of infections of the cases}
 }

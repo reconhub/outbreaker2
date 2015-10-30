@@ -7,6 +7,8 @@
 outbreaker.config(..., data = NULL, config = NULL)
 }
 \arguments{
+\item{...}{settings to be passed to outbreaker}
+
 \item{data}{an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.}
 
 \item{config}{a previous set of settings, as returned by \code{outbreaker.config}}
@@ -18,7 +20,14 @@ It takes a list of named items as input, performs various checks, set defaults w
 \details{
 Acceptables arguments for ... are:
 \describe{
-
+\item{init.tree}{the tree used to initialize the MCMC. Can be either a
+character string indicating how this tree should be computed, or a vector of
+integers corresponding to the tree itself, where the i-th value corresponds
+to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
+ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
+seqTrack output as initialize tree), "random" (ancestor randomly selected
+from preceding cases), and "star" (all cases coalesce to the first case).
+Note that for SeqTrack, all cases should have been sequenced.}
 \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 including the burnin period}
 

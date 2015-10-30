@@ -6,18 +6,7 @@
 \usage{
 outbreaker.data(dates, w.dens, f.dens = w.dens, dna = NULL)
 }
-\description{
-This function performs various checks on input data given to outbreaker.
-}
-\details{
-Acceptables arguments are:
-\describe{
-
-\item{dna}{the DNA sequences in \code{DNAbin} format (see
-\code{\link[ape]{read.dna}} in the ape package); this can be imported from a
-fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
-\link[adegenet]{fasta2DNAbin}.}
-
+\arguments{
 \item{dates}{a vector indicating the collection dates, provided either as
 integer numbers or in a usual date format such as \code{Date} or
 \code{POSIXct} format. By convention, zero will indicate the oldest date.}
@@ -32,16 +21,13 @@ standardized, this distribution is rescaled to sum to 1.}
 of the colonization time, i.e. time interval during which the pathogen can
 be sampled from the patient.}
 
-\item{init.tree}{the tree used to initialize the MCMC. Can be either a
-character string indicating how this tree should be computed, or a vector of
-integers corresponding to the tree itself, where the i-th value corresponds
-to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
-ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
-seqTrack output as initialize tree), "random" (ancestor randomly selected
-from preceding cases), and "star" (all cases coalesce to the first case).
-Note that for SeqTrack, all cases should have been sequenced.}
-
+\item{dna}{the DNA sequences in \code{DNAbin} format (see
+\code{\link[ape]{read.dna}} in the ape package); this can be imported from a
+fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
+\link[adegenet]{fasta2DNAbin}.}
 }
+\description{
+This function performs various checks on input data given to outbreaker.
 }
 \examples{
 x <- fakeOutbreak

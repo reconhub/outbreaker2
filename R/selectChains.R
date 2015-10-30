@@ -36,6 +36,8 @@
 #' have been discarded.
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
+#' @importFrom stats D anova density dist lm median rbinom rpois
+#' 
 selectChains <- function(x, select="visual", alpha=0.001, ...){
     ## CHECKS ##
     if(!is.list(x)) stop("x should be a list as output by outbreaker / outbreaker.parallel")

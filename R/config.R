@@ -2,38 +2,24 @@
 #'
 #' This function performs various checks on input data given to outbreaker.
 #'
-#' Acceptables arguments are:
-#' \describe{
-#'
-#' \item{dna}{the DNA sequences in \code{DNAbin} format (see
+#' @param dna the DNA sequences in \code{DNAbin} format (see
 #' \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
-#' \link[adegenet]{fasta2DNAbin}.}
+#' \link[adegenet]{fasta2DNAbin}.
 #'
-#' \item{dates}{a vector indicating the collection dates, provided either as
+#' @param dates a vector indicating the collection dates, provided either as
 #' integer numbers or in a usual date format such as \code{Date} or
-#' \code{POSIXct} format. By convention, zero will indicate the oldest date.}
+#' \code{POSIXct} format. By convention, zero will indicate the oldest date.
 #'
-#' \item{w.dens}{a vector of numeric values indicating the generation time
+#' @param w.dens a vector of numeric values indicating the generation time
 #' distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
 #' time steps after infection. By convention, w.dens[1]=0, meaning that an
 #' newly infected patient cannot be instantaneously infectious. If not
-#' standardized, this distribution is rescaled to sum to 1.}
+#' standardized, this distribution is rescaled to sum to 1.
 #'
-#' \item{f.dens}{similar to \code{w.dens}, except that this is the distribution
+#' @param f.dens similar to \code{w.dens}, except that this is the distribution
 #' of the colonization time, i.e. time interval during which the pathogen can
-#' be sampled from the patient.}
-#'
-#' \item{init.tree}{the tree used to initialize the MCMC. Can be either a
-#' character string indicating how this tree should be computed, or a vector of
-#' integers corresponding to the tree itself, where the i-th value corresponds
-#' to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
-#' ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
-#' seqTrack output as initialize tree), "random" (ancestor randomly selected
-#' from preceding cases), and "star" (all cases coalesce to the first case).
-#' Note that for SeqTrack, all cases should have been sequenced.}
-#'
-#' }
+#' be sampled from the patient.
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
@@ -112,7 +98,15 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #'
 #' Acceptables arguments for ... are:
 #' \describe{
-#'
+#' \item{init.tree}{the tree used to initialize the MCMC. Can be either a
+#' character string indicating how this tree should be computed, or a vector of
+#' integers corresponding to the tree itself, where the i-th value corresponds
+#' to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
+#' ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
+#' seqTrack output as initialize tree), "random" (ancestor randomly selected
+#' from preceding cases), and "star" (all cases coalesce to the first case).
+#' Note that for SeqTrack, all cases should have been sequenced.}
+#
 #' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
@@ -132,6 +126,8 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
 #' }
 #'
+#' @param ... settings to be passed to outbreaker
+#'
 #' @param data an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.
 #'
 #' @param config a previous set of settings, as returned by \code{outbreaker.config}
@@ -148,6 +144,9 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 #'
 #' ## change defaults
 #' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
+#'
+#'
+#' @importFrom utils modifyList
 #'
 outbreaker.config <- function(..., data=NULL, config=NULL) {
     ## process ... only if no config is passed

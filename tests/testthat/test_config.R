@@ -32,11 +32,12 @@ test_that("test: settings are processed fine", {
     ## check output
     expect_is(outbreaker.config(), "list")
     expect_is(outbreaker.config(data=dat), "list")
-    expect_error(outbreaker.config(unknownArg))
+    expect_error(outbreaker.config(uknownarg=123))
     expect_error(outbreaker.config(init.tree="wrongtreeinit"))
     expect_error(outbreaker.config(init.mu=-5))
     expect_error(outbreaker.config(n.iter=0))
     expect_error(outbreaker.config(sample.every=0))
+    expect_equal(outbreaker.config(init.tree="star", data=dat)$ances, c(NA, rep(1,29)))
 })
 
 

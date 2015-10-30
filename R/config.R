@@ -209,7 +209,7 @@ outbreaker.config <- function(..., data=NULL) {
                 config$ances <- as.integer(config$ances)
             } else if(config$init.tree=="star"){
                 config$ances <- rep(which.min(data$dates), length(data$dates))
-                config$ances[data$dates==min(data$dates)] <- 0
+                config$ances[data$dates==min(data$dates)] <- NA
             } else if(config$init.tree=="random"){
                 config$ances <- rconfig$ances(data$dates)
             }

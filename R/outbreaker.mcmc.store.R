@@ -8,17 +8,15 @@
 #'
 #' @param data a list of settings as returned by \code{outbreaker.data}
 #'
-#' @param config a list of output items as returned by \code{outbreaker.config}
-#'
 #' @export
 #'
-outbreaker.mcmc.store <- function(chain, data, config) {
+outbreaker.mcmc.store <- function(chain, data) {
     ## UPDATE COUNTER
     chain$counter <- chain$counter + 1
 
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
     counter <- chain$counter
-    chain$like[counter] <- ll.all(data=data, config=config)
+    chain$like[counter] <- ll.all(data=data, chain=chain)
     chain$prior[counter] <- prior.all(chains)
     chain$post[counter] <- chain$like[counter] + chain$prior[counter]
 

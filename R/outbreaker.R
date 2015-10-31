@@ -81,7 +81,7 @@ outbreaker <- function(dates, dna=NULL,
 
         ## store outputs if needed
         if((i %% config$sample.every) == 0){
-            chain <- outbreaker.mcmc.store(chain=chain, data=data, config=config)
+            chain <- outbreaker.mcmc.store(chain=chain, data=data)
         }
 
     } # end of the chain

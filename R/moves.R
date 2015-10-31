@@ -42,9 +42,9 @@ move.t.inf <- function(data, chain, r.acc){ # assumes symmetric proposal
 
     ## compute log ratio
     logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                          ances=chain$ances, t.inf=new.t.inf) -
+                          ances=chain$current.ances, t.inf=new.t.inf) -
         ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                          ances=chain$ances, t.inf=chain$current.t.inf)
+                          ances=chain$current.ances, t.inf=chain$current.t.inf)
 
     ## accept/reject
     if(logratio >= r.acc) return(new.t.inf)
@@ -83,10 +83,13 @@ move.ances <- function(data, chain, r.acc){
     new.ances <- rances(chain$current.t.inf)
 
     ## compute log ratio
-    logratio <- ll.all(sampling.times=data$sampling.times, D=data$D, gen.length=data$L, log.w=data$log.w, log.f=data$log.f,
-                       t.inf=chain$current.t.inf, mu=chain$current.mu, ances=new.ances) -
-                           ll.all(sampling.times=data$sampling.times, D=data$D, gen.length=data$L, log.w=data$log.w, log.f=data$log.f,
-                       t.inf=chain$current.t.inf, mu=chain$current.mu, ances=chain$current.ances)
+    logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                          t.inf=chain$current.t.inf, ances=new.ances) +
+                              ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
+                                  ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                                            t.inf=chain$current.t.inf, ances=chain$current.ances) -
+                                                ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
+
 
     ## accept/reject
     if(logratio >= r.acc) return(new.ances)

@@ -81,7 +81,7 @@ ll.genetic <- function(D, gen.length, ances, mu){
 #' @param data a list of data items as returned by \code{outbreaker.data}
 ll.all <- function(data, chain){
     return(ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                     ances=chain$ances, t.inf=chain$t.inf) +
-           ll.genetic(D=data$D, gen.length=data$L, ances=chain$ances, mu=chain$mu)
+                     ances=chain$current.ances, t.inf=chain$current.t.inf) +
+           ll.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)
            )
 } # end ll.all

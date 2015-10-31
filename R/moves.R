@@ -31,25 +31,25 @@ move.mu <- function(data, chain, r.new, r.acc){
 
 
 
+
+
 #' @rdname moves
 #' @export
-#' @param t.inf a vector of integers indicating dates of infections of the cases
-#' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
-#' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
-#' @param sampling.times a vector of integers indicating dates of sampling/observation/reporting of the cases
 #'
-move.t.inf <- function(t.inf, log.w, log.f, ances, sampling.times, lunif){ # assumes symmetric proposal
+move.t.inf <- function(data, chain, r.acc){ # assumes symmetric proposal
     ## propose new t.inf
-    new.t.inf <- t.inf + sample(-1:1, size=length(t.inf), replace=TRUE, prob=c(.1,8,.1))
+    new.t.inf <- chain$current.t.inf + sample(-1:1, size=length(chain$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
-    logratio <- ll.timing(t.inf=new.t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) -
-        ll.timing(t.inf=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times)
+    logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                          ances=chain$ances, t.inf=new.t.inf) -
+        ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                          ances=chain$ances, t.inf=chain$current.t.inf)
 
     ## accept/reject
-    if(logratio >= lunif) return(new.t.inf)
+    if(logratio >= r.acc) return(new.t.inf)
 
-    return(t.inf)
+    return(chain$current.t.inf)
 } # end move.t.inf
 
 

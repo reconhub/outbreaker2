@@ -66,7 +66,7 @@ outbreaker <- function(dates, dna=NULL,
     for(i in 2:config$n.iter){
         ## move infection dates ##
         if(config$move.t.inf){
-            chain$current.t.inf <- move.t.inf(data=data, chain=chain, config=config, r.acc=RAND.ACC.T.INF[i])
+            chain$current.t.inf <- move.t.inf(data=data, chain=chain, r.acc=RAND.ACC.T.INF[i])
         }
 
         ## move ancestries ##
@@ -76,7 +76,7 @@ outbreaker <- function(dates, dna=NULL,
 
         ## move mu ##
         if(config$move.mu){
-            chain$current.mu <- move.mu(data=data, chain=chain, config=config, r.new=RAND.MU[i], r.acc=RAND.ACC.MU[i])
+            chain$current.mu <- move.mu(data=data, chain=chain, r.new=RAND.MU[i], r.acc=RAND.ACC.MU[i])
         }
 
         ## store outputs if needed

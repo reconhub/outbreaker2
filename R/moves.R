@@ -78,18 +78,18 @@ rances <- function(t.inf){
 #' @rdname moves
 #' @export
 #'
-move.ances <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu, lunif){
+move.ances <- function(data, chain, r.acc){
     ## propose new ances
-    new.ances <- rances(t.inf)
+    new.ances <- rances(chain$current.t.inf)
 
     ## compute log ratio
-    logratio <- ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D, gen.length=gen.length,
-                       log.w=log.w, log.f=log.f, ances=new.ances, mu=mu) -
-                           ll.all(t.inf=t.inf, sampling.times=sampling.times, D=D, gen.length=gen.length,
-                                  log.w=log.w, log.f=log.f, ances=ances, mu=mu)
+    logratio <- ll.all(sampling.times=data$sampling.times, D=data$D, gen.length=data$L, log.w=data$log.w, log.f=data$log.f,
+                       t.inf=chain$current.t.inf, mu=chain$current.mu, ances=new.ances) -
+                           ll.all(sampling.times=data$sampling.times, D=data$D, gen.length=data$L, log.w=data$log.w, log.f=data$log.f,
+                       t.inf=chain$current.t.inf, mu=chain$current.mu, ances=chain$current.ances)
 
     ## accept/reject
-    if(logratio >= lunif) return(new.ances)
+    if(logratio >= r.acc) return(new.ances)
 
-    return(ances)
+    return(chain$current.ances)
 } # end move.ances

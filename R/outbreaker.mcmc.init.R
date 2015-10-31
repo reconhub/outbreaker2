@@ -23,24 +23,16 @@ outbreaker.mcmc.init <- function(data, config) {
     current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
     counter <- 1L
 
-    ## INITIALIZE PRE-DRAWN RANDOM ARRAYS ##
-    RAND.MU <- rnorm(config$n.iter, mean=0, sd=config$sd.mu)
-    RAND.ACC.MU <- log(runif(config$n.iter))
-    RAND.ACC.T.INF <- log(runif(config$n.iter))
-    RAND.ACC.ANCES <- log(runif(config$n.iter))
-
 
     ## SHAPE CHAIN ##
     out <- list(size=size, post=post, like=like, prior=prior,
                 ances=ances, t.inf=t.inf, mu=mu,
                 current.ances=current.ances, current.t.inf=current.t.inf, current.mu=current.mu,
-                counter=counter,
-                RAND.MU=RAND.MU, RAND.ACC.MU=RAND.ACC.MU, RAND.ACC.T.INF=RAND.ACC.T.INF,
-                RAND.ACC.ANCES=RAND.ACC.ANCES)
+                counter=counter)
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##
-    out$like[1] <- ll.all(data=data, chain=chain)
-    out$prior[1] <- prior.all(config)
+    out$like[1] <- ll.all(data=data, chain=out)
+    out$prior[1] <- prior.all(chain=out)
     out$post[1] <- out$like[1] + out$prior[1]
 
     return(out)

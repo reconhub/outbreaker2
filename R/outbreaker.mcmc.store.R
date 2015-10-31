@@ -23,9 +23,9 @@ outbreaker.mcmc.store <- function(chain, data, config) {
     chain$post[counter] <- chain$like[counter] + chain$prior[counter]
 
     ## PARAMETERS AND AUGMENTED DATA
-    chain$mu[counter] <- current.mu
-    chain$ances[[counter]] <- current.ances
-    chain.t.inf[[counter]] <- current.t.inf
+    chain$mu[counter] <- chain$current.mu
+    chain$ances[[counter]] <- chain$current.ances
+    chain$t.inf[[counter]] <- chain$current.t.inf
 
     ## RETURN ##
     return(chain)

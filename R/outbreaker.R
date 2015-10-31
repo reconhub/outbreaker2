@@ -82,14 +82,9 @@ outbreaker <- function(dates, dna=NULL,
 
 
     ## SHAPE RESULTS ##
-    out.ances <- matrix(unlist(out.ances), ncol=N, byrow=TRUE)
-    colnames(out.ances) <- paste("alpha",1:N, sep=".")
-    out.t.inf <- matrix(unlist(out.t.inf), ncol=N, byrow=TRUE)
-    colnames(out.t.inf) <- paste("t.inf",1:N, sep=".")
-    out <- data.frame(post=out.post, like=out.like, prior=out.prior, mu=out.mu, out.ances, out.t.inf)
-    out <- coda::mcmc(out)
+    chain <- outbreaker.mcmc.shape(chain=chain, data=data)
 
     ## RETURN ##
-    return(out)
+    return(chain)
 } # end outbreaker
 

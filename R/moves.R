@@ -6,28 +6,27 @@
 #'
 #' @rdname moves
 #'
-#' @param D a matrix of pairwise genetic distances
-#' @param gen.length length of the genetic sequences
-#' @param ances a vector of indices of ancestors
-#' @param mu a mutation rate
-#' @param dev a deviation from the previous mu
-#' @param lunif a logged random variate from Unif(0,1)
+#' @param data a list of data items as returned by \code{outbreaker.data}
+#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
+#' @param r.new a deviation from the previous mu
+#' @param r.acc a logged random variate from Unif(0,1)
 #'
 #' @importFrom stats rnorm
 #'
-move.mu <- function(D, gen.length, ances, mu, dev, lunif){ # assumes symmetric proposal
-    new.mu <- mu + dev
+move.mu <- function(data, chain, r.new, r.acc){
+    ## get new proposed values
+    new.mu <- chain$current.mu + r.new
 
-    ## escape if new.mu<0
-    if(new.mu<0) return(mu)
+    ## escape if new.mu<0 or >1
+    if(new.mu<0 || new.mu>1) return(chain$current.mu)
 
-    ## compute log ratio
-    logratio <- post.genetic(D=D, gen.length=gen.length, ances=ances, mu=new.mu) -
-        post.genetic(D=D, gen.length=gen.length, ances=ances, mu=mu)
+    ## compute log ratio  (assumes symmetric proposal)
+    logratio <- post.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=new.mu) -
+        post.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)
 
     ## accept/reject
-    if(logratio >= lunif) return(new.mu)
-    return(mu)
+    if(logratio >= r.acc) return(new.mu)
+    return(chain$current.mu)
 } # end move.mu
 
 

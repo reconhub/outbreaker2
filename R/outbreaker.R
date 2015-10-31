@@ -56,21 +56,27 @@ outbreaker <- function(dates, dna=NULL,
     chain <- outbreaker.mcmc.init(data=data, config=config)
 
 
+    ## INITIALIZE PRE-DRAWN RANDOM ARRAYS ##
+    RAND.ACC.T.INF <- log(runif(config$n.iter))
+    RAND.ACC.ANCES <- log(runif(config$n.iter))
+    RAND.MU <- rnorm(config$n.iter, mean=0, sd=config$sd.mu)
+    RAND.ACC.MU <- log(runif(config$n.iter))
+
     ## MCMC ##
     for(i in 2:config$n.iter){
         ## move infection dates ##
         if(config$move.t.inf){
-            chain$current.t.inf <- move.t.inf(data=data, config=config, chain=chain)
+            chain$current.t.inf <- move.t.inf(data=data, chain=chain, config=config, r.acc=RAND.ACC.T.INF[i])
         }
 
         ## move ancestries ##
         if(config$move.ances){
-            chain$current.ances <- move.ances(data=data, config=config, chain=chain)
+            chain$current.ances <- move.ances(data=data, config=config, chain=chain, r.acc=RAND.ACC.ANCES[i])
         }
 
         ## move mu ##
         if(config$move.mu){
-            chain$current.mu <- move.mu(data=data, config=config, chain=chain)
+            chain$current.mu <- move.mu(data=data, chain=chain, config=config, r.new=RAND.MU[i], r.acc=RAND.ACC.MU[i])
         }
 
         ## store outputs if needed

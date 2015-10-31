@@ -1,4 +1,4 @@
-#' #' Set and check parameter settings of outbreaker
+#' Set and check parameter settings of outbreaker
 #'
 #' This function defines settings for outbreaker.
 #' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
@@ -35,7 +35,7 @@
 #'
 #' @param ... settings to be passed to outbreaker
 #'
-#' @param data an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker settings.
+#' @param data an optional list of data items as returned by \code{outbreaker.data}; if provided, this allows for further checks of the outbreaker setings.
 #'
 #' @param config a previous set of settings, as returned by \code{outbreaker.config}
 #'

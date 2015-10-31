@@ -66,19 +66,15 @@ test_that("ll.all gives expected results", {
     skip_on_cran()
 
     ## generate data
-    set.seed(1)
-    times <- 0:4
-    w <- c(0, .1, .2, .5, .2, .1)
-    D <- as.matrix(round(dist(rnorm(5))))
-    ances <- c(NA, 1, 1, 1, 2)
-    mu <- 0.543e-4
-    gen.length <- 2e4
+    data(fakeOutbreak)
+    dat <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=dat)
+    chain <- outbreaker.mcmc.init(data=dat, config=config)
 
     ## tests
-    out <- ll.all(t.inf=times, ances=ances, log.w=log(w), D=D, mu=mu,
-                  gen.length=gen.length, sampling.times=times+2, log.f=log(w))
+    out <- ll.all(data=dat, chain=chain)
     expect_is(out, "numeric")
-    expect_equal(out, -47.1524209612)
+    expect_equal(out, -1077.7375488)
 })
 
 

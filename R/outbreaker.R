@@ -48,85 +48,34 @@ outbreaker <- function(dates, dna=NULL,
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker.data(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens)
+
+    ## CHECK / PROCESS CONFIG ##
     config <- outbreaker.config(data=data, config=config)
 
-    ## ATTACH OBJECTS
-    current.env <- environment()
-
-    ## attach data items
-    for(i in 1:length(data)){
-        assign(names(data)[i], data[[i]], envir=current.env)
-    }
-
-    ## attach config items
-    for(i in 1:length(config)){
-        assign(names(config)[i], config[[i]], envir=current.env)
-    }
+    ## INITIALIZE MCMC CHAIN ##
+    chain <- outbreaker.mcmc.init(data=data, config=config)
 
 
     ## MCMC ##
-    ## create output templates ##
-    out.size <- round(n.iter/sample.every) + 1 # +1 because initial state is always there
-    out.post <- out.prior <- out.like <- out.mu <- double(out.size)
-    out.ances <- as.list(integer(out.size))
-    out.t.inf <- as.list(integer(out.size))
-
-    ## initialize algorithm and outputs ##
-    current.mu <- out.mu[1] <- init.mu
-    current.ances <- out.ances[[1]] <- ances
-    current.t.inf <- out.t.inf[[1]] <- dates - which.max(f.dens) + 1
-    out.like[1] <- ll.all(t.inf=out.t.inf[[1]], ances=out.ances[[1]],
-                          log.w=log.w.dens, log.f=log.f.dens,
-                          sampling.times=dates,
-                          D=D, mu=init.mu, gen.length=L)
-    out.prior[1] <- prior.all(init.mu)
-    out.post[1] <- out.like[1] + out.prior[1]
-    OUT.COUNTER <- 1
-
-    ## initialize pre-drawn random arrays ##
-    RAND.MU <- rnorm(n.iter, mean=0, sd=sd.mu)
-    RAND.ACC.MU <- log(runif(n.iter))
-    RAND.ACC.T.INF <- log(runif(n.iter))
-    RAND.ACC.ANCES <- log(runif(n.iter))
-
-    ## run MCMC ##
-    for(i in 2:n.iter){
+    for(i in 2:config$n.iter){
         ## move infection dates ##
-        if(move.t.inf){
-            current.t.inf <- move.t.inf(sampling.times=dates, log.w=log.w.dens, log.f=log.f.dens,
-                                        t.inf=current.t.inf, ances=current.ances,
-                                        lunif=RAND.ACC.T.INF[i])
+        if(config$move.t.inf){
+            chain$current.t.inf <- move.t.inf(data=data, config=config, chain=chain)
         }
 
         ## move ancestries ##
-        if(move.ances){
-            current.ances <- move.ances(sampling.times=dates, D=D,
-                                        gen.length=L, log.w=log.w.dens, log.f=log.f.dens,
-                                        t.inf=current.t.inf, ances=current.ances, mu=current.mu,
-                                        lunif=RAND.ACC.ANCES[i])
+        if(config$move.ances){
+            chain$current.ances <- move.ances(data=data, config=config, chain=chain)
         }
 
         ## move mu ##
-        if(move.mu){
-            current.mu <- move.mu(D=D, gen.length=L, ances=current.ances, mu=current.mu,
-                                  dev=RAND.MU[i], lunif=RAND.ACC.MU[i])
+        if(config$move.mu){
+            chain$current.mu <- move.mu(data=data, config=config, chain=chain)
         }
 
         ## store outputs if needed
-        if((i %% sample.every) == 0){
-            OUT.COUNTER <- OUT.COUNTER + 1
-            ## store like, prior, post
-            out.like[OUT.COUNTER] <- ll.all(t.inf=current.t.inf, ances=current.ances,
-                                            log.w=log.w.dens, log.f=log.f.dens,
-                                            sampling.times=dates,
-                                            D=D, mu=init.mu, gen.length=L)
-            out.prior[OUT.COUNTER] <- prior.all(current.mu)
-            out.post[OUT.COUNTER] <- out.like[OUT.COUNTER] + out.prior[OUT.COUNTER]
-
-            ## parameters and augmented data
-            out.mu[OUT.COUNTER] <- current.mu
-            out.ances[[OUT.COUNTER]] <- current.ances
-            out.t.inf[[OUT.COUNTER]] <- current.t.inf
+        if((i %% config$sample.every) == 0){
+            outbreaker.mcmc.store(chain=chain, data=data, config=config)
         }
 
     } # end of the chain

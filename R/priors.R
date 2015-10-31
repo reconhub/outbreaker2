@@ -17,8 +17,9 @@ prior.mu <- function(mu){
 
 #' @rdname priors
 #' @export
+#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
-prior.all <- function(mu){
-    return(prior.mu(mu))
+prior.all <- function(chain){
+    return(prior.mu(chain$current.mu))
 } # end prior.all
 

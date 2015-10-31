@@ -78,8 +78,10 @@ ll.genetic <- function(D, gen.length, ances, mu){
 
 #' @rdname likelihoods
 #' @export
-#'
-ll.all <- function(t.inf, sampling.times, D, gen.length, log.w, log.f, ances, mu){
-    return(ll.timing(t.inf=t.inf, log.w=log.w, log.f=log.f, ances=ances, sampling.times=sampling.times) +
-           ll.genetic(D=D, ances=ances, mu=mu, gen.length=gen.length))
+#' @param data a list of data items as returned by \code{outbreaker.data}
+ll.all <- function(data, chain){
+    return(ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                     ances=chain$ances, t.inf=chain$t.inf) +
+           ll.genetic(D=data$D, gen.length=data$L, ances=chain$ances, mu=chain$mu)
+           )
 } # end ll.all

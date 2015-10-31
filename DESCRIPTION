@@ -6,7 +6,7 @@ Author: Thibaut Jombart <thibautjombart@gmail.com>
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
 Suggests: EpiEstim, OutbreakTools,
     testthat
-Depends: R (>= 3.0.0), parallel
+Depends: R (>= 3.0.0)
 Imports: utils, stats, graphics, grDevices, ape, igraph, adegenet, coda
 Suggests: testthat
 Description: Bayesian reconstruction of disease outbreaks using epidemiological and genetic information.

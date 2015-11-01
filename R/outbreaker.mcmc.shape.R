@@ -15,7 +15,7 @@ outbreaker.mcmc.shape <- function(chain, data) {
 
     ## UNFOLD INFECTION DATES ##
     chain$t.inf <- matrix(unlist(chain$t.inf), ncol=data$N, byrow=TRUE)
-    colnames(chain$inf) <- paste("t.inf",1:data$N, sep=".")
+    colnames(chain$t.inf) <- paste("t.inf",1:data$N, sep=".")
 
     ## SHAPE DATA.FRAME AND CONVERT ##
     chain <- data.frame(post=chain$post, like=chain$like, prior=chain$prior,

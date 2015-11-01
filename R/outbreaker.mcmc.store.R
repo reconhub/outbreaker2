@@ -17,7 +17,7 @@ outbreaker.mcmc.store <- function(chain, data) {
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
     counter <- chain$counter
     chain$like[counter] <- ll.all(data=data, chain=chain)
-    chain$prior[counter] <- prior.all(chains)
+    chain$prior[counter] <- prior.all(chain)
     chain$post[counter] <- chain$like[counter] + chain$prior[counter]
 
     ## PARAMETERS AND AUGMENTED DATA

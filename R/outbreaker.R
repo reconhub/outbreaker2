@@ -42,6 +42,16 @@
 #' @importFrom stats dexp rnorm runif
 #' @importFrom coda mcmc
 #'
+#' @examples
+#' ## get data
+#' data(fakeOutbreak)
+#' dat <- fakeOutbreak$dat
+#' w <- fakeOutbreak$w
+#'
+#' ## run outbreaker
+#' out <- outbreaker(dna=dat$dna, dates=dat$onset, w.dens=w, config=list(n.iter=100, sample.every=10))
+#'
+#'
 outbreaker <- function(dates, dna=NULL,
                        w.dens, f.dens=w.dens,
                        config=outbreaker.config()){

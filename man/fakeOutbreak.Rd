@@ -4,6 +4,10 @@
 \name{fakeOutbreak}
 \alias{fakeOutbreak}
 \title{Small simulated outbreak}
+\format{An object of class \code{list} of length 4.}
+\usage{
+fakeOutbreak
+}
 \description{
 This dataset is a small simulated outbreak used to illustrate outbreaker.
 It was generated using \code{simOutbreak}.

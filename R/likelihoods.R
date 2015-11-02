@@ -4,7 +4,7 @@
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
-#' @rdname likelihoods
+#' @name likelihoods
 #' @export
 #'
 #' @param t.inf a vector of integers indicating dates of infections of the cases

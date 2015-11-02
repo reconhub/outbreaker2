@@ -1,14 +1,25 @@
 Package: outbreaker2
 Version: 1.0-0
 Date: 2029-09-11
-Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic and Genomic Data
+Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
+    and Genomic Data
 Author: Thibaut Jombart <thibautjombart@gmail.com>
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
-Suggests: EpiEstim, OutbreakTools,
+Suggests:
     testthat
-Depends: R (>= 3.0.0)
-Imports: utils, stats, graphics, grDevices, ape, igraph, adegenet, coda
-Suggests: testthat
-Description: Bayesian reconstruction of disease outbreaks using epidemiological and genetic information.
+Depends:
+    R (>= 3.0.0)
+Imports:
+    utils,
+    stats,
+    graphics,
+    grDevices,
+    ape,
+    igraph,
+    adegenet,
+    coda
+Description: Bayesian reconstruction of disease outbreaks using epidemiological
+    and genetic information.
 License: GPL (>=2)
 LazyData: true
+RoxygenNote: 5.0.0

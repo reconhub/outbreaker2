@@ -5,12 +5,13 @@
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @rdname likelihoods
+#' @export
 #'
 #' @param t.inf a vector of integers indicating dates of infections of the cases
 #' @param ances a vector of indices of ancestors
 #' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #'
-#' @export
+#'
 ll.timing.infections <- function(t.inf, log.w, ances){
     ## find indices in w (delay + 1 day)
     T <- (t.inf-t.inf[ances])+1

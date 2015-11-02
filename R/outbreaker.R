@@ -1,4 +1,3 @@
-
 #' Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
 #'
 #'
@@ -43,6 +42,7 @@
 #' @importFrom coda mcmc
 #'
 #' @examples
+#'
 #' ## get data
 #' data(fakeOutbreak)
 #' dat <- fakeOutbreak$dat
@@ -65,28 +65,25 @@ outbreaker <- function(dates, dna=NULL,
     ## INITIALIZE MCMC CHAIN ##
     chain <- outbreaker.mcmc.init(data=data, config=config)
 
-
     ## INITIALIZE PRE-DRAWN RANDOM ARRAYS ##
-    RAND.ACC.T.INF <- log(runif(config$n.iter))
-    RAND.ACC.ANCES <- log(runif(config$n.iter))
-    RAND.MU <- rnorm(config$n.iter, mean=0, sd=config$sd.mu)
-    RAND.ACC.MU <- log(runif(config$n.iter))
+    rand <- outbreaker.rand.vec(config)
+
 
     ## MCMC ##
     for(i in 2:config$n.iter){
         ## move infection dates ##
         if(config$move.t.inf){
-            chain$current.t.inf <- move.t.inf(data=data, chain=chain, r.acc=RAND.ACC.T.INF[i])
+            chain$current.t.inf <- move.t.inf(data=data, chain=chain, r.acc=rand$acc.t.inf[i])
         }
 
         ## move ancestries ##
         if(config$move.ances){
-            chain$current.ances <- move.ances(data=data, chain=chain, r.acc=RAND.ACC.ANCES[i])
+            chain$current.ances <- move.ances(data=data, chain=chain, r.acc=rand$acc.ances[i])
         }
 
         ## move mu ##
         if(config$move.mu){
-            chain$current.mu <- move.mu(data=data, chain=chain, r.new=RAND.MU[i], r.acc=RAND.ACC.MU[i])
+            chain$current.mu <- move.mu(data=data, chain=chain, r.new=rand$mu[i], r.acc=rand$acc.mu[i])
         }
 
         ## store outputs if needed

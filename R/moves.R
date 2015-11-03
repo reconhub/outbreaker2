@@ -58,6 +58,7 @@ move.t.inf <- function(data, chain, r.acc){ # assumes symmetric proposal
 
 #' @rdname moves
 #' @export
+#' @param t.inf a vector of infection dates
 #'
 rances <- function(t.inf){
     ## find possible ancestors

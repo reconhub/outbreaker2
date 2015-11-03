@@ -23,6 +23,8 @@ move.ances(data, chain, r.acc)
 \item{r.new}{a deviation from the previous mu}
 
 \item{r.acc}{a logged random variate from Unif(0,1)}
+
+\item{t.inf}{a vector of infection dates}
 }
 \description{
 These functions are used to move in the parameter space in the MCMC.

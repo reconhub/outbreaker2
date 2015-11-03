@@ -10,10 +10,6 @@
 #' @param gen.length length of the genetic sequences
 #' @param ances a vector of indices of ancestors
 #' @param mu a mutation rate
-#' @param t.inf a vector of integers indicating dates of infections of the cases
-#' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
-#' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
-#' @param sampling.times a vector of integers indicating dates of sampling/observation/reporting of the cases
 #'
 post.genetic <- function(D, gen.length, ances, mu){
     return(ll.genetic(D=D, gen.length=gen.length, ances=ances, mu=mu) +

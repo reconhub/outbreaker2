@@ -8,6 +8,8 @@ outbreaker.mcmc.shape(chain, data)
 }
 \arguments{
 \item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+
+\item{data}{a list of data items as returned by \code{outbreaker.data}}
 }
 \description{
 This function shapes MCMC samples for outbreaker into a mcmc object from the package \code{coda}.

@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/thibautjombart/apex.png?branch=master)](https://travis-ci.org/thibautjombart/outbreaker2)
+[![Travis-CI Build Status](https://travis-ci.org/thibautjombart/outbreaker2.png?branch=master)](https://travis-ci.org/thibautjombart/outbreaker2)
 [![codecov.io](https://codecov.io/github/thibautjombart/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/thibautjombart/outbreaker2?branch=master)
 
 # outbreaker2

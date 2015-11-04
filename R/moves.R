@@ -75,15 +75,27 @@ rances <- function(t.inf){
 
 
 
+## hidden function
+## finds possible ancestor for a case 'i'
+## (any case before i)
+find.possible.ances <- function(t.inf, i){
+    if(t.inf[i]==min(t.inf)) return(NA)
+    return(sample(which(t.inf[t.inf < t.inf[i]]), 1))
+}
+
+
 
 #' @rdname moves
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
 move.ances <- function(data, chain, config, r.acc){
     ## find out which ancestries to move
+    n.to.move <- max(round(config$prop.ances.move * data$N),1)
+    to.move <- sample(data$N, n.to.move)
 
     ## propose new ances
-    new.ances <- rances(chain$current.t.inf)
+    new.ances <- chain$current.ances
+    new.ances[to.move] <- rances(chain$current.t.inf[to.move])
 
     ## compute log ratio
     logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,

@@ -78,7 +78,7 @@ outbreaker <- function(dates, dna=NULL,
 
         ## move ancestries ##
         if(config$move.ances){
-            chain$current.ances <- move.ances(data=data, chain=chain, r.acc=rand$acc.ances[i])
+            chain$current.ances <- move.ances(data=data, chain=chain, config=config, r.acc=rand$acc.ances[i])
         }
 
         ## move mu ##

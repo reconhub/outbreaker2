@@ -31,6 +31,8 @@
 #' \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 #'
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
+#'
+#' \item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
 #' }
 #'
 #' @param ... settings to be passed to outbreaker
@@ -65,7 +67,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     defaults <- list(init.tree=c("seqTrack","star","random"),
                      init.mu=1e-4,
                      move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
-                     n.iter=100, sample.every=10, sd.mu=0.0001)
+                     n.iter=100, sample.every=10, sd.mu=0.0001,
+                     prop.ances.move=1/4)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -101,6 +104,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     ## check sd.mu
     if(!is.numeric(config$sd.mu)) stop("sd.mu is not a numeric value")
     if(config$sd.mu < 0) stop("sd.mu is negative")
+
+    ## check prop.ances.move
+    if(!is.numeric(config$prop.ances.move)) stop("prop.ances.move is not a numeric value")
+    if(config$prop.ances.move < 0 ) stop("prop.ances.move is negative")
+    if(config$prop.ances.move > 1 ) stop("prop.ances.move is greater than one")
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

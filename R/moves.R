@@ -78,8 +78,10 @@ rances <- function(t.inf){
 
 #' @rdname moves
 #' @export
-#'
-move.ances <- function(data, chain, r.acc){
+#' @param config a list of settings as returned by \code{outbreaker.config}
+move.ances <- function(data, chain, config, r.acc){
+    ## find out which ancestries to move
+
     ## propose new ances
     new.ances <- rances(chain$current.t.inf)
 

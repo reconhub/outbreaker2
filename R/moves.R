@@ -75,13 +75,17 @@ rances <- function(t.inf){
 
 
 
-## hidden function
+
+## non-exported function
 ## finds possible ancestor for a case 'i'
 ## (any case before i)
 find.possible.ances <- function(t.inf, i){
-    if(t.inf[i]==min(t.inf)) return(NA)
-    return(sample(which(t.inf[t.inf < t.inf[i]]), 1))
-}
+    if(length(i)>1) stop("i has a length > 1")
+    if(any(t.inf[i]==min(t.inf))) return(NA)
+    return(sample(which(t.inf < t.inf[i[1]]), 1))
+} # end find.possible.ances
+
+
 
 
 
@@ -90,25 +94,37 @@ find.possible.ances <- function(t.inf, i){
 #' @param config a list of settings as returned by \code{outbreaker.config}
 move.ances <- function(data, chain, config, r.acc){
     ## find out which ancestries to move
-    n.to.move <- max(round(config$prop.ances.move * data$N),1)
-    to.move <- sample(data$N, n.to.move)
+    ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
+    if(!any(ances.can.move)) {
+        warning("trying to move ancestries but none can move")
+        return(chain$current.ances)
+    }
+    n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
+    to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
 
     ## propose new ances
     new.ances <- chain$current.ances
+
+    ## move all ancestries that should be moved
     for(i in to.move){
-    new.ances[to.move] <- rances(chain$current.t.inf[to.move])
+        ## propose new ancestor
+        new.ances[i] <- find.possible.ances(chain$current.t.inf, i)
 
-    ## compute log ratio
-    logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                          t.inf=chain$current.t.inf, ances=new.ances) +
-                              ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
-                                  ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                                            t.inf=chain$current.t.inf, ances=chain$current.ances) -
-                                                ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
-} ### TO FINISH!
+        ## compute log ratio
+        logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                              t.inf=chain$current.t.inf, ances=new.ances) +
+                                  ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
+                                      ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                                                t.inf=chain$current.t.inf, ances=chain$current.ances) -
+                                                    ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
 
-    ## accept/reject
-    if(logratio >= r.acc) return(new.ances)
+        ## accept/reject
+        if(logratio >= r.acc){
+            chain$current.ances[i] <- new.ances[i]
+        } else {
+            new.ances[i] <- chain$current.ances[i]
+        }
+    } # end for loop
 
     return(chain$current.ances)
 } # end move.ances

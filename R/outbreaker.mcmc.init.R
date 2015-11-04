@@ -12,7 +12,7 @@
 #'
 outbreaker.mcmc.init <- function(data, config) {
   ## CREATE EMPTY OUTPUT VECTORS ##
-    size <- round(config$n.iter/config$sample.every) + 1 # +1 because initial state is always there
+    size <- round(config$n.iter/config$sample.every)
     post <- prior <- like <- mu <- double(size)
     ances <- as.list(integer(size))
     t.inf <- as.list(integer(size))

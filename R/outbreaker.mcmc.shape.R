@@ -11,10 +11,12 @@
 #'
 outbreaker.mcmc.shape <- function(chain, data) {
     ## UNFOLD ANCESTRIES ##
+    if(!all(sapply(chain$ances, length)==data$N)) stop("some ancestries are missing in the chain")
     chain$ances <- matrix(unlist(chain$ances), ncol=data$N, byrow=TRUE)
     colnames(chain$ances) <- paste("alpha",1:data$N, sep=".")
 
     ## UNFOLD INFECTION DATES ##
+    if(!all(sapply(chain$t.inf, length)==data$N)) stop("some infection dates are missing in the chain")
     chain$t.inf <- matrix(unlist(chain$t.inf), ncol=data$N, byrow=TRUE)
     colnames(chain$t.inf) <- paste("t.inf",1:data$N, sep=".")
 

@@ -95,6 +95,7 @@ move.ances <- function(data, chain, config, r.acc){
 
     ## propose new ances
     new.ances <- chain$current.ances
+    for(i in to.move){
     new.ances[to.move] <- rances(chain$current.t.inf[to.move])
 
     ## compute log ratio
@@ -104,7 +105,7 @@ move.ances <- function(data, chain, config, r.acc){
                                   ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
                                             t.inf=chain$current.t.inf, ances=chain$current.ances) -
                                                 ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
-
+} ### TO FINISH!
 
     ## accept/reject
     if(logratio >= r.acc) return(new.ances)

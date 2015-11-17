@@ -45,6 +45,8 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 
 \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
+
+\item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
 }
 }
 \examples{

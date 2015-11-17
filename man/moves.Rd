@@ -13,7 +13,7 @@ move.t.inf(data, chain, r.acc)
 
 rances(t.inf)
 
-move.ances(data, chain, r.acc)
+move.ances(data, chain, config, r.acc)
 }
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
@@ -25,6 +25,8 @@ move.ances(data, chain, r.acc)
 \item{r.acc}{a logged random variate from Unif(0,1)}
 
 \item{t.inf}{a vector of infection dates}
+
+\item{config}{a list of settings as returned by \code{outbreaker.config}}
 }
 \description{
 These functions are used to move in the parameter space in the MCMC.

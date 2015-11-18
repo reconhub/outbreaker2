@@ -192,7 +192,7 @@ find.possible.ances <- function(t.inf, i)
 ## x-> i becomes i->x
 ## plus all subsequent changes
 ##
-swap.ances <- function(ances, i)
+swap.ances <- function(ances, t.inf, i)
 {
     ## stop if 'i' out of range
     if(i>length(ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(ances), " cases")
@@ -201,7 +201,7 @@ swap.ances <- function(ances, i)
     if(is.na(x <- ances[i]))
     {
         warning("trying to swap the ancestry of the imported case ", i)
-        return(ances) ## !! NEED TO RETURN T.INF LATER HERE
+        return(list(ances=ances, t.inf=t.inf))
     }
 
     ## find indices to swap
@@ -212,6 +212,10 @@ swap.ances <- function(ances, i)
     ances[to.be.x] <- x
     ances[to.be.i] <- i
 
+    ## swap  t.inf
+    t.inf[to.be.x] <- t.inf[x]
+    t.inf[to.be.i] <- t.inf[i]
+
     ## return
-    return(ances)
+    return(list(ances=ances, t.inf=t.inf))
 } # end swap.ancestries

@@ -10,7 +10,8 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.init <- function(data, config) {
+outbreaker.mcmc.init <- function(data, config)
+{
   ## CREATE EMPTY OUTPUT VECTORS ##
     size <- round(config$n.iter/config$sample.every)
     post <- prior <- like <- mu <- double(size)

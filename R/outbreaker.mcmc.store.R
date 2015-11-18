@@ -10,7 +10,8 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.store <- function(chain, data) {
+outbreaker.mcmc.store <- function(chain, data)
+{
     ## UPDATE COUNTER
     chain$counter <- chain$counter + 1
 

@@ -9,7 +9,8 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.shape <- function(chain, data) {
+outbreaker.mcmc.shape <- function(chain, data)
+{
     ## UNFOLD ANCESTRIES ##
     if(!all(sapply(chain$ances, length)==data$N)) stop("some ancestries are missing in the chain")
     chain$ances <- matrix(unlist(chain$ances), ncol=data$N, byrow=TRUE)

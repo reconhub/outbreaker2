@@ -130,8 +130,8 @@ move.swap.ances <- function(data, chain, config, r.acc)
     {
         ## swap ancestries
         temp <- swap.ances(new.ances, new.t.inf, i)
-        new.ances <- temp$new.ances
-        new.t.inf <- temp$new.t.inf
+        new.ances <- temp$ances
+        new.t.inf <- temp$t.inf
 
         ## compute log ratio
         logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,

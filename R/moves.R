@@ -189,28 +189,27 @@ find.possible.ances <- function(t.inf, i)
 
 ## non-exported function
 ## swaps ancestries in the tree
+## x-> i becomes i->x
+## plus all subsequent changes
 swap.ances <- function(ances, i)
 {
     ## stop if 'i' out of range
     if(i>length(ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(ances), " cases")
 
     ## stop if case 'i' is imported
-    if(is.na(ances[i]))
+    if(is.na(x <- ances[i]))
     {
         warning("trying to swap the ancestry of the imported case ", i)
         return(ances) ## !! NEED TO RETURN T.INF LATER HERE
     }
 
-    ## find ancestor of 'i'
-    ances.of.i <- ances[i]
-
     ## find indices to swap
-    to.be.b <- which(ances==a)
-    to.be.a <- which(ances==b)
+    to.be.x <- which(ances==i)
+    to.be.i <- which(ances==x)
 
     ## swap a and b
-    ances[to.be.b] <- b
-    ances[to.be.a] <- a
+    ances[to.be.x] <- x
+    ances[to.be.i] <- i
 
     ## return
     return(ances)

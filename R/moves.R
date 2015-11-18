@@ -57,42 +57,6 @@ move.t.inf <- function(data, chain, r.acc) # assumes symmetric proposal
 
 
 
-
-#' @rdname moves
-#' @export
-#' @param t.inf a vector of infection dates
-#'
-rances <- function(t.inf)
-{
-    ## find possible ancestors
-    canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
-    diag(canBeAnces) <- FALSE
-
-    ## pick possible ancestors at random
-    ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
-
-    ## return
-    return(ances)
-} # end rances
-
-
-
-
-
-## non-exported function
-## finds possible ancestor for a case 'i'
-## (any case before i)
-find.possible.ances <- function(t.inf, i)
-{
-    if(length(i)>1) stop("i has a length > 1")
-    if(any(t.inf[i]==min(t.inf))) return(NA)
-    return(sample(which(t.inf < t.inf[i[1]]), 1))
-} # end find.possible.ances
-
-
-
-
-
 #' @rdname moves
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
@@ -136,3 +100,118 @@ move.ances <- function(data, chain, config, r.acc)
 
     return(chain$current.ances)
 } # end move.ances
+
+
+
+
+
+
+#' @rdname moves
+#' @export
+#'
+move.swap.ances <- function(data, chain, config, r.acc)
+{
+     ## find out which ancestries to move
+    ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
+    if(!any(ances.can.move))
+    {
+        warning("trying to move ancestries but none can move")
+        return(chain$current.ances)
+    }
+    n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
+    to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
+
+    ## propose new ances
+    new.ances <- chain$current.ances
+
+    ## move all ancestries that should be moved
+    for(i in to.move)
+    {
+        ## swap ancestries: A->B becomes B->A
+        new.ances <- swap.ancestries(new.ances, a, b)
+
+        ## compute log ratio
+        logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                              t.inf=chain$current.t.inf, ances=new.ances) +
+                                  ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
+                                      ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                                                t.inf=chain$current.t.inf, ances=chain$current.ances) -
+                                                    ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
+
+        ## accept/reject
+        if(logratio >= r.acc)
+        {
+            chain$current.ances[i] <- new.ances[i]
+        } else {
+            new.ances[i] <- chain$current.ances[i]
+        }
+    } # end for loop
+
+    return(chain$current.ances)
+} # end move.swap.ances
+
+
+
+
+
+#' @rdname moves
+#' @export
+#' @param t.inf a vector of infection dates
+#'
+rances <- function(t.inf)
+{
+    ## find possible ancestors
+    canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
+    diag(canBeAnces) <- FALSE
+
+    ## pick possible ancestors at random
+    ances <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
+
+    ## return
+    return(ances)
+} # end rances
+
+
+
+
+
+## non-exported function
+## finds possible ancestor for a case 'i'
+## (any case before i)
+find.possible.ances <- function(t.inf, i)
+{
+    if(length(i)>1) stop("i has a length > 1")
+    if(any(t.inf[i]==min(t.inf))) return(NA)
+    return(sample(which(t.inf < t.inf[i[1]]), 1))
+} # end find.possible.ances
+
+
+
+## non-exported function
+## swaps ancestries in the tree
+swap.ances <- function(ances, i)
+{
+    ## stop if 'i' out of range
+    if(i>length(ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(ances), " cases")
+
+    ## stop if case 'i' is imported
+    if(is.na(ances[i]))
+    {
+        warning("trying to swap the ancestry of the imported case ", i)
+        return(ances) ## !! NEED TO RETURN T.INF LATER HERE
+    }
+
+    ## find ancestor of 'i'
+    ances.of.i <- ances[i]
+
+    ## find indices to swap
+    to.be.b <- which(ances==a)
+    to.be.a <- which(ances==b)
+
+    ## swap a and b
+    ances[to.be.b] <- b
+    ances[to.be.a] <- a
+
+    ## return
+    return(ances)
+} # end swap.ancestries

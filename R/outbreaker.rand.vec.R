@@ -10,7 +10,8 @@
 #'
 #' @export
 #'
-outbreaker.rand.vec <- function(config){
+outbreaker.rand.vec <- function(config)
+{
     ## CREATE OUTPUT ##
     out <- list()
 

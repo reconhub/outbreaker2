@@ -11,7 +11,8 @@
 #' @param ances a vector of indices of ancestors
 #' @param mu a mutation rate
 #'
-post.genetic <- function(D, gen.length, ances, mu){
+post.genetic <- function(D, gen.length, ances, mu)
+{
     return(ll.genetic(D=D, gen.length=gen.length, ances=ances, mu=mu) +
            prior.mu(mu=mu))
 } # end post.genetic
@@ -25,6 +26,7 @@ post.genetic <- function(D, gen.length, ances, mu){
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
-post.all <- function(data=data, chain=chain){
+post.all <- function(data=data, chain=chain)
+{
     return(ll.all(data=data, chain=chain) + prior.all(chain))
 }

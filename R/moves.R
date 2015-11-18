@@ -197,8 +197,11 @@ swap.ances <- function(ances, t.inf, i)
     ## stop if 'i' out of range
     if(i>length(ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(ances), " cases")
 
+    ## find ancestor of 'i'
+    x <- ances[i]
+
     ## stop if case 'i' is imported
-    if(is.na(x <- ances[i]))
+    if(is.na(x))
     {
         warning("trying to swap the ancestry of the imported case ", i)
         return(list(ances=ances, t.inf=t.inf))
@@ -208,13 +211,18 @@ swap.ances <- function(ances, t.inf, i)
     to.be.x <- which(ances==i)
     to.be.i <- which(ances==x)
 
-    ## swap a and b
+    ## swap 'i' and 'x' in ancestries
     ances[to.be.x] <- x
     ances[to.be.i] <- i
 
-    ## swap  t.inf
-    t.inf[to.be.x] <- t.inf[x]
-    t.inf[to.be.i] <- t.inf[i]
+    ## the ancestor of 'i' is now has the ancestor of 'x'
+    ances[i] <- ances[x]
+
+    ## 'i' is now the ancestor of 'x'
+    ances[x] <- i
+
+    ## swap t.inf
+    t.inf[c(x,i)] <- t.inf[c(i,x)]
 
     ## return
     return(list(ances=ances, t.inf=t.inf))

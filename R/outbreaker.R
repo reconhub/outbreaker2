@@ -54,7 +54,8 @@
 #'
 outbreaker <- function(dates, dna=NULL,
                        w.dens, f.dens=w.dens,
-                       config=outbreaker.config()){
+                       config=outbreaker.config())
+{
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker.data(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens)
@@ -73,22 +74,26 @@ outbreaker <- function(dates, dna=NULL,
     for(i in seq.int(2, config$n.iter, 1))
     {
         ## move infection dates ##
-        if(config$move.t.inf){
+        if(config$move.t.inf)
+        {
             chain$current.t.inf <- move.t.inf(data=data, chain=chain, r.acc=rand$acc.t.inf[i])
         }
 
         ## move ancestries ##
-        if(config$move.ances){
+        if(config$move.ances)
+        {
             chain$current.ances <- move.ances(data=data, chain=chain, config=config, r.acc=rand$acc.ances[i])
         }
 
         ## move mu ##
-        if(config$move.mu){
+        if(config$move.mu)
+        {
             chain$current.mu <- move.mu(data=data, chain=chain, r.new=rand$mu[i], r.acc=rand$acc.mu[i])
         }
 
         ## store outputs if needed
-        if((i %% config$sample.every) == 0){
+        if((i %% config$sample.every) == 0)
+        {
             chain <- outbreaker.mcmc.store(chain=chain, data=data)
         }
 

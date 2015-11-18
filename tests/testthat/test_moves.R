@@ -11,7 +11,8 @@ test_that("Auxiliary functions for ancestries are working", {
     t.inf <- c(0, 2,3, 5,7)
 
     ## test swap.ances
-    expect_equal(ances, swap.ances(ances, t.inf, 1)$ances)
-    expect_equal(t.inf, swap.ances(ances, t.inf, 1)$t.inf)
+    expect_warning(res <- swap.ances(ances, t.inf, 1))
+    expect_equal(ances, res$ances)
+    expect_equal(t.inf, res$t.inf)
 
 })

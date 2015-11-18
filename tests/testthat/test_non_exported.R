@@ -1,7 +1,7 @@
 context("Test non-exported functions")
 
 
-## test data ##
+## test find.possible.ances ##
 test_that("test: find.possible.ances", {
     ## skip on CRAN
     skip_on_cran()
@@ -19,3 +19,19 @@ test_that("test: find.possible.ances", {
     expect_error(find.possible.ances(1:10, NA))
 })
 
+
+## test swap.ances ##
+test_that("Auxiliary functions for ancestries are working", {
+    ## skip on CRAN
+    skip_on_cran()
+
+    ## generate data
+    ances <- c(NA,1,1,2,2)
+    t.inf <- c(0, 2,3, 5,7)
+
+    ## make tests
+    expect_warning(res <- outbreaker2:::swap.ances(ances, t.inf, 1))
+    expect_equal(ances, res$ances)
+    expect_equal(t.inf, res$t.inf)
+
+})

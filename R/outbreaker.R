@@ -70,7 +70,8 @@ outbreaker <- function(dates, dna=NULL,
 
 
     ## MCMC ##
-    for(i in 2:config$n.iter){
+    for(i in seq.int(2, config$n.iter, 1))
+    {
         ## move infection dates ##
         if(config$move.t.inf){
             chain$current.t.inf <- move.t.inf(data=data, chain=chain, r.acc=rand$acc.t.inf[i])

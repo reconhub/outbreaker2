@@ -85,6 +85,12 @@ outbreaker <- function(dates, dna=NULL,
             chain$current.ances <- move.ances(data=data, chain=chain, config=config, r.acc=rand$acc.ances[i])
         }
 
+        ## swap ancestries ##
+        if(config$move.ances && config$move.t.inf)
+        {
+            chain <- move.swap.ances(data=data, chain=chain, config=config, r.acc=rand$acc.ances[i])
+        }
+
         ## move mu ##
         if(config$move.mu)
         {

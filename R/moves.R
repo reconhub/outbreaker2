@@ -72,7 +72,7 @@ move.ances <- function(data, chain, config, r.acc)
     n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
     to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
 
-    ## propose new ances
+    ## initialize new ances
     new.ances <- chain$current.ances
 
     ## move all ancestries that should be moved
@@ -121,18 +121,21 @@ move.swap.ances <- function(data, chain, config, r.acc)
     n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
     to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
 
-    ## propose new ances
+    ## initialize new ances and t.inf
     new.ances <- chain$current.ances
+    new.t.inf <- chain$current.t.inf
 
     ## move all ancestries that should be moved
     for(i in to.move)
     {
-        ## swap ancestries: A->B becomes B->A
-        new.ances <- swap.ancestries(new.ances, a, b)
+        ## swap ancestries
+        temp <- swap.ances(new.ances, new.t.inf, i)
+        new.ances <- temp$new.ances
+        new.t.inf <- temp$new.t.inf
 
         ## compute log ratio
         logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                              t.inf=chain$current.t.inf, ances=new.ances) +
+                              t.inf=new.t.inf, ances=new.ances) +
                                   ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
                                       ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
                                                 t.inf=chain$current.t.inf, ances=chain$current.ances) -
@@ -142,12 +145,14 @@ move.swap.ances <- function(data, chain, config, r.acc)
         if(logratio >= r.acc)
         {
             chain$current.ances[i] <- new.ances[i]
+            chain$current.t.inf[i] <- new.t.inf[i]
         } else {
             new.ances[i] <- chain$current.ances[i]
+            new.t.inf[i] <- chain$current.t.inf[i]
         }
     } # end for loop
 
-    return(chain$current.ances)
+    return(chain)
 } # end move.swap.ances
 
 

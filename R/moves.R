@@ -187,11 +187,12 @@ find.possible.ances <- function(t.inf, i)
 
 
 
+
+
 ## non-exported function
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes
-##
 swap.ances <- function(ances, t.inf, i)
 {
     ## stop if 'i' out of range

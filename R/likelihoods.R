@@ -12,7 +12,8 @@
 #' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
 #'
 #'
-ll.timing.infections <- function(t.inf, log.w, ances){
+ll.timing.infections <- function(t.inf, log.w, ances)
+{
     ## find indices in w (delay + 1 day)
     T <- (t.inf-t.inf[ances])+1
     T <- T[!is.na(T)]
@@ -34,7 +35,8 @@ ll.timing.infections <- function(t.inf, log.w, ances){
 #' @param sampling.times a vector of integers indicating dates of sampling/observation/reporting of the cases
 #' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
 #'
-ll.timing.sampling <- function(t.inf, log.f, sampling.times){
+ll.timing.sampling <- function(t.inf, log.f, sampling.times)
+{
     ## find indices in w (delay + 1 day)
     T <- (sampling.times-t.inf)+1
     T <- T[!is.na(T)]
@@ -53,7 +55,8 @@ ll.timing.sampling <- function(t.inf, log.f, sampling.times){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing <- function(t.inf, log.w, log.f, ances, sampling.times){
+ll.timing <- function(t.inf, log.w, log.f, ances, sampling.times)
+{
     return(ll.timing.infections(t.inf=t.inf, log.w=log.w, ances=ances) +
            ll.timing.sampling(t.inf=t.inf, log.f=log.f, sampling.times=sampling.times))
 } # end ll.timing
@@ -68,7 +71,8 @@ ll.timing <- function(t.inf, log.w, log.f, ances, sampling.times){
 #' @param D a matrix of pairwise genetic distances
 #' @param mu a mutation rate
 #' @param gen.length length of the genetic sequences
-ll.genetic <- function(D, gen.length, ances, mu){
+ll.genetic <- function(D, gen.length, ances, mu)
+{
     nmut <- diag(D[,ances])
     return(sum(log(mu)*nmut + log(1-mu)*(gen.length-nmut), na.rm=TRUE))
 } # end ll.genetic
@@ -82,7 +86,8 @@ ll.genetic <- function(D, gen.length, ances, mu){
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
-ll.all <- function(data, chain){
+ll.all <- function(data, chain)
+{
     return(ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
                      ances=chain$current.ances, t.inf=chain$current.t.inf) +
            ll.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)

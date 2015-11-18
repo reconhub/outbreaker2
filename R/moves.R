@@ -13,7 +13,8 @@
 #'
 #' @importFrom stats rnorm
 #'
-move.mu <- function(data, chain, r.new, r.acc){
+move.mu <- function(data, chain, r.new, r.acc)
+{
     ## get new proposed values
     new.mu <- chain$current.mu + r.new
 
@@ -36,15 +37,16 @@ move.mu <- function(data, chain, r.new, r.acc){
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, chain, r.acc){ # assumes symmetric proposal
+move.t.inf <- function(data, chain, r.acc) # assumes symmetric proposal
+{
     ## propose new t.inf
     new.t.inf <- chain$current.t.inf + sample(-1:1, size=length(chain$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
     logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
                           ances=chain$current.ances, t.inf=new.t.inf) -
-        ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                          ances=chain$current.ances, t.inf=chain$current.t.inf)
+                              ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
+                                        ances=chain$current.ances, t.inf=chain$current.t.inf)
 
     ## accept/reject
     if(logratio >= r.acc) return(new.t.inf)
@@ -60,7 +62,8 @@ move.t.inf <- function(data, chain, r.acc){ # assumes symmetric proposal
 #' @export
 #' @param t.inf a vector of infection dates
 #'
-rances <- function(t.inf){
+rances <- function(t.inf)
+{
     ## find possible ancestors
     canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
     diag(canBeAnces) <- FALSE
@@ -79,7 +82,8 @@ rances <- function(t.inf){
 ## non-exported function
 ## finds possible ancestor for a case 'i'
 ## (any case before i)
-find.possible.ances <- function(t.inf, i){
+find.possible.ances <- function(t.inf, i)
+{
     if(length(i)>1) stop("i has a length > 1")
     if(any(t.inf[i]==min(t.inf))) return(NA)
     return(sample(which(t.inf < t.inf[i[1]]), 1))
@@ -92,10 +96,12 @@ find.possible.ances <- function(t.inf, i){
 #' @rdname moves
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
-move.ances <- function(data, chain, config, r.acc){
+move.ances <- function(data, chain, config, r.acc)
+{
     ## find out which ancestries to move
     ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
-    if(!any(ances.can.move)) {
+    if(!any(ances.can.move))
+    {
         warning("trying to move ancestries but none can move")
         return(chain$current.ances)
     }
@@ -106,7 +112,8 @@ move.ances <- function(data, chain, config, r.acc){
     new.ances <- chain$current.ances
 
     ## move all ancestries that should be moved
-    for(i in to.move){
+    for(i in to.move)
+    {
         ## propose new ancestor
         new.ances[i] <- find.possible.ances(chain$current.t.inf, i)
 
@@ -119,7 +126,8 @@ move.ances <- function(data, chain, config, r.acc){
                                                     ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
 
         ## accept/reject
-        if(logratio >= r.acc){
+        if(logratio >= r.acc)
+        {
             chain$current.ances[i] <- new.ances[i]
         } else {
             new.ances[i] <- chain$current.ances[i]

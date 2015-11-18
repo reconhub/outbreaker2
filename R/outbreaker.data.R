@@ -30,7 +30,8 @@
 #' x <- fakeOutbreak
 #' outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
 #'
-outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
+outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL)
+{
     ## CHECK DATES ##
     if(inherits(dates, "Date")) dates <- dates-min(dates)
     if(inherits(dates, "POSIXct")) dates <- difftime(dates, min(dates), units="days")
@@ -44,14 +45,16 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 
 
     ## CHECK W.DENS ##
-    if(any(w.dens<0)) {
+    if(any(w.dens<0))
+    {
         stop("w.dens has negative entries (these should be probabilities!)")
     }
     w.dens[1] <- 0
     ## add an exponential tail summing to 1e-4 to 'w'
     ## to cover the span of the outbreak
     ## (avoids starting with -Inf temporal loglike)
-    if(length(w.dens)<MAX.RANGE) {
+    if(length(w.dens)<MAX.RANGE)
+    {
         length.to.add <- (MAX.RANGE-length(w.dens)) + 10 # +10 to be on the safe side
         val.to.add <- dexp(1:length.to.add, 1)
         val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
@@ -62,7 +65,8 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 
 
     ## CHECK F.DENS ##
-    if(any(f.dens<0)) {
+    if(any(f.dens<0))
+    {
         stop("f.dens has negative entries (these should be probabilities!)")
     }
     f.dens[1] <- 0
@@ -70,7 +74,8 @@ outbreaker.data <- function(dates, w.dens, f.dens=w.dens, dna=NULL) {
 
 
     ## CHECK DNA ##
-    if(!is.null(dna)){
+    if(!is.null(dna))
+    {
         if(!inherits(dna, "DNAbin")) stop("dna is not a DNAbin object.")
         if(!is.matrix(dna)) dna <- as.matrix(dna)
         L <- ncol(dna) #  (genome length)

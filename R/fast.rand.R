@@ -8,7 +8,7 @@
 #' \item \code{fast.rnorm1} creates an optimized function generating a single value from Norm(mean, sd)
 #' }
 #'
-#' @param size.batch the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.
+#' @param batch.size the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.
 #'
 #' @rdname fast.rand
 #' @aliases fast.runif fast.log.runif fast.log.runif1 fast.log.rnorm fast.log.rnorm1
@@ -28,9 +28,9 @@
 #' environment(x)$counter
 #' environment(x)$values
 #'
-fast.log.runif <- function(size.batch=5e4){
+fast.log.runif <- function(batch.size=5e4){
     ## initialize array
-    values <- log(runif(size.batch))
+    values <- log(runif(batch.size))
 
     ## initialize counter
     counter <- 0
@@ -38,15 +38,15 @@ fast.log.runif <- function(size.batch=5e4){
     ## create returned function
     out <- function(n){
         ## read from array if enough values
-        if((counter+n) <= size.batch){
+        if((counter+n) <= batch.size){
             counter <<- counter+n
             return(values[seq.int(counter-n+1, counter)])
         } else {
             ## else, regenerate vector of values
-            if(n>size.batch) {
-                size.batch <<- n
+            if(n>batch.size) {
+                batch.size <<- n
             }
-            values <<- log(runif(size.batch))
+            values <<- log(runif(batch.size))
             counter <<- 0
 
             return(out(n))
@@ -63,9 +63,9 @@ fast.log.runif <- function(size.batch=5e4){
 
 #' @rdname fast.rand
 #' @export
-fast.log.runif1 <- function(size.batch=5e4){
+fast.log.runif1 <- function(batch.size=5e4){
     ## initialize array
-    values <- log(runif(size.batch))
+    values <- log(runif(batch.size))
 
     ## initialize counter
     counter <- 0
@@ -73,12 +73,12 @@ fast.log.runif1 <- function(size.batch=5e4){
     ## create returned function
     out <- function(){
         ## read from array if enough values
-        if(counter < size.batch){
+        if(counter < batch.size){
             counter <<- counter+1
             return(values[counter])
         } else {
             ## else, regenerate vector of values
-            values <<- log(runif(size.batch))
+            values <<- log(runif(batch.size))
             counter <<- 0
             return(out())
         }
@@ -94,9 +94,9 @@ fast.log.runif1 <- function(size.batch=5e4){
 
 #' @rdname fast.rand
 #' @export
-fast.rnorm <- function(mean=0, sd=1, size.batch=5e4){
+fast.rnorm <- function(mean=0, sd=1, batch.size=5e4){
     ## initialize array
-    values <- rnorm(n=size.batch, mean=mean, sd=sd)
+    values <- rnorm(n=batch.size, mean=mean, sd=sd)
 
     ## initialize counter
     counter <- 0
@@ -104,15 +104,15 @@ fast.rnorm <- function(mean=0, sd=1, size.batch=5e4){
     ## create returned function
     out <- function(n){
         ## read from array if enough values
-        if((counter+n) <= size.batch){
+        if((counter+n) <= batch.size){
             counter <<- counter+n
             return(values[seq.int(counter-n+1, counter)])
         } else {
             ## else, regenerate vector of values
-            if(n>size.batch) {
-                size.batch <<- n
+            if(n>batch.size) {
+                batch.size <<- n
             }
-            values <<- rnorm(size.batch, mean=mean, sd=sd)
+            values <<- rnorm(batch.size, mean=mean, sd=sd)
             counter <<- 0
 
             return(out(n))
@@ -129,9 +129,9 @@ fast.rnorm <- function(mean=0, sd=1, size.batch=5e4){
 
 #' @rdname fast.rand
 #' @export
-fast.rnorm1 <- function(mean=0, sd=1, size.batch=5e4){
+fast.rnorm1 <- function(mean=0, sd=1, batch.size=5e4){
     ## initialize array
-    values <- rnorm(n=size.batch, mean=mean, sd=sd)
+    values <- rnorm(n=batch.size, mean=mean, sd=sd)
 
     ## initialize counter
     counter <- 0
@@ -139,12 +139,12 @@ fast.rnorm1 <- function(mean=0, sd=1, size.batch=5e4){
     ## create returned function
     out <- function(){
         ## read from array if enough values
-        if(counter < size.batch){
+        if(counter < batch.size){
             counter <<- counter+1
             return(values[counter])
         } else {
             ## else, regenerate vector of values
-            values <<- rnorm(n=size.batch, mean=mean, sd=sd)
+            values <<- rnorm(n=batch.size, mean=mean, sd=sd)
             counter <<- 0
             return(out())
         }

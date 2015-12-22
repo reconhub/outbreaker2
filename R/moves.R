@@ -13,9 +13,9 @@
 #'
 #' @importFrom stats rnorm
 #'
-move.mu <- function(data, chain, config){
+move.mu <- function(data, chain, rand){
     ## get new proposed values
-    new.mu <- chain$current.mu + config$mu.rnorm1()
+    new.mu <- chain$current.mu + rand$mu.rnorm1()
 
     ## escape if new.mu<0 or >1
     if(new.mu<0 || new.mu>1) return(chain$current.mu)
@@ -25,7 +25,7 @@ move.mu <- function(data, chain, config){
         post.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)
 
     ## accept/reject
-    if(logratio >= config$log.runif1()) return(new.mu)
+    if(logratio >= rand$log.runif1()) return(new.mu)
     return(chain$current.mu)
 } # end move.mu
 
@@ -36,7 +36,7 @@ move.mu <- function(data, chain, config){
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, chain) # assumes symmetric proposal
+move.t.inf <- function(data, chain, rand) # assumes symmetric proposal
 {
     ## propose new t.inf
     new.t.inf <- chain$current.t.inf + sample(-1:1, size=length(chain$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
@@ -48,7 +48,7 @@ move.t.inf <- function(data, chain) # assumes symmetric proposal
                                         ances=chain$current.ances, t.inf=chain$current.t.inf)
 
     ## accept/reject
-    if(logratio >= config$log.runif1()) return(new.t.inf)
+    if(logratio >= rand$log.runif1()) return(new.t.inf)
 
     return(chain$current.t.inf)
 } # end move.t.inf
@@ -59,7 +59,7 @@ move.t.inf <- function(data, chain) # assumes symmetric proposal
 #' @rdname moves
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
-move.ances <- function(data, chain, config){
+move.ances <- function(data, chain, config, rand){
     ## find out which ancestries to move
     ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
     if(!any(ances.can.move)){
@@ -86,7 +86,7 @@ move.ances <- function(data, chain, config){
                                                     ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
 
         ## accept/reject
-        if(logratio >= config$log.runif1()){
+        if(logratio >= rand$log.runif1()){
             chain$current.ances[i] <- new.ances[i]
         } else {
             new.ances[i] <- chain$current.ances[i]
@@ -104,7 +104,7 @@ move.ances <- function(data, chain, config){
 #' @rdname moves
 #' @export
 #'
-move.swap.ances <- function(data, chain, config){
+move.swap.ances <- function(data, chain, config, rand=rand){
      ## find out which ancestries to move
     ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
     if(!any(ances.can.move)){
@@ -134,7 +134,7 @@ move.swap.ances <- function(data, chain, config){
                                                     ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
 
         ## accept/reject
-        if(logratio >= config$log.runif1()){
+        if(logratio >= rand$log.runif1()){
             chain$current.ances[i] <- new.ances[i]
             chain$current.t.inf[i] <- new.t.inf[i]
         } else {

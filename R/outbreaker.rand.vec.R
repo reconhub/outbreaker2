@@ -27,21 +27,24 @@ outbreaker.rand.vec <- function(config)
 
 
 
-counter <- function(batch.size=10){
-    i <- 0
-    out <- function(){
-        if(i<batch.size){
-            i <<- i+1
-        } else {
-            i <<- 0
-        }
-        return(i)
-    }
-    return(out)
-}
-
-
-outbreaker.log.runif <- function(size.batch=10){
+#' Fast random uniform number generation
+#'
+#' These functions use closure programming for fast generation of (logged) random numbers from a uniform distribution on [0;1].
+#' \itemize{
+#' \item \code{fast.log.runif} creates a function which generates 'n' values
+#' \item \code{fast.runif1} creates an optimized function generating a single value
+#' }
+#'
+#' @param size.batch the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.
+#'
+#' @rdname fast.runif
+#' @aliases fast.log.runif fast.log.runif1
+#'
+#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
+#'
+#' @export
+#'
+fast.log.runif <- function(size.batch=5e4){
     ## initialize array
     values <- log(runif(size.batch))
 
@@ -52,14 +55,10 @@ outbreaker.log.runif <- function(size.batch=10){
     out <- function(n){
         ## read from array if enough values
         if((counter+n) <= size.batch){
-            cat("\n reading values from vector\n")
             counter <<- counter+n
-            cat("\nCounter is now: \n", counter)
-            cat("\n Reading values idx: ", counter-n+1, ":", counter)
             return(values[seq.int(counter-n+1, counter)])
         } else {
-            ## regenerate vector of values
-            cat("\n generating vector\n")
+            ## else, regenerate vector of values
             if(n>size.batch) {
                 size.batch <<- n
             }
@@ -72,4 +71,33 @@ outbreaker.log.runif <- function(size.batch=10){
 
     ## return output function
     return(out)
-}
+} # end outbreaker.log.runif
+
+
+
+#' @rdname fast.runif
+#' @export
+fast.log.runif1 <- function(size.batch=5e4){
+    ## initialize array
+    values <- log(runif(size.batch))
+
+    ## initialize counter
+    counter <- 0
+
+    ## create returned function
+    out <- function(){
+        ## read from array if enough values
+        if(counter < size.batch){
+            counter <<- counter+1
+            return(values[counter])
+        } else {
+            ## else, regenerate vector of values
+            values <<- log(runif(size.batch))
+            counter <<- 0
+            return(out())
+        }
+    }
+
+    ## return output function
+    return(out)
+} # end fast.log.runif1

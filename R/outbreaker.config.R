@@ -71,7 +71,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL)
                      move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
-                     batch.size=5e4)
+                     batch.size=1e6)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)

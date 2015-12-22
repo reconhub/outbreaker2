@@ -17,11 +17,11 @@ test_that("parameters and augmented data move", {
     ## expect_equal(config$init.mu+0.002, move.mu(chain=chain, data=data, r.acc=-Inf, r.new=0.002))
 
     ## test move.swap.ances ##
-    res <- move.swap.ances(data=data, chain=chain, config=config)
+    res <- move.swap.ances(data=data, chain=chain, config=config, rand=rand)
     expect_equal(length(chain), length(res))
     expect_equal(length(unlist(chain)), length(unlist(res)))
     expect_equal(names(chain), names(res))
-    res <- move.swap.ances(data=data, chain=chain, config=config)
+    res <- move.swap.ances(data=data, chain=chain, config=config, rand=rand)
     expect_equal(chain,res)
 })
 

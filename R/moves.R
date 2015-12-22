@@ -104,7 +104,7 @@ move.ances <- function(data, chain, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.swap.ances <- function(data, chain, config, rand=rand){
+move.swap.ances <- function(data, chain, config, rand){
      ## find out which ancestries to move
     ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
     if(!any(ances.can.move)){

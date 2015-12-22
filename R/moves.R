@@ -13,8 +13,7 @@
 #'
 #' @importFrom stats rnorm
 #'
-move.mu <- function(data, chain, config)
-{
+move.mu <- function(data, chain, config){
     ## get new proposed values
     new.mu <- chain$current.mu + config$mu.rnorm1()
 
@@ -37,7 +36,7 @@ move.mu <- function(data, chain, config)
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, chain, r.acc) # assumes symmetric proposal
+move.t.inf <- function(data, chain) # assumes symmetric proposal
 {
     ## propose new t.inf
     new.t.inf <- chain$current.t.inf + sample(-1:1, size=length(chain$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
@@ -49,7 +48,7 @@ move.t.inf <- function(data, chain, r.acc) # assumes symmetric proposal
                                         ances=chain$current.ances, t.inf=chain$current.t.inf)
 
     ## accept/reject
-    if(logratio >= r.acc) return(new.t.inf)
+    if(logratio >= config$log.runif1()) return(new.t.inf)
 
     return(chain$current.t.inf)
 } # end move.t.inf
@@ -60,12 +59,10 @@ move.t.inf <- function(data, chain, r.acc) # assumes symmetric proposal
 #' @rdname moves
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
-move.ances <- function(data, chain, config, r.acc)
-{
+move.ances <- function(data, chain, config){
     ## find out which ancestries to move
     ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
-    if(!any(ances.can.move))
-    {
+    if(!any(ances.can.move)){
         warning("trying to move ancestries but none can move")
         return(chain$current.ances)
     }
@@ -76,8 +73,7 @@ move.ances <- function(data, chain, config, r.acc)
     new.ances <- chain$current.ances
 
     ## move all ancestries that should be moved
-    for(i in to.move)
-    {
+    for(i in to.move){
         ## propose new ancestor
         new.ances[i] <- find.possible.ances(chain$current.t.inf, i)
 
@@ -90,8 +86,7 @@ move.ances <- function(data, chain, config, r.acc)
                                                     ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
 
         ## accept/reject
-        if(logratio >= r.acc)
-        {
+        if(logratio >= config$log.runif1()){
             chain$current.ances[i] <- new.ances[i]
         } else {
             new.ances[i] <- chain$current.ances[i]
@@ -109,12 +104,10 @@ move.ances <- function(data, chain, config, r.acc)
 #' @rdname moves
 #' @export
 #'
-move.swap.ances <- function(data, chain, config, r.acc)
-{
+move.swap.ances <- function(data, chain, config){
      ## find out which ancestries to move
     ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
-    if(!any(ances.can.move))
-    {
+    if(!any(ances.can.move)){
         warning("trying to move ancestries but none can move")
         return(chain$current.ances)
     }
@@ -126,8 +119,7 @@ move.swap.ances <- function(data, chain, config, r.acc)
     new.t.inf <- chain$current.t.inf
 
     ## move all ancestries that should be moved
-    for(i in to.move)
-    {
+    for(i in to.move){
         ## swap ancestries
         temp <- swap.ances(new.ances, new.t.inf, i)
         new.ances <- temp$ances
@@ -142,8 +134,7 @@ move.swap.ances <- function(data, chain, config, r.acc)
                                                     ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
 
         ## accept/reject
-        if(logratio >= r.acc)
-        {
+        if(logratio >= config$log.runif1()){
             chain$current.ances[i] <- new.ances[i]
             chain$current.t.inf[i] <- new.t.inf[i]
         } else {
@@ -163,8 +154,7 @@ move.swap.ances <- function(data, chain, config, r.acc)
 #' @export
 #' @param t.inf a vector of infection dates
 #'
-rances <- function(t.inf)
-{
+rances <- function(t.inf){
     ## find possible ancestors
     canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
     diag(canBeAnces) <- FALSE
@@ -183,8 +173,7 @@ rances <- function(t.inf)
 ## non-exported function
 ## finds possible ancestor for a case 'i'
 ## (any case before i)
-find.possible.ances <- function(t.inf, i)
-{
+find.possible.ances <- function(t.inf, i){
     if(length(i)>1) stop("i has a length > 1")
     if(any(t.inf[i]==min(t.inf))) return(NA)
     return(sample(which(t.inf < t.inf[i[1]]), 1))
@@ -198,8 +187,7 @@ find.possible.ances <- function(t.inf, i)
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes
-swap.ances <- function(ances, t.inf, i)
-{
+swap.ances <- function(ances, t.inf, i){
     ## stop if 'i' out of range
     if(i>length(ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(ances), " cases")
 
@@ -207,8 +195,7 @@ swap.ances <- function(ances, t.inf, i)
     x <- ances[i]
 
     ## stop if case 'i' is imported
-    if(is.na(x))
-    {
+    if(is.na(x)){
         warning("trying to swap the ancestry of the imported case ", i)
         return(list(ances=ances, t.inf=t.inf))
     }

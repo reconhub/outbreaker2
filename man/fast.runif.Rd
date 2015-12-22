@@ -3,6 +3,7 @@
 \name{fast.log.runif}
 \alias{fast.log.runif}
 \alias{fast.log.runif1}
+\alias{fast.runif}
 \title{Fast random uniform number generation}
 \usage{
 fast.log.runif(size.batch = 50000)
@@ -18,6 +19,18 @@ These functions use closure programming for fast generation of (logged) random n
 \item \code{fast.log.runif} creates a function which generates 'n' values
 \item \code{fast.runif1} creates an optimized function generating a single value
 }
+}
+\examples{
+x <- fast.log.runif(10)
+environment(x)$values
+x(6)
+environment(x)$counter
+x(4)
+environment(x)$counter
+x(3)
+environment(x)$counter
+environment(x)$values
+
 }
 \author{
 Thibaut Jombart \email{t.jombart@imperial.ac.uk}

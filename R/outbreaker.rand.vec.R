@@ -38,11 +38,22 @@ outbreaker.rand.vec <- function(config)
 #' @param size.batch the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.
 #'
 #' @rdname fast.runif
-#' @aliases fast.log.runif fast.log.runif1
+#' @aliases fast.runif fast.log.runif fast.log.runif1
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @export
+#'
+#' @examples
+#' x <- fast.log.runif(10)
+#' environment(x)$values
+#' x(6)
+#' environment(x)$counter
+#' x(4)
+#' environment(x)$counter
+#' x(3)
+#' environment(x)$counter
+#' environment(x)$values
 #'
 fast.log.runif <- function(size.batch=5e4){
     ## initialize array

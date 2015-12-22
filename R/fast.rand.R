@@ -94,7 +94,7 @@ fast.log.runif1 <- function(batch.size=5e4){
 
 #' @rdname fast.rand
 #' @export
-fast.rnorm <- function(mean=0, sd=1, batch.size=5e4){
+fast.rnorm <- function(batch.size=5e4, mean=0, sd=1){
     ## initialize array
     values <- rnorm(n=batch.size, mean=mean, sd=sd)
 
@@ -129,7 +129,7 @@ fast.rnorm <- function(mean=0, sd=1, batch.size=5e4){
 
 #' @rdname fast.rand
 #' @export
-fast.rnorm1 <- function(mean=0, sd=1, batch.size=5e4){
+fast.rnorm1 <- function(batch.size=5e4, mean=0, sd=1){
     ## initialize array
     values <- rnorm(n=batch.size, mean=mean, sd=sd)
 

@@ -10,16 +10,16 @@
 \alias{fast.runif}
 \title{Fast random number generation}
 \usage{
-fast.log.runif(size.batch = 50000)
+fast.log.runif(batch.size = 50000)
 
-fast.log.runif1(size.batch = 50000)
+fast.log.runif1(batch.size = 50000)
 
-fast.rnorm(mean = 0, sd = 1, size.batch = 50000)
+fast.rnorm(mean = 0, sd = 1, batch.size = 50000)
 
-fast.rnorm1(mean = 0, sd = 1, size.batch = 50000)
+fast.rnorm1(mean = 0, sd = 1, batch.size = 50000)
 }
 \arguments{
-\item{size.batch}{the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.}
+\item{batch.size}{the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.}
 }
 \description{
 These functions use closure programming for fast generation of random numbers from various distributions.

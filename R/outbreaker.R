@@ -66,7 +66,7 @@ outbreaker <- function(dates, dna=NULL,
     ## INITIALIZE MCMC CHAIN ##
     chain <- outbreaker.mcmc.init(data=data, config=config)
 
-    ## INITIALIZE PRE-DRAWN RANDOM ARRAYS ##
+    ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
 
 
@@ -76,25 +76,25 @@ outbreaker <- function(dates, dna=NULL,
         ## move infection dates ##
         if(config$move.t.inf)
         {
-            chain$current.t.inf <- move.t.inf(data=data, chain=chain, r.acc=rand$acc.t.inf[i])
+            chain$current.t.inf <- move.t.inf(data=data, chain=chain, config=config)
         }
 
         ## move ancestries ##
         if(config$move.ances)
         {
-            chain$current.ances <- move.ances(data=data, chain=chain, config=config, r.acc=rand$acc.ances[i])
+            chain$current.ances <- move.ances(data=data, chain=chain, config=config)
         }
 
         ## swap ancestries ##
         if(config$move.ances && config$move.t.inf)
         {
-            chain <- move.swap.ances(data=data, chain=chain, config=config, r.acc=rand$acc.ances[i])
+            chain <- move.swap.ances(data=data, chain=chain, config=config)
         }
 
         ## move mu ##
         if(config$move.mu)
         {
-            chain$current.mu <- move.mu(data=data, chain=chain, r.new=rand$mu[i], r.acc=rand$acc.mu[i])
+            chain$current.mu <- move.mu(data=data, chain=chain, config=config)
         }
 
         ## store outputs if needed

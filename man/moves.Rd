@@ -3,6 +3,7 @@
 \name{move.mu}
 \alias{move.ances}
 \alias{move.mu}
+\alias{move.swap.ances}
 \alias{move.t.inf}
 \alias{rances}
 \title{Movements of augmented data and parameters for outbreaker2}
@@ -11,9 +12,11 @@ move.mu(data, chain, r.new, r.acc)
 
 move.t.inf(data, chain, r.acc)
 
-rances(t.inf)
-
 move.ances(data, chain, config, r.acc)
+
+move.swap.ances(data, chain, config, r.acc)
+
+rances(t.inf)
 }
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
@@ -24,9 +27,9 @@ move.ances(data, chain, config, r.acc)
 
 \item{r.acc}{a logged random variate from Unif(0,1)}
 
-\item{t.inf}{a vector of infection dates}
-
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
+
+\item{t.inf}{a vector of infection dates}
 }
 \description{
 These functions are used to move in the parameter space in the MCMC.

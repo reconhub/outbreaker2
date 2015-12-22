@@ -10,7 +10,7 @@
 #'
 #' @param batch.size the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.
 #'
-#' @rdname fast.rand
+#' @rdname make.fast.rand
 #' @aliases make.fast.runif make.fast.log.runif make.fast.log.runif1 make.fast.log.rnorm make.fast.log.rnorm1
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
@@ -94,6 +94,8 @@ make.fast.log.runif1 <- function(batch.size=5e4){
 
 #' @rdname make.fast.rand
 #' @export
+#' @param mean the mean of the normal distribution (default 0)
+#' @param sd the mean of the normal distribution (default 1)
 make.fast.rnorm <- function(batch.size=5e4, mean=0, sd=1){
     ## initialize array
     values <- rnorm(n=batch.size, mean=mean, sd=sd)

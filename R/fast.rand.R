@@ -2,23 +2,23 @@
 #'
 #' These functions use closure programming for fast generation of random numbers from various distributions.
 #' \itemize{
-#' \item \code{fast.log.runif} creates a function which generates 'n' (logged) values from Unif(0,1)
-#' \item \code{fast.runif1} creates an optimized function generating a single (logged) value from Unif(0,1)
-#' \item \code{fast.rnorm} creates a function which generates 'n' values from Norm(mean, sd)
-#' \item \code{fast.rnorm1} creates an optimized function generating a single value from Norm(mean, sd)
+#' \item \code{make.fast.log.runif} creates a function which generates 'n' (logged) values from Unif(0,1)
+#' \item \code{make.fast.runif1} creates an optimized function generating a single (logged) value from Unif(0,1)
+#' \item \code{make.fast.rnorm} creates a function which generates 'n' values from Norm(mean, sd)
+#' \item \code{make.fast.rnorm1} creates an optimized function generating a single value from Norm(mean, sd)
 #' }
 #'
 #' @param batch.size the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.
 #'
 #' @rdname fast.rand
-#' @aliases fast.runif fast.log.runif fast.log.runif1 fast.log.rnorm fast.log.rnorm1
+#' @aliases make.fast.runif make.fast.log.runif make.fast.log.runif1 make.fast.log.rnorm make.fast.log.rnorm1
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @export
 #'
 #' @examples
-#' x <- fast.log.runif(10)
+#' x <- make.fast.log.runif(10)
 #' environment(x)$values
 #' x(6)
 #' environment(x)$counter
@@ -28,7 +28,7 @@
 #' environment(x)$counter
 #' environment(x)$values
 #'
-fast.log.runif <- function(batch.size=5e4){
+make.fast.log.runif <- function(batch.size=5e4){
     ## initialize array
     values <- log(runif(batch.size))
 
@@ -55,15 +55,15 @@ fast.log.runif <- function(batch.size=5e4){
 
     ## return output function
     return(out)
-} # end fast.log.runif
+} # end make.fast.log.runif
 
 
 
 
 
-#' @rdname fast.rand
+#' @rdname make.fast.rand
 #' @export
-fast.log.runif1 <- function(batch.size=5e4){
+make.fast.log.runif1 <- function(batch.size=5e4){
     ## initialize array
     values <- log(runif(batch.size))
 
@@ -86,15 +86,15 @@ fast.log.runif1 <- function(batch.size=5e4){
 
     ## return output function
     return(out)
-} # end fast.log.runif1
+} # end make.fast.log.runif1
 
 
 
 
 
-#' @rdname fast.rand
+#' @rdname make.fast.rand
 #' @export
-fast.rnorm <- function(batch.size=5e4, mean=0, sd=1){
+make.fast.rnorm <- function(batch.size=5e4, mean=0, sd=1){
     ## initialize array
     values <- rnorm(n=batch.size, mean=mean, sd=sd)
 
@@ -121,15 +121,15 @@ fast.rnorm <- function(batch.size=5e4, mean=0, sd=1){
 
     ## return output function
     return(out)
-} # end fast.rnorm
+} # end make.fast.rnorm
 
 
 
 
 
-#' @rdname fast.rand
+#' @rdname make.fast.rand
 #' @export
-fast.rnorm1 <- function(batch.size=5e4, mean=0, sd=1){
+make.fast.rnorm1 <- function(batch.size=5e4, mean=0, sd=1){
     ## initialize array
     values <- rnorm(n=batch.size, mean=mean, sd=sd)
 
@@ -152,4 +152,4 @@ fast.rnorm1 <- function(batch.size=5e4, mean=0, sd=1){
 
     ## return output function
     return(out)
-} # end fast.rnorm1
+} # end make.fast.rnorm1

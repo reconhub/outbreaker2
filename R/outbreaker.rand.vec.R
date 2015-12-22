@@ -53,8 +53,10 @@ outbreaker.log.runif <- function(size.batch=10){
         ## read from array if enough values
         if((counter+n) <= size.batch){
             cat("\n reading values from vector\n")
-            on.exit(return(values[seq.int(counter+1, counter+n)]))
             counter <<- counter+n
+            cat("\nCounter is now: \n", counter)
+            cat("\n Reading values idx: ", counter-n+1, ":", counter)
+            return(values[seq.int(counter-n+1, counter)])
         } else {
             ## regenerate vector of values
             cat("\n generating vector\n")

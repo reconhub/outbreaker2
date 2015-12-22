@@ -13,10 +13,10 @@
 #'
 #' @importFrom stats rnorm
 #'
-move.mu <- function(data, chain, r.new, r.acc)
+move.mu <- function(data, chain, config)
 {
     ## get new proposed values
-    new.mu <- chain$current.mu + r.new
+    new.mu <- chain$current.mu + config$mu.rnorm1()
 
     ## escape if new.mu<0 or >1
     if(new.mu<0 || new.mu>1) return(chain$current.mu)
@@ -26,7 +26,7 @@ move.mu <- function(data, chain, r.new, r.acc)
         post.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)
 
     ## accept/reject
-    if(logratio >= r.acc) return(new.mu)
+    if(logratio >= config$log.runif1()) return(new.mu)
     return(chain$current.mu)
 } # end move.mu
 

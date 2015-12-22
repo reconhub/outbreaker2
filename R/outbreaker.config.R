@@ -70,7 +70,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL)
                      init.mu=1e-4,
                      move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001,
-                     prop.ances.move=1/4)
+                     prop.ances.move=1/4,
+                     batch.size=5e4)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -112,6 +113,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL)
     if(!is.numeric(config$prop.ances.move)) stop("prop.ances.move is not a numeric value")
     if(config$prop.ances.move < 0 ) stop("prop.ances.move is negative")
     if(config$prop.ances.move > 1 ) stop("prop.ances.move is greater than one")
+
+    ## check batch.size
+    if(!is.numeric(config$batch.size)) stop("batch.size is not numeric")
+    if(config$batch.size<1) stop("batch.size is less than 1")
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

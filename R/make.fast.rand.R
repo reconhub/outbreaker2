@@ -18,6 +18,8 @@
 #'
 #' @export
 #'
+#' @importFrom compiler cmpfun
+#'
 #' @examples
 #' ## from Unif(0,1)
 #' x <- make.fast.rand()
@@ -29,6 +31,12 @@
 #' x(3)
 #' environment(x)$counter
 #' environment(x)$values
+#'
+#' ## check with microbenchmark
+#' if(require(microbenchmark)){
+#' x1 <- make.fast.rand1()
+#' plot(microbenchmark(x1(), runif(1), times=1e3L), ylim=c(1000,3000))
+#' }
 #'
 make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## initialize array
@@ -61,7 +69,7 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     return(out)
 } # end make.fast.rand
 
-
+make.fast.rand <- compiler::cmpfun(make.fast.rand)
 
 
 
@@ -92,7 +100,8 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
 
     ## return output function
     return(out)
-} # end make.fast.log.runif1
+} # end make.fast.rand1
 
+make.fast.rand1 <- compiler::cmpfun(make.fast.rand1)
 
 

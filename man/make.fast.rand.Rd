@@ -14,7 +14,7 @@ make.fast.rand(..., f = runif, batch.size = 50000, log = FALSE)
 
 \item{batch.size}{the size of the pre-generated vectors of values; larger batches lead to faster computations but require more RAM.}
 
-\item{log}{a logical indicating whether generated values should be logged.}
+\item{log}{a logical indicating whether generated values should be logged; defaults to FALSE.}
 }
 \description{
 These functions use pre-generation of large random vectors to speed up random number generation.
@@ -34,6 +34,12 @@ environment(x)$counter
 x(3)
 environment(x)$counter
 environment(x)$values
+
+## check with microbenchmark
+if(require(microbenchmark)){
+x1 <- make.fast.rand1()
+plot(microbenchmark(x1(), runif(1), times=1e3L), ylim=c(1000,3000))
+}
 
 }
 \author{

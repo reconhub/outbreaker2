@@ -17,7 +17,8 @@ Imports:
     ape,
     igraph,
     adegenet,
-    coda
+    coda, 
+    compiler
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information.
 License: GPL (>=2)

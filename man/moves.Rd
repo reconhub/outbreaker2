@@ -23,13 +23,11 @@ rances(t.inf)
 
 \item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
 
+\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
+
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
 
 \item{t.inf}{a vector of infection dates}
-
-\item{r.new}{a deviation from the previous mu}
-
-\item{r.acc}{a logged random variate from Unif(0,1)}
 }
 \description{
 These functions are used to move in the parameter space in the MCMC.

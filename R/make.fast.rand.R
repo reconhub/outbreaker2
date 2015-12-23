@@ -12,7 +12,7 @@
 #' @param log a logical indicating whether generated values should be logged; defaults to FALSE.
 #'
 #' @rdname make.fast.rand
-#' @aliases make.fast.rand make.fast.rand1
+#' @aliases make.fast.rand
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}, Rich Fitzjohn
 #'
@@ -73,8 +73,9 @@ make.fast.rand <- compiler::cmpfun(make.fast.rand)
 
 
 
-#' @rdname make.fast.rand1
+#' @rdname make.fast.rand
 #' @export
+#' @aliases  make.fast.rand1
 make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## initialize array
     values <- f(batch.size, ...)

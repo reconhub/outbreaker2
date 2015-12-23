@@ -8,9 +8,7 @@
 #'
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
-#' @param r.new a deviation from the previous mu
-#' @param r.acc a logged random variate from Unif(0,1)
-#'
+#' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #' @importFrom stats rnorm
 #'
 move.mu <- function(data, chain, rand){

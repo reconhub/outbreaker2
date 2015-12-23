@@ -6,6 +6,8 @@
 \title{Fast random number generation}
 \usage{
 make.fast.rand(..., f = runif, batch.size = 50000, log = FALSE)
+
+make.fast.rand1(..., f = runif, batch.size = 50000, log = FALSE)
 }
 \arguments{
 \item{...}{arguments to be passed to a function implementing random number generation, e.g. \code{runif} or \code{rnorm}.}

@@ -6,7 +6,8 @@ Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
 Author: Thibaut Jombart <thibautjombart@gmail.com>
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
 Suggests:
-    testthat
+    testthat, 
+    microbenchmark
 Depends:
     R (>= 3.0.0)
 Imports:

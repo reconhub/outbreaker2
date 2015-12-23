@@ -32,7 +32,7 @@ test_that("Outputs have expected size and types", {
     y1()
     i <- environment(y1)$counter
     expect_equal(i, 1L)
-    y <- make.fast.rnorm()
+    y <- make.fast.rand()
     y(4)
     expect_equal(environment(y)$counter, 4L)
 

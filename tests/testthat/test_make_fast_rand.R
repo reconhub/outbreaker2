@@ -8,8 +8,8 @@ test_that("Outputs have expected size and types", {
 
     ## generate data ##
     size <- as.integer(sample(10:100,1))
-    x <- make.fast.log.runif(batch.size=size)
-    x1 <- make.fast.log.runif1(batch.size=size)
+    x <- make.fast.rand(batch.size=size)
+    x1 <- make.fast.rand1(batch.size=size)
 
     ## tests ##
     ## test length of pre-generated vector
@@ -21,12 +21,12 @@ test_that("Outputs have expected size and types", {
     expect_true(length(x1())==1L)
 
     ## test values
-    set.seed(1);a <- make.fast.rnorm(mean=1, sd=1.123)(10)
+    set.seed(1);a <- make.fast.rand(mean=1, sd=1.123, f=rnorm)(10)
     set.seed(1);b <- rnorm(10, mean=1, sd=1.123)
     expect_equal(a,b)
 
     ## test counters
-    y1 <- make.fast.rnorm1()
+    y1 <- make.fast.rand1()
     i <- environment(y1)$counter
     expect_equal(i, 0L)
     y1()

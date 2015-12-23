@@ -8,13 +8,13 @@
 \alias{rances}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
-move.mu(data, chain, r.new, r.acc)
+move.mu(data, chain, rand)
 
-move.t.inf(data, chain, r.acc)
+move.t.inf(data, chain, rand)
 
-move.ances(data, chain, config, r.acc)
+move.ances(data, chain, config, rand)
 
-move.swap.ances(data, chain, config, r.acc)
+move.swap.ances(data, chain, config, rand)
 
 rances(t.inf)
 }
@@ -23,13 +23,13 @@ rances(t.inf)
 
 \item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
 
-\item{r.new}{a deviation from the previous mu}
-
-\item{r.acc}{a logged random variate from Unif(0,1)}
-
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
 
 \item{t.inf}{a vector of infection dates}
+
+\item{r.new}{a deviation from the previous mu}
+
+\item{r.acc}{a logged random variate from Unif(0,1)}
 }
 \description{
 These functions are used to move in the parameter space in the MCMC.

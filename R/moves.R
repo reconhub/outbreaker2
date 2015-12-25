@@ -7,24 +7,24 @@
 #' @rdname moves
 #'
 #' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
+#' @param param a list of output items as returned by \code{outbreaker.mcmc.init}
 #' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #' @importFrom stats rnorm
 #'
-move.mu <- function(data, chain, rand){
+move.mu <- function(data, param, rand){
     ## get new proposed values
-    new.mu <- chain$current.mu + rand$mu.rnorm1()
+    new.mu <- param$current.mu + rand$mu.rnorm1()
 
     ## escape if new.mu<0 or >1
-    if(new.mu<0 || new.mu>1) return(chain$current.mu)
+    if(new.mu<0 || new.mu>1) return(param$current.mu)
 
     ## compute log ratio  (assumes symmetric proposal)
-    logratio <- post.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=new.mu) -
-        post.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)
+    logratio <- post.genetic(D=data$D, gen.length=data$L, ances=param$current.ances, mu=new.mu) -
+        post.genetic(D=data$D, gen.length=data$L, ances=param$current.ances, mu=param$current.mu)
 
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.mu)
-    return(chain$current.mu)
+    return(param$current.mu)
 } # end move.mu
 
 
@@ -34,21 +34,21 @@ move.mu <- function(data, chain, rand){
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, chain, rand) # assumes symmetric proposal
+move.t.inf <- function(data, param, rand) # assumes symmetric proposal
 {
     ## propose new t.inf
-    new.t.inf <- chain$current.t.inf + sample(-1:1, size=length(chain$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
+    new.t.inf <- param$current.t.inf + sample(-1:1, size=length(param$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
     logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                          ances=chain$current.ances, t.inf=new.t.inf) -
+                          ances=param$current.ances, t.inf=new.t.inf) -
                               ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                                        ances=chain$current.ances, t.inf=chain$current.t.inf)
+                                        ances=param$current.ances, t.inf=param$current.t.inf)
 
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.t.inf)
 
-    return(chain$current.t.inf)
+    return(param$current.t.inf)
 } # end move.t.inf
 
 
@@ -57,41 +57,41 @@ move.t.inf <- function(data, chain, rand) # assumes symmetric proposal
 #' @rdname moves
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
-move.ances <- function(data, chain, config, rand){
+move.ances <- function(data, param, config, rand){
     ## find out which ancestries to move
-    ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
+    ances.can.move <- !is.na(param$current.ances) & param$current.t.inf>min(param$current.t.inf)
     if(!any(ances.can.move)){
         warning("trying to move ancestries but none can move")
-        return(chain$current.ances)
+        return(param$current.ances)
     }
     n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
     to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
 
     ## initialize new ances
-    new.ances <- chain$current.ances
+    new.ances <- param$current.ances
 
     ## move all ancestries that should be moved
     for(i in to.move){
         ## propose new ancestor
-        new.ances[i] <- find.possible.ances(chain$current.t.inf, i)
+        new.ances[i] <- find.possible.ances(param$current.t.inf, i)
 
         ## compute log ratio
         logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                              t.inf=chain$current.t.inf, ances=new.ances) +
-                                  ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
+                              t.inf=param$current.t.inf, ances=new.ances) +
+                                  ll.genetic(D=data$D, gen.length=data$L, mu=param$current.mu, ances=new.ances) -
                                       ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                                                t.inf=chain$current.t.inf, ances=chain$current.ances) -
-                                                    ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
+                                                t.inf=param$current.t.inf, ances=param$current.ances) -
+                                                    ll.genetic(D=data$D, gen.length=data$L, mu=param$current.mu, ances=param$current.ances)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){
-            chain$current.ances[i] <- new.ances[i]
+            param$current.ances[i] <- new.ances[i]
         } else {
-            new.ances[i] <- chain$current.ances[i]
+            new.ances[i] <- param$current.ances[i]
         }
     } # end for loop
 
-    return(chain$current.ances)
+    return(param$current.ances)
 } # end move.ances
 
 
@@ -102,19 +102,19 @@ move.ances <- function(data, chain, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.swap.ances <- function(data, chain, config, rand){
+move.swap.ances <- function(data, param, config, rand){
      ## find out which ancestries to move
-    ances.can.move <- !is.na(chain$current.ances) & chain$current.t.inf>min(chain$current.t.inf)
+    ances.can.move <- !is.na(param$current.ances) & param$current.t.inf>min(param$current.t.inf)
     if(!any(ances.can.move)){
         warning("trying to move ancestries but none can move")
-        return(chain$current.ances)
+        return(param$current.ances)
     }
     n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
     to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
 
     ## initialize new ances and t.inf
-    new.ances <- chain$current.ances
-    new.t.inf <- chain$current.t.inf
+    new.ances <- param$current.ances
+    new.t.inf <- param$current.t.inf
 
     ## move all ancestries that should be moved
     for(i in to.move){
@@ -126,22 +126,22 @@ move.swap.ances <- function(data, chain, config, rand){
         ## compute log ratio
         logratio <- ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
                               t.inf=new.t.inf, ances=new.ances) +
-                                  ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=new.ances) -
+                                  ll.genetic(D=data$D, gen.length=data$L, mu=param$current.mu, ances=new.ances) -
                                       ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                                                t.inf=chain$current.t.inf, ances=chain$current.ances) -
-                                                    ll.genetic(D=data$D, gen.length=data$L, mu=chain$current.mu, ances=chain$current.ances)
+                                                t.inf=param$current.t.inf, ances=param$current.ances) -
+                                                    ll.genetic(D=data$D, gen.length=data$L, mu=param$current.mu, ances=param$current.ances)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){
-            chain$current.ances[i] <- new.ances[i]
-            chain$current.t.inf[i] <- new.t.inf[i]
+            param$current.ances[i] <- new.ances[i]
+            param$current.t.inf[i] <- new.t.inf[i]
         } else {
-            new.ances[i] <- chain$current.ances[i]
-            new.t.inf[i] <- chain$current.t.inf[i]
+            new.ances[i] <- param$current.ances[i]
+            new.t.inf[i] <- param$current.t.inf[i]
         }
     } # end for loop
 
-    return(chain)
+    return(param)
 } # end move.swap.ances
 
 

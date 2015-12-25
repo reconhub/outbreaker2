@@ -62,7 +62,7 @@ outbreaker <- function(data=outbreaker.data(),
     config <- outbreaker.config(data=data, config=config)
 
     ## INITIALIZE MCMC CHAIN ##
-    chain <- outbreaker.mcmc.init(data=data, config=config)
+    param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
@@ -72,36 +72,36 @@ outbreaker <- function(data=outbreaker.data(),
     for(i in seq.int(2, config$n.iter, 1)){
         ## move infection dates ##
         if(config$move.t.inf){
-            chain$current.t.inf <- move.t.inf(data=data, chain=chain, rand=rand)
+            param$current.t.inf <- move.t.inf(data=data, param=param, rand=rand)
         }
 
         ## move ancestries ##
         if(config$move.ances){
-            chain$current.ances <- move.ances(data=data, chain=chain, config=config, rand=rand)
+            param$current.ances <- move.ances(data=data, param=param, config=config, rand=rand)
         }
 
         ## swap ancestries ##
         if(config$move.ances && config$move.t.inf){
-            chain <- move.swap.ances(data=data, chain=chain, config=config, rand=rand)
+            param <- move.swap.ances(data=data, param=param, config=config, rand=rand)
         }
 
         ## move mu ##
         if(config$move.mu){
-            chain$current.mu <- move.mu(data=data, chain=chain, rand=rand)
+            param$current.mu <- move.mu(data=data, param=param, rand=rand)
         }
 
         ## store outputs if needed
         if((i %% config$sample.every) == 0){
-            chain <- outbreaker.mcmc.store(chain=chain, data=data)
+            param <- outbreaker.mcmc.store(chain=param, data=data)
         }
 
     } # end of the chain
 
 
     ## SHAPE RESULTS ##
-    chain <- outbreaker.mcmc.shape(chain=chain, data=data)
+    param <- outbreaker.mcmc.shape(chain=param, data=data)
 
     ## RETURN ##
-    return(chain)
+    return(param)
 } # end outbreaker
 

@@ -85,7 +85,7 @@ outbreaker.data <- function(..., data=NULL){
             data$w.dens <- c(data$w.dens, val.to.add)
             data$w.dens <- data$w.dens/sum(data$w.dens)
         }
-        log.w.dens <- log(data$w.dens)
+        data$log.w.dens <- log(data$w.dens)
     }
 
     ## CHECK F.DENS
@@ -98,7 +98,7 @@ outbreaker.data <- function(..., data=NULL){
             stop("f.dens has negative entries (these should be probabilities!)")
         }
         data$f.dens[1] <- 0
-        log.f.dens <- log(data$f.dens)
+        data$log.f.dens <- log(data$f.dens)
     }
 
     ## CHECK DNA

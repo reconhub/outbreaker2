@@ -8,20 +8,20 @@
 \alias{rances}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
-move.mu(data, chain, rand)
+move.mu(data, param, rand)
 
-move.t.inf(data, chain, rand)
+move.t.inf(data, param, rand)
 
-move.ances(data, chain, config, rand)
+move.ances(data, param, config, rand)
 
-move.swap.ances(data, chain, config, rand)
+move.swap.ances(data, param, config, rand)
 
 rances(t.inf)
 }
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
 
-\item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list of output items as returned by \code{outbreaker.mcmc.init}}
 
 \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 

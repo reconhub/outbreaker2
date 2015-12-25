@@ -2,14 +2,30 @@
 % Please edit documentation in R/outbreaker.data.R
 \name{outbreaker.data}
 \alias{outbreaker.data}
-\title{Checks input data for outbreaker}
+\title{Process input data for outbreaker}
 \usage{
-outbreaker.data(dates, w.dens, f.dens = w.dens, dna = NULL)
+outbreaker.data(..., data = NULL)
 }
 \arguments{
-\item{dates}{a vector indicating the collection dates, provided either as
+\item{...}{a list of data items to be processed (see description)}
+
+\item{data}{optionally, an existing list of data item as returned by \code{outbreaker.data}.}
+}
+\description{
+This function performs various checks on input data given to outbreaker.
+It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of data input. If no input is given, it returns the default settings.
+}
+\details{
+Acceptables arguments for ... are:
+\describe{
+\item{dates}{dates a vector indicating the collection dates, provided either as
 integer numbers or in a usual date format such as \code{Date} or
 \code{POSIXct} format. By convention, zero will indicate the oldest date.}
+
+\item{dna}{the DNA sequences in \code{DNAbin} format (see
+\code{\link[ape]{read.dna}} in the ape package); this can be imported from a
+fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
+\link[adegenet]{fasta2DNAbin}.}
 
 \item{w.dens}{a vector of numeric values indicating the generation time
 distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
@@ -21,13 +37,7 @@ standardized, this distribution is rescaled to sum to 1.}
 of the colonization time, i.e. time interval during which the pathogen can
 be sampled from the patient.}
 
-\item{dna}{the DNA sequences in \code{DNAbin} format (see
-\code{\link[ape]{read.dna}} in the ape package); this can be imported from a
-fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
-\link[adegenet]{fasta2DNAbin}.}
 }
-\description{
-This function performs various checks on input data given to outbreaker.
 }
 \examples{
 

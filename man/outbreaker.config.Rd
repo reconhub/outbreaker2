@@ -28,6 +28,7 @@ ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
 seqTrack output as initialize tree), "random" (ancestor randomly selected
 from preceding cases), and "star" (all cases coalesce to the first case).
 Note that for SeqTrack, all cases should have been sequenced.}
+
 \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 including the burnin period}
 

@@ -8,9 +8,11 @@ test_that("priors have plausible values", {
     rm(list=ls())
 
     ## generate data
-    mu <- runif(100)
+    param <- lapply(1:30, function(i) outbreaker.mcmc.init(
+        config=outbreaker.config(init.mu=runif(1)),
+        data=outbreaker.data()))
 
     ## tests
-    prior.mu <- sapply(mu, prior.mu)
-    expect_true(!any(is.na(prior.mu)))
+    out <- sapply(param, prior.mu)
+    expect_true(!any(is.na(out)))
 })

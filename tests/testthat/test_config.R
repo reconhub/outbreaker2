@@ -5,13 +5,14 @@ context("Test outbreaker config")
 test_that("test: settings are processed fine", {
     ## skip on CRAN
     skip_on_cran()
-
+    rm(list=ls())
+    
     ## get data
     x <- fakeOutbreak
     dat <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
     dat.nodna <- dat
     dat.nodna$dna <- NULL
-    init.ances <- rep(1, x$dat$n)
+    ances <- rep(1, x$dat$n)
 
     ## check output
     expect_is(outbreaker.config(), "list")

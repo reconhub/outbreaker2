@@ -58,7 +58,7 @@ test_that("ll.genetic gives expected results", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
-    param <- outbreaker.mcmc.init(data=dat, config=config)
+    param <- outbreaker.mcmc.init(data=data, config=config)
 
 
     ## tests
@@ -78,14 +78,14 @@ test_that("ll.all gives expected results", {
 
     ## generate data
     data(fakeOutbreak)
-    dat <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
-    config <- outbreaker.config(data=dat)
-    param <- outbreaker.mcmc.init(data=dat, config=config)
+    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=data)
+    param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## tests
-    out <- ll.all(data=dat, param=param)
+    out <- ll.all(data=data, param=param)
     expect_is(out, "numeric")
-    expect_equal(out, -1279.4428075568)
+    expect_equal(out, -1102.06678859)
 })
 
 

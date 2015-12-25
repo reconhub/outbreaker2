@@ -17,6 +17,8 @@ test_that("test: data are processed fine", {
     expect_equal(out$MAX.RANGE, 11)
     expect_equal(out.nodna$L, 0)
     expect_equal(out$L, 1e4)
+    expect_equal(out$w.dens, out$f.dens)
+    expect_equal(out$log.w.dens, out$log.f.dens)
     expect_error(outbreaker.data(dates=1, w.dens=c(0,-1)))
     expect_error(outbreaker.data(dates=1, w.dens=c(0,1), f.dens=c(0,-1)))
 })

@@ -83,10 +83,7 @@ move.ances <- function(data, param, config, rand){
         new.param$current.ances[i] <- find.possible.ances(param$current.t.inf, i)
 
         ## compute log ratio
-        logratio <- ll.timing(data=data, param=new.param) +
-                                  ll.genetic(data=data, param=new.param) -
-                                      ll.timing(data=data, param=param) -
-                                                    ll.genetic(data=data, param=param)
+        logratio <-  ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){
@@ -127,9 +124,7 @@ move.swap.ances <- function(data, param, config, rand){
     ## move all ancestries that should be moved
     for(i in to.move){
         ## swap ancestries
-        temp <- swap.ances(new.param$current.ances, new.param$current.t.inf, i)
-        new.param$current.ances <- temp$ances
-        new.param$current.t.inf <- temp$t.inf
+        new.param <- swap.ances(new.param, i)
 
         ## compute log ratio
         logratio <- ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
@@ -188,36 +183,36 @@ find.possible.ances <- function(t.inf, i){
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes
-swap.ances <- function(ances, t.inf, i){
+swap.ances <- function(param, i){
     ## stop if 'i' out of range
-    if(i>length(ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(ances), " cases")
+    if(i>length(param$current.ances)) stop("trying to swap ancestry of case ", i, " while there are only ", length(param$current.ances), " cases")
 
     ## find ancestor of 'i'
-    x <- ances[i]
+    x <- param$current.ances[i]
 
     ## stop if case 'i' is imported
     if(is.na(x)){
         warning("trying to swap the ancestry of the imported case ", i)
-        return(list(ances=ances, t.inf=t.inf))
+        return(param)
     }
 
     ## find indices to swap
-    to.be.x <- which(ances==i)
-    to.be.i <- which(ances==x)
+    to.be.x <- which(param$current.ances==i)
+    to.be.i <- which(param$current.ances==x)
 
     ## swap 'i' and 'x' in ancestries
-    ances[to.be.x] <- x
-    ances[to.be.i] <- i
+    param$current.ances[to.be.x] <- x
+    param$current.ances[to.be.i] <- i
 
     ## the ancestor of 'i' is now has the ancestor of 'x'
-    ances[i] <- ances[x]
+    param$current.ances[i] <- param$current.ances[x]
 
     ## 'i' is now the ancestor of 'x'
-    ances[x] <- i
+    param$current.ances[x] <- i
 
     ## swap t.inf
-    t.inf[c(x,i)] <- t.inf[c(i,x)]
+    param$current.t.inf[c(x,i)] <- param$current.t.inf[c(i,x)]
 
     ## return
-    return(list(ances=ances, t.inf=t.inf))
+    return(param)
 } # end swap.ancestries

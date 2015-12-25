@@ -5,22 +5,14 @@
 \alias{post.genetic}
 \title{Posteriors of outbreaker2}
 \usage{
-post.genetic(D, gen.length, ances, mu)
+post.genetic(data, param)
 
-post.all(data = data, chain = chain)
+post.all(data, param)
 }
 \arguments{
-\item{D}{a matrix of pairwise genetic distances}
+\item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 
-\item{gen.length}{length of the genetic sequences}
-
-\item{ances}{a vector of indices of ancestors}
-
-\item{mu}{a mutation rate}
-
-\item{data}{a list of data items as returned by \code{outbreaker.data}}
-
-\item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list containing parameters as returned by \code{outbreaker.mcmc.init}}
 }
 \description{
 These functions compute various posteriors used in outbreaker.

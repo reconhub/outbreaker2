@@ -14,4 +14,6 @@
 #'
 #' @importFrom ape dist.dna as.DNAbin
 #'
+#' @importFrom("stats", "na.omit")
+#'
 NULL

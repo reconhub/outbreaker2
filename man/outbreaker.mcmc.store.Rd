@@ -4,10 +4,10 @@
 \alias{outbreaker.mcmc.store}
 \title{Stores MCMC samples for outbreaker}
 \usage{
-outbreaker.mcmc.store(chain, data)
+outbreaker.mcmc.store(param, data)
 }
 \arguments{
-\item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list of output items as returned by \code{outbreaker.mcmc.init}}
 
 \item{data}{a list of settings as returned by \code{outbreaker.data}}
 }

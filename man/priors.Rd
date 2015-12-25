@@ -5,14 +5,12 @@
 \alias{prior.mu}
 \title{Priors of outbreaker2}
 \usage{
-prior.mu(mu)
+prior.mu(param)
 
-prior.all(chain)
+prior.all(param)
 }
 \arguments{
-\item{mu}{a mutation rate}
-
-\item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list containing parameters as returned by \code{outbreaker.mcmc.init}}
 }
 \description{
 These functions compute various priors used in outbreaker.

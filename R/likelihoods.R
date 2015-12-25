@@ -73,8 +73,6 @@ ll.genetic <- function(data, param){
 
 #' @rdname likelihoods
 #' @export
-#' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
 ll.all <- function(data, param){
     return(ll.timing(data=data, param=param) +

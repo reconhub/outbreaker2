@@ -4,10 +4,10 @@
 \alias{outbreaker.mcmc.shape}
 \title{Shape MCMC samples into outputs for outbreaker}
 \usage{
-outbreaker.mcmc.shape(chain, data)
+outbreaker.mcmc.shape(param, data)
 }
 \arguments{
-\item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list of output items as returned by \code{outbreaker.mcmc.init}}
 
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
 }

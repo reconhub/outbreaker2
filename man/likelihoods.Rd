@@ -9,36 +9,20 @@
 \alias{ll.timing.sampling}
 \title{Internal functions for outbreaker2}
 \usage{
-ll.timing.infections(t.inf, log.w, ances)
+ll.timing.infections(data, param)
 
-ll.timing.sampling(t.inf, log.f, sampling.times)
+ll.timing.sampling(data, param)
 
-ll.timing(t.inf, log.w, log.f, ances, sampling.times)
+ll.timing(data, param)
 
-ll.genetic(D, gen.length, ances, mu)
+ll.genetic(data, param)
 
-ll.all(data, chain)
+ll.all(data, param)
 }
 \arguments{
-\item{t.inf}{a vector of integers indicating dates of infections of the cases}
+\item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 
-\item{log.w}{a vector of log probabilities of time intervals (between infections), starting at p(T=0)}
-
-\item{ances}{a vector of indices of ancestors}
-
-\item{log.f}{a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)}
-
-\item{sampling.times}{a vector of integers indicating dates of sampling/observation/reporting of the cases}
-
-\item{D}{a matrix of pairwise genetic distances}
-
-\item{gen.length}{length of the genetic sequences}
-
-\item{mu}{a mutation rate}
-
-\item{data}{a list of data items as returned by \code{outbreaker.data}}
-
-\item{chain}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list containing parameters as returned by \code{outbreaker.mcmc.init}}
 }
 \description{
 These functions compute various likelihoods used in outbreaker.

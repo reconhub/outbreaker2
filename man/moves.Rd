@@ -21,13 +21,16 @@ rances(t.inf)
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
 
-\item{param}{a list of output items as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
 
 \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
 
 \item{t.inf}{a vector of infection dates}
+}
+\value{
+a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
 }
 \description{
 These functions are used to move in the parameter space in the MCMC.

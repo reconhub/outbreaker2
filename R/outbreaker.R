@@ -56,12 +56,12 @@ outbreaker <- function(data=outbreaker.data(),
     for(i in seq.int(2, config$n.iter, 1)){
         ## move infection dates ##
         if(config$move.t.inf){
-            param$current.t.inf <- move.t.inf(data=data, param=param, rand=rand)
+            param <- move.t.inf(data=data, param=param, rand=rand)
         }
 
         ## move ancestries ##
         if(config$move.ances){
-            param$current.ances <- move.ances(data=data, param=param, config=config, rand=rand)
+            param <- move.ances(data=data, param=param, config=config, rand=rand)
         }
 
         ## swap ancestries ##
@@ -71,19 +71,19 @@ outbreaker <- function(data=outbreaker.data(),
 
         ## move mu ##
         if(config$move.mu){
-            param$current.mu <- move.mu(data=data, param=param, rand=rand)
+            param <- move.mu(data=data, param=param, rand=rand)
         }
 
         ## store outputs if needed
         if((i %% config$sample.every) == 0){
-            param <- outbreaker.mcmc.store(chain=param, data=data)
+            param <- outbreaker.mcmc.store(param=param, data=data)
         }
 
     } # end of the chain
 
 
     ## SHAPE RESULTS ##
-    param <- outbreaker.mcmc.shape(chain=param, data=data)
+    param <- outbreaker.mcmc.shape(param=param, data=data)
 
     ## RETURN ##
     return(param)

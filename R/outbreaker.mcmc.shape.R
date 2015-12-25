@@ -4,29 +4,29 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
-#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
+#' @param param a list of output items as returned by \code{outbreaker.mcmc.init}
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #'
 #' @export
 #'
-outbreaker.mcmc.shape <- function(chain, data)
+outbreaker.mcmc.shape <- function(param, data)
 {
     ## UNFOLD ANCESTRIES ##
-    if(!all(sapply(chain$ances, length)==data$N)) stop("some ancestries are missing in the chain")
-    chain$ances <- matrix(unlist(chain$ances), ncol=data$N, byrow=TRUE)
-    colnames(chain$ances) <- paste("alpha",1:data$N, sep=".")
+    if(!all(sapply(param$ances, length)==data$N)) stop("some ancestries are missing in the param")
+    param$ances <- matrix(unlist(param$ances), ncol=data$N, byrow=TRUE)
+    colnames(param$ances) <- paste("alpha",1:data$N, sep=".")
 
     ## UNFOLD INFECTION DATES ##
-    if(!all(sapply(chain$t.inf, length)==data$N)) stop("some infection dates are missing in the chain")
-    chain$t.inf <- matrix(unlist(chain$t.inf), ncol=data$N, byrow=TRUE)
-    colnames(chain$t.inf) <- paste("t.inf",1:data$N, sep=".")
+    if(!all(sapply(param$t.inf, length)==data$N)) stop("some infection dates are missing in the param")
+    param$t.inf <- matrix(unlist(param$t.inf), ncol=data$N, byrow=TRUE)
+    colnames(param$t.inf) <- paste("t.inf",1:data$N, sep=".")
 
     ## SHAPE DATA.FRAME AND CONVERT ##
-    chain <- data.frame(post=chain$post, like=chain$like, prior=chain$prior,
-                      mu=chain$mu, chain$ances, chain$t.inf)
-    chain <- coda::mcmc(chain)
+    param <- data.frame(post=param$post, like=param$like, prior=param$prior,
+                      mu=param$mu, param$ances, param$t.inf)
+    param <- coda::mcmc(param)
 
     ## RETURN ##
-    return(chain)
+    return(param)
 } # end store.mcmc
 

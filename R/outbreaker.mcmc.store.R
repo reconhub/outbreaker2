@@ -4,29 +4,29 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
-#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
+#' @param param a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
 #' @param data a list of settings as returned by \code{outbreaker.data}
 #'
 #' @export
 #'
-outbreaker.mcmc.store <- function(chain, data)
+outbreaker.mcmc.store <- function(param, data)
 {
     ## UPDATE COUNTER
-    chain$counter <- chain$counter + 1
+    param$counter <- param$counter + 1
 
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
-    counter <- chain$counter
-    chain$like[counter] <- ll.all(data=data, chain=chain)
-    chain$prior[counter] <- prior.all(chain)
-    chain$post[counter] <- chain$like[counter] + chain$prior[counter]
+    counter <- param$counter
+    param$like[counter] <- ll.all(data=data, param=param)
+    param$prior[counter] <- prior.all(param)
+    param$post[counter] <- param$like[counter] + param$prior[counter]
 
     ## PARAMETERS AND AUGMENTED DATA
-    chain$mu[counter] <- chain$current.mu
-    chain$ances[[counter]] <- chain$current.ances
-    chain$t.inf[[counter]] <- chain$current.t.inf
+    param$mu[counter] <- param$current.mu
+    param$ances[[counter]] <- param$current.ances
+    param$t.inf[[counter]] <- param$current.t.inf
 
     ## RETURN ##
-    return(chain)
+    return(param)
 } # end store.mcmc
 

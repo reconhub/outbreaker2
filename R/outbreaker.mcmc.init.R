@@ -23,6 +23,8 @@ outbreaker.mcmc.init <- function(data, config)
     current.ances <- ances[[1]] <- config$ances
     if(is.null(config$init.t.inf)){
         current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
+    } else {
+        current.t.inf <- config$init.t.inf
     }
     counter <- 1L
 

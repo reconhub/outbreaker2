@@ -40,7 +40,7 @@ test_that("ll.timing.sampling gives expected results", {
     ## tests
     out <- ll.timing.sampling(data=data, param=param)
     expect_is(out, "numeric")
-    expect_equal(out, -3.465735903)
+    expect_equal(out, -8.51719319142)
 })
 
 

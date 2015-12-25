@@ -34,8 +34,8 @@ move.mu <- function(data, param, rand){
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, param, rand) # assumes symmetric proposal
-{
+move.t.inf <- function(data, param, rand){ # assumes symmetric proposal
+
     ## propose new t.inf
     new.t.inf <- param$current.t.inf + sample(-1:1, size=length(param$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
 

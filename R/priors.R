@@ -8,20 +8,19 @@
 #'
 #' @export
 #'
-#' @param mu a mutation rate
+#' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
 #'
-prior.mu <- function(mu)
+prior.mu <- function(param)
 {
-    return(dexp(mu, 1000, log=TRUE))
+    return(dexp(param$current.mu, 1000, log=TRUE))
 } # end prior.mu
 
 
 #' @rdname priors
 #' @export
-#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
-prior.all <- function(chain)
+prior.all <- function(param)
 {
-    return(prior.mu(chain$current.mu))
+    return(prior.mu(param=param))
 } # end prior.all
 

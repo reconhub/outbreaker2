@@ -7,21 +7,20 @@
 #' @name likelihoods
 #' @export
 #'
-#' @param t.inf a vector of integers indicating dates of infections of the cases
-#' @param ances a vector of indices of ancestors
-#' @param log.w a vector of log probabilities of time intervals (between infections), starting at p(T=0)
+#' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
 #'
+#' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
 #'
-ll.timing.infections <- function(t.inf, log.w, ances){
+ll.timing.infections <- function(data, param){
     ## find indices in w (delay + 1 day)
-    T <- (t.inf-t.inf[ances])+1
+    T <- (param$current.t.inf - param$current.t.inf[ances])+1
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
-    if(any(T<1 | T>length(log.w))) return(-Inf)
+    if(any(T<1 | T>length(data$log.w.dens))) return(-Inf)
 
     ## return
-    return(sum(log.w[T], na.rm=TRUE))
+    return(sum(data$log.w.dens[T], na.rm=TRUE))
 } # end ll.timing.infections
 
 
@@ -31,19 +30,16 @@ ll.timing.infections <- function(t.inf, log.w, ances){
 #' @rdname likelihoods
 #' @export
 #'
-#' @param sampling.times a vector of integers indicating dates of sampling/observation/reporting of the cases
-#' @param log.f a vector of log probabilities of time intervals (from infection to collection), starting at p(T=0)
-#'
-ll.timing.sampling <- function(t.inf, log.f, sampling.times){
+ll.timing.sampling <- function(data, param){
     ## find indices in w (delay + 1 day)
-    T <- (sampling.times-t.inf)+1
+    T <- (data$dates - param$current.t.inf)+1
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
-    if(any(T<1 | T>length(log.f))) return(-Inf)
+    if(any(T<1 | T>length(data$log.f.dens))) return(-Inf)
 
     ## return
-    return(sum(log.f[T], na.rm=TRUE))
+    return(sum(data$log.f.dens[T], na.rm=TRUE))
 } # end ll.timing.sampling
 
 
@@ -53,9 +49,9 @@ ll.timing.sampling <- function(t.inf, log.f, sampling.times){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing <- function(t.inf, log.w, log.f, ances, sampling.times){
-    return(ll.timing.infections(t.inf=t.inf, log.w=log.w, ances=ances) +
-           ll.timing.sampling(t.inf=t.inf, log.f=log.f, sampling.times=sampling.times))
+ll.timing <- function(data, param){
+    return(ll.timing.infections(data=data, param=param) +
+           ll.timing.sampling(data=data, param=param))
 } # end ll.timing
 
 
@@ -65,12 +61,9 @@ ll.timing <- function(t.inf, log.w, log.f, ances, sampling.times){
 #' @rdname likelihoods
 #' @export
 #'
-#' @param D a matrix of pairwise genetic distances
-#' @param mu a mutation rate
-#' @param gen.length length of the genetic sequences
-ll.genetic <- function(D, gen.length, ances, mu){
-    nmut <- diag(D[,ances])
-    return(sum(log(mu)*nmut + log(1-mu)*(gen.length-nmut), na.rm=TRUE))
+ll.genetic <- function(data, param){
+    nmut <- diag(data$D[, param$current.ances])
+    return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
 } # end ll.genetic
 
 
@@ -82,9 +75,8 @@ ll.genetic <- function(D, gen.length, ances, mu){
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
-ll.all <- function(data, chain){
-    return(ll.timing(log.w=data$log.w, log.f=data$log.f, sampling.times=data$sampling.times,
-                     ances=chain$current.ances, t.inf=chain$current.t.inf) +
-           ll.genetic(D=data$D, gen.length=data$L, ances=chain$current.ances, mu=chain$current.mu)
+ll.all <- function(data, param){
+    return(ll.timing(data=data, param=param) +
+           ll.genetic(data=data, param=param)
            )
 } # end ll.all

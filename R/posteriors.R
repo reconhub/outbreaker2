@@ -6,15 +6,14 @@
 #'
 #' @rdname posteriors
 #'
-#' @param D a matrix of pairwise genetic distances
-#' @param gen.length length of the genetic sequences
-#' @param ances a vector of indices of ancestors
-#' @param mu a mutation rate
+#' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
 #'
-post.genetic <- function(D, gen.length, ances, mu)
+#' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
+#'
+post.genetic <- function(data, param)
 {
-    return(ll.genetic(D=D, gen.length=gen.length, ances=ances, mu=mu) +
-           prior.mu(mu=mu))
+    return(ll.genetic(data=data, param=param) +
+           prior.mu(param=param))
 } # end post.genetic
 
 
@@ -23,10 +22,8 @@ post.genetic <- function(D, gen.length, ances, mu)
 
 #' @rdname posteriors
 #' @export
-#' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param chain a list of output items as returned by \code{outbreaker.mcmc.init}
 #'
-post.all <- function(data=data, chain=chain)
+post.all <- function(data, param)
 {
-    return(ll.all(data=data, chain=chain) + prior.all(chain))
+    return(ll.all(data=data, param=param) + prior.all(param))
 }

@@ -29,15 +29,17 @@ test_that("Auxiliary functions for ancestries are working", {
     ## generate data
     ances <- c(NA,1,1,2,2)
     t.inf <- c(0, 2,3, 5,7)
+    param <- outbreaker.mcmc.init(
+        config=outbreaker.config(init.tree=ances, init.t.inf=t.inf),
+        data=outbreaker.data())
 
     ## tests non swapping (imported case)
-    expect_warning(res <- outbreaker2:::swap.ances(ances, t.inf, 1))
-    expect_equal(ances, res$ances)
-    expect_equal(t.inf, res$t.inf)
+    expect_warning(res <- outbreaker2:::swap.ances(param, 1))
+    expect_equal(param, res)
 
     ## test full swapping
-    res <- outbreaker2:::swap.ances(ances, t.inf, 2)
-    expect_equal(res$ances, c(2,NA,2,1,1))
-    expect_equal(res$t.inf, c(2,0,3,5,7))
+    res <- outbreaker2:::swap.ances(param, 2)
+    expect_equal(res$current.ances, c(2,NA,2,1,1))
+    expect_equal(res$current.t.inf, c(2,0,3,5,7))
 
 })

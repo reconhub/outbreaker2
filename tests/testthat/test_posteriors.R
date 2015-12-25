@@ -5,6 +5,7 @@ context("Test posterior functions")
 test_that("post = like + prior", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     data(fakeOutbreak)

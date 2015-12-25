@@ -5,6 +5,7 @@ context("Test prior functions")
 test_that("priors have plausible values", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     mu <- runif(100)

@@ -5,6 +5,7 @@ context("Test non-exported functions")
 test_that("test: find.possible.ances", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## get data
     ans1 <- outbreaker2:::find.possible.ances(1:10, 1)

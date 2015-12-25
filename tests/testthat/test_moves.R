@@ -4,6 +4,7 @@ context("Test movement of parameters and augmented data")
 test_that("parameters and augmented data move", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     data(fakeOutbreak)

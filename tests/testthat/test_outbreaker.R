@@ -4,6 +4,7 @@ context("Test outbreaker")
 test_that("test: outbreaker's output have expected format", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## get data
     data(fakeOutbreak)

@@ -5,6 +5,7 @@ context("Test likelihood functions")
 test_that("ll.timing.infections gives expected results", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     times <- 0:4
@@ -27,6 +28,7 @@ test_that("ll.timing.infections gives expected results", {
 test_that("ll.timing.sampling gives expected results", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     times <- 0:4
@@ -50,6 +52,7 @@ test_that("ll.timing.sampling gives expected results", {
 test_that("ll.genetic gives expected results", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     data(fakeOutbreak)
@@ -71,6 +74,7 @@ test_that("ll.genetic gives expected results", {
 test_that("ll.all gives expected results", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data
     data(fakeOutbreak)

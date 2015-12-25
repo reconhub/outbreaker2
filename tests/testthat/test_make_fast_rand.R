@@ -5,6 +5,7 @@ context("Test make.fast functions")
 test_that("Outputs have expected size and types", {
     ## skip on CRAN
     skip_on_cran()
+    rm(list=ls())
 
     ## generate data ##
     size <- as.integer(sample(10:100,1))

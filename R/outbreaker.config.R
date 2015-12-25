@@ -82,9 +82,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     }
 
     ## check / process init.t.inf
-    if(inherits(config$init.t.inf, "Date")) config$init.t.inf <- config$init.t.inf-min(config$init.t.inf)
-    if(inherits(config$init.t.inf, "POSIXct")) config$init.t.inf <- difftime(config$init.t.inf, min(config$init.t.inf), units="days")
-    config$init.t.inf <- as.integer(round(config$init.t.inf))
+    if(!is.null(init.t.inf)){
+        if(inherits(config$init.t.inf, "Date")) config$init.t.inf <- config$init.t.inf-min(config$init.t.inf)
+        if(inherits(config$init.t.inf, "POSIXct")) config$init.t.inf <- difftime(config$init.t.inf, min(config$init.t.inf), units="days")
+        config$init.t.inf <- as.integer(round(config$init.t.inf))
+    }
 
     ## check init.mu
     if(!is.numeric(config$init.mu)) stop("init.mu is not a numeric value")

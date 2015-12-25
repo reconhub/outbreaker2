@@ -30,15 +30,17 @@ test_that("ll.timing.sampling gives expected results", {
 
     ## generate data
     times <- 0:4
+    ances <- c(NA,rep(1,4))
+    samp.times <- times + c(1, 1, 2, 3, 4)
     f <- c(0, .1, .2, .5, .2, .1)
     data <- outbreaker.data(dates=samp.times, f.dens=f)
-    config <- outbreaker.config(data=data, init.t.inf=times)
+    config <- outbreaker.config(data=data, init.t.inf=times, init.tree=ances)
     param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## tests
-    out <- ll.timing.sampling(t.inf=times, sampling.times=samp.times, log.f=log(f))
+    out <- ll.timing.sampling(data=data, param=param)
     expect_is(out, "numeric")
-    expect_equal(out, -8.51719319142)
+    expect_equal(out, -3.465735903)
 })
 
 

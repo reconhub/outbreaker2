@@ -20,8 +20,10 @@ outbreaker.mcmc.init <- function(data, config)
 
     ## SET CURRENT VALUES AND COUNTER ##
     current.mu <- mu[1] <- config$init.mu
-    current.ances <- ances[[1]] <- config$ances
-    current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
+    current.ances <- ances[[1]] <- config$init.tree
+    if(is.null(config$init.t.inf)){
+        current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
+    }
     counter <- 1L
 
 

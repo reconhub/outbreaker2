@@ -10,9 +10,12 @@ test_that("ll.timing.infections gives expected results", {
     times <- 0:4
     ances <- c(NA,rep(1,4))
     w <- c(0, .1, .2, .5, .2, .1)
+    data <- outbreaker.data(dates=times, w.dens=w)
+    config <- outbreaker.config(data=data, init.tree=ances)
+    param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## tests
-    out <- ll.timing.infections(t.inf=times, ances=ances, log.w=log(w))
+    out <- ll.timing.infections(data=data, param=param)
     expect_is(out, "numeric")
     expect_equal(out, -6.214608098)
 })
@@ -27,8 +30,10 @@ test_that("ll.timing.sampling gives expected results", {
 
     ## generate data
     times <- 0:4
-    samp.times <- times + c(1, 1, 2, 3, 4)
     f <- c(0, .1, .2, .5, .2, .1)
+    data <- outbreaker.data(dates=samp.times, f.dens=f)
+    config <- outbreaker.config(data=data, init.t.inf=times)
+    param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## tests
     out <- ll.timing.sampling(t.inf=times, sampling.times=samp.times, log.f=log(f))

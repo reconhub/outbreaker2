@@ -32,8 +32,8 @@ outbreaker.mcmc.init <- function(data, config)
                 counter=counter)
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##
-    out$like[1] <- ll.all(data=data, chain=out)
-    out$prior[1] <- prior.all(chain=out)
+    out$like[1] <- ll.all(data=data, param=out)
+    out$prior[1] <- prior.all(param=out)
     out$post[1] <- out$like[1] + out$prior[1]
 
     return(out)

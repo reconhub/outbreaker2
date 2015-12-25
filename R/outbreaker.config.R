@@ -66,6 +66,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## SET DEFAULTS ##
     defaults <- list(init.tree=c("seqTrack","star","random"),
                      init.mu=1e-4,
+                     init.t.inf=NULL,
                      move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
@@ -79,6 +80,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(is.character(config$init.tree)){
         config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
     }
+
+    ## check / process init.t.inf
+    if(inherits(config$init.t.inf, "Date")) config$init.t.inf <- config$init.t.inf-min(config$init.t.inf)
+    if(inherits(config$init.t.inf, "POSIXct")) config$init.t.inf <- difftime(config$init.t.inf, min(config$init.t.inf), units="days")
+    config$init.t.inf <- as.integer(round(config$init.t.inf))
 
     ## check init.mu
     if(!is.numeric(config$init.mu)) stop("init.mu is not a numeric value")
@@ -141,10 +147,15 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
         } else { ## if ancestries are provided
             if(length(config$init.tree) != data$N) stop("inconvenient length for init.tree")
             unknownAnces <- config$init.tree<1 | config$init.tree>data$N
-            if(any(unknownAnces)){
+            if(any(na.omit(unknownAnces))){
                 warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
                 config$init.tree[unknownAnces] <- NA
             }
+        }
+
+        ## check initial t.inf
+        if(!is.null(config$init.t.inf)){
+            if(any(config$init.t.inf >= data$dates)) stop("Initial dates of infection come after sampling dates / dates of onset.")
         }
 
         ## recycle move.ances

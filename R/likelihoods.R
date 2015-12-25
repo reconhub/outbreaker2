@@ -13,7 +13,7 @@
 #'
 ll.timing.infections <- function(data, param){
     ## find indices in w (delay + 1 day)
-    T <- (param$current.t.inf - param$current.t.inf[ances])+1
+    T <- (param$current.t.inf - param$current.t.inf[param$current.ances])+1
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -62,6 +62,7 @@ ll.timing <- function(data, param){
 #' @export
 #'
 ll.genetic <- function(data, param){
+    if(is.null(data$dna)) return(0)
     nmut <- diag(data$D[, param$current.ances])
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
 } # end ll.genetic

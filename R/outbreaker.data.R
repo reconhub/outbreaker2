@@ -46,7 +46,9 @@ outbreaker.data <- function(..., data=NULL){
     }
 
     ## SET DEFAULTS ##
-    defaults <- list(dates=NULL, w.dens=NULL, f.dens=w.dens, dna=NULL)
+    defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL,
+                     N=0L, L=0L, D=NULL, MAX.RANGE=NA, CAN.BE.ANCES=NULL,
+                     log.w.dens=NULL, log.f.dens=NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
     data <- modify.defaults(defaults, data)
@@ -54,62 +56,65 @@ outbreaker.data <- function(..., data=NULL){
 
     ## CHECK DATA ##
     ## CHECK DATES
-    if(inherits(data$dates, "Date")) data$dates <- data$dates-min(data$dates)
-    if(inherits(data$dates, "POSIXct")) data$dates <- difftime(data$dates, min(data$dates), units="days")
-    data$dates <- as.integer(round(data$dates))
-    N <- length(data$dates)
-    MAX.RANGE <- diff(range(data$dates))
-    ## get temporal ordering constraint:
-    ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
-    CAN.BE.ANCES <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
-    diag(CAN.BE.ANCES) <- FALSE
-
+    if(!is.null(data$dates)){
+        if(inherits(data$dates, "Date")) data$dates <- data$dates-min(data$dates)
+        if(inherits(data$dates, "POSIXct")) data$dates <- difftime(data$dates, min(data$dates), units="days")
+        data$dates <- as.integer(round(data$dates))
+        data$N <- length(data$dates)
+        data$MAX.RANGE <- diff(range(data$dates))
+        ## get temporal ordering constraint:
+        ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
+        data$CAN.BE.ANCES <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
+        diag(data$CAN.BE.ANCES) <- FALSE
+    }
 
     ## CHECK W.DENS
-    if(any(data$w.dens<0))
-    {
-        stop("w.dens has negative entries (these should be probabilities!)")
+    if(!is.null(data$w.dens)){
+        if(any(data$w.dens<0))
+        {
+            stop("w.dens has negative entries (these should be probabilities!)")
+        }
+        data$w.dens[1] <- 0
+        ## add an exponential tail summing to 1e-4 to 'w'
+        ## to cover the span of the outbreak
+        ## (avoids starting with -Inf temporal loglike)
+        if(length(data$w.dens)<data$MAX.RANGE){
+            length.to.add <- (data$MAX.RANGE-length(data$w.dens)) + 10 # +10 to be on the safe side
+            val.to.add <- dexp(1:length.to.add, 1)
+            val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
+            data$w.dens <- c(data$w.dens, val.to.add)
+            data$w.dens <- data$w.dens/sum(data$w.dens)
+        }
+        log.w.dens <- log(data$w.dens)
     }
-    data$w.dens[1] <- 0
-    ## add an exponential tail summing to 1e-4 to 'w'
-    ## to cover the span of the outbreak
-    ## (avoids starting with -Inf temporal loglike)
-    if(length(data$w.dens)<MAX.RANGE)
-    {
-        length.to.add <- (MAX.RANGE-length(data$w.dens)) + 10 # +10 to be on the safe side
-        val.to.add <- dexp(1:length.to.add, 1)
-        val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
-        data$w.dens <- c(data$w.dens, val.to.add)
-        data$w.dens <- data$w.dens/sum(data$w.dens)
-    }
-    log.w.dens <- log(data$w.dens)
-
 
     ## CHECK F.DENS
-    if(any(data$data$f.dens<0))
-    {
-        stop("f.dens has negative entries (these should be probabilities!)")
+    if(!is.null(data$w.dens) && is.null(data$f.dens)){
+        data$f.dens <- data$w.dens
     }
-    data$data$f.dens[1] <- 0
-    log.f.dens <- log(data$f.dens)
-
+    if(!is.null(data$f.dens)){
+        if(any(data$f.dens<0))
+        {
+            stop("f.dens has negative entries (these should be probabilities!)")
+        }
+        data$f.dens[1] <- 0
+        log.f.dens <- log(data$f.dens)
+    }
 
     ## CHECK DNA
     if(!is.null(data$dna))
     {
         if(!inherits(data$dna, "DNAbin")) stop("dna is not a DNAbin object.")
         if(!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
-        L <- ncol(data$dna) #  (genome length)
-        D <- as.matrix(dist.dna(data$dna, model="N")) # distance matrix
+        data$L <- ncol(data$dna) #  (genome length)
+        data$D <- as.matrix(dist.dna(data$dna, model="N")) # distance matrix
     } else {
-        L <- 0
-        D <- matrix(numeric(0), ncol=0, nrow=0)
+        data$L <- 0
+        data$D <- matrix(numeric(0), ncol=0, nrow=0)
     }
 
     ## RETURN DATA ##
-    return(list(dates=data$dates, dna=data$dna, w.dens=data$w.dens, f.dens=data$f.dens,
-                N=N, L=L, D=D, MAX.RANGE=MAX.RANGE, CAN.BE.ANCES=CAN.BE.ANCES,
-                log.w.dens=log.w.dens, log.f.dens=log.f.dens))
+    return(data)
 
 } # end outbreaker.data
 

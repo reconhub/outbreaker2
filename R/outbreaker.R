@@ -52,13 +52,11 @@
 #' out <- outbreaker(dna=dat$dna, dates=dat$onset, w.dens=w, config=list(n.iter=100, sample.every=10))
 #'
 #'
-outbreaker <- function(dates, dna=NULL,
-                       w.dens, f.dens=w.dens,
-                       config=outbreaker.config())
-{
+outbreaker <- function(data=outbreaker.data(),
+                       config=outbreaker.config()){
 
     ## CHECKS / PROCESS DATA ##
-    data <- outbreaker.data(dates=dates, dna=dna, w.dens=w.dens, f.dens=f.dens)
+    data <- outbreaker.data(data=data)
 
     ## CHECK / PROCESS CONFIG ##
     config <- outbreaker.config(data=data, config=config)
@@ -71,35 +69,29 @@ outbreaker <- function(dates, dna=NULL,
 
 
     ## MCMC ##
-    for(i in seq.int(2, config$n.iter, 1))
-    {
+    for(i in seq.int(2, config$n.iter, 1)){
         ## move infection dates ##
-        if(config$move.t.inf)
-        {
+        if(config$move.t.inf){
             chain$current.t.inf <- move.t.inf(data=data, chain=chain, rand=rand)
         }
 
         ## move ancestries ##
-        if(config$move.ances)
-        {
+        if(config$move.ances){
             chain$current.ances <- move.ances(data=data, chain=chain, config=config, rand=rand)
         }
 
         ## swap ancestries ##
-        if(config$move.ances && config$move.t.inf)
-        {
+        if(config$move.ances && config$move.t.inf){
             chain <- move.swap.ances(data=data, chain=chain, config=config, rand=rand)
         }
 
         ## move mu ##
-        if(config$move.mu)
-        {
+        if(config$move.mu){
             chain$current.mu <- move.mu(data=data, chain=chain, rand=rand)
         }
 
         ## store outputs if needed
-        if((i %% config$sample.every) == 0)
-        {
+        if((i %% config$sample.every) == 0){
             chain <- outbreaker.mcmc.store(chain=chain, data=data)
         }
 

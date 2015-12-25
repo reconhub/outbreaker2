@@ -13,7 +13,7 @@
 #' seqTrack output as initialize tree), "random" (ancestor randomly selected
 #' from preceding cases), and "star" (all cases coalesce to the first case).
 #' Note that for SeqTrack, all cases should have been sequenced.}
-                                        #
+#'
 #' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
@@ -57,11 +57,9 @@
 #'
 #' @importFrom utils modifyList
 #'
-outbreaker.config <- function(..., data=NULL, config=NULL)
-{
-    ## process ... only if no config is passed
-    if(is.null(config))
-    {
+outbreaker.config <- function(..., data=NULL, config=NULL){
+    ## PROCESS ... ONLY IF NO CONFIG IS PASSED
+    if(is.null(config)){
         config <- list(...)
     }
 
@@ -78,8 +76,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL)
 
     ## CHECK CONFIG ##
     ## check init.tree
-    if(is.character(config$init.tree))
-    {
+    if(is.character(config$init.tree)){
         config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
     }
 
@@ -120,38 +117,31 @@ outbreaker.config <- function(..., data=NULL, config=NULL)
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
-    if(!is.null(data))
-    {
+    if(!is.null(data)){
         ## check initial tree
-        if(is.character(config$init.tree))
-        {
-            if(config$init.tree=="seqTrack" && is.null(data$dna))
-            {
+        if(is.character(config$init.tree)){
+            if(config$init.tree=="seqTrack" && is.null(data$dna)){
                 warning("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
                 config$init.tree <- "star"
             }
 
             ## seqTrack init
-            if(config$init.tree=="seqTrack")
-            {
+            if(config$init.tree=="seqTrack"){
                 D.temp <- data$D
                 D.temp[!data$CAN.BE.ANCES] <- 1e30
                 config$ances <- apply(D.temp,2,which.min)
                 config$ances[data$dates==min(data$dates)] <- NA
                 config$ances <- as.integer(config$ances)
-            } else if(config$init.tree=="star")
-            {
+            } else if(config$init.tree=="star"){
                 config$ances <- rep(which.min(data$dates), length(data$dates))
                 config$ances[data$dates==min(data$dates)] <- NA
-            } else if(config$init.tree=="random")
-            {
+            } else if(config$init.tree=="random"){
                 config$ances <- rances(data$dates)
             }
         } else { ## if ancestries are provided
             if(length(config$init.tree) != data$N) stop("inconvenient length for init.tree")
             unknownAnces <- config$init.tree<1 | config$init.tree>data$N
-            if(any(unknownAnces))
-            {
+            if(any(unknownAnces)){
                 warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
                 config$init.tree[unknownAnces] <- NA
             }
@@ -178,11 +168,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL)
 ## NON EXPORTED FUNCTIONS ##
 
 ## append arguments to defaults ##
-modify.defaults <- function(defaults, x)
-{
+modify.defaults <- function(defaults, x){
     extra <- setdiff(names(x), names(defaults))
-    if (length(extra) > 0L)
-    {
+    if (length(extra) > 0L){
         stop("Additional invalid options: ", paste(extra, collapse=", "))
     }
     modifyList(defaults, x)

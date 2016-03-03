@@ -51,36 +51,8 @@ outbreaker <- function(data=outbreaker.data(),
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
 
-
     ## MCMC ##
-    for(i in seq.int(2, config$n.iter, 1)){
-        ## move infection dates ##
-        if(config$move.t.inf){
-            param <- move.t.inf(data=data, param=param, rand=rand)
-        }
-
-        ## move ancestries ##
-        if(config$move.ances){
-            param <- move.ances(data=data, param=param, config=config, rand=rand)
-        }
-
-        ## swap ancestries ##
-        if(config$move.ances && config$move.t.inf){
-            param <- move.swap.ances(data=data, param=param, config=config, rand=rand)
-        }
-
-        ## move mu ##
-        if(config$move.mu){
-            param <- move.mu(data=data, param=param, rand=rand)
-        }
-
-        ## store outputs if needed
-        if((i %% config$sample.every) == 0){
-            param <- outbreaker.mcmc.store(param=param, data=data)
-        }
-
-    } # end of the chain
-
+    param <- outbreaker.move(data=data, config=config, param=param, rand=rand)
 
     ## SHAPE RESULTS ##
     param <- outbreaker.mcmc.shape(param=param, data=data)

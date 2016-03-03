@@ -11,6 +11,8 @@ outbreaker(data = outbreaker.data(), config = outbreaker.config(),
 \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 
 \item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
+
+\item{moves}{a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}}
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data

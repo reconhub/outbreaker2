@@ -16,8 +16,8 @@
 #' @seealso \code{\link{outbreaker.data}} to process input data, and \code{\link{outbreaker.config}} to process/set up parameters
 #'
 #' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
-#'
 #' @param config a set of settings as returned by \code{\link{outbreaker.config}}
+#' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
 #'
 #' @seealso \code{\link{outbreaker.config}} to see default parameters / set parameters and \code{\link{outbreaker.data}} to process input data
 #'

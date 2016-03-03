@@ -16,7 +16,7 @@ outbreaker.move <- function(data, config, param, rand){
     for(i in seq.int(2, config$n.iter, 1)){
         ## move infection dates ##
         if(config$move.t.inf){
-            param <- move.t.inf(data=data, param=param, rand=rand)
+            param <- move.t.inf(data=data, param=param, config=config, rand=rand)
         }
 
         ## move ancestries ##
@@ -31,7 +31,7 @@ outbreaker.move <- function(data, config, param, rand){
 
         ## move mu ##
         if(config$move.mu){
-            param <- move.mu(data=data, param=param, rand=rand)
+            param <- move.mu(data=data, param=param, config=config, rand=rand)
         }
 
         ## store outputs if needed
@@ -43,4 +43,4 @@ outbreaker.move <- function(data, config, param, rand){
 
     ## RETURN ##
     return(param)
-} #end outbreaker.move
+} # end outbreaker.move

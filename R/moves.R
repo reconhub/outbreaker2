@@ -14,7 +14,7 @@
 #'
 #' @importFrom stats rnorm
 #'
-move.mu <- function(data, param, rand){
+move.mu <- function(data, param, config, rand){
     ## get new proposed values
     new.param <- param
     new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
@@ -38,7 +38,7 @@ move.mu <- function(data, param, rand){
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, param, rand){ # assumes symmetric proposal
+move.t.inf <- function(data, param, config, rand){ # assumes symmetric proposal
 
     ## propose new t.inf
     new.param <- param

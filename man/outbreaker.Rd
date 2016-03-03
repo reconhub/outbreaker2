@@ -4,7 +4,8 @@
 \alias{outbreaker}
 \title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
 \usage{
-outbreaker(data = outbreaker.data(), config = outbreaker.config())
+outbreaker(data = outbreaker.data(), config = outbreaker.config(),
+  moves = outbreaker.create.moves())
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}

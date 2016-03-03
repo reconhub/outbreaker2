@@ -8,9 +8,9 @@
 \alias{rances}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
-move.mu(data, param, rand)
+move.mu(data, param, config, rand)
 
-move.t.inf(data, param, rand)
+move.t.inf(data, param, config, rand)
 
 move.ances(data, param, config, rand)
 
@@ -23,9 +23,9 @@ rances(t.inf)
 
 \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
 
-\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
-
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
+
+\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 
 \item{t.inf}{a vector of infection dates}
 }

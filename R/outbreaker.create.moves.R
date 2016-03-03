@@ -3,6 +3,14 @@
 #' This function creates a named list of functions, each of which moves parameters of outbreaker.
 #' If these functions are provided as input, they will be used. Otherwise, default functions will be used.
 #'
+#' User-provided functions will be checked to ensure the right arguments are present. All movement functions should have to following arguments:
+#' \describe{
+#' \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
+#' \item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
+#' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}} 
+#' \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}} 
+#' }
+#' 
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @param ... a named list (see details), each component being a list movement functions defining movements of parameters or augmented data; see details for available movements and the corresponding names.
@@ -36,6 +44,23 @@ outbreaker.create.moves <- function(..., moves=NULL){
     moves <- modify.defaults(defaults, moves)
     
 
+    ## CHECK FUNCTIONS ##
+    check.function.args <- function(f){
+        args <- names(formals(f))
+        if(!identical(sort(args), c("config","data","param", "rand"))) {
+            return(FALSE)
+        } else {
+            return(TRUE)
+        }
+    }
+
+    args.checks <- sapply(unlist(moves), check.function.args)
+    if(!all(args.checks)){
+        culprits <- names(args.checks)[!args.checks]
+        culprits <- paste(culprits, collapse=",")
+        stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'config', 'param', 'rand'")
+    }
+    
     ## RETURN ##
     return(moves)
     

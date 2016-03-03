@@ -19,6 +19,15 @@ This function creates a named list of functions, each of which moves parameters 
 If these functions are provided as input, they will be used. Otherwise, default functions will be used.
 }
 \details{
+User-provided functions will be checked to ensure the right arguments are present. All movement functions should have to following arguments:
+\describe{
+\item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
+\item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
+\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}} 
+\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}} 
+}
+
+
 The movement functions which can be passed as arguments are:
 \describe{
 \item{mu}{a list of functions to move mutation rates; defaults to \code{move.mu}}

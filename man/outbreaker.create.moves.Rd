@@ -7,7 +7,7 @@
 outbreaker.create.moves(..., moves = NULL)
 }
 \arguments{
-\item{...}{a list of named movement functions; see details for available names.}
+\item{...}{a named list (see details), each component being a list movement functions defining movements of parameters or augmented data; see details for available movements and the corresponding names.}
 
 \item{moves}{a list of functions as returned by \code{outbreaker.create.moves}}
 }
@@ -17,6 +17,14 @@ a list of named functions
 \description{
 This function creates a named list of functions, each of which moves parameters of outbreaker.
 If these functions are provided as input, they will be used. Otherwise, default functions will be used.
+}
+\details{
+The movement functions which can be passed as arguments are:
+\describe{
+\item{mu}{a list of functions to move mutation rates; defaults to \code{move.mu}}
+\item{t.inf}{a list of functions to move dates of infection; defaults to \code{move.t.inf}}
+\item{ances}{a list of functions to move ancestries, i.e. the transmission tree; defaults to \code{move.ances} and \code{move.swap.ances}}
+}
 }
 \author{
 Thibaut Jombart \email{t.jombart@imperial.ac.uk}

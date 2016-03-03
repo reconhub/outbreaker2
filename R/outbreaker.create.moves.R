@@ -5,9 +5,18 @@
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
-#' @param ... a list of named movement functions; see details for available names.
+#' @param ... a named list (see details), each component being a list movement functions defining movements of parameters or augmented data; see details for available movements and the corresponding names.
 #' @param moves a list of functions as returned by \code{outbreaker.create.moves}
 #'
+#' @details
+#' The movement functions which can be passed as arguments are:
+#' \describe{
+#' \item{mu}{a list of functions to move mutation rates; defaults to \code{move.mu}}
+#' \item{t.inf}{a list of functions to move dates of infection; defaults to \code{move.t.inf}}
+#' \item{ances}{a list of functions to move ancestries, i.e. the transmission tree; defaults to \code{move.ances} and \code{move.swap.ances}}
+#' }
+#' 
+#' 
 #' @return a list of named functions
 #' 
 outbreaker.create.moves <- function(..., moves=NULL){
@@ -20,12 +29,14 @@ outbreaker.create.moves <- function(..., moves=NULL){
     ## SET DEFAULTS ##
     defaults <- list(mu = list(move.mu),
                      t.inf = list(move.t.inf),
-                     ances = list(move.ances, move.swap.ances),
+                     ances = list(move.ances, move.swap.ances)
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
     moves <- modify.defaults(defaults, moves)
     
 
+    ## RETURN ##
+    return(moves)
     
 } # end outbreaker.create.moves

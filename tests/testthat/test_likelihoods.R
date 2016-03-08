@@ -89,3 +89,25 @@ test_that("ll.all gives expected results", {
 })
 
 
+
+
+## test outbreaker.create.loglike ##
+test_that("outbreaker.create.loglike gives expected results", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    out <- outbreaker.create.loglike()
+    
+    ## tests
+    expect_is(out, "list")
+    expect_equal(length(out), 5)
+    expect_equal(names(out), c("timing.infections",
+                               "timing.sampling",
+                               "timing",
+                               "genetic",
+                               "all")
+                 )
+                 
+})

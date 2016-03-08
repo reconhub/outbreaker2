@@ -61,9 +61,9 @@ add.to.context <- function(x, objects){
         if(is.list(objects[[i]])){
             add.to.context(env, objects[[i]])
         }
-        assign(env = names(objects)[i],
+        assign(x = names(objects)[i],
                value = objects[[i]],
-               envir = environment(x))
+               envir = env)
     }
 
     return(invisible(NULL))

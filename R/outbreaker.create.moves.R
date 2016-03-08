@@ -13,15 +13,16 @@
 #' 
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
-#' @param ... a named list (see details), each component being a list movement functions defining movements of parameters or augmented data; see details for available movements and the corresponding names.
+#' @param ... a named list of movement functions for parameters or augmented data; see details for available movements and the corresponding names.
 #' @param moves a list of functions as returned by \code{outbreaker.create.moves}
 #'
 #' @details
-#' The movement functions which can be passed as arguments are:
+#' The movement functions which are used by default:
 #' \describe{
-#' \item{mu}{a list of functions to move mutation rates; defaults to \code{move.mu}}
-#' \item{t.inf}{a list of functions to move dates of infection; defaults to \code{move.t.inf}}
-#' \item{ances}{a list of functions to move ancestries, i.e. the transmission tree; defaults to \code{move.ances} and \code{move.swap.ances}}
+#' \item{move.mu}{a function to move mutation rates}
+#' \item{move.t.inf}{a function to move dates of infection}
+#' \item{move.ances}{a function to move ancestries, i.e. the transmission tree}
+#' \item{move.swap.ances}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
 #' }
 #' 
 #' 
@@ -35,13 +36,14 @@ outbreaker.create.moves <- function(..., moves=NULL){
 
     
     ## SET DEFAULTS ##
-    defaults <- list(mu = list(move.mu),
-                     t.inf = list(move.t.inf),
-                     ances = list(move.ances, move.swap.ances)
+    defaults <- list(move.mu = move.mu,
+                     move.t.inf = move.t.inf,
+                     move.ances = move.ances,
+                     move.swap.ances = move.swap.ances
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
-    moves <- modify.defaults(defaults, moves)
+    moves <- modify.defaults(defaults, moves, strict=FALSE)
     
 
     ## CHECK FUNCTIONS ##

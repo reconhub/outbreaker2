@@ -11,27 +11,14 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
 #' 
-outbreaker.move <- function(data, config, param, rand){
+outbreaker.move <- function(moves, data, config, param, rand){
+    ## get number of moves ##
+    J <- length(moves)
+    
     ## RUN MCMC ##
     for(i in seq.int(2, config$n.iter, 1)){
-        ## move infection dates ##
-        if(config$move.t.inf){
-            param <- move.t.inf(data=data, param=param, config=config, rand=rand)
-        }
-
-        ## move ancestries ##
-        if(config$move.ances){
-            param <- move.ances(data=data, param=param, config=config, rand=rand)
-        }
-
-        ## swap ancestries ##
-        if(config$move.ances && config$move.t.inf){
-            param <- move.swap.ances(data=data, param=param, config=config, rand=rand)
-        }
-
-        ## move mu ##
-        if(config$move.mu){
-            param <- move.mu(data=data, param=param, config=config, rand=rand)
+        for(j in seq.int(J)){
+            param <- moves[[j]](data=data, param=param, config=config, rand=rand)
         }
 
         ## store outputs if needed

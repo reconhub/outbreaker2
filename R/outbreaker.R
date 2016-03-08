@@ -63,7 +63,7 @@ outbreaker <- function(data = outbreaker.data(),
     add.to.context(environment(), c(loglike=loglike, priors=priors, posteriors=posteriors))
 
     ## perform mcmc
-    param <- outbreaker.move(data=data, config=config, param=param, rand=rand)
+    param <- outbreaker.move(moves=moves, data=data, config=config, param=param, rand=rand)
 
     ## SHAPE RESULTS ##
     param <- outbreaker.mcmc.shape(param=param, data=data)

@@ -30,7 +30,7 @@ Note that unlike \code{outbreaker.create.moves}, posterior functions have no man
 
 The posterior functions used by default are:
 \describe{
-\item{genetic}{corresponds to the posterior distribution of the mutation rates; defaults to \code{\link{post.mu}}}
+\item{genetic}{corresponds to the posterior distribution of the mutation rates; defaults to \code{\link{post.genetic}}}
 \item{all}{corresponds to the joint posterior; defaults to \code{\link{post.all}}}
 }
 }

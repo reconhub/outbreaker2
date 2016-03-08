@@ -12,7 +12,7 @@ add.to.context(x, objects)
 \arguments{
 \item{defaults}{a list containing default arguments}
 
-\item{x}{in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function.}
+\item{x}{in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function or an environment.}
 
 \item{strict}{a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'}
 
@@ -26,6 +26,10 @@ These functions are meant for internal use in outbreaker2. They are not exported
 \item{modify.default}{modify default arguments using user-provided values}
 \item{add.to.function.context}{add a set of objects to the environment of a function}
 }
+}
+\examples{
+f1 <- function(x) { foo(x)+1}
+
 }
 \author{
 Rich Fitzjohn, Thibaut Jombart

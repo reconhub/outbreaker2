@@ -11,7 +11,7 @@
 #' @rdname internals
 #' 
 #' @param defaults a list containing default arguments
-#' @param x in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function.
+#' @param x in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function or an environment.
 #' @param strict a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'
 #'
 #' @author Rich Fitzjohn, Thibaut Jombart

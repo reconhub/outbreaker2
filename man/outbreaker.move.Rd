@@ -4,9 +4,11 @@
 \alias{outbreaker.move}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
-outbreaker.move(data, config, param, rand)
+outbreaker.move(moves, data, config, param, rand)
 }
 \arguments{
+\item{moves}{a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}}
+
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
 
 \item{config}{a list of settings as returned by \code{outbreaker.config}}

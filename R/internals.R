@@ -31,13 +31,16 @@ modify.defaults <- function(defaults, x, strict=TRUE){
 #' @rdname internals
 #'
 #' @param objects a list of objects to be added to the environment of 'x'; all items need to be named.
+#'
+#' @examples
+#' f1 <- function(x) { foo(x)+1}
 #' 
 add.to.context <- function(x, objects){
     ## escape if object is empty ##
     if(length(objects) < 1L) return(x)
 
     ## check that all objects are named ##
-    if(any(names(objects == ""))) {
+    if(any(names(objects) == "")) {
         warning("all objects to be added to the environment of 'x' must be named; only adding named objects")
         to.keep <- names(objects) != ""
         objects <- objects[to.keep]

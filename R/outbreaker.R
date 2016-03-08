@@ -59,6 +59,11 @@ outbreaker <- function(data = outbreaker.data(),
     rand <- outbreaker.rand.vec(config)
 
     ## MCMC ##
+    ## add likelihood, prior and posterior functions to movement context
+    environment(moves) <- moves.env <- new.env()
+    moves <- add.to.context(moves, list(loglike=loglike, priors=priors, posteriors=posteriors))
+
+    ## perform mcmc
     param <- outbreaker.move(data=data, config=config, param=param, rand=rand)
 
     ## SHAPE RESULTS ##

@@ -182,9 +182,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 ## NON EXPORTED FUNCTIONS ##
 
 ## append arguments to defaults ##
-modify.defaults <- function(defaults, x){
+modify.defaults <- function(defaults, x, strict=TRUE){
     extra <- setdiff(names(x), names(defaults))
-    if (length(extra) > 0L){
+    if (strict && (length(extra) > 0L)){
         stop("Additional invalid options: ", paste(extra, collapse=", "))
     }
     modifyList(defaults, x)

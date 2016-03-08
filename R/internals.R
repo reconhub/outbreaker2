@@ -28,6 +28,8 @@ modify.defaults <- function(defaults, x, strict=TRUE){
 
 
 
+
+
 #' @rdname internals
 #'
 #' @param objects a list of objects to be added to the environment of 'x'; all items need to be named.
@@ -36,27 +38,33 @@ modify.defaults <- function(defaults, x, strict=TRUE){
 #' f1 <- function(x) { foo(x)+1}
 #' 
 add.to.context <- function(x, objects){
-    ## escape if object is empty ##
-    if(length(objects) < 1L) return(x)
+    ## get environment
+    if(is.environment(x)){
+        env <- x
+    } else{
+        env <- environment(x)
+    }
+    
+    ## escape if object is empty
+    if(length(objects) < 1L) return(invisible(NULL))
 
-    ## check that all objects are named ##
+    ## check that all objects are named
     if(any(names(objects) == "")) {
         warning("all objects to be added to the environment of 'x' must be named; only adding named objects")
         to.keep <- names(objects) != ""
         objects <- objects[to.keep]
     }
 
-    ## add objects to environment ##
+    ## add objects to environment
     for(i in seq_along(objects)){
         ## recursive behaviour if object is a list
         if(is.list(objects[[i]])){
-            x <- add.to.context(x, objects[[i]])
+            add.to.context(env, objects[[i]])
         }
-        assign(x = names(objects)[i],
+        assign(env = names(objects)[i],
                value = objects[[i]],
                envir = environment(x))
     }
 
-    ## return ##
-    return(x)
+    return(invisible(NULL))
 } # add.to.context

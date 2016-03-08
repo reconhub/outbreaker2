@@ -11,7 +11,7 @@
 #' @rdname internals
 #' 
 #' @param defaults a list containing default arguments
-#' @param x in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.function.context}, a function
+#' @param x in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function.
 #' @param strict a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'
 #'
 #' @author Rich Fitzjohn, Thibaut Jombart
@@ -31,23 +31,25 @@ modify.defaults <- function(defaults, x, strict=TRUE){
 #' @rdname internals
 #'
 #' @param objects a list of objects to be added to the environment of 'x'; all items need to be named.
-add.to.function.context <- function(x, objects){
-    ## extract basic info
-    obj.names <- names(objects)
-    n.obj <- length(objects)
-    x.env <- environment(x)
-    
-    ## escape if object is empty
-    if(n.obk<1L) return(x)
+#' 
+add.to.context <- function(x, objects){
+    ## escape if object is empty ##
+    if(length(objects) < 1L) return(x)
 
-    ## check that all objects are named
-    if(length(obj.names)!=n.obj) stop("all objects to be added to the environment of 'x' must be named")
-
-    ## add objects to environment
-    for(i in seq_along(objects)){
-        assign(names(objects)[i], objects[[i]], envir=x.env)
+    ## check that all objects are named ##
+    if(any(names(objects == ""))) {
+        warning("all objects to be added to the environment of 'x' must be named; only adding named objects")
+        to.keep <- names(objects) != ""
+        objects <- objects[to.keep]
     }
 
-    ## return
+    ## add objects to environment ##
+    for(i in seq_along(objects)){
+        assign(x = names(objects)[i],
+               value = objects[[i]],
+               envir = environment(x))
+    }
+
+    ## return ##
     return(x)
-} # add.to.function.context
+} # add.to.context

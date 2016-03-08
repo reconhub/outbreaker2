@@ -49,8 +49,8 @@ add.to.context <- function(x, objects){
     ## add objects to environment ##
     for(i in seq_along(objects)){
         ## recursive behaviour if object is a list
-        if(is.list(objects[[i]]){
-            x <- add.to.context(x, objects[[i]]
+        if(is.list(objects[[i]])){
+            x <- add.to.context(x, objects[[i]])
         }
         assign(x = names(objects)[i],
                value = objects[[i]],

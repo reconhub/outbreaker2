@@ -43,3 +43,25 @@ test_that("posterior is atomic", {
     expect_equal(length(prior), 1)
     expect_equal(length(post), 1)
 })
+
+
+
+
+
+## test outbreaker.create.posteriors ##
+test_that("outbreaker.create.posteriors gives expected results", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    out <- outbreaker.create.posteriors()
+    
+    ## tests
+    expect_is(out, "list")
+    expect_equal(length(out), 2)
+    expect_equal(names(out), c("genetic",
+                               "all")
+                 )
+                 
+})

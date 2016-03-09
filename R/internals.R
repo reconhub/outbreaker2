@@ -144,19 +144,19 @@ check.param <- function(param){
     ## look for new imported cases (should not happen)
     if(!identical(is.na(param$ances[[1]]), is.na(param$current.ances))){
         out$pass <- FALSE
-        out$msg <- c(out.msg, "imported cases have changed")
+        out$msg <- c(out$msg, "imported cases have changed")
     }
 
     ## look for negative ancestries
     if(any(param$current.ances<1,na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out.msg, "some ancestries point to unknown cases (param$ances<1)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$ances<1)")
     }
 
     ## look for ancestries greater than 'N'
     if(any(param$current.ances>length(param$ances[[1]]),na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out.msg, "some ancestries point to unknown cases (param$ances>N)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$ances>N)")
     }
 
 

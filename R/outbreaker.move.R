@@ -11,13 +11,22 @@
 #' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
-#' 
+#'
 outbreaker.move <- function(moves, data, config, param, rand){
     ## get number of moves ##
     J <- length(moves)
-    
+
     ## RUN MCMC ##
     for(i in seq.int(2, config$n.iter, 1)){
+        ## safemode
+        if(config$safemode){
+            diagnostic <- check.param(param)
+            if(!diagnostic$pass){
+                stop("safemode detected an error at MCMC iteration", i, "with the following diagnostics:\n", diagnostic$msg)
+            }
+        }
+
+        ## move parameters / augmented data
         for(j in seq.int(J)){
             param <- moves[[j]](data=data, param=param, config=config, rand=rand)
         }

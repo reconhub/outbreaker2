@@ -79,8 +79,9 @@ add.to.context <- function(x, objects){
 #'
 ## checks only sure for the current state
 check.param <- function(param){
-    ## prepare output
+    ## PREPARE OUTPUT ##
     out <- list(pass=TRUE, msg=NULL)
+
 
     ## LIEKLIHOOD / POSTERIOR / PRIOR
     ## look for NAs in loglike / post / prior
@@ -109,6 +110,26 @@ check.param <- function(param){
     if(!all(is.finite(param$prior))){
         out$pass <- FALSE
         out$msg <- c(out$msg, "non-finite prior values detected (param$prior)")
+    }
+
+
+    ## CHECKS ON MU ##
+    ## check that mu > 0
+    if(param$current.mu<0){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "mu has a negative value:", param$current.mu)
+    }
+
+    ## check if mu is NA
+    if(is.na(param$current.mu)){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "mu is NA")
+    }
+
+    ## check if mu is finite
+    if(!is.finite(param$current.mu)){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "mu is not finite and equals:", param$current.mu)
     }
 
 

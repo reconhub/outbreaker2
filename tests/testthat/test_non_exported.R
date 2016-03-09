@@ -31,29 +31,33 @@ test_that("Auxiliary functions for ancestries are working", {
     ances <- c(2, NA, 1, 3, 3, 1)
     t.inf <- c(2, 1, 3, 4, 4, 3)
     data <- outbreaker.data(dates=t.inf+1)
-    config <- outbreaker.config(init.tree=ances, init.t.inf=t.inf)
+    config <- outbreaker.config(init.tree=ances, init.t.inf=t.inf, data=data)
     config2 <- config
-    config2$move.ances <- c(rep(TRUE,4),FALSE)
+    config2$move.ances <- c(rep(TRUE,4),FALSE, TRUE)
     param <- outbreaker.mcmc.init(config=config, data=data)
 
     ## test can be ances
-    expect_equal(can.move.ances(param, config), c(FALSE,rep(TRUE,4)))
-    expect_equal(can.move.ances(param, config2), c(FALSE, TRUE, TRUE, TRUE, FALSE))
+    expect_equal(can.move.ances(param, config), c(TRUE, FALSE,rep(TRUE,4)))
+    expect_equal(can.move.ances(param, config2), c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE))
 
     ## test ancestor selection
     set.seed(1)
     to.move <- replicate(10,select.ances.to.move(param,config))
-    expect_equal(to.move, c(3,3,4,5,2,5,5,4,4,2))
+    expect_equal(to.move, c(3,3,4,6,3,6,6,5,5,1))
     to.move2 <- replicate(10,select.ances.to.move(param,config2))
-    expect_equal(to.move2, c(2,2,4,3,4,3,4,4,3,4))
+    expect_equal(to.move2, c(1,1,4,3,6,3,4,6,3,6))
 
     ## tests non swapping (imported case)
-    expect_warning(res <- outbreaker2:::swap.ances(param, config, 1))
+    expect_warning(res <- outbreaker2:::swap.ances(param, config, 2))
     expect_equal(param, res)
 
+    ## trying swap x->i to i->x when x is imported (forbidden)
+    res <- outbreaker2:::swap.ances(param, config, 1)
+    expect_equal(res$current.ances, param$current.ances)
+
     ## test full swapping
-    res <- outbreaker2:::swap.ances(param, config, 2)
-    expect_equal(res$current.ances, c(2,NA,2,1,1))
-    expect_equal(res$current.t.inf, c(2,0,3,5,7))
+    res <- outbreaker2:::swap.ances(param, config, 3)
+    expect_equal(res$current.ances, c(3,NA,2,1,1,3))
+    expect_equal(res$current.t.inf, c(3,1,2,4,4,3))
 
 })

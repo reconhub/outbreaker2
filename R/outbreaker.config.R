@@ -37,6 +37,8 @@
 #' \item{batch.size}{the size of the batch of random number pre-generated}
 #'
 #' \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for performing additional tests during outbreaker; it makes computations substantially slower and is mostly used for debugging purposes.}
+#'
+#' \item{min.date}{earliest infection date possible, expressed as days since the first sampling;}
 #' }
 #'
 #' @param ... settings to be passed to outbreaker
@@ -76,7 +78,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
                      batch.size=1e6,
-                     paranoid=FALSE)
+                     paranoid=FALSE,
+                     min.date=-10)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -135,6 +138,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## check paranoid
     if(!is.logical(config$paranoid)) stop("paranoid is not logical")
     if(length(config$paranoid) != 1L) stop("paranoid should be a single logical value")
+
+    ## check min.date
+    if(!is.numeric(min.date)) stop("min.date is not numeric")
+    if(min.date>=0) stop("min.date is greater or equal to 0")
+
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
     if(!is.null(data)){

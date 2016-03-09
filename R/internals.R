@@ -241,7 +241,7 @@ find.possible.ances <- function(t.inf, i){
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes
-swap.ances <- function(param, i){
+swap.ances <- function(param, config, i){
     ## stop if 'i' out of range
     if(i>length(param$current.ances)) stop("trying to swap ancestry of case ",
                                            i, " while there are only ",

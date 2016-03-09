@@ -132,6 +132,12 @@ check.param <- function(param){
         out$msg <- c(out$msg, "mu is not finite and equals:", param$current.mu)
     }
 
+    ## check if mu is numeric
+    if(!is.numeric(param$current.mu)){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "mu is not numeric and equals:", param$current.mu)
+    }
+
 
     ## ANCESTRIES ##
     ## look for new imported cases (should not happen)
@@ -150,6 +156,26 @@ check.param <- function(param){
     if(any(param$current.ances>length(param$ances[[1]]),na.rm=TRUE)){
        out$pass <- FALSE
        out$msg <- c(out.msg, "some ancestries point to unknown cases (param$ances>N)")
+    }
+
+
+    ## INFECTION DATES ##
+    ## check NA
+    if(any(is.na(param$current.t.inf))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "NA detected in infection dates (param$current.t.inf)")
+    }
+
+    ## check finite values
+    if(any(!is.finite(param$current.t.inf))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "some infection dates are not finite (param$current.t.inf)")
+    }
+
+    ## check that values are numeric
+    if(any(!is.numeric(param$current.t.inf))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "some infection dates are not numeric (param$current.t.inf)")
     }
 
 

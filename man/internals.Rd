@@ -2,6 +2,7 @@
 % Please edit documentation in R/internals.R
 \name{modify.defaults}
 \alias{add.to.context}
+\alias{check.param}
 \alias{modify.defaults}
 \alias{select.ances.to.move}
 \title{Internal functions for outbreaker2}
@@ -9,6 +10,8 @@
 modify.defaults(defaults, x, strict = TRUE)
 
 add.to.context(x, objects)
+
+check.param(param)
 
 select.ances.to.move(param, config)
 }
@@ -20,6 +23,8 @@ select.ances.to.move(param, config)
 \item{strict}{a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'}
 
 \item{objects}{a list of objects to be added to the environment of 'x'; all items need to be named.}
+
+\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
 }
 \description{
 These functions are meant for internal use in outbreaker2. They are not exported, and their API might change in the future.
@@ -28,6 +33,7 @@ These functions are meant for internal use in outbreaker2. They are not exported
 \describe{
 \item{modify.default}{modify default arguments using user-provided values}
 \item{add.to.function.context}{add a set of objects to the environment of a function}
+\item{check.param}{a function performing various checks of the status of the chain; tries to pick up impossible values for augmented data and parameters, or -Inf log-likelihood or posterior values; this function is used only in 'safemode' (see \code{\link{outbreaker.config}})}
 }
 }
 \examples{

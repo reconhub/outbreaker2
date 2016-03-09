@@ -37,6 +37,9 @@ w <- fakeOutbreak$w
 out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
 config=list(n.iter=100, sample.every=10))
 
+## run outbreaker, no DNA sequences
+out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
+config=list(n.iter=100, sample.every=10))
 
 }
 \author{

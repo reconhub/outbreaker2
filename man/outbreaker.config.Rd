@@ -48,6 +48,10 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
 
 \item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
+
+\item{batch.size}{the size of the batch of random number pre-generated}
+
+\item{safemode}{a logical indicating if the safemode should be used; safemode is used for performing additional tests during outbreaker; mostly used for debugging purposes.}
 }
 }
 \examples{

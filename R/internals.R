@@ -79,7 +79,7 @@ add.to.context <- function(x, objects){
 #'
 ## checks are only sure for the 'current' state
 ##
-check.wandering <- function(param){
+look.for.trouble <- function(param, data){
     ## PREPARE OUTPUT ##
     out <- list(pass=TRUE, msg=NULL)
 
@@ -185,6 +185,17 @@ check.wandering <- function(param){
         out$msg <- c(out$msg, "some infection dates are not numeric (param$current.t.inf)")
     }
 
+    ## check that delays between infections are > 0
+    if(any((param$current.t.inf - param$current.t.inf[param$current.ances]) < 1, na.rm=TRUE)){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "some delays between succesive infections are less than 1 (param$current.t.inf)")
+    }
+
+    ## check that delays to collection are > 0
+    if(any((data$dates-param$current.t.inf) < 1, na.rm=TRUE)){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "some delays to collection are less than 1 (param$current.t.inf)")
+    }
 
     ## SHAPE OUTPUT AND RETURN ##
     out$msg <- paste(out$msg, collapse="\n")

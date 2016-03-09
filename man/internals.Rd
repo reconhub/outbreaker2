@@ -2,7 +2,7 @@
 % Please edit documentation in R/internals.R
 \name{modify.defaults}
 \alias{add.to.context}
-\alias{check.param}
+\alias{check.wandering}
 \alias{modify.defaults}
 \alias{select.ances.to.move}
 \title{Internal functions for outbreaker2}
@@ -11,7 +11,7 @@ modify.defaults(defaults, x, strict = TRUE)
 
 add.to.context(x, objects)
 
-check.param(param)
+check.wandering(param)
 
 select.ances.to.move(param, config)
 }

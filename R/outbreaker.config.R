@@ -36,7 +36,7 @@
 #'
 #' \item{batch.size}{the size of the batch of random number pre-generated}
 #'
-#' \item{safemode}{a logical indicating if the safemode should be used; safemode is used for performing additional tests during outbreaker; mostly used for debugging purposes.}
+#' \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for performing additional tests during outbreaker; it makes computations substantially slower and is mostly used for debugging purposes.}
 #' }
 #'
 #' @param ... settings to be passed to outbreaker
@@ -76,7 +76,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
                      batch.size=1e6,
-                     safemode=FALSE)
+                     paranoid=FALSE)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -132,16 +132,16 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(!is.numeric(config$batch.size)) stop("batch.size is not numeric")
     if(config$batch.size<1) stop("batch.size is less than 1")
 
-    ## check safemode
-    if(!is.logical(config$safemode)) stop("safemode is not logical")
-    if(length(config$safemode) != 1L) stop("safemode should be a single logical value")
+    ## check paranoid
+    if(!is.logical(config$paranoid)) stop("paranoid is not logical")
+    if(length(config$paranoid) != 1L) stop("paranoid should be a single logical value")
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
     if(!is.null(data)){
         ## check initial tree
         if(is.character(config$init.tree)){
             if(config$init.tree=="seqTrack" && is.null(data$dna)){
-                warning("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
+                message("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
                 config$init.tree <- "star"
             }
 

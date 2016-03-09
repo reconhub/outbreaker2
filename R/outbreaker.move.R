@@ -21,7 +21,7 @@ outbreaker.move <- function(moves, data, config, param, rand){
         ## move parameters / augmented data
         for(j in seq.int(J)){
             ## safemode
-            if(config$safemode){
+            if(config$paranoid){
                 old.param <- param
             }
 
@@ -29,8 +29,8 @@ outbreaker.move <- function(moves, data, config, param, rand){
             param <- moves[[j]](data=data, param=param, config=config, rand=rand)
 
             ## safemode
-            if(config$safemode){
-                diagnostic <- check.wandering(param)
+            if(config$paranoid){
+                diagnostic <- look.for.trouble(param, data)
                 if(!diagnostic$pass){
                     stop(paste("\n\n SAFEMODE DETECTED AN ERROR:\n",
                                "at iteration ", i, ", ",

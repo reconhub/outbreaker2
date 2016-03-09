@@ -6,7 +6,7 @@ test_that("test: settings are processed fine", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
-    
+
     ## get data
     x <- fakeOutbreak
     dat <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
@@ -26,7 +26,7 @@ test_that("test: settings are processed fine", {
     expect_error(outbreaker.config(n.iter=0))
     expect_error(outbreaker.config(sample.every=0))
     expect_error(outbreaker.config(init.tree=1:5, data=dat))
-    expect_warning(outbreaker.config(init.tree="seqTrack", data=dat.nodna))
+    ## expect_warning(outbreaker.config(init.tree="seqTrack", data=dat.nodna))
     expect_warning(outbreaker.config(init.tree=rep(-1,dat$N), data=dat))
 })
 

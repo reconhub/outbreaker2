@@ -51,7 +51,9 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{batch.size}{the size of the batch of random number pre-generated}
 
-\item{safemode}{a logical indicating if the safemode should be used; safemode is used for performing additional tests during outbreaker; mostly used for debugging purposes.}
+\item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for performing additional tests during outbreaker; it makes computations substantially slower and is mostly used for debugging purposes.}
+
+\item{min.date}{earliest infection date possible, expressed as days since the first sampling;}
 }
 }
 \examples{

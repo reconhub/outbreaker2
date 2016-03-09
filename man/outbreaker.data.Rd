@@ -28,9 +28,9 @@ fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 \link[adegenet]{fasta2DNAbin}.}
 
 \item{w.dens}{a vector of numeric values indicating the generation time
-distribution, reflecting the infectious potential of a case t=0, 1, 2, ...
-time steps after infection. By convention, w.dens[1]=0, meaning that an
-newly infected patient cannot be instantaneously infectious. If not
+distribution, reflecting the infectious potential of a case t=1, 2, ...
+time steps after infection. By convention, it is assumed that
+newly infected patients cannot see new infections on the same time step. If not
 standardized, this distribution is rescaled to sum to 1.}
 
 \item{f.dens}{similar to \code{w.dens}, except that this is the distribution

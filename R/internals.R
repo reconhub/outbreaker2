@@ -76,7 +76,6 @@ add.to.context <- function(x, objects){
 
 
 
-#' @rdname internals
 ## check which ancestries can move (returns a TRUE/FALSE vector)
 can.move.ances <- function(param, config){
     out <- !is.na(param$current.ances) & # non-imported case
@@ -96,7 +95,6 @@ select.ances.to.move <- function(param, config){
 }
 
 
-#' @rdname internals
 ## find possible ancestors for a case 'i'
 find.possible.ances <- function(t.inf, i){
     if(length(i)>1) stop("i has a length > 1")
@@ -106,9 +104,6 @@ find.possible.ances <- function(t.inf, i){
 
 
 
-#' @rdname internals
-
-## non-exported function
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes

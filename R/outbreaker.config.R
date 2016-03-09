@@ -33,6 +33,10 @@
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
 #'
 #' \item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
+#'
+#' \item{batch.size}{the size of the batch of random number pre-generated}
+#'
+#' \item{safemode}{a logical indicating if the safemode should be used; safemode is used for performing additional tests during outbreaker; mostly used for debugging purposes.}
 #' }
 #'
 #' @param ... settings to be passed to outbreaker
@@ -71,7 +75,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      move.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
-                     batch.size=1e6)
+                     batch.size=1e6,
+                     safemode=FALSE)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -127,6 +132,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(!is.numeric(config$batch.size)) stop("batch.size is not numeric")
     if(config$batch.size<1) stop("batch.size is less than 1")
 
+    ## check safemode
+    if(!is.logical(config$safemode)) stop("safemode is not logical")
+    if(length(config$safemode) != 1L) stop("safemode should be a single logical value")
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
     if(!is.null(data)){

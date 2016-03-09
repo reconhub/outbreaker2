@@ -117,10 +117,6 @@ move.swap.ances <- function(data, param, config, rand){
     n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
     to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
 
-    ## initialize new ances and t.inf
-    new.param$current.ances <- param$current.ances
-    new.param$current.t.inf <- param$current.t.inf
-
     ## move all ancestries that should be moved
     for(i in to.move){
         ## swap ancestries

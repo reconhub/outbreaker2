@@ -2,12 +2,24 @@
 % Please edit documentation in R/internals.R
 \name{modify.defaults}
 \alias{add.to.context}
+\alias{can.move.ances}
+\alias{find.possible.ances}
 \alias{modify.defaults}
+\alias{select.ances.to.move}
+\alias{swap.ances}
 \title{Internal functions for outbreaker2}
 \usage{
 modify.defaults(defaults, x, strict = TRUE)
 
 add.to.context(x, objects)
+
+can.move.ances(param, config)
+
+select.ances.to.move(param, config)
+
+find.possible.ances(t.inf, i)
+
+swap.ances(param, i)
 }
 \arguments{
 \item{defaults}{a list containing default arguments}

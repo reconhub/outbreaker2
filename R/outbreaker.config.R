@@ -140,8 +140,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(length(config$paranoid) != 1L) stop("paranoid should be a single logical value")
 
     ## check min.date
-    if(!is.numeric(min.date)) stop("min.date is not numeric")
-    if(min.date>=0) stop("min.date is greater or equal to 0")
+    if(!is.numeric(config$min.date)) stop("min.date is not numeric")
+    if(config$min.date >= 0) stop("min.date is greater or equal to 0")
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

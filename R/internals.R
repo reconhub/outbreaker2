@@ -6,6 +6,7 @@
 #' \describe{
 #' \item{modify.default}{modify default arguments using user-provided values}
 #' \item{add.to.function.context}{add a set of objects to the environment of a function}
+#' \item{check.param}{a function performing various checks of the status of the chain; tries to pick up impossible values for augmented data and parameters, or -Inf log-likelihood or posterior values; this function is used only in 'safemode' (see \code{\link{outbreaker.config}})}
 #' }
 #'
 #' @rdname internals
@@ -13,6 +14,7 @@
 #' @param defaults a list containing default arguments
 #' @param x in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function or an environment.
 #' @param strict a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'
+#' @param param a list of parameters as returned by \code{outbreaker.mcmc.init}
 #'
 #' @author Rich Fitzjohn, Thibaut Jombart
 #'
@@ -73,8 +75,73 @@ add.to.context <- function(x, objects){
 
 
 
+#' @rdname internals
+#'
+## checks only sure for the current state
+check.param <- function(param){
+    ## prepare output
+    out <- list(pass=TRUE, msg=NULL)
+
+    ## LIEKLIHOOD / POSTERIOR / PRIOR
+    ## look for NAs in loglike / post / prior
+    if(any(is.na(param$post))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "NA detected in posterior values (param$post)")
+    }
+    if(any(is.na(param$like))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "NA detected in likelihood values (param$like)")
+    }
+    if(any(is.na(param$prior))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "NA detected in prior values (param$prior)")
+    }
+
+    ## look for NAs in loglike / post / prior
+    if(!all(is.finite(param$post))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "non-finite posterior values detected (param$post)")
+    }
+    if(!all(is.finite(param$like))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "non-finite likelihood values detected (param$like)")
+    }
+    if(!all(is.finite(param$prior))){
+        out$pass <- FALSE
+        out$msg <- c(out$msg, "non-finite prior values detected (param$prior)")
+    }
 
 
+    ## ANCESTRIES ##
+    ## look for new imported cases (should not happen)
+    if(!identical(is.na(param$ances[[1]]), is.na(param$current.ances))){
+        out$pass <- FALSE
+        out$msg <- c(out.msg, "imported cases have changed")
+    }
+
+    ## look for negative ancestries
+    if(any(param$current.ances<1,na.rm=TRUE)){
+       out$pass <- FALSE
+       out$msg <- c(out.msg, "some ancestries point to unknown cases (param$ances<1)")
+    }
+
+    ## look for ancestries greater than 'N'
+    if(any(param$current.ances>length(param$ances[[1]]),na.rm=TRUE)){
+       out$pass <- FALSE
+       out$msg <- c(out.msg, "some ancestries point to unknown cases (param$ances>N)")
+    }
+
+
+} # end check.param
+
+
+
+
+
+
+##############################
+## NON-DOCUMENTED FUNCTIONS ##
+##############################
 
 ## check which ancestries can move (returns a TRUE/FALSE vector)
 can.move.ances <- function(param, config){

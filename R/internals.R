@@ -79,7 +79,7 @@ add.to.context <- function(x, objects){
 #'
 ## checks are only sure for the 'current' state
 ##
-check.param <- function(param){
+check.wandering <- function(param){
     ## PREPARE OUTPUT ##
     out <- list(pass=TRUE, msg=NULL)
 
@@ -150,13 +150,19 @@ check.param <- function(param){
     ## look for negative ancestries
     if(any(param$current.ances<1,na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$ances<1)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.ances<1)")
     }
 
     ## look for ancestries greater than 'N'
     if(any(param$current.ances>length(param$ances[[1]]),na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$ances>N)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.ances>N)")
+    }
+
+    ## case infecting itself
+    if(any(param$current.ances==1:length(param$current.ances),na.rm=TRUE)){
+       out$pass <- FALSE
+       out$msg <- c(out$msg, "auto-infections detected (param$current.ances[i]==i)")
     }
 
 
@@ -205,6 +211,14 @@ can.move.ances <- function(param, config){
 }
 
 
+## check which ancestries can move (returns a TRUE/FALSE vector)
+can.be.swapped <- function(param, config){
+    out <- !is.na(param$current.ances) & # non-imported case
+            config$move.ances # add user-specification through move.ances
+    return(out)
+}
+
+
 #' @rdname internals
 ## random selection of cases for which ancestries is moved
 select.ances.to.move <- function(param, config){
@@ -232,19 +246,26 @@ swap.ances <- function(param, i){
     if(i>length(param$current.ances)) stop("trying to swap ancestry of case ",
                                            i, " while there are only ",
                                            length(param$current.ances), " cases")
+    ## find cases for which ancestries can move
+    id.ok.to.swap <- which(can.be.swapped(param, config))
 
     ## find ancestor of 'i'
     x <- param$current.ances[i]
 
-    ## stop if case 'i' is imported
+    ## stop if case 'i' is imported - this should not happen
     if(is.na(x)){
         warning("trying to swap the ancestry of the imported case ", i)
         return(param)
     }
 
+    ## check that x can be swapped, stop if not
+    if(!(x %in% id.ok.to.swap)){
+        return(param)
+    }
+
     ## find indices to swap
-    to.be.x <- which(param$current.ances==i)
-    to.be.i <- which(param$current.ances==x)
+    to.be.x <- intersect(which(param$current.ances==i), id.ok.to.swap)
+    to.be.i <- intersect(which(param$current.ances==x), id.ok.to.swap)
 
     ## swap 'i' and 'x' in ancestries
     param$current.ances[to.be.x] <- x

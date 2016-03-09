@@ -105,15 +105,12 @@ move.ances <- function(data, param, config, rand){
 #' @export
 #'
 move.swap.ances <- function(data, param, config, rand){
-    ## find out which ancestries to move
-    ances.can.move <- !is.na(param$current.ances) & (param$current.t.inf>min(param$current.t.inf))
-    if(!any(ances.can.move)){
-        warning("trying to move ancestries but none can move")
-        return(param$current.ances)
-    }
-    n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
-    to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
+    ## find ancestries which can move
+    to.move <- select.ances.to.move(param, config)
 
+    ## leave if nothing moves
+    if(length(to.move)<1) return(param)
+    
     ## create new parameters
     new.param <- param
 
@@ -162,18 +159,12 @@ rances <- function(t.inf){
 
 
 
-## non-exported function
-## finds possible ancestor for a case 'i'
-## (any case before i)
-find.possible.ances <- function(t.inf, i){
-    if(length(i)>1) stop("i has a length > 1")
-    if(any(t.inf[i]==min(t.inf))) return(NA)
-    return(sample(which(t.inf < t.inf[i[1]]), 1))
-} # end find.possible.ances
 
 
 
 
+
+## NON-EXPORTED FUNCTIONS ##
 ## finds cases for which ancestry can be moved
 can.move.ances <- function(param, config){
     out <- !is.na(param$current.ances) & # non-imported case
@@ -183,6 +174,22 @@ can.move.ances <- function(param, config){
 }
 
 
+## select cases for which to move ancestry
+select.ances.to.move <- function(param, config){
+    choices <- which(can.move.ances(param, config))
+    n.to.move <- max(round(config$prop.ances.move * length(choices)),0)
+    out <- sample(choices, n.to.move, replace=FALSE)
+    return(out)
+}
+
+
+## finds possible ancestor for a case 'i'
+## (any case before i)
+find.possible.ances <- function(t.inf, i){
+    if(length(i)>1) stop("i has a length > 1")
+    if(any(t.inf[i]==min(t.inf))) return(NA)
+    return(sample(which(t.inf < t.inf[i[1]]), 1))
+} # end find.possible.ances
 
 
 

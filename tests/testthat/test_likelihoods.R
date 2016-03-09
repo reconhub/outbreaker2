@@ -10,7 +10,7 @@ test_that("ll.timing.infections gives expected results", {
     ## generate data
     times <- 0:4
     ances <- c(NA,rep(1,4))
-    w <- c(0, .1, .2, .5, .2, .1)
+    w <- c(.1, .2, .5, .2, .1)
     data <- outbreaker.data(dates=times, w.dens=w)
     config <- outbreaker.config(data=data, init.tree=ances)
     param <- outbreaker.mcmc.init(data=data, config=config)
@@ -34,7 +34,7 @@ test_that("ll.timing.sampling gives expected results", {
     times <- 0:4
     ances <- c(NA,rep(1,4))
     samp.times <- times + c(1, 1, 2, 3, 4)
-    f <- c(0, .1, .2, .5, .2, .1)
+    f <- c(.1, .2, .5, .2, .1)
     data <- outbreaker.data(dates=samp.times, f.dens=f)
     config <- outbreaker.config(data=data, init.t.inf=times, init.tree=ances)
     param <- outbreaker.mcmc.init(data=data, config=config)
@@ -85,7 +85,7 @@ test_that("ll.all gives expected results", {
     ## tests
     out <- ll.all(data=data, param=param)
     expect_is(out, "numeric")
-    expect_equal(out, -1102.06678859)
+    expect_equal(out, -1112.15893046)
 })
 
 
@@ -99,7 +99,7 @@ test_that("outbreaker.create.loglike gives expected results", {
 
     ## generate data
     out <- outbreaker.create.loglike()
-    
+
     ## tests
     expect_is(out, "list")
     expect_equal(length(out), 5)
@@ -109,5 +109,5 @@ test_that("outbreaker.create.loglike gives expected results", {
                                "genetic",
                                "all")
                  )
-                 
+
 })

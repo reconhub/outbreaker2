@@ -96,7 +96,6 @@ outbreaker.data <- function(..., data=NULL){
         {
             stop("f.dens has negative entries (these should be probabilities!)")
         }
-        data$f.dens[1] <- 0
         data$log.f.dens <- log(data$f.dens)
     }
 

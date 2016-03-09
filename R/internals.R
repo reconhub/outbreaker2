@@ -77,7 +77,8 @@ add.to.context <- function(x, objects){
 
 #' @rdname internals
 #'
-## checks only sure for the current state
+## checks are only sure for the 'current' state
+##
 check.param <- function(param){
     ## PREPARE OUTPUT ##
     out <- list(pass=TRUE, msg=NULL)
@@ -179,7 +180,12 @@ check.param <- function(param){
     }
 
 
+    ## SHAPE OUTPUT AND RETURN ##
+    out$msg <- paste(out$msg, collapse="\n")
+    return(out)
 } # end check.param
+
+
 
 
 

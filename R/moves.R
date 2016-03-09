@@ -105,17 +105,17 @@ move.ances <- function(data, param, config, rand){
 #' @export
 #'
 move.swap.ances <- function(data, param, config, rand){
-    ## create new parameters
-    new.param <- param
-
     ## find out which ancestries to move
-    ances.can.move <- !is.na(param$current.ances) & param$current.t.inf>min(param$current.t.inf)
+    ances.can.move <- !is.na(param$current.ances) & (param$current.t.inf>min(param$current.t.inf))
     if(!any(ances.can.move)){
         warning("trying to move ancestries but none can move")
         return(param$current.ances)
     }
     n.to.move <- max(round(config$prop.ances.move * sum(ances.can.move)),1)
     to.move <- sample(which(ances.can.move), n.to.move, replace=FALSE)
+
+    ## create new parameters
+    new.param <- param
 
     ## move all ancestries that should be moved
     for(i in to.move){
@@ -170,6 +170,17 @@ find.possible.ances <- function(t.inf, i){
     if(any(t.inf[i]==min(t.inf))) return(NA)
     return(sample(which(t.inf < t.inf[i[1]]), 1))
 } # end find.possible.ances
+
+
+
+
+## finds cases for which ancestry can be moved
+can.move.ances <- function(param, config){
+    out <- !is.na(param$current.ances) & # non-imported case
+        (param$current.t.inf > min(param$current.t.inf)) & # not the first date
+            config$move.ances # add user-specification through move.ances
+    return(out)
+}
 
 
 

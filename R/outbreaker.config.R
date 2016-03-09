@@ -165,10 +165,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
         }
 
         ## recycle move.ances
-        config$move.ances <- rep(config$move.ances, lenth=data$N)
+        config$move.ances <- rep(config$move.ances, length=data$N)
 
         ## recycle move.t.inf
-        config$move.t.inf <- rep(config$move.t.inf, lenth=data$N)
+        config$move.t.inf <- rep(config$move.t.inf, length=data$N)
     }
 
     ## RETURN CONFIG ##

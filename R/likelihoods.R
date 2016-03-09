@@ -12,8 +12,8 @@
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
 #'
 ll.timing.infections <- function(data, param){
-    ## find indices in w (delay + 1 day)
-    T <- (param$current.t.inf - param$current.t.inf[param$current.ances])+1
+    ## compute delays
+    T <- param$current.t.inf - param$current.t.inf[param$current.ances]
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -31,8 +31,8 @@ ll.timing.infections <- function(data, param){
 #' @export
 #'
 ll.timing.sampling <- function(data, param){
-    ## find indices in w (delay + 1 day)
-    T <- (data$dates - param$current.t.inf)+1
+    ## compute delays
+    T <- data$dates - param$current.t.inf
     T <- T[!is.na(T)]
 
     ## avoid over-shooting

@@ -43,15 +43,17 @@ move.t.inf <- function(data, param, config, rand){ # assumes symmetric proposal
     ## propose new t.inf
     new.param <- param
     new.param$current.t.inf <- new.param$current.t.inf +
-        sample(-1:1, size=length(param$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
+        sample(-1:1, size=data$N, replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
     logratio <- ll.timing(data=data, param=new.param) - ll.timing(data=data, param=param)
 
     ## accept/reject
-    if(logratio >= rand$log.runif1()) return(new.param)
-
-    return(param)
+    if(logratio >= rand$log.runif1()){
+        return(new.param)
+    } else {
+        return(param)
+    }
 } # end move.t.inf
 
 

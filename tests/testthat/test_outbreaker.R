@@ -16,6 +16,9 @@ test_that("test: outbreaker's output have expected format", {
                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
     out.df <- as.data.frame(out)
 
+    out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
+                      config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+
     ## check output
     expect_is(out, "mcmc")
     expect_is(out.df, "data.frame")

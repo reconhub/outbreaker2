@@ -87,6 +87,10 @@ move.ances <- function(data, param, config, rand){
         ## compute log ratio
         logratio <-  ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
 
+        ## compute correction factor
+        logratio <- logratio + log(sum(are.possible.ances(new.param$current.t.inf, i))) -
+            log(sum(are.possible.ances(param$current.t.inf, i)))
+
         ## accept/reject
         if(logratio >= rand$log.runif1()){
             param$current.ances[i] <- new.param$current.ances[i]

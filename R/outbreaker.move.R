@@ -32,7 +32,7 @@ outbreaker.move <- function(moves, data, config, param, rand){
             if(config$paranoid){
                 diagnostic <- look.for.trouble(param, data)
                 if(!diagnostic$pass){
-                    stop(paste("\n\n SAFEMODE DETECTED AN ERROR:\n",
+                    stop(paste("\n\n PARANOID MODE DETECTED AN ERROR:\n",
                                "at iteration ", i, ", ",
                                "movement ", j, " (", names(moves)[j], ")",
                                " with the following diagnostics:\n", diagnostic$msg, "\n\n",

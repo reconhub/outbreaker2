@@ -240,12 +240,18 @@ select.ances.to.move <- function(param, config){
 }
 
 
-## find possible ancestors for a case 'i'
-find.possible.ances <- function(t.inf, i){
+## which cases are possible ancestors for a case 'i'
+are.possible.ances <- function(t.inf, i){
     if(length(i)>1) stop("i has a length > 1")
-    if(any(t.inf[i]==min(t.inf))) return(NA)
-    return(sample(which(t.inf < t.inf[i[1]]), 1))
-} # end find.possible.ances
+    if(t.inf[i]==min(t.inf)) return(NA)
+    return(which(t.inf < t.inf[i[1]]))
+} # end are.possible.ances
+
+
+## choose one possible ancestor for a case 'i'
+choose.possible.ances <- function(t.inf, i){
+    return(sample(are.possible.ances(t.inf=t.inf, i=i), 1))
+} # end choose.possible.ances
 
 
 

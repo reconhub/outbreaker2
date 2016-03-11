@@ -82,7 +82,7 @@ move.ances <- function(data, param, config, rand){
     ## move all ancestries that should be moved
     for(i in to.move){
         ## propose new ancestor
-        new.param$current.ances[i] <- find.possible.ances(param$current.t.inf, i)
+        new.param$current.ances[i] <- choose.possible.ances(param$current.t.inf, i)
 
         ## compute log ratio
         logratio <-  ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
@@ -146,7 +146,7 @@ move.swap.ances <- function(data, param, config, rand){
 #' @param t.inf a vector of infection dates
 #'
 rances <- function(t.inf){
-    ## find possible ancestors
+    ## choose.possible.ancestors
     canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
     diag(canBeAnces) <- FALSE
 

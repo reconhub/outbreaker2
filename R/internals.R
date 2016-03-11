@@ -243,7 +243,7 @@ select.ances.to.move <- function(param, config){
 ## which cases are possible ancestors for a case 'i'
 are.possible.ances <- function(t.inf, i){
     if(length(i)>1) stop("i has a length > 1")
-    if(t.inf[i]==min(t.inf)) return(NA)
+    if(any(t.inf[i]==min(t.inf))) return(NA)
     return(which(t.inf < t.inf[i[1]]))
 } # end are.possible.ances
 

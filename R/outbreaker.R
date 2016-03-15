@@ -34,14 +34,20 @@
 #' dat <- fakeOutbreak$dat
 #' w <- fakeOutbreak$w
 #'
+#' \dontrun{
 #' ## run outbreaker
 #' out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-#' config=list(n.iter=100, sample.every=10))
+#' config=list(n.iter=2e4, sample.every=200))
+#' plot(out)
+#' as.data.frame(out)
 #'
 #' ## run outbreaker, no DNA sequences
 #' out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-#' config=list(n.iter=100, sample.every=10))
+#' config=list(n.iter=2e4, sample.every=200))
+#' plot(out2)
+#' as.data.frame(out2)
 #'
+#' }
 outbreaker <- function(data = outbreaker.data(),
                        config = outbreaker.config(),
                        loglike = outbreaker.create.loglike(),

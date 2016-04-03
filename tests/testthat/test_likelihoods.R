@@ -107,19 +107,29 @@ test_that("ll.all.i gives expected results", {
     param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## compute local likelihoods
+    sum.all.timing.sampling <- sum(sapply(seq.int(data$N), ll.timing.sampling.i, data=data, param=param))
+    sum.all.timing.infection <- sum(sapply(seq.int(data$N), ll.timing.infection.i, data=data, param=param))
     sum.all.timing <- sum(sapply(seq.int(data$N), ll.timing.i, data=data, param=param))
     sum.all.genetic <- sum(sapply(seq.int(data$N), ll.genetic.i, data=data, param=param))
     sum.all <- sum(sapply(seq.int(data$N), ll.all.i, data=data, param=param))
 
     out.timing <- ll.timing(data=data, param=param)
+    out.timing.sampling <- ll.timing.sampling(data=data, param=param)
+    out.timing.infection <- ll.timing.infection(data=data, param=param)
     out.genetic <- ll.genetic(data=data, param=param)
     out.all <- ll.all(data=data, param=param)
 
-    ## tests
+    ## tests sum of local against global
+    expect_equal(sum.all.timing.sampling, out.timing.sampling)
+    expect_equal(sum.all.timing.infection, out.timing.infection)
     expect_equal(sum.all.timing, out.timing)
     expect_equal(sum.all.genetic, out.genetic)
     expect_equal(sum.all, out.all)
-    expect_equal(sum.all.timing+sum.all.genetic, sum.all)
+
+    ## test internal sums add up
+    expect_equal(sum.all.timing.samping + sum.timing.infection, sum.all.timing)
+    expect_equal(sum.all.timing + sum.all.genetic, sum.all)
+
 })
 
 

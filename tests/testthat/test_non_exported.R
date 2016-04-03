@@ -87,7 +87,7 @@ test_that("Testing check.i", {
     expect_error(check.i(data, c(NA,2)))
     expect_error(check.i(data, "1"))
     expect_error(check.i(data, TRUE))
-    expect_true(check.i(data, NULL))
+    expect_equal(check.i(data, NULL), 1:6)
     expect_equal(check.i(data, 6),6)
     expect_equal(check.i(data, c(1,3,2)), c(1,3,2))
     expect_equal(check.i(data, 1:6), 1:6)

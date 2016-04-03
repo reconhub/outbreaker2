@@ -74,7 +74,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.mu=1e-4,
                      init.t.inf=NULL,
                      init.ances=NULL,
-                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
+                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE, move.kappa=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
                      batch.size=1e6,
@@ -116,6 +116,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
     ## check move.mu
     if(!is.logical(config$move.mu)) stop("move.mu is not a logical")
+
+    ## check move.mu
+    if(!is.logical(config$move.kappa)) stop("move.kappa is not a logical")
 
     ## check n.iter
     if(!is.numeric(config$n.iter)) stop("n.iter is not a numeric value")

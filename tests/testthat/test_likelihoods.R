@@ -93,6 +93,7 @@ test_that("ll.all gives expected results", {
 
     ## test that likelihoods add up
     expect_equal(out.timing + out.genetic, out)
+
 })
 
 
@@ -114,11 +115,11 @@ test_that("ll.all.i gives expected results", {
     param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## compute local likelihoods
-    sum.all.timing.sampling <- sum(sapply(seq.int(data$N), ll.timing.sampling.i, data=data, param=param))
-    sum.all.timing.infections <- sum(sapply(seq.int(data$N), ll.timing.infections.i, data=data, param=param))
-    sum.all.timing <- sum(sapply(seq.int(data$N), ll.timing.i, data=data, param=param))
-    sum.all.genetic <- sum(sapply(seq.int(data$N), ll.genetic.i, data=data, param=param))
-    sum.all <- sum(sapply(seq.int(data$N), ll.all.i, data=data, param=param))
+    sum.local.timing.sampling <- sum(sapply(seq.int(data$N), ll.timing.sampling.i, data=data, param=param))
+    sum.local.timing.infections <- sum(sapply(seq.int(data$N), ll.timing.infections.i, data=data, param=param))
+    sum.local.timing <- sum(sapply(seq.int(data$N), ll.timing.i, data=data, param=param))
+    sum.local.genetic <- sum(sapply(seq.int(data$N), ll.genetic.i, data=data, param=param))
+    sum.local.all <- sum(sapply(seq.int(data$N), ll.all.i, data=data, param=param))
 
     out.timing <- ll.timing(data=data, param=param)
     out.timing.sampling <- ll.timing.sampling(data=data, param=param)
@@ -127,15 +128,15 @@ test_that("ll.all.i gives expected results", {
     out.all <- ll.all(data=data, param=param)
 
     ## tests sum of local against global
-    expect_equal(sum.all.timing.sampling, out.timing.sampling)
-    expect_equal(sum.all.timing.infections, out.timing.infections)
-    expect_equal(sum.all.timing, out.timing)
-    expect_equal(sum.all.genetic, out.genetic)
-    expect_equal(sum.all, out.all)
+    expect_equal(sum.local.timing.sampling, out.timing.sampling)
+    expect_equal(sum.local.timing.infections, out.timing.infections)
+    expect_equal(sum.local.timing, out.timing)
+    expect_equal(sum.local.genetic, out.genetic)
+    expect_equal(sum.local.all, out.all)
 
     ## test internal sums add up
-    expect_equal(sum.all.timing.sampling + sum.timing.infections, sum.all.timing)
-    expect_equal(sum.all.timing + sum.all.genetic, sum.all)
+    expect_equal(sum.local.timing.sampling + sum.local.timing.infections, sum.local.timing)
+    expect_equal(sum.local.timing + sum.local.genetic, sum.local.all)
 
 })
 

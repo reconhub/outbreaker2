@@ -303,3 +303,16 @@ check.i <- function(data, i){
     if(i > data$N) stop("i is not a valid case index (i>dat$N)")
     return(TRUE)
 } # end check.i
+
+
+
+
+
+## find descendents of a case 'i'
+find.descendents <- function(data, param, i){
+    ## check i
+    check.i(data=data, i=i)
+
+    ## find descendents
+    return(which(param$current.ances==i))
+} # end find.descendents

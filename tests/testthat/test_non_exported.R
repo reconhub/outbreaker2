@@ -69,8 +69,8 @@ test_that("Auxiliary functions for ancestries are working", {
 })
 
 
-## test swap.ances ##
-test_that("Other internal functions", {
+## test check.i ##
+test_that("Testing check.i", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
@@ -90,5 +90,27 @@ test_that("Other internal functions", {
     expect_error(check.i(data, "1"))
     expect_true(check.i(data, 6))
     expect_true(check.i(data, 1))
+
+})
+
+
+
+
+## test find.descendents ##
+test_that("Testing find.descendents", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=dat)
+    param <- outbreaker.mcmc.init(data=dat, config=config)
+
+    ## tests
+    expect_error(find.descendents(data, param, 0))
+    expect_error(find.descendents(data, param, 666))
+    expect_equal(find.descendents(data, param, 1), c(2,4,28))
+    expect_equal(find.descendents(data, param, 30), integer(0))
 
 })

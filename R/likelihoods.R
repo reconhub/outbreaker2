@@ -161,7 +161,7 @@ ll.timing.i <- function(data, param, i){
 #' @rdname likelihoods
 #' @export
 #'
-ll.genetic.i <- function(data, param){
+ll.genetic.i <- function(data, param, i){
     ## check i
     check.i(data, i)
 

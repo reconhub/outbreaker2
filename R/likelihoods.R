@@ -11,6 +11,9 @@
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
 #' @param i an optional vector of integers, indicating subset of cases included in the likelihood computation; if NULL (default), all cases are used.
 ll.timing.infections <- function(data, param, i=NULL){
+   ## return 0 if no data
+    if(data$N==0) return(0)
+
     ## check i
     i <- check.i(data=data, i=i)
 
@@ -33,6 +36,9 @@ ll.timing.infections <- function(data, param, i=NULL){
 #' @export
 #'
 ll.timing.sampling <- function(data, param, i=NULL){
+   ## return 0 if no data
+    if(data$N==0) return(0)
+
     ## check i
     i <- check.i(data=data, i=i)
 
@@ -55,6 +61,9 @@ ll.timing.sampling <- function(data, param, i=NULL){
 #' @export
 #'
 ll.timing <- function(data, param, i=NULL){
+    ## return 0 if no data
+    if(data$N==0) return(0)
+
     ## check i
     i <- check.i(data=data, i=i)
 
@@ -93,6 +102,9 @@ ll.genetic <- function(data, param, i=NULL){
 #' @export
 #'
 ll.all <- function(data, param, i=NULL){
+    ## return 0 if no data
+    if(data$N==0) return(0)
+
     ## check i
     i <- check.i(data=data, i=i)
 

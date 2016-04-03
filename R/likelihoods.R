@@ -71,15 +71,17 @@ ll.timing <- function(data, param, i=NULL){
 #' @export
 #'
 ll.genetic <- function(data, param, i=NULL){
+    ## return 0 if no data
+    if(is.null(data$dna)) return(0)
+
     ## check i
     i <- check.i(data=data, i=i)
 
     ## discard cases with no ancestors
-
+    i <- i[!is.na(param$current.ances[i])]
 
     ## compute likelihood
-    if(is.null(data$dna)) return(0)
-    nmut <- diag(data$D[i, param$current.ances[i]])
+    nmut <- diag(data$D[i, param$current.ances[i], drop=FALSE])
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
 } # end ll.genetic
 

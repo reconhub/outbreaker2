@@ -9,8 +9,11 @@
 #'
 #' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
-#' @param i an optional vector of integers or logical, indicating subset of cases included in the likelihood computation; if NULL, all cases are used.
-ll.timing.infections <- function(data, param, i=TRUE){
+#' @param i an optional vector of integers, indicating subset of cases included in the likelihood computation; if NULL (default), all cases are used.
+ll.timing.infections <- function(data, param, i=NULL){
+    ## check i
+    i <- check.i(data=data, i=i)
+
     ## compute delays
     T <- param$current.t.inf[i] - param$current.t.inf[param$current.ances[i]]
     T <- T[!is.na(T)]
@@ -29,7 +32,10 @@ ll.timing.infections <- function(data, param, i=TRUE){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing.sampling <- function(data, param, i=TRUE){
+ll.timing.sampling <- function(data, param, i=NULL){
+    ## check i
+    i <- check.i(data=data, i=i)
+
     ## compute delays
     T <- data$dates[i] - param$current.t.inf[i]
     T <- T[!is.na(T)]
@@ -48,7 +54,11 @@ ll.timing.sampling <- function(data, param, i=TRUE){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing <- function(data, param, i=TRUE){
+ll.timing <- function(data, param, i=NULL){
+    ## check i
+    i <- check.i(data=data, i=i)
+
+    ## compute likelihood
     return(ll.timing.infections(data=data, param=param, i=i) +
            ll.timing.sampling(data=data, param=param, i=i))
 } # end ll.timing
@@ -60,7 +70,14 @@ ll.timing <- function(data, param, i=TRUE){
 #' @rdname likelihoods
 #' @export
 #'
-ll.genetic <- function(data, param, i=TRUE){
+ll.genetic <- function(data, param, i=NULL){
+    ## check i
+    i <- check.i(data=data, i=i)
+
+    ## discard cases with no ancestors
+
+
+    ## compute likelihood
     if(is.null(data$dna)) return(0)
     nmut <- diag(data$D[i, param$current.ances[i]])
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
@@ -73,7 +90,11 @@ ll.genetic <- function(data, param, i=TRUE){
 #' @rdname likelihoods
 #' @export
 #'
-ll.all <- function(data, param, i=TRUE){
+ll.all <- function(data, param, i=NULL){
+    ## check i
+    i <- check.i(data=data, i=i)
+
+    ## compute likelihood
     return(ll.timing(data=data, param=param, i=i) +
            ll.genetic(data=data, param=param, i=i)
            )

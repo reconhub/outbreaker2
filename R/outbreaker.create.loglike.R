@@ -41,12 +41,7 @@ outbreaker.create.loglike <- function(..., loglike=NULL){
                      timing.sampling = ll.timing.sampling,
                      timing = ll.timing,
                      genetic = ll.genetic,
-                     all = ll.all,
-                     timing.infections.i = ll.timing.infections.i,
-                     timing.sampling.i = ll.timing.sampling.i,
-                     timing.i = ll.timing.i,
-                     genetic.i = ll.genetic.i,
-                     all.i = ll.all.i
+                     all = ll.all
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##

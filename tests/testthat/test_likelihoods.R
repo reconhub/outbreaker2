@@ -115,11 +115,11 @@ test_that("ll.all.i gives expected results", {
     param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## compute local likelihoods
-    sum.local.timing.sampling <- sum(sapply(seq.int(data$N), ll.timing.sampling.i, data=data, param=param))
-    sum.local.timing.infections <- sum(sapply(seq.int(data$N), ll.timing.infections.i, data=data, param=param))
-    sum.local.timing <- sum(sapply(seq.int(data$N), ll.timing.i, data=data, param=param))
-    sum.local.genetic <- sum(sapply(seq.int(data$N), ll.genetic.i, data=data, param=param))
-    sum.local.all <- sum(sapply(seq.int(data$N), ll.all.i, data=data, param=param))
+    sum.local.timing.sampling <- sum(sapply(seq.int(data$N), ll.timing.sampling, data=data, param=param))
+    sum.local.timing.infections <- sum(sapply(seq.int(data$N), ll.timing.infections, data=data, param=param))
+    sum.local.timing <- sum(sapply(seq.int(data$N), ll.timing, data=data, param=param))
+    sum.local.genetic <- sum(sapply(seq.int(data$N), ll.genetic, data=data, param=param))
+    sum.local.all <- sum(sapply(seq.int(data$N), ll.all, data=data, param=param))
 
     out.timing <- ll.timing(data=data, param=param)
     out.timing.sampling <- ll.timing.sampling(data=data, param=param)

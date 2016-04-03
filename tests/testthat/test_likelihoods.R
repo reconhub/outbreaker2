@@ -82,10 +82,17 @@ test_that("ll.all gives expected results", {
     config <- outbreaker.config(data=data)
     param <- outbreaker.mcmc.init(data=data, config=config)
 
-    ## tests
+    ## compute likelihoods
     out <- ll.all(data=data, param=param)
+    out.timing <- ll.timing(data=data, param=param)
+    out.genetic <- ll.genetic(data=data, param=param)
+
+    ## test expected values
     expect_is(out, "numeric")
     expect_equal(out, -1112.15893046)
+
+    ## test that likelihoods add up
+    expect_equal(out.timing + out.genetic, out)
 })
 
 

@@ -121,9 +121,6 @@ ll.timing.sampling.i <- function(data, param, i){
     ## check i
     check.i(data, i)
 
-    ## escape if 'i' is imported
-    if(is.na(param$current.ances[i])) return(0)
-
     ## compute delays
     T <- data$dates[i] - param$current.t.inf[i]
     T <- T[!is.na(T)]

@@ -6,11 +6,11 @@
 #' User-provided functions will be checked to ensure the right arguments are present. All log-likelihood functions should have to following arguments:
 #' \describe{
 #' \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
-#' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}} 
+#' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
 #' }
 #'
 #' Note that unlike \code{outbreaker.create.moves}, likelihood functions have no mandatory names. They only need to be compatible with the movement functions used in \code{outbreaker.create.moves}. See 'details' for defaults.
-#' 
+#'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @param ... a named list (see details) of functions, each computing a log-likelihood component.
@@ -25,36 +25,42 @@
 #' \item{genetic}{corresponds to the probability of the genetic sequences given the transmission tree}
 #' \item{all}{corresponds to the overal probability of the data}
 #' }
-#' 
-#' 
+#'
+#'
 #' @return a list of named functions
-#' 
+#'
 outbreaker.create.loglike <- function(..., loglike=NULL){
     ## PROCESS ... ONLY IF NO MOVES IS PASSED
     if(is.null(loglike)){
         loglike <- list(...)
     }
 
-    
+
     ## SET DEFAULTS ##
     defaults <- list(timing.infections = ll.timing.infections,
                      timing.sampling = ll.timing.sampling,
                      timing = ll.timing,
                      genetic = ll.genetic,
-                     all = ll.all
+                     all = ll.all,
+                     timing.infections.i = ll.timing.infections.i,
+                     timing.sampling.i = ll.timing.sampling.i,
+                     timing.i = ll.timing.i,
+                     genetic.i = ll.genetic.i,
+                     all.i = ll.all.i
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
     loglike <- modify.defaults(defaults, loglike, strict=FALSE)
-    
+
 
     ## CHECK FUNCTIONS ##
     check.function.args <- function(f){
         args <- names(formals(f))
-        if(!identical(sort(args), c("data","param"))) {
-            return(FALSE)
-        } else {
+        if(identical(sort(args), c("data", "param")) ||
+           identical(sort(args), c("data", "i", "param"))) {
             return(TRUE)
+        } else {
+            return(FALSE)
         }
     }
 
@@ -62,10 +68,10 @@ outbreaker.create.loglike <- function(..., loglike=NULL){
     if(!all(args.checks)){
         culprits <- names(args.checks)[!args.checks]
         culprits <- paste(culprits, collapse=",")
-        stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'param'")
+        stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'param' (and optionally 'i' for local likelihoods)")
     }
-    
+
     ## RETURN ##
     return(loglike)
-    
+
 } # end outbreaker.create.loglike

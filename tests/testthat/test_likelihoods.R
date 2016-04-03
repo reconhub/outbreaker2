@@ -102,12 +102,17 @@ test_that("outbreaker.create.loglike gives expected results", {
 
     ## tests
     expect_is(out, "list")
-    expect_equal(length(out), 5)
+    expect_equal(length(out), 10)
     expect_equal(names(out), c("timing.infections",
                                "timing.sampling",
                                "timing",
                                "genetic",
-                               "all")
+                               "all",
+                               "timing.infections.i",
+                               "timing.sampling.i",
+                               "timing.i",
+                               "genetic.i",
+                               "all.i")
                  )
 
 })

@@ -297,7 +297,7 @@ swap.ances <- function(param, config, i){
 check.i <- function(data, i){
     if(is.null(i)) stop("i is null")
     if(!is.numeric(i)) stop("i is not numeric")
-    if(is.na(i)) stop("i is NA")
+    if(is.na(i[1])) stop("i is NA")
     if(length(i)!=1L) stop("i has a length different than 1")
     if(i < 1) stop("i is not a valid case index (i<1)")
     if(i > data$N) stop("i is not a valid case index (i>dat$N)")

@@ -79,3 +79,80 @@ ll.all <- function(data, param){
            ll.genetic(data=data, param=param)
            )
 } # end ll.all
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
+ll.local.timing.infections <- function(data, param, i){
+    ## compute delays
+    T <- param$current.t.inf - param$current.t.inf[param$current.ances]
+    T <- T[!is.na(T)]
+
+    ## avoid over-shooting
+    if(any(T<1 | T>length(data$log.w.dens))) return(-Inf)
+
+    ## return
+    return(sum(data$log.w.dens[T], na.rm=TRUE))
+} # end ll.timing.infections
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
+ll.timing.sampling <- function(data, param){
+    ## compute delays
+    T <- data$dates - param$current.t.inf
+    T <- T[!is.na(T)]
+
+    ## avoid over-shooting
+    if(any(T<1 | T>length(data$log.f.dens))) return(-Inf)
+
+    ## return
+    return(sum(data$log.f.dens[T], na.rm=TRUE))
+} # end ll.timing.sampling
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
+ll.timing <- function(data, param){
+    return(ll.timing.infections(data=data, param=param) +
+           ll.timing.sampling(data=data, param=param))
+} # end ll.timing
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
+ll.genetic <- function(data, param){
+    if(is.null(data$dna)) return(0)
+    nmut <- diag(data$D[, param$current.ances])
+    return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
+} # end ll.genetic
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
+ll.all <- function(data, param){
+    return(ll.timing(data=data, param=param) +
+           ll.genetic(data=data, param=param)
+           )
+} # end ll.all
+

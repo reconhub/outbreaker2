@@ -84,6 +84,7 @@ test_that("Other internal functions", {
     expect_error(check.i(data, 0))
     expect_error(check.i(data, -13))
     expect_error(check.i(data, 7))
+    expect_error(check.i(data, 1:3))
     expect_error(check.i(data, NULL))
     expect_error(check.i(data, NA))
     expect_error(check.i(data, "1"))

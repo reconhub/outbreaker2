@@ -91,6 +91,40 @@ test_that("ll.all gives expected results", {
 
 
 
+
+
+
+## test local likelihoods ##
+test_that("ll.all.i gives expected results", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    data(fakeOutbreak)
+    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=data)
+    param <- outbreaker.mcmc.init(data=data, config=config)
+
+    ## compute local likelihoods
+    sum.all.timing <- sum(sapply(seq.int(data$N), ll.timing.i, data=data, param=param))
+    sum.all.genetic <- sum(sapply(seq.int(data$N), ll.genetic.i, data=data, param=param))
+    sum.all <- sum(sapply(seq.int(data$N), ll.all.i, data=data, param=param))
+
+    out.timing <- ll.timing(data=data, param=param)
+    out.genetic <- ll.genetic(data=data, param=param)
+    out.all <- ll.all(data=data, param=param)
+
+    ## tests
+    expect_equal(sum.all.timing, out.timing)
+    expect_equal(sum.all.genetic, out.genetic)
+    expect_equal(sum.all, out.all)
+    expect_equal(sum.all.timing+sum.all.genetic, sum.all)
+})
+
+
+
+
 ## test outbreaker.create.loglike ##
 test_that("outbreaker.create.loglike gives expected results", {
     ## skip on CRAN

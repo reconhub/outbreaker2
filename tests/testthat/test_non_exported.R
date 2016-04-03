@@ -67,3 +67,27 @@ test_that("Auxiliary functions for ancestries are working", {
     expect_equal(res$current.t.inf, c(3,1,2,4,4,3))
 
 })
+
+
+## test swap.ances ##
+test_that("Other internal functions", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    ances <- c(2, NA, 1, 3, 3, 1)
+    t.inf <- c(2, 1, 3, 4, 4, 3)
+    data <- outbreaker.data(dates=t.inf+1)
+
+    ## tests
+    expect_error(check.i(data, 0))
+    expect_error(check.i(data, -13))
+    expect_error(check.i(data, 7))
+    expect_error(check.i(data, NULL))
+    expect_error(check.i(data, NA))
+    expect_error(check.i(data, "1"))
+    expect_true(check.i(data, 6))
+    expect_true(check.i(data, 1))
+
+})

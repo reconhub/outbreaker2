@@ -8,12 +8,11 @@
 #' @export
 #'
 #' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
-#'
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
-#'
-ll.timing.infections <- function(data, param){
+#' @param i an optional vector of integers or logical, indicating subset of cases included in the likelihood computation; if NULL, all cases are used.
+ll.timing.infections <- function(data, param, i=TRUE){
     ## compute delays
-    T <- param$current.t.inf - param$current.t.inf[param$current.ances]
+    T <- param$current.t.inf[i] - param$current.t.inf[param$current.ances[i]]
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -30,9 +29,9 @@ ll.timing.infections <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing.sampling <- function(data, param){
+ll.timing.sampling <- function(data, param, i=TRUE){
     ## compute delays
-    T <- data$dates - param$current.t.inf
+    T <- data$dates[i] - param$current.t.inf[i]
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -49,9 +48,9 @@ ll.timing.sampling <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing <- function(data, param){
-    return(ll.timing.infections(data=data, param=param) +
-           ll.timing.sampling(data=data, param=param))
+ll.timing <- function(data, param, i=TRUE){
+    return(ll.timing.infections(data=data, param=param, i=i) +
+           ll.timing.sampling(data=data, param=param, i=i))
 } # end ll.timing
 
 
@@ -61,9 +60,9 @@ ll.timing <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.genetic <- function(data, param){
+ll.genetic <- function(data, param, i=TRUE){
     if(is.null(data$dna)) return(0)
-    nmut <- diag(data$D[, param$current.ances])
+    nmut <- diag(data$D[i, param$current.ances[i]])
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
 } # end ll.genetic
 
@@ -74,114 +73,9 @@ ll.genetic <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.all <- function(data, param){
-    return(ll.timing(data=data, param=param) +
-           ll.genetic(data=data, param=param)
-           )
-} # end ll.all
-
-
-
-
-
-
-#######################
-## LOCAL LIKELIHOODS ##
-#######################
-
-#' @rdname likelihoods
-#' @export
-#'
-ll.timing.infections.i <- function(data, param, i){
-    ## check i
-    check.i(data, i)
-
-    ## escape if 'i' is imported
-    if(is.na(param$current.ances[i])) return(0)
-
-    ## compute delays
-    T <- param$current.t.inf[i] - param$current.t.inf[param$current.ances[i]]
-    T <- T[!is.na(T)]
-
-    ## avoid over-shooting
-    if(any(T<1 | T>length(data$log.w.dens))) return(-Inf)
-
-    ## return
-    return(sum(data$log.w.dens[T], na.rm=TRUE))
-} # end ll.timing.infections.i
-
-
-
-
-
-#' @rdname likelihoods
-#' @export
-#'
-ll.timing.sampling.i <- function(data, param, i){
-    ## check i
-    check.i(data, i)
-
-    ## compute delays
-    T <- data$dates[i] - param$current.t.inf[i]
-    T <- T[!is.na(T)]
-
-    ## avoid over-shooting
-    if(any(T<1 | T>length(data$log.f.dens))) return(-Inf)
-
-    ## return
-    return(sum(data$log.f.dens[T], na.rm=TRUE))
-} # end ll.timing.sampling.i
-
-
-
-
-
-#' @rdname likelihoods
-#' @export
-#'
-ll.timing.i <- function(data, param, i){
-    ## check i
-    check.i(data, i)
-
-    ## compute log-likelihood
-    return(ll.timing.infections.i(data=data, param=param, i=i) +
-           ll.timing.sampling.i(data=data, param=param, i=i))
-} # end ll.timing.i
-
-
-
-
-
-#' @rdname likelihoods
-#' @export
-#'
-ll.genetic.i <- function(data, param, i){
-    ## check i
-    check.i(data, i)
-
-    ## escape if 'i' is imported
-    if(is.na(param$current.ances[i])) return(0)
-
-    ## compute log-likelihood
-    if(is.null(data$dna)) return(0)
-    nmut <- data$D[i, param$current.ances[i]]
-    return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
-} # end ll.genetic.i
-
-
-
-
-
-#' @rdname likelihoods
-#' @export
-#'
-ll.all.i <- function(data, param, i){
-    ## check i
-    check.i(data, i)
-
-    ## compute log-likelihood
-    return(ll.timing.i(data=data, param=param, i=i) +
-           ll.genetic.i(data=data, param=param, i=i)
+ll.all <- function(data, param, i=TRUE){
+    return(ll.timing(data=data, param=param, i=i) +
+           ll.genetic(data=data, param=param, i=i)
            )
 } # end ll.all
 

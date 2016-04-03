@@ -81,15 +81,16 @@ test_that("Testing check.i", {
     data <- outbreaker.data(dates=t.inf+1)
 
     ## tests
-    expect_error(check.i(data, 0))
+    expect_error(check.i(data, 0:10))
     expect_error(check.i(data, -13))
-    expect_error(check.i(data, 7))
-    expect_error(check.i(data, 1:3))
-    expect_error(check.i(data, NULL))
-    expect_error(check.i(data, NA))
+    expect_error(check.i(data, 5:11))
+    expect_error(check.i(data, c(NA,2)))
     expect_error(check.i(data, "1"))
-    expect_true(check.i(data, 6))
-    expect_true(check.i(data, 1))
+    expect_error(check.i(data, TRUE))
+    expect_true(check.i(data, NULL))
+    expect_equal(check.i(data, 6),6)
+    expect_equal(check.i(data, c(1,3,2)), c(1,3,2))
+    expect_equal(check.i(data, 1:6), 1:6)
 
 })
 

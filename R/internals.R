@@ -292,16 +292,17 @@ swap.ances <- function(param, config, i){
 
 
 
-## check that 'i' is a valid case id
+## check that 'i' is a vector of valid case ids
+## and return correct IDs
 ## (non-exported)
 check.i <- function(data, i){
-    if(is.null(i)) stop("i is null")
+    if(is.null(i)) return(TRUE)
     if(!is.numeric(i)) stop("i is not numeric")
-    if(is.na(i[1])) stop("i is NA")
-    if(length(i)!=1L) stop("i has a length different than 1")
-    if(i < 1) stop("i is not a valid case index (i<1)")
-    if(i > data$N) stop("i is not a valid case index (i>dat$N)")
-    return(TRUE)
+    if(any(is.na(i))) stop("NA detected in case IDs")
+    if(length(i)==0L) stop("i has length zero")
+    if(any(i < 1)) stop("i contains invalid case indices (i<1)")
+    if(any(i > data$N)) stop("i contains invalid case indices (i>dat$N)")
+    return(i)
 } # end check.i
 
 

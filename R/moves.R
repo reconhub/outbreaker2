@@ -123,7 +123,14 @@ move.swap.ances <- function(data, param, config, rand){
         new.param <- swap.ances(param, config, i)
 
         ## compute log ratio
-        logratio <- ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
+        ## only use local changes:
+        ## descendents of to.move
+        ## descendents of ances[to.move]
+        ## ances[to.move]
+        affected.cases <- c(find.descendents(data=data, param=param, i=i),
+                            find.descendents(data=data, param=param, i=param$current.ances[i]),
+                            param$current.ances[i])
+        logratio <- ll.all.i(data=data, param=new.param, i=affected.cases) - ll.all.i(data=data, param=param, i=affected.cases)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){

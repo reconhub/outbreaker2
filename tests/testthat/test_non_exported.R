@@ -104,8 +104,8 @@ test_that("Testing find.descendents", {
 
     ## generate data
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
-    config <- outbreaker.config(data=dat)
-    param <- outbreaker.mcmc.init(data=dat, config=config)
+    config <- outbreaker.config(data=data)
+    param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## tests
     expect_error(find.descendents(data, param, 0))

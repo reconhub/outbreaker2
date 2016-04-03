@@ -143,9 +143,6 @@ ll.timing.i <- function(data, param, i){
     ## check i
     check.i(data, i)
 
-    ## escape if 'i' is imported
-    if(is.na(param$current.ances[i])) return(0)
-
     ## compute log-likelihood
     return(ll.timing.infections.i(data=data, param=param, i=i) +
            ll.timing.sampling.i(data=data, param=param, i=i))
@@ -181,9 +178,6 @@ ll.genetic.i <- function(data, param, i){
 ll.all.i <- function(data, param, i){
     ## check i
     check.i(data, i)
-
-    ## escape if 'i' is imported
-    if(is.na(param$current.ances[i])) return(0)
 
     ## compute log-likelihood
     return(ll.timing.i(data=data, param=param, i=i) +

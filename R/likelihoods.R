@@ -84,12 +84,23 @@ ll.all <- function(data, param){
 
 
 
+
+#######################
+## LOCAL LIKELIHOODS ##
+#######################
+
 #' @rdname likelihoods
 #' @export
 #'
-ll.local.timing.infections <- function(data, param, i){
+ll.timing.infections.i <- function(data, param, i){
+    ## check i
+    check.i(data, i)
+
+    ## escape if 'i' is imported
+    if(is.na(param$current.ances[i])) return(0)
+
     ## compute delays
-    T <- param$current.t.inf - param$current.t.inf[param$current.ances]
+    T <- param$current.t.inf[i] - param$current.t.inf[param$current.ances[i]]
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -97,7 +108,7 @@ ll.local.timing.infections <- function(data, param, i){
 
     ## return
     return(sum(data$log.w.dens[T], na.rm=TRUE))
-} # end ll.timing.infections
+} # end ll.timing.infections.i
 
 
 
@@ -106,9 +117,15 @@ ll.local.timing.infections <- function(data, param, i){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing.sampling <- function(data, param){
+ll.timing.sampling.i <- function(data, param, i){
+    ## check i
+    check.i(data, i)
+
+    ## escape if 'i' is imported
+    if(is.na(param$current.ances[i])) return(0)
+
     ## compute delays
-    T <- data$dates - param$current.t.inf
+    T <- data$dates[i] - param$current.t.inf[i]
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -116,7 +133,7 @@ ll.timing.sampling <- function(data, param){
 
     ## return
     return(sum(data$log.f.dens[T], na.rm=TRUE))
-} # end ll.timing.sampling
+} # end ll.timing.sampling.i
 
 
 
@@ -125,10 +142,17 @@ ll.timing.sampling <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.timing <- function(data, param){
-    return(ll.timing.infections(data=data, param=param) +
-           ll.timing.sampling(data=data, param=param))
-} # end ll.timing
+ll.timing.i <- function(data, param, i){
+    ## check i
+    check.i(data, i)
+
+    ## escape if 'i' is imported
+    if(is.na(param$current.ances[i])) return(0)
+
+    ## compute log-likelihood
+    return(ll.timing.infections.i(data=data, param=param, i=i) +
+           ll.timing.sampling.i(data=data, param=param, i=i))
+} # end ll.timing.i
 
 
 
@@ -137,11 +161,18 @@ ll.timing <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.genetic <- function(data, param){
+ll.genetic.i <- function(data, param){
+    ## check i
+    check.i(data, i)
+
+    ## escape if 'i' is imported
+    if(is.na(param$current.ances[i])) return(0)
+
+    ## compute log-likelihood
     if(is.null(data$dna)) return(0)
-    nmut <- diag(data$D[, param$current.ances])
+    nmut <- data$D[i, param$current.ances[i]]
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
-} # end ll.genetic
+} # end ll.genetic.i
 
 
 
@@ -150,9 +181,16 @@ ll.genetic <- function(data, param){
 #' @rdname likelihoods
 #' @export
 #'
-ll.all <- function(data, param){
-    return(ll.timing(data=data, param=param) +
-           ll.genetic(data=data, param=param)
+ll.all.i <- function(data, param, i){
+    ## check i
+    check.i(data, i)
+
+    ## escape if 'i' is imported
+    if(is.na(param$current.ances[i])) return(0)
+
+    ## compute log-likelihood
+    return(ll.timing.i(data=data, param=param, i=i) +
+           ll.genetic.i(data=data, param=param, i=i)
            )
 } # end ll.all
 

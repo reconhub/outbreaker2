@@ -116,7 +116,7 @@ test_that("ll.all gives expected results", {
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -1159.97407416)
+    expect_equal(out, -1115.31974593)
 
     ## test that likelihoods add up
     expect_equal(out.timing + out.genetic + out.reporting, out)

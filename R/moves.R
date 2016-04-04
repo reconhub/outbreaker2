@@ -179,8 +179,8 @@ move.pi <- function(data, param, config, rand){
     if(new.param$current.pi<0 || new.param$current.pi>1) return(param)
 
     ## compute log ratio  (assumes symmetric proposal)
-    logratio <- post.genetic(data=data, param=new.param) -
-        post.genetic(data=data, param=param)
+    logratio <- post.reporting(data=data, param=new.param) -
+        post.reporting(data=data, param=param)
 
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.param)

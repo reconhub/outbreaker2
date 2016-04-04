@@ -84,7 +84,7 @@ outbreaker.data <- function(..., data=NULL){
             data$w.dens <- c(data$w.dens, val.to.add)
             data$w.dens <- data$w.dens/sum(data$w.dens)
         }
-        data$log.w.dens <- list(log(data$w.dens))
+        data$log.w.dens <- matrix(log(data$w.dens), nrow=1)
     }
 
     ## CHECK F.DENS

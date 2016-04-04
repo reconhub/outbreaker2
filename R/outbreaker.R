@@ -60,6 +60,9 @@ outbreaker <- function(data = outbreaker.data(),
     ## CHECK / PROCESS CONFIG ##
     config <- outbreaker.config(data=data, config=config)
 
+    ## ADD CONVOLUTIONS TO DATA ##
+    data <- add.convolutions(data=data, config=config)
+
     ## INITIALIZE MCMC CHAIN ##
     param <- outbreaker.mcmc.init(data=data, config=config)
 

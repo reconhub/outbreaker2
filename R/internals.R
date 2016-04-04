@@ -328,11 +328,11 @@ add.convolutions <- function(data, config){
     if(config$max.kappa>1){
         ## first compute convolutions on natural scale
         for(i in 2:config$max.kappa){
-            data$log.w.dens[[i]] <- convolve(data$log.w.dens[[i]], rev(data$w.dens), type="open")
+            data$log.w.dens[i,] <- convolve(data$log.w.dens[i,], rev(data$w.dens), type="open")[1:ncol(data$log.w.dens)]
         }
 
         ## then log all densities
-        data$log.w.dens <- lapply(data$log.w.dens, log)
+        data$log.w.dens <- log(data$log.w.dens)
         }
 
     ## RETURN ##

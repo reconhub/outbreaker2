@@ -19,13 +19,12 @@ ll.timing.infections <- function(data, param, i=NULL){
 
     ## compute delays
     T <- param$current.t.inf[i] - param$current.t.inf[param$current.ances[i]]
-    T <- T[!is.na(T)]
 
     ## avoid over-shooting
-    if(any(T<1 | T>length(data$log.w.dens))) return(-Inf)
+    if(any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
 
     ## return
-    return(sum(data$log.w.dens[T], na.rm=TRUE))
+    return(sum(data$log.w.dens[cbind(param$current.kappa, T)], na.rm=TRUE))
 } # end ll.timing.infections
 
 

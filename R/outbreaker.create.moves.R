@@ -49,7 +49,7 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
     if(!any(config$move.ances)) moves$move.ances <-  moves$move.swap.ances <- NULL
-    if(!any(config$move.t.inf)) moves$move.t.inf <- NULL
+    if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.ances <- NULL
     if(!any(config$move.mu)) moves$move.mu <- NULL
 
 

@@ -7,14 +7,15 @@
 #' \describe{
 #' \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 #' \item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
-#' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}} 
-#' \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}} 
+#' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
+#' \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 #' }
-#' 
+#'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @param ... a named list of movement functions for parameters or augmented data; see details for available movements and the corresponding names.
 #' @param moves a list of functions as returned by \code{outbreaker.create.moves}
+#' @param config a list of settings as returned by \code{outbreaker.config}
 #'
 #' @details
 #' The movement functions which are used by default:
@@ -24,17 +25,17 @@
 #' \item{move.ances}{a function to move ancestries, i.e. the transmission tree}
 #' \item{move.swap.ances}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
 #' }
-#' 
-#' 
+#'
+#'
 #' @return a list of named functions
-#' 
-outbreaker.create.moves <- function(..., moves=NULL){
+#'
+outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config()){
     ## PROCESS ... ONLY IF NO MOVES IS PASSED
     if(is.null(moves)){
         moves <- list(...)
     }
 
-    
+
     ## SET DEFAULTS ##
     defaults <- list(move.mu = move.mu,
                      move.t.inf = move.t.inf,
@@ -44,10 +45,17 @@ outbreaker.create.moves <- function(..., moves=NULL){
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
     moves <- modify.defaults(defaults, moves, strict=FALSE)
-    
+
+
+    ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
+    if(!any(config$move.ances)) moves$move.ances <- NULL
+    if(!any(config$move.t.inf)) moves$move.t.inf <- NULL
+    if(!any(config$move.mu)) moves$move.mu <- NULL
+
 
     ## CHECK FUNCTIONS ##
     check.function.args <- function(f){
+        if(is.null(f)) return(TRUE)
         args <- names(formals(f))
         if(!identical(sort(args), c("config","data","param", "rand"))) {
             return(FALSE)
@@ -62,8 +70,8 @@ outbreaker.create.moves <- function(..., moves=NULL){
         culprits <- paste(culprits, collapse=",")
         stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'config', 'param', 'rand'")
     }
-    
+
     ## RETURN ##
     return(moves)
-    
+
 } # end outbreaker.create.moves

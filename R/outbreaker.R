@@ -67,6 +67,9 @@ outbreaker <- function(data = outbreaker.data(),
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
 
+    ## CREATE MOVEMENTS ##
+    moves <- outbreaker.create.moves(config=config, moves=moves)
+
     ## MCMC ##
     ## add likelihood, prior and posterior functions to current context
     add.to.context(environment(), c(loglike=loglike, priors=priors, posteriors=posteriors))

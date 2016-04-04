@@ -24,7 +24,7 @@ ll.timing.infections <- function(data, param, i=NULL){
     if(any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
 
     ## return
-    return(sum(data$log.w.dens[cbind(param$current.kappa, T)], na.rm=TRUE))
+    return(sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE))
 } # end ll.timing.infections
 
 

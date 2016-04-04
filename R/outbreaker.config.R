@@ -29,7 +29,7 @@
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
 #' \item{move.kappa}{a logical indicating whether the number of generations between two successive cases
-#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+#' should be estimated ('moved' in the MCMC), or not, all defaulting to FALSE.}
 #'
 #' \item{n.iter}{the number of iterations of the MCMC}
 #'
@@ -82,7 +82,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.t.inf=NULL,
                      init.ances=NULL,
                      init.kappa=1,
-                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE, move.kappa=TRUE,
+                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE, move.kappa=FALSE,
                      n.iter=100, sample.every=10, sd.mu=0.0001,
                      prop.ances.move=1/4,
                      batch.size=1e6,

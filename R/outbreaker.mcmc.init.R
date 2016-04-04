@@ -35,8 +35,8 @@ outbreaker.mcmc.init <- function(data, config){
     ## SHAPE CHAIN ##
     out <- list(size=size, step=step,
                 post=post, like=like, prior=prior,
-                ances=ances, t.inf=t.inf, mu=mu,
-                current.ances=current.ances, current.t.inf=current.t.inf, current.mu=current.mu,
+                ances=ances, t.inf=t.inf, mu=mu, kappa=kappa,
+                current.ances=current.ances, current.t.inf=current.t.inf, current.mu=current.mu, current.kappa=current.kappa,
                 counter=counter)
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##

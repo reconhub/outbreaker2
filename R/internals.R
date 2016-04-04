@@ -317,3 +317,24 @@ find.descendents <- function(data, param, i){
     ## find descendents
     return(which(param$current.ances==i))
 } # end find.descendents
+
+
+
+
+
+## add convolutions to data$log.w.dens
+add.convolutions <- function(data, config){
+    ## COMPUTE CONVOLUTIONS IF NEEDED ##
+    if(config$max.kappa>1){
+        ## first compute convolutions on natural scale
+        for(i in 2:config$max.kappa){
+            data$log.w.dens[[i]] <- convolve(data$log.w.dens[[i]], rev(data$w.dens), type="open")
+        }
+
+        ## then log all densities
+        data$log.w.dens <- lapply(data$log.w.dens, log)
+        }
+
+    ## RETURN ##
+    return(data)
+}

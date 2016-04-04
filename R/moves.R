@@ -117,24 +117,17 @@ move.swap.ances <- function(data, param, config, rand){
     ## leave if nothing moves
     if(length(to.move)<1) return(param)
 
-    ## create new parameters
-    new.param <- param
-
     ## move all ancestries that should be moved
     for(i in to.move){
         ## swap ancestries
-        new.param <- swap.ances(new.param, config, i)
+        new.param <- swap.ances(param, config, i)
 
         ## compute log ratio
         logratio <- ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){
-            param$current.ances[i] <- new.param$current.ances[i]
-            param$current.t.inf[i] <- new.param$current.t.inf[i]
-        } else {
-            new.param$current.ances[i] <- param$current.ances[i]
-            new.param$current.t.inf[i] <- param$current.t.inf[i]
+            param <- new.param
         }
     } # end for loop
 

@@ -10,7 +10,8 @@
 \method{print}{outbreaker.chains}(x, n.row = 3, n.col = 8, ...)
 
 \method{plot}{outbreaker.chains}(x, y = "post", type = c("trace", "hist",
-  "density", "alpha", "t.inf"), burnin = 0, ...)
+  "density", "alpha", "t.inf", "network"), burnin = 0, min.support = 0.5,
+  ...)
 
 \method{summary}{outbreaker.chains}(object, burnin = 0, ...)
 }
@@ -25,14 +26,19 @@
 
 \item{y}{a character string indicating which result to plot}
 
-\item{type}{a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation}
+\item{type}{a character string indicating the kind of plot to be used (see details)}
 
 \item{burnin}{the number of iterations to be discarded as burnin}
+
+\item{min.support}{a number between 0 and 1 indicating the minimum support of ancestries to be plotted; only used if 'type' is 'network'}
 
 \item{object}{an \code{outbreaker.chains} object as returned by \code{outbreaker}.}
 }
 \description{
 Several methods are defined for instances of the class \code{outbreaker.chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}
+}
+\details{
+'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})

@@ -61,9 +61,9 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #'  'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
-#' @importFrom reshape2 melt
 #' @importFrom visNetwork visNetwork visEdges visNodes
 #' @importFrom dplyr "%>%"
+#' @importFrom grDevices xyTable
 plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf", "network"),
                                    burnin=0, min.support=0.5, ...){
 
@@ -161,6 +161,7 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
 #' @rdname outbreaker.chains
 #' @param object an \code{outbreaker.chains} object as returned by \code{outbreaker}.
 #' @export
+#' @importFrom stats median
 summary.outbreaker.chains <- function(object, burnin=0, ...){
     ## check burnin ##
     x <- object

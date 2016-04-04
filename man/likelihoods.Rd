@@ -9,20 +9,22 @@
 \alias{ll.timing.sampling}
 \title{Internal functions for outbreaker2}
 \usage{
-ll.timing.infections(data, param)
+ll.timing.infections(data, param, i = NULL)
 
-ll.timing.sampling(data, param)
+ll.timing.sampling(data, param, i = NULL)
 
-ll.timing(data, param)
+ll.timing(data, param, i = NULL)
 
-ll.genetic(data, param)
+ll.genetic(data, param, i = NULL)
 
-ll.all(data, param)
+ll.all(data, param, i = NULL)
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 
 \item{param}{a list containing parameters as returned by \code{outbreaker.mcmc.init}}
+
+\item{i}{an optional vector of integers, indicating subset of cases included in the likelihood computation; if NULL (default), all cases are used.}
 }
 \description{
 These functions compute various likelihoods used in outbreaker.

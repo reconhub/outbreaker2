@@ -17,9 +17,11 @@
 #' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
-#' \item{init.mu}{initial values for the mutation rates}
+#' \item{init.mu}{initial value for the mutation rates}
 #'
 #' \item{init.kappa}{a (recycled) vector of integers indicating the initial values of kappa; defaults to 1.}
+#'
+#' \item{init.pi}{initial value for the reporting probability}
 #'
 #' \item{move.ances}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 #'
@@ -28,14 +30,22 @@
 #' \item{move.mu}{a logical indicating whether the mutation rates
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
+#' \item{move.pi}{a logical indicating whether the reporting probability
+#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+#'
 #' \item{move.kappa}{a logical indicating whether the number of generations between two successive cases
-#' should be estimated ('moved' in the MCMC), or not, all defaulting to FALSE.}
+#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+#'
+#' \item{move.pi}{a logical indicating whether the reporting probability
+#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
 #' \item{n.iter}{the number of iterations of the MCMC}
 #'
 #' \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 #'
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
+#'
+#' \item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
 #'
 #' \item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
 #'
@@ -82,8 +92,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.t.inf=NULL,
                      init.ances=NULL,
                      init.kappa=1,
-                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE, move.kappa=FALSE,
-                     n.iter=100, sample.every=10, sd.mu=0.0001,
+                     init.pi=0.9,
+                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
+                     move.kappa=TRUE, move.pi=TRUE,
+                     n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.0001,
                      prop.ances.move=1/4,
                      batch.size=1e6,
                      paranoid=FALSE,
@@ -123,6 +135,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
         warning("values of init.kappa greater than max.kappa have been set to max.kappa")
     }
 
+    ## check init.pi
+    if(!is.numeric(config$init.pi)) stop("init.pi is not a numeric value")
+    if(config$init.pi < 0) stop("init.pi is negative")
+    if(config$init.pi > 1) stop("init.pi is greater than 1")
+
     ## check move.ances
     if(!is.logical(config$move.ances)) stop("move.ances is not a logical")
 
@@ -138,6 +155,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## check move.kappa
     if(!is.logical(config$move.kappa)) stop("move.kappa is not a logical")
 
+    ## check move.pi
+    if(!is.logical(config$move.pi)) stop("move.pi is not a logical")
+
     ## check n.iter
     if(!is.numeric(config$n.iter)) stop("n.iter is not a numeric value")
     if(config$n.iter < 2 ) stop("n.iter is smaller than 2")
@@ -149,6 +169,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## check sd.mu
     if(!is.numeric(config$sd.mu)) stop("sd.mu is not a numeric value")
     if(config$sd.mu < 0) stop("sd.mu is negative")
+
+    ## check sd.pi
+    if(!is.numeric(config$sd.pi)) stop("sd.pi is not a numeric value")
+    if(config$sd.pi < 0) stop("sd.pi is negative")
 
     ## check prop.ances.move
     if(!is.numeric(config$prop.ances.move)) stop("prop.ances.move is not a numeric value")

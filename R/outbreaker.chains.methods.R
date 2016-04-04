@@ -191,6 +191,9 @@ summary.outbreaker.chains <- function(object, burnin=0, ...){
     ## summary for mu ##
     out$mu <- summary(x$mu)
 
+    ## summary for pi ##
+    out$pi <- summary(x$pi)
+
 
     ## summary tree ##
     out$tree <- list()

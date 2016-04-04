@@ -10,17 +10,25 @@
 #'
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
 #'
-prior.mu <- function(param)
-{
+prior.mu <- function(param){
     return(dexp(param$current.mu, 1000, log=TRUE))
 } # end prior.mu
+
 
 
 #' @rdname priors
 #' @export
 #'
-prior.all <- function(param)
-{
-    return(prior.mu(param=param))
+prior.pi <- function(param){
+    return(dbeta(param$current.pi, 10, 1, log=TRUE))
+}
+
+
+
+#' @rdname priors
+#' @export
+#'
+prior.all <- function(param){
+    return(prior.mu(param=param) + prior.pi(param=param))
 } # end prior.all
 

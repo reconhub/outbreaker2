@@ -10,19 +10,20 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.init <- function(data, config)
-{
+outbreaker.mcmc.init <- function(data, config){
   ## CREATE EMPTY OUTPUT VECTORS ##
     size <- round(config$n.iter/config$sample.every)
     step <- integer(size)
     post <- prior <- like <- mu <- double(size)
     ances <- as.list(integer(size))
     t.inf <- as.list(integer(size))
+    kappa <- as.list(integer(size))
 
     ## SET CURRENT VALUES AND COUNTER ##
     step[1] <- 1L
     current.mu <- mu[1] <- config$init.mu
     current.ances <- ances[[1]] <- config$init.ances
+    current.kappa <- kappa[[1]] <- config$init.kappa
     if(is.null(config$init.t.inf)){
         current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
     } else {

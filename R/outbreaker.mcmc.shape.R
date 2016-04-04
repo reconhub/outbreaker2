@@ -24,7 +24,7 @@ outbreaker.mcmc.shape <- function(param, data)
     ## SHAPE DATA.FRAME AND CONVERT ##
     param <- data.frame(step=param$step,
                         post=param$post, like=param$like, prior=param$prior,
-                        mu=param$mu, param$ances, param$t.inf)
+                        mu=param$mu, pi=param$pi, param$ances, param$t.inf)
 
     ## RETURN ##
     class(param) <- c("outbreaker.chains","data.frame")

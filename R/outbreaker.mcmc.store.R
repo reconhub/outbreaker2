@@ -28,7 +28,7 @@ outbreaker.mcmc.store <- function(param, data, step)
     param$ances[[counter]] <- param$current.ances
     param$t.inf[[counter]] <- param$current.t.inf
     param$kappa[[counter]] <- param$current.kappa
-    param$kappa[[counter]] <- param$current.kappa
+    param$pi[counter] <- param$current.pi
 
     ## RETURN ##
     return(param)

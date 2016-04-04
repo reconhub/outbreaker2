@@ -48,11 +48,19 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
 
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
+    ## remove move.ances if no ancestry can be moved
     if(!any(config$move.ances)) moves$move.ances <-  moves$move.swap.ances <- NULL
-    if(!any(config$move.swap.ances)) moves$move.swap.ances <- NULL
+
+    ## remove move.t.inf if disabled
     if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.ances <- NULL
+
+    ## remove move.mu if disabled
     if(!any(config$move.mu)) moves$move.mu <- NULL
 
+    ## remove swap if disabled, or if some ances/t.inf cannot be moved
+    if(!any(config$move.swap.ances) ||
+       !any(config$move.ances) ||
+       !any(config$move.t.inf)) moves$move.swap.ances <- NULL
 
     ## CHECK FUNCTIONS ##
     check.function.args <- function(f){

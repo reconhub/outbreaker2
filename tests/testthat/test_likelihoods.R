@@ -70,6 +70,32 @@ test_that("ll.genetic gives expected results", {
 
 
 
+
+
+## test ll.reporting ##
+test_that("ll.reporting gives expected results", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    data(fakeOutbreak)
+    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=data, init.mu=0.543e-4)
+    param <- outbreaker.mcmc.init(data=data, config=config)
+
+
+    ## tests
+    out <- ll.reporting(data=data, param=param)
+    expect_is(out, "numeric")
+    expect_equal(out, -3.16081546973)
+
+})
+
+
+
+
+
 ## test ll.all ##
 test_that("ll.all gives expected results", {
     ## skip on CRAN
@@ -86,13 +112,14 @@ test_that("ll.all gives expected results", {
     out <- ll.all(data=data, param=param)
     out.timing <- ll.timing(data=data, param=param)
     out.genetic <- ll.genetic(data=data, param=param)
+    out.reporting <- ll.reporting(data=data, param=param)
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -1112.15893046)
+    expect_equal(out, -1159.97407416)
 
     ## test that likelihoods add up
-    expect_equal(out.timing + out.genetic, out)
+    expect_equal(out.timing + out.genetic + out.reporting, out)
 
 })
 

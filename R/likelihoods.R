@@ -127,7 +127,8 @@ ll.all <- function(data, param, i=NULL){
 
     ## compute likelihood
     return(ll.timing(data=data, param=param, i=i) +
-           ll.genetic(data=data, param=param, i=i)
+           ll.genetic(data=data, param=param, i=i) +
+           ll.reporting(data=data, param=param, i=i)
            )
 } # end ll.all
 

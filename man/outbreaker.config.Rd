@@ -34,11 +34,16 @@ including the burnin period}
 
 \item{init.mu}{initial values for the mutation rates}
 
+\item{init.kappa}{a (recycled) vector of integers indicating the initial values of kappa; defaults to 1.}
+
 \item{move.ances}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 
 \item{move.t.inf}{a vector of logicals indicating, for each case, if the dates of infection should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 
 \item{move.mu}{a logical indicating whether the mutation rates
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+
+\item{move.kappa}{a logical indicating whether the number of generations between two successive cases
 should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{n.iter}{the number of iterations of the MCMC}
@@ -54,6 +59,8 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for performing additional tests during outbreaker; it makes computations substantially slower and is mostly used for debugging purposes.}
 
 \item{min.date}{earliest infection date possible, expressed as days since the first sampling;}
+
+\item{max.kappa}{an integer indicating the largest number of generations between any two linked cases; defaults to 5}
 }
 }
 \examples{

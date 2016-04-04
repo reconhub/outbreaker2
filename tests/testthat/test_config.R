@@ -20,6 +20,7 @@ test_that("test: settings are processed fine", {
     expect_equal(outbreaker.config(init.tree="star", data=dat)$init.ances, c(NA, rep(1,29)))
     expect_equal(outbreaker.config(init.tree=ances)$init.tree, outbreaker.config(init.tree=ances)$init.ances)
     expect_equal(length(outbreaker.config(init.tree="random",data=dat)$init.ances), dat$N)
+    expect_equal(unique(outbreaker.config(data=dat, init.kappa=1:2)$init.kappa), 1:2)
     expect_error(outbreaker.config(uknownarg=123))
     expect_error(outbreaker.config(init.tree="wrongtreeinit"))
     expect_error(outbreaker.config(init.mu=-5))

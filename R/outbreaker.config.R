@@ -116,8 +116,12 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
     ## check init.kappa
     if(!is.numeric(config$init.kappa)) stop("init.kappa is not a numeric value")
-    config$kappa <- as.integer(round(config$kappa))
-    if(any(config$kappa < 1)) stop("init.kappa has values smaller than 1")
+    config$init.kappa <- as.integer(round(config$init.kappa))
+    if(any(config$init.kappa < 1)) stop("init.kappa has values smaller than 1")
+    if(any(config$init.kappa > config$max.kappa)){
+        config$init.kappa[config$init.kappa > config$max.kappa] <- config$max.kappa
+        warning("values of init.kappa greater than max.kappa have been set to max.kappa")
+    }
 
     ## check move.ances
     if(!is.logical(config$move.ances)) stop("move.ances is not a logical")
@@ -207,7 +211,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
         config$move.t.inf <- rep(config$move.t.inf, length=data$N)
 
         ## recycle kappa
-        config$init.kappa <- rep(config$kappa, length=data$N)
+        config$init.kappa <- rep(config$init.kappa, length=data$N)
     }
 
     ## RETURN CONFIG ##

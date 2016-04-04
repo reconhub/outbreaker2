@@ -100,6 +100,24 @@ ll.genetic <- function(data, param, i=NULL){
 #' @rdname likelihoods
 #' @export
 #'
+ll.reporting <- function(data, param, i=NULL){
+    ## return 0 if no data
+    if(data$N==0) return(0)
+
+    ## check i
+    i <- check.i(data=data, i=i)
+
+    ## compute likelihood
+    return(sum(dgeom(param$current.kappa[i]-1, prob=param$current.pi, log=TRUE),na.rm=TRUE))
+} # end ll.reporting
+
+
+
+
+
+#' @rdname likelihoods
+#' @export
+#'
 ll.all <- function(data, param, i=NULL){
     ## return 0 if no data
     if(data$N==0) return(0)

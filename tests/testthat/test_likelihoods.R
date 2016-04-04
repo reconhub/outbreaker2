@@ -103,7 +103,7 @@ test_that("ll.all gives expected results", {
 
 
 ## test local likelihoods ##
-test_that("ll.all.i gives expected results", {
+test_that("ll.all with i specified gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())

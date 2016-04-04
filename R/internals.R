@@ -323,17 +323,28 @@ find.descendents <- function(data, param, i){
 
 
 ## add convolutions to data$log.w.dens
+## rows = kapp avalue
+## columns = time interval
 add.convolutions <- function(data, config){
     ## COMPUTE CONVOLUTIONS IF NEEDED ##
     if(config$max.kappa>1){
+        ## de-log the first line
+        data$log.w.dens[1,] <- data$w.dens
+
         ## first compute convolutions on natural scale
         for(i in 2:config$max.kappa){
-            data$log.w.dens[i,] <- convolve(data$log.w.dens[i,], rev(data$w.dens), type="open")[1:ncol(data$log.w.dens)]
+            data$log.w.dens <- rbind(data$log.w.dens,
+                                     convolve(data$log.w.dens[i-1,], rev(data$w.dens), type="open")[1:ncol(data$log.w.dens)]
+                                     )
         }
 
         ## then log all densities
         data$log.w.dens <- log(data$log.w.dens)
         }
+
+    ## name rows/columns (useful if internal debugging needed)
+    rownames(data$log.w.dens) <- paste("kappa", 1:nrow(data$log.w.dens), sep="=")
+    colnames(data$log.w.dens) <- 1:ncol(data$log.w.dens)
 
     ## RETURN ##
     return(data)

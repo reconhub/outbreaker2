@@ -115,3 +115,25 @@ test_that("Testing find.descendents", {
     expect_equal(find.descendents(data, param, 30), integer(0))
 
 })
+
+
+
+
+test_that("Testing add.convolutions", {
+ ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## generate data
+    data(fakeOutbreak)
+    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=data)
+    param <- outbreaker.mcmc.init(data=data, config=config)
+
+    out <- add.convolutions(data=data, config=config)
+
+    ## tests
+    expect_is(out$log.w.dens, "matrix")
+    expect_equal(dim(out$log.w.dens), c(5, length(out$w.dens)))
+    expect_true(!any(is.na(out$log.w.dens)))
+})

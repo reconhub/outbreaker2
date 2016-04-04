@@ -32,9 +32,11 @@ Note that for SeqTrack, all cases should have been sequenced.}
 \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 including the burnin period}
 
-\item{init.mu}{initial values for the mutation rates}
+\item{init.mu}{initial value for the mutation rates}
 
 \item{init.kappa}{a (recycled) vector of integers indicating the initial values of kappa; defaults to 1.}
+
+\item{init.pi}{initial value for the reporting probability}
 
 \item{move.ances}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 
@@ -43,7 +45,13 @@ including the burnin period}
 \item{move.mu}{a logical indicating whether the mutation rates
 should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
+\item{move.pi}{a logical indicating whether the reporting probability
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+
 \item{move.kappa}{a logical indicating whether the number of generations between two successive cases
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+
+\item{move.pi}{a logical indicating whether the reporting probability
 should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{n.iter}{the number of iterations of the MCMC}
@@ -51,6 +59,8 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 \item{sample.every}{the frequency at which MCMC samples are retained for the output}
 
 \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
+
+\item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
 
 \item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
 

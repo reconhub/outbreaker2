@@ -3,6 +3,7 @@
 \name{move.mu}
 \alias{move.ances}
 \alias{move.mu}
+\alias{move.pi}
 \alias{move.swap.ances}
 \alias{move.t.inf}
 \alias{rances}
@@ -17,6 +18,8 @@ move.ances(data, param, config, rand)
 move.swap.ances(data, param, config, rand)
 
 rances(t.inf)
+
+move.pi(data, param, config, rand)
 }
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker.data}}

@@ -3,9 +3,12 @@
 \name{prior.mu}
 \alias{prior.all}
 \alias{prior.mu}
+\alias{prior.pi}
 \title{Priors of outbreaker2}
 \usage{
 prior.mu(param)
+
+prior.pi(param)
 
 prior.all(param)
 }

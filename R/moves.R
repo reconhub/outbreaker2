@@ -167,3 +167,23 @@ rances <- function(t.inf){
 
 
 
+#' @rdname moves
+#' @export
+#'
+move.pi <- function(data, param, config, rand){
+    ## get new proposed values
+    new.param <- param
+    new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
+
+    ## escape if new.pi<0 or >1
+    if(new.param$current.pi<0 || new.param$current.pi>1) return(param)
+
+    ## compute log ratio  (assumes symmetric proposal)
+    logratio <- post.genetic(data=data, param=new.param) -
+        post.genetic(data=data, param=param)
+
+    ## accept/reject
+    if(logratio >= rand$log.runif1()) return(new.param)
+    return(param)
+} # end move.pi
+

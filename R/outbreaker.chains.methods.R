@@ -57,8 +57,9 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #' @export
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density aes_string labs
+#' @importFrom reshape2 melt
 #'
-plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density"), burnin=0, ...){
+plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf"), burnin=0, ...){
 
     ## CHECKS ##
     type <- match.arg(type)
@@ -87,6 +88,20 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
             labs(x=y, title=paste("density:",y))
     }
 
+    if(type=="alpha"){
+            alpha <- as.matrix(x[,grep("alpha", names(x))])
+            colnames(alpha) <- 1:ncol(alpha)
+            from <- unlist(alpha)
+            to <- as.vector(col(alpha))
+            out.dat <- data.frame(xyTable(from,to))
+            out.dat[3] <- out.dat[3]/nrow(x)
+            names(out.dat) <- c("from", "to", "frequency")
+
+            out <- ggplot(out.dat) +
+                geom_point(aes(x=to, y=from, size=frequency, color=factor(from))) +
+                guides(colour=FALSE) +
+                labs(title="ancestries")
+    }
 
     return(out)
 } # end plot.outbreaker.chains

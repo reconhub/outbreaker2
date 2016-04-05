@@ -121,7 +121,7 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
     }
 
     if(type=="network"){
-        ## extract edge info
+        ## extract edge info: ancestries
         alpha <- x[, grep("alpha",names(x)), drop=FALSE]
         from <- unlist(alpha)
         to <- as.vector(col(alpha))
@@ -130,6 +130,13 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
         names(edges) <- c("from", "to", "value")
         edges <- edges[edges$value > min.support,,drop=FALSE]
         edges$arrows <- "to"
+
+        ## ## extract edge info: timing
+        ## t.inf <- x[, grep("t.inf",names(x)), drop=FALSE]
+        ## mean.time <- apply(t.inf, 2, mean)
+        ## mean.delay <- mean.time[edges$to] - mean.time[edges$from]
+        ## mean.delay[mean.delay<1] <- 1
+        ## edges$label <- paste(round(mean.delay), "days")
 
         ## node info
         nodes <- list(id=1:ncol(alpha), label=1:ncol(alpha))

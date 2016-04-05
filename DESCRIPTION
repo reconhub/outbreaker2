@@ -7,7 +7,8 @@ Author: Thibaut Jombart <thibautjombart@gmail.com>
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
 Suggests:
     testthat, 
-    microbenchmark
+    microbenchmark, 
+    coda
 Depends:
     R (>= 3.0.0)
 Imports:
@@ -18,7 +19,7 @@ Imports:
     ape,
     igraph,
     adegenet,
-    coda, 
+    ggplot2,
     compiler
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information.

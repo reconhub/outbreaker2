@@ -153,29 +153,33 @@ summary.outbreaker.chains <- function(object, burnin=0, ...){
     out$mu <- summary(x$mu)
 
 
+    ## summary tree ##
+    out$tree <- list()
+
     ## summary of alpha ##
     alpha <- as.matrix(x[,grep("alpha", names(x))])
-
 
     ## function to get most frequent item
     f1 <- function(x) {
         as.integer(names(sort(table(x, exclude=NULL), decreasing=TRUE)[1]))
     }
-    out$ances <- apply(alpha, 2, f1)
-    names(out$ances) <- 1:length(out$ances)
-
-    ## function to get most frequent item
-    f2 <- function(x) {
-        (sort(table(x), decreasing=TRUE)/length(x))[1]
-    }
-    out$ances.support <- apply(alpha, 2, f2)
-    names(out$ances.support) <- 1:length(out$ances.support)
+    out$tree$from <- apply(alpha, 2, f1)
+    out$tree$to <- 1:ncol(alpha)
 
 
     ## summary of t.inf ##
     t.inf <- as.matrix(x[,grep("t.inf", names(x))])
-    out$t.inf <- apply(alpha, 2, mean)
-    names(out$t.inf) <- 1:length(out$t.inf)
+    out$tree$time <- apply(alpha, 2, median)
+
+    ## function to get frequency of most frequent item
+    f2 <- function(x) {
+        (sort(table(x), decreasing=TRUE)/length(x))[1]
+    }
+    out$tree$support <- apply(alpha, 2, f2)
+
+    ## shape tree as a data.frame
+    out$tree <- as.data.frame(out$tree)
+    rownames(out$tree) <- NULL
 
     ## RETURN ##
     return(out)

@@ -22,7 +22,7 @@ outbreaker.mcmc.shape <- function(param, data)
     colnames(param$t.inf) <- paste("t.inf",1:data$N, sep=".")
 
     ## SHAPE DATA.FRAME AND CONVERT ##
-    param <- data.frame(step=step,
+    param <- data.frame(step=param$step,
                         post=param$post, like=param$like, prior=param$prior,
                         mu=param$mu, param$ances, param$t.inf)
     param <- coda::mcmc(param)

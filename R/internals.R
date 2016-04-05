@@ -32,13 +32,15 @@ modify.defaults <- function(defaults, x, strict=TRUE){
 
 
 
-#' @rdname internals
-#'
-#' @param objects a list of objects to be added to the environment of 'x'; all items need to be named.
-#'
-#' @examples
-#' f1 <- function(x) { foo(x)+1}
-#'
+
+
+##############################
+## NON-DOCUMENTED FUNCTIONS ##
+##############################
+
+## add objects to an environment
+## objects: list of objects to be added to the environment (of) 'x'
+##
 add.to.context <- function(x, objects){
     ## get environment
     if(is.environment(x)){
@@ -74,9 +76,6 @@ add.to.context <- function(x, objects){
 
 
 
-
-#' @rdname internals
-#'
 ## checks are only sure for the 'current' state
 ##
 look.for.trouble <- function(param, data){
@@ -206,13 +205,6 @@ look.for.trouble <- function(param, data){
 
 
 
-
-
-
-##############################
-## NON-DOCUMENTED FUNCTIONS ##
-##############################
-
 ## check which ancestries can move (returns a TRUE/FALSE vector)
 can.move.ances <- function(param, config){
     out <- !is.na(param$current.ances) & # non-imported case
@@ -230,7 +222,6 @@ can.be.swapped <- function(param, config){
 }
 
 
-#' @rdname internals
 ## random selection of cases for which ancestries is moved
 select.ances.to.move <- function(param, config){
     choices <- which(can.move.ances(param, config))

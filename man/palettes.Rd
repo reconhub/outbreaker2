@@ -7,11 +7,15 @@
 \usage{
 chains.pal(n)
 }
+\arguments{
+\item{n}{a number of colors to be created}
+}
 \description{
 These functions are different color palettes (color-generating functions) used in outbreaker.
 }
 \examples{
 plot(1:8, col=chains.pal(8), cex=10, pch=20)
+
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})

@@ -79,28 +79,39 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
     if(type=="hist"){
         out <- ggplot(x) + geom_histogram(aes_string(x=y)) +
             geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
-        labs(x=y, title=paste("histogram:",y))
+                labs(x=y, title=paste("histogram:",y))
     }
 
     if(type=="density"){
         out <- ggplot(x) + geom_density(aes_string(x=y)) +
             geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
-            labs(x=y, title=paste("density:",y))
+                labs(x=y, title=paste("density:",y))
     }
 
     if(type=="alpha"){
-            alpha <- as.matrix(x[,grep("alpha", names(x))])
-            colnames(alpha) <- 1:ncol(alpha)
-            from <- unlist(alpha)
-            to <- as.vector(col(alpha))
-            out.dat <- data.frame(xyTable(from,to))
-            out.dat[3] <- out.dat[3]/nrow(x)
-            names(out.dat) <- c("from", "to", "frequency")
+        alpha <- as.matrix(x[,grep("alpha", names(x))])
+        colnames(alpha) <- 1:ncol(alpha)
+        from <- as.vector(alpha)
+        to <- as.vector(col(alpha))
+        out.dat <- data.frame(xyTable(from,to))
+        out.dat[3] <- out.dat[3]/nrow(x)
+        names(out.dat) <- c("from", "to", "frequency")
 
-            out <- ggplot(out.dat) +
-                geom_point(aes(x=to, y=from, size=frequency, color=factor(from))) +
+        out <- ggplot(out.dat) +
+            geom_point(aes(x=to, y=from, size=frequency, color=factor(from))) +
                 guides(colour=FALSE) +
-                labs(title="ancestries")
+                    labs(title="ancestries")
+    }
+
+    if(type=="t.inf"){
+        t.inf <- as.matrix(x[,grep("t.inf", names(x))])
+        dates <- as.vector(t.inf)
+        cases <- as.vector(col(t.inf))
+        out.dat <- data.frame(cases=factor(cases), dates=dates)
+        out <- ggplot(out.dat) +
+            geom_violin(aes(x=cases, y=dates, fill=cases)) +
+                coord_flip() + guides(fill=FALSE) +
+                    labs(title="infection times")
     }
 
     return(out)

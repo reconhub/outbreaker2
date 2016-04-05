@@ -56,7 +56,7 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #'
 #' @export
 #'
-#' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes_string labs guides
+#' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
 #' @importFrom reshape2 melt
 #'
 plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf"), burnin=0, ...){

@@ -27,3 +27,28 @@ test_that("test: outbreaker's output have expected format", {
     expect_true(all(out.df$post> -1e30))
 })
 
+
+
+
+## test convergence ##
+test_that("test: convergence to decent results for toy example", {
+    ## skip on CRAN
+    skip_on_cran()
+    rm(list=ls())
+
+    ## get data
+    data(fakeOutbreak)
+    dat <- fakeOutbreak$dat
+    w <- fakeOutbreak$w
+
+    ## outbreaker DNA + time
+    out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
+                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+
+    ## outbreaker time only
+
+    ## outbreaker DNA only
+
+
+
+})

@@ -14,11 +14,13 @@ outbreaker.mcmc.init <- function(data, config)
 {
   ## CREATE EMPTY OUTPUT VECTORS ##
     size <- round(config$n.iter/config$sample.every)
+    step <- integer(size)
     post <- prior <- like <- mu <- double(size)
     ances <- as.list(integer(size))
     t.inf <- as.list(integer(size))
 
     ## SET CURRENT VALUES AND COUNTER ##
+    step[1] <- 1L
     current.mu <- mu[1] <- config$init.mu
     current.ances <- ances[[1]] <- config$init.ances
     if(is.null(config$init.t.inf)){
@@ -30,7 +32,8 @@ outbreaker.mcmc.init <- function(data, config)
 
 
     ## SHAPE CHAIN ##
-    out <- list(size=size, post=post, like=like, prior=prior,
+    out <- list(size=size, step=step,
+                post=post, like=like, prior=prior,
                 ances=ances, t.inf=t.inf, mu=mu,
                 current.ances=current.ances, current.t.inf=current.t.inf, current.mu=current.mu,
                 counter=counter)

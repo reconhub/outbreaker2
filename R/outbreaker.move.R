@@ -43,7 +43,7 @@ outbreaker.move <- function(moves, data, config, param, rand){
 
         ## store outputs if needed
         if((i %% config$sample.every) == 0){
-            param <- outbreaker.mcmc.store(param=param, data=data)
+            param <- outbreaker.mcmc.store(param=param, data=data, step=i)
         }
 
     } # end of the chain

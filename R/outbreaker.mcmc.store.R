@@ -5,18 +5,20 @@
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
 #' @param param a list of output items as returned by \code{outbreaker.mcmc.init}
-#'
 #' @param data a list of settings as returned by \code{outbreaker.data}
+#' @param step an integer indicating the MCMC iteration being stored
 #'
 #' @export
 #'
-outbreaker.mcmc.store <- function(param, data)
+outbreaker.mcmc.store <- function(param, data, step)
 {
     ## UPDATE COUNTER
-    param$counter <- param$counter + 1
+    counter <- param$counter <- param$counter + 1
+
+    ## STORE STEP
+    param$step[counter] <- step
 
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
-    counter <- param$counter
     param$like[counter] <- ll.all(data=data, param=param)
     param$prior[counter] <- prior.all(param)
     param$post[counter] <- param$like[counter] + param$prior[counter]

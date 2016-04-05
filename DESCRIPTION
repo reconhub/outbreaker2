@@ -20,6 +20,7 @@ Imports:
     igraph,
     adegenet,
     ggplot2,
+    reshape2,
     compiler
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information.

@@ -5,8 +5,6 @@
 #'
 #' \describe{
 #' \item{modify.default}{modify default arguments using user-provided values}
-#' \item{add.to.function.context}{add a set of objects to the environment of a function}
-#' \item{check.param}{a function performing various checks of the status of the chain; tries to pick up impossible values for augmented data and parameters, or -Inf log-likelihood or posterior values; this function is used only in 'safemode' (see \code{\link{outbreaker.config}})}
 #' }
 #'
 #' @rdname internals
@@ -14,7 +12,6 @@
 #' @param defaults a list containing default arguments
 #' @param x in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function or an environment.
 #' @param strict a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'
-#' @param param a list of parameters as returned by \code{outbreaker.mcmc.init}
 #'
 #' @author Rich Fitzjohn, Thibaut Jombart
 #'

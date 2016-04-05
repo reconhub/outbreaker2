@@ -12,8 +12,6 @@ modify.defaults(defaults, x, strict = TRUE)
 \item{x}{in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function or an environment.}
 
 \item{strict}{a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'}
-
-\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
 }
 \description{
 These functions are meant for internal use in outbreaker2. They are not exported, and their API might change in the future.
@@ -21,8 +19,6 @@ These functions are meant for internal use in outbreaker2. They are not exported
 \details{
 \describe{
 \item{modify.default}{modify default arguments using user-provided values}
-\item{add.to.function.context}{add a set of objects to the environment of a function}
-\item{check.param}{a function performing various checks of the status of the chain; tries to pick up impossible values for augmented data and parameters, or -Inf log-likelihood or posterior values; this function is used only in 'safemode' (see \code{\link{outbreaker.config}})}
 }
 }
 \author{

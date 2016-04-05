@@ -4,12 +4,15 @@
 \alias{outbreaker.chains}
 \alias{plot.outbreaker.chains}
 \alias{print.outbreaker.chains}
+\alias{summary.outbreaker.chains}
 \title{Basic methods for processing outbreaker results}
 \usage{
 \method{print}{outbreaker.chains}(x, n.row = 3, n.col = 8, ...)
 
 \method{plot}{outbreaker.chains}(x, y = "post", type = c("trace", "hist",
-  "density"), burnin = 0, ...)
+  "density", "alpha", "t.inf"), burnin = 0, ...)
+
+\method{summary}{outbreaker.chains}(object, burnin = 0, ...)
 }
 \arguments{
 \item{x}{an \code{outbreaker.chains} object as returned by \code{outbreaker}.}
@@ -25,6 +28,8 @@
 \item{type}{a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation}
 
 \item{burnin}{the number of iterations to be discarded as burnin}
+
+\item{object}{an \code{outbreaker.chains} object as returned by \code{outbreaker}.}
 }
 \description{
 Several methods are defined for instances of the class \code{outbreaker.chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}

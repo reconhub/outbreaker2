@@ -49,17 +49,23 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 
 #' @rdname outbreaker.chains
 #' @param y a character string indicating which result to plot
-#' @param type a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
+#' @param type a character string indicating the kind of plot to be used (see details)
 #' @param burnin the number of iterations to be discarded as burnin
+#' @param min.support a number between 0 and 1 indicating the minimum support of ancestries to be plotted; only used if 'type' is 'network'
 ## #' @param dens.all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
 ## #' @param col the colors to be used for different runs
 #'
 #' @export
 #'
+#' @details
+#'  'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
+#'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
 #' @importFrom reshape2 melt
-#'
-plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf"), burnin=0, ...){
+#' @importFrom visNetwork visNetwork
+#' @importFrom dplyr "%>%"
+plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf", "network"),
+                                   burnin=0, min.support=0.5, ...){
 
     ## CHECKS ##
     type <- match.arg(type)
@@ -113,6 +119,31 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
                 coord_flip() + guides(fill=FALSE) +
                     labs(title="infection times")
     }
+
+    if(type=="network"){
+        ## extract edge info
+        alpha <- x[, grep("alpha",names(x)), drop=FALSE]
+        from <- unlist(alpha)
+        to <- as.vector(col(alpha))
+        edges <- na.omit(data.frame(xyTable(from, to)))
+        edges[3] <- edges$number/nrow(alpha)
+        names(edges) <- c("from", "to", "value")
+        edges <- edges[edges$value > min.support,,drop=FALSE]
+        edges$arrows <- "to"
+
+        ## node info
+        nodes <- list(id=1:ncol(alpha), label=1:ncol(alpha))
+        nodes$value <- sapply(nodes$id, function(i) sum(from==i, na.rm=TRUE))/nrow(alpha)
+
+        ## generate graph
+        out <- visNetwork::visNetwork(nodes=nodes, edges=edges, ...) %>%
+            visEdges(arrows = list(to = list(enabled = TRUE, scaleFactor = 0.2)),
+                     color = list(highlight = "red")) %>%
+                         visNodes(shadow = list(enabled = TRUE, size = 10),
+                                  color = list(highlight = "red"))
+
+    }
+
 
     return(out)
 } # end plot.outbreaker.chains

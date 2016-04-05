@@ -4,12 +4,14 @@
 \alias{outbreaker.mcmc.store}
 \title{Stores MCMC samples for outbreaker}
 \usage{
-outbreaker.mcmc.store(param, data)
+outbreaker.mcmc.store(param, data, step)
 }
 \arguments{
 \item{param}{a list of output items as returned by \code{outbreaker.mcmc.init}}
 
 \item{data}{a list of settings as returned by \code{outbreaker.data}}
+
+\item{step}{an integer indicating the MCMC iteration being stored}
 }
 \description{
 This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.

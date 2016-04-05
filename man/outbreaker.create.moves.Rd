@@ -4,12 +4,14 @@
 \alias{outbreaker.create.moves}
 \title{Create the parameter space explorer}
 \usage{
-outbreaker.create.moves(..., moves = NULL)
+outbreaker.create.moves(..., moves = NULL, config = outbreaker.config())
 }
 \arguments{
 \item{...}{a named list of movement functions for parameters or augmented data; see details for available movements and the corresponding names.}
 
 \item{moves}{a list of functions as returned by \code{outbreaker.create.moves}}
+
+\item{config}{a list of settings as returned by \code{outbreaker.config}}
 }
 \value{
 a list of named functions
@@ -23,8 +25,8 @@ User-provided functions will be checked to ensure the right arguments are presen
 \describe{
 \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 \item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
-\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}} 
-\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}} 
+\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
+\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 }
 
 

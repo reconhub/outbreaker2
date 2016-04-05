@@ -42,13 +42,12 @@ test_that("test: convergence to decent results for toy example", {
     w <- fakeOutbreak$w
 
     ## outbreaker DNA + time
-    out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+    out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
+                      config=list(n.iter=5000, sample.every=100, init.tree="star"))
 
-    ## outbreaker time only
-
-    ## outbreaker DNA only
-
-
-
+    ## check that tree is OK
+    out.smry <- summary(out, burn=1000)
+    expect_true(min(out.smry$post) > -920) # approx log post values
+    expect_true(mean(out.smry$ances==dat$ances, na.rm=TRUE) > .85) # at least 85% ancestries correct
+    expect_true(mean(abs(out.smry$t.inf - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
 })

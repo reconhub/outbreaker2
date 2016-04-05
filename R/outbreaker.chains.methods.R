@@ -3,7 +3,9 @@
 #' Several methods are defined for instances of the class \code{outbreaker.chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}
 #'
 #' @rdname outbreaker.chains
-#' @aliases outbreaker.chains
+#'
+#' @aliases outbreaker.chains print.outbreaker.chains plot.outbreaker.chains
+#'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @param x an \code{outbreaker.chains} object as returned by \code{outbreaker}.
@@ -44,61 +46,47 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 
 
 
-#' @export
 #' @rdname outbreaker.chains
 #' @param what a character string indicating which result to plot
-#' @param type a character string indicating the kind of plot to be used: 'series' for time series, 'density' for a kernel density estimation
+#' @param type a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
 #' @param burnin the number of iterations to be discarded as burnin
-#' @param dens.all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
-#' @param col the colors to be used for different runs
-#' @param main the title of the plot
-#' @param legend a logical indicating if a legend should be added to the plot; defaults to TRUE
-#' @param posi a character string indicating the position of the legend; defaults to "bottomleft"
-plot.outbreaker.chains <- function(x, what="post", type=c("series","density"), burnin=0, dens.all=TRUE,
-                       col=funky(x$n.runs), main=what,
-                       legend=TRUE, posi="bottomleft", ...){
-    ## HANDLE ARGUMENTS ##
+## #' @param dens.all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
+## #' @param col the colors to be used for different runs
+#'
+#' @export
+#'
+#' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density aes_string labs
+#'
+plot.outbreaker.chains <- function(x, what="post", type=c("trace", "hist", "density"), burnin=0){
+
+    ## CHECKS ##
     type <- match.arg(type)
-    ## n.runs <- x$n.runs
-    n.runs <- 1
-    col.ori <- col
     if(!what %in% names(x)) stop(paste(what,"is not a column of x"))
-    if(!is.null(col)) col <- rep(col, length = n.runs)
-    if(!is.null(lty)) lty <- rep(lty, length = n.runs)
-    if(!is.null(lwd)) lwd <- rep(lwd, length = n.runs)
-    if(is.null(burnin)){
-        burnin <- max(x$burnin, x$find.import.at, x$tune.end)
-    }
+
 
     ## GET DATA TO PLOT ##
-    dat <- cbind(x$step[x$run==1],data.frame(split(x[,what], x$run)))
-    names(dat) <- c("step", paste(what, 1:n.runs,sep=""))
-    if(!any(dat$step>burnin)) stop("burnin is greater than the number of steps in x")
-    dat <- dat[dat$step>burnin,,drop=FALSE]
+    if(burnin > max(x$step)) stop("burnin exceeds the number of steps in x")
+    x <- x[x$step>burnin,,drop=FALSE]
 
     ## MAKE PLOT ##
-    if(type=="series"){
-        matplot(dat$step, dat[,-1,drop=FALSE], type="l", col=col, lty=lty, xlab="MCMC iteration", ylab="value", main=main, ...)
+    if(type=="trace"){
+        out <- ggplot(x) + geom_line(aes_string(x="step", y=what)) +
+            labs(x="Iteration", y=what, title=paste("trace:",what))
+    }
+
+    if(type=="hist"){
+        out <- ggplot(x) + geom_histogram(aes_string(x=what)) +
+            geom_point(aes_string(x=what, y=0), shape="|", alpha=0.5, size=3) +
+        labs(x=what, title=paste("histogram:",what))
     }
 
     if(type=="density"){
-        ## add general density if needed ##
-        temp <- lapply(dat[, -1, drop=FALSE], density)
-        if(dens.all){
-            temp[[n.runs+1]] <- density(unlist(dat[,-1,drop=FALSE]))
-            col <- c(col, "black")
-            n.runs <- n.runs+1
-        }
-        range.x <- range(sapply(temp, function(e) e$x))
-        range.y <- range(sapply(temp, function(e) e$y))
-        plot(1,type="n", xlim=range.x, ylim=range.y, xlab="value", ylab="density", main=main, ...)
-        invisible(lapply(1:n.runs, function(i) lines(temp[[i]], col=col[i], lty=lty[i], lwd=lwd[i])))
+        out <- ggplot(x) + geom_density(aes_string(x=what)) +
+            geom_point(aes_string(x=what, y=0), shape="|", alpha=0.5, size=3) +
+            labs(x=what, title=paste("density:",what))
     }
 
-    ## ADD LEGEND ##
-    if(legend){
-        legend(posi, fill=col, title="Runs", leg=1:length(col.ori))
-    }
-    return(invisible())
+
+    return(out)
 } # end plot.outbreaker.chains
 

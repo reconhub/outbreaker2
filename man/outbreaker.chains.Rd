@@ -8,9 +8,8 @@
 \usage{
 \method{print}{outbreaker.chains}(x, n.row = 3, n.col = 8, ...)
 
-\method{plot}{outbreaker.chains}(x, what = "post", type = c("series",
-  "density"), burnin = 0, dens.all = TRUE, col = funky(x$n.runs),
-  main = what, legend = TRUE, posi = "bottomleft", ...)
+\method{plot}{outbreaker.chains}(x, what = "post", type = c("trace", "hist",
+  "density"), burnin = 0)
 }
 \arguments{
 \item{x}{an \code{outbreaker.chains} object as returned by \code{outbreaker}.}
@@ -21,19 +20,9 @@
 
 \item{what}{a character string indicating which result to plot}
 
-\item{type}{a character string indicating the kind of plot to be used: 'series' for time series, 'density' for a kernel density estimation}
+\item{type}{a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation}
 
 \item{burnin}{the number of iterations to be discarded as burnin}
-
-\item{dens.all}{a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE}
-
-\item{col}{the colors to be used for different runs}
-
-\item{main}{the title of the plot}
-
-\item{legend}{a logical indicating if a legend should be added to the plot; defaults to TRUE}
-
-\item{posi}{a character string indicating the position of the legend; defaults to "bottomleft"}
 }
 \description{
 Several methods are defined for instances of the class \code{outbreaker.chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}

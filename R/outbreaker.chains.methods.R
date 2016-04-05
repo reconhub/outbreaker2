@@ -4,7 +4,7 @@
 #'
 #' @rdname outbreaker.chains
 #'
-#' @aliases outbreaker.chains print.outbreaker.chains plot.outbreaker.chains
+#' @aliases outbreaker.chains print.outbreaker.chains plot.outbreaker.chains summary.outbreaker.chains
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
@@ -91,3 +91,62 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
     return(out)
 } # end plot.outbreaker.chains
 
+
+
+
+#' @rdname outbreaker.chains
+#' @param object an \code{outbreaker.chains} object as returned by \code{outbreaker}.
+#'
+summary.outbreaker.chains <- function(object, burnin=0, ...){
+    ## check burnin ##
+    x <- object
+    if(burnin > max(x$step)) stop("burnin exceeds the number of steps in object")
+    x <- x[x$step>burnin,,drop=FALSE]
+
+
+    ## make output ##
+    out <- list()
+
+
+    ## summary for $step ##
+    interv <- ifelse(nrow(x)>2, diff(tail(x$step, 2)), NA)
+    out$step <- c(first = min(x$step),
+                  last = max(x$step),
+                  interval = interv,
+                  n.steps = length(x$step)
+                  )
+
+
+    ## summary of post, like, prior ##
+    out$post <- summary(x$post)
+    out$like <- summary(x$like)
+    out$prior <- summary(x$prior)
+
+
+    ## summary of alpha ##
+    alpha <- as.matrix(x[,grep("alpha", names(x))])
+
+
+    ## function to get most frequent item
+    f1 <- function(x) {
+        as.integer(names(sort(table(x, exclude=NULL), decreasing=TRUE)[1]))
+    }
+    out$ances <- apply(alpha, 2, f1)
+    names(out$ances) <- 1:length(out$ances)
+
+    ## function to get most frequent item
+    f2 <- function(x) {
+        (sort(table(x), decreasing=TRUE)/length(x))[1]
+    }
+    out$ances.support <- apply(alpha, 2, f2)
+    names(out$ances.support) <- 1:length(out$ances.support)
+
+
+    ## summary of t.inf ##
+    t.inf <- as.matrix(x[,grep("t.inf", names(x))])
+    out$t.inf <- apply(alpha, 2, mean)
+    names(out$t.inf) <- 1:length(out$t.inf)
+
+    ## RETURN ##
+    return(out)
+} # end summary.outbreaker.chains

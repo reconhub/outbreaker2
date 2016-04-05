@@ -11,6 +11,7 @@
 #' @param x an \code{outbreaker.chains} object as returned by \code{outbreaker}.
 #' @param n.row the number of rows to display in head and tail; defaults to 3.
 #' @param n.col the number of columns to display; defaults to 8.
+#' @param ... further arguments to be passed to other methods
 #'
 #' @export
 #' @importFrom utils head tail
@@ -47,7 +48,7 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 
 
 #' @rdname outbreaker.chains
-#' @param what a character string indicating which result to plot
+#' @param y a character string indicating which result to plot
 #' @param type a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
 #' @param burnin the number of iterations to be discarded as burnin
 ## #' @param dens.all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
@@ -57,11 +58,11 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density aes_string labs
 #'
-plot.outbreaker.chains <- function(x, what="post", type=c("trace", "hist", "density"), burnin=0){
+plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density"), burnin=0, ...){
 
     ## CHECKS ##
     type <- match.arg(type)
-    if(!what %in% names(x)) stop(paste(what,"is not a column of x"))
+    if(!y %in% names(x)) stop(paste(y,"is not a column of x"))
 
 
     ## GET DATA TO PLOT ##
@@ -70,20 +71,20 @@ plot.outbreaker.chains <- function(x, what="post", type=c("trace", "hist", "dens
 
     ## MAKE PLOT ##
     if(type=="trace"){
-        out <- ggplot(x) + geom_line(aes_string(x="step", y=what)) +
-            labs(x="Iteration", y=what, title=paste("trace:",what))
+        out <- ggplot(x) + geom_line(aes_string(x="step", y=y)) +
+            labs(x="Iteration", y=y, title=paste("trace:",y))
     }
 
     if(type=="hist"){
-        out <- ggplot(x) + geom_histogram(aes_string(x=what)) +
-            geom_point(aes_string(x=what, y=0), shape="|", alpha=0.5, size=3) +
-        labs(x=what, title=paste("histogram:",what))
+        out <- ggplot(x) + geom_histogram(aes_string(x=y)) +
+            geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
+        labs(x=y, title=paste("histogram:",y))
     }
 
     if(type=="density"){
-        out <- ggplot(x) + geom_density(aes_string(x=what)) +
-            geom_point(aes_string(x=what, y=0), shape="|", alpha=0.5, size=3) +
-            labs(x=what, title=paste("density:",what))
+        out <- ggplot(x) + geom_density(aes_string(x=y)) +
+            geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
+            labs(x=y, title=paste("density:",y))
     }
 
 

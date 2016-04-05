@@ -1,8 +1,8 @@
 #' Shape MCMC samples into outputs for outbreaker
 #'
-#' This function shapes MCMC samples for outbreaker into a mcmc object from the package \code{coda}.
+#' This function shapes MCMC samples for outbreaker into a data.frame with the class \code{outbreaker.chains}.
 #'
-#' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @param param a list of output items as returned by \code{outbreaker.mcmc.init}
 #' @param data a list of data items as returned by \code{outbreaker.data}

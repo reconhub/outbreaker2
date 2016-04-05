@@ -12,9 +12,9 @@ outbreaker.mcmc.shape(param, data)
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
 }
 \description{
-This function shapes MCMC samples for outbreaker into a mcmc object from the package \code{coda}.
+This function shapes MCMC samples for outbreaker into a data.frame with the class \code{outbreaker.chains}.
 }
 \author{
-Thibaut Jombart (\email{t.jombart@imperial.ac.uk})
+Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
 

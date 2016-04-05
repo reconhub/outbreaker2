@@ -25,7 +25,6 @@
 #' @seealso \code{\link{outbreaker.config}} to see default parameters / set parameters and \code{\link{outbreaker.data}} to process input data
 #'
 #' @importFrom stats dexp rnorm runif
-#' @importFrom coda mcmc
 #'
 #' @examples
 #'

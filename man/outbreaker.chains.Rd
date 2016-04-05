@@ -8,8 +8,8 @@
 \usage{
 \method{print}{outbreaker.chains}(x, n.row = 3, n.col = 8, ...)
 
-\method{plot}{outbreaker.chains}(x, what = "post", type = c("trace", "hist",
-  "density"), burnin = 0)
+\method{plot}{outbreaker.chains}(x, y = "post", type = c("trace", "hist",
+  "density"), burnin = 0, ...)
 }
 \arguments{
 \item{x}{an \code{outbreaker.chains} object as returned by \code{outbreaker}.}
@@ -18,7 +18,9 @@
 
 \item{n.col}{the number of columns to display; defaults to 8.}
 
-\item{what}{a character string indicating which result to plot}
+\item{...}{further arguments to be passed to other methods}
+
+\item{y}{a character string indicating which result to plot}
 
 \item{type}{a character string indicating the kind of plot to be used: 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation}
 

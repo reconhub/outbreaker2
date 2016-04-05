@@ -20,7 +20,7 @@ test_that("test: outbreaker's output have expected format", {
                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
 
     ## check output
-    expect_is(out, "mcmc")
+    expect_is(out, "outbreaker.chains")
     expect_is(out.df, "data.frame")
     expect_equal(nrow(out), 11)
     expect_true(!any(is.na(out.df$post)))

@@ -25,9 +25,8 @@ outbreaker.mcmc.shape <- function(param, data)
     param <- data.frame(step=param$step,
                         post=param$post, like=param$like, prior=param$prior,
                         mu=param$mu, param$ances, param$t.inf)
-    param <- coda::mcmc(param)
 
     ## RETURN ##
+    class(param) <- c("outbreaker.chains","data.frame")
     return(param)
 } # end store.mcmc
-

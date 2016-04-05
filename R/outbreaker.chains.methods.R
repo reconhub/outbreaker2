@@ -149,6 +149,10 @@ summary.outbreaker.chains <- function(object, burnin=0, ...){
     out$prior <- summary(x$prior)
 
 
+    ## summary for mu ##
+    out$mu <- summary(x$mu)
+
+
     ## summary of alpha ##
     alpha <- as.matrix(x[,grep("alpha", names(x))])
 

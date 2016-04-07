@@ -40,7 +40,9 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
     defaults <- list(move.mu = move.mu,
                      move.t.inf = move.t.inf,
                      move.alpha = move.alpha,
-                     move.swap.cases = move.swap.cases
+                     move.swap.cases = move.swap.cases,
+                     move.pi = move.pi,
+                     move.kappa = move.kappa
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
@@ -61,6 +63,13 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
     if(!any(config$move.swap.cases) ||
        !any(config$move.alpha) ||
        !any(config$move.t.inf)) moves$move.swap.cases <- NULL
+
+    ## remove move.pi if disabled
+    if(!any(config$move.pi)) moves$move.pi <- NULL
+
+    ## remove move.kappa if disabled
+    if(!any(config$move.kappa)) moves$move.kappa <- NULL
+
 
     ## CHECK FUNCTIONS ##
     check.function.args <- function(f){

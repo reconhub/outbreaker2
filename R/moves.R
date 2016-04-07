@@ -210,7 +210,6 @@ move.kappa <- function(data, param, config, rand){
     } # end for loop
 
 
-    ## accept/reject
-    if(logratio >= rand$log.runif1()) return(new.param)
+    ## return potentially modified parameters
     return(param)
 } # end move.kappa

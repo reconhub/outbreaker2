@@ -2,9 +2,12 @@
 % Please edit documentation in R/internals.R
 \name{modify.defaults}
 \alias{modify.defaults}
+\alias{ralpha}
 \title{Internal functions for outbreaker2}
 \usage{
 modify.defaults(defaults, x, strict = TRUE)
+
+ralpha(t.inf)
 }
 \arguments{
 \item{defaults}{a list containing default arguments}
@@ -12,6 +15,8 @@ modify.defaults(defaults, x, strict = TRUE)
 \item{x}{in \code{modify.defaults}, a list with user-provided arguments; in \code{add.to.context}, a function or an environment.}
 
 \item{strict}{a logical indicating if errors shoul be returned when 'x' contains items not in 'defaults'}
+
+\item{t.inf}{a vector of infection dates}
 }
 \description{
 These functions are meant for internal use in outbreaker2. They are not exported, and their API might change in the future.

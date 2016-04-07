@@ -2,11 +2,11 @@
 % Please edit documentation in R/moves.R
 \name{move.mu}
 \alias{move.alpha}
+\alias{move.kappa}
 \alias{move.mu}
 \alias{move.pi}
 \alias{move.swap.cases}
 \alias{move.t.inf}
-\alias{ralpha}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
 move.mu(data, param, config, rand)
@@ -17,9 +17,9 @@ move.alpha(data, param, config, rand)
 
 move.swap.cases(data, param, config, rand)
 
-ralpha(t.inf)
-
 move.pi(data, param, config, rand)
+
+move.kappa(data, param, config, rand)
 }
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
@@ -29,8 +29,6 @@ move.pi(data, param, config, rand)
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
 
 \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
-
-\item{t.inf}{a vector of infection dates}
 }
 \value{
 a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}

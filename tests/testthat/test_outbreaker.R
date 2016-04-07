@@ -42,27 +42,44 @@ test_that("test: convergence to decent results for toy example", {
     dat <- fakeOutbreak$dat
     w <- fakeOutbreak$w
 
-    ## outbreaker DNA + time
+    ## outbreaker DNA + time ##
+    ## analysis
     set.seed(1)
     out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
                       config=list(n.iter=5000, sample.every=100, init.tree="star"))
 
-    ## check that tree is OK
+    ## checks
     out.smry <- summary(out, burn=1000)
-    expect_true(min(out.smry$post) > -920) # approx log post values
-    expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .85) # at least 85% ancestries correct
+    expect_true(min(out.smry$post) > -940) # approx log post values
+    expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .8) # at least 80% ancestries correct
     expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
     expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.0004) # mu between 2e-4 and 4 e-4
 
-    ## outbreaker time, no DNA
+    ## outbreaker time, no DNA ##
+    ## analysis
     set.seed(1)
     out.no.dna <- outbreaker(data=list(dates=dat$onset, w.dens=w),
                       config=list(n.iter=5000, sample.every=100, init.tree="star"))
 
-    ## check that tree is OK
+    ## checks
     out.no.dna.smry <- summary(out.no.dna, burn=1000)
     expect_true(min(out.no.dna.smry$post) > -100) # approx log post values
-    expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .05) # at least 5% ancestries correct
+    expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .1) # at least 5% ancestries correct
     expect_true(mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
+
+
+    ## outbreaker, no missing cases
+    ## analysis
+    set.seed(1)
+    out.no.missing <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
+                      config=list(n.iter=5000, sample.every=100, init.tree="star",
+                                 move.kappa=FALSE, move.pi=FALSE, init.pi=1)
+                                 )
+
+    ## checks
+    out.no.missing.smry <- summary(out.no.missing, burn=1000)
+    expect_true(min(out.no.missing.smry$post) > -900) # approx log post values
+    expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .90) # at least 90% ancestries correct
+    expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
 
 })

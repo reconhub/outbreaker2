@@ -4,6 +4,7 @@
 \alias{likelihoods}
 \alias{ll.all}
 \alias{ll.genetic}
+\alias{ll.reporting}
 \alias{ll.timing}
 \alias{ll.timing.infections}
 \alias{ll.timing.sampling}
@@ -16,6 +17,8 @@ ll.timing.sampling(data, param, i = NULL)
 ll.timing(data, param, i = NULL)
 
 ll.genetic(data, param, i = NULL)
+
+ll.reporting(data, param, i = NULL)
 
 ll.all(data, param, i = NULL)
 }

@@ -3,9 +3,12 @@
 \name{post.genetic}
 \alias{post.all}
 \alias{post.genetic}
+\alias{post.reporting}
 \title{Posteriors of outbreaker2}
 \usage{
 post.genetic(data, param)
+
+post.reporting(data, param)
 
 post.all(data, param)
 }

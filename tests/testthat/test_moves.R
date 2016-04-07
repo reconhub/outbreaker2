@@ -10,14 +10,14 @@ test_that("parameters and augmented data move", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    config.no.move <- outbreaker.config(data=data, move.ances=FALSE, move.t.inf=FALSE, move.mu=FALSE)
+    config.no.move <- outbreaker.config(data=data, move.alpha=FALSE, move.t.inf=FALSE, move.mu=FALSE)
     param <- outbreaker.mcmc.init(data=data, config=config)
     rand <- outbreaker.rand.vec(config=config)
     moves <- outbreaker.create.moves(config=config)
     moves.no.move <- outbreaker.create.moves(config=config.no.move)
 
-    ## test move.swap.ances ##
-    res <- moves$move.swap.ances(data=data, param=param, config=config, rand=rand)
+    ## test move.swap.alpha ##
+    res <- moves$move.swap.alpha(data=data, param=param, config=config, rand=rand)
     expect_equal(length(param), length(res))
     expect_equal(length(unlist(param)), length(unlist(res)))
     expect_equal(names(param), names(res))

@@ -147,28 +147,6 @@ move.swap.cases <- function(data, param, config, rand){
 
 #' @rdname moves
 #' @export
-#' @param t.inf a vector of infection dates
-#'
-ralpha <- function(t.inf){
-    ## choose.possible.ancestors
-    canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
-    diag(canBeAnces) <- FALSE
-
-    ## pick possible ancestors at random
-    alpha <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
-
-    ## return
-    return(alpha)
-} # end ralpha
-
-
-
-
-
-
-
-#' @rdname moves
-#' @export
 #'
 move.pi <- function(data, param, config, rand){
     ## get new proposed values
@@ -191,46 +169,48 @@ move.pi <- function(data, param, config, rand){
 
 
 
+#' @rdname moves
+#' @export
+#'
+move.kappa <- function(data, param, config, rand){
+
+    ## determine which cases to move
+    kappa.can.move <- !is.na(param$current.alpha)
+    n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
+    to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
+
+    ## initialize new kappa
+    new.param <- param
+
+    ## move all ancestries that should be moved
+    for(i in to.move){
+        ## propose new kappa
+        new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
+
+        ## reject move automatically if new kappa < 1 or greater than allowed max
+        if(new.param$current.kappa[i] < 1 ||
+           new.param$current.kappa[i] > config$max.kappa){
+            new.param$current.kappa[i] <- param$current.kappa[i]
+        } else {
+            ## compute log ratio
+            logratio <- ll.timing.infections(data=data, param=new.param, i=i) +
+                ll.genetic(data=data, param=new.param, i=i) +
+                ll.reporting(data=data, param=new.param, i=i) -
+                ll.timing.infections(data=data, param=param, i=i) -
+                ll.genetic(data=data, param=param, i=i) -
+                ll.reporting(data=data, param=param, i=i)
+
+            ## accept/reject
+            if(logratio >= rand$log.runif1()){
+                param$current.kappa[i] <- new.param$current.kappa[i]
+            } else {
+                new.param$current.kappa[i] <- param$current.kappa[i]
+            }
+        }
+    } # end for loop
 
 
-## #' @rdname moves
-## #' @export
-## #'
-## move.kappa <- function(data, param, config, rand){
-##     ## initialise proposed values
-##     new.param <- param
-
-##     ## determine which cases to move
-##     kappa.can.move <- which(!is.na(param$current.alpha))
-##     to.move <- sample(kappa.can.move, n.to.move, replace=FALSE)
-
-
-
-##     ## initialize new alpha
-##     new.param$current.alpha <- param$current.alpha
-
-##     ## move all ancestries that should be moved
-##     for(i in to.move){
-##         ## propose new ancestor
-##         new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
-
-##         ## compute log ratio
-##         logratio <-  ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
-
-##         ## compute correction factor
-##         logratio <- logratio + log(sum(are.possible.alpha(new.param$current.t.inf, i))) -
-##             log(sum(are.possible.alpha(param$current.t.inf, i)))
-
-##         ## accept/reject
-##         if(logratio >= rand$log.runif1()){
-##             param$current.alpha[i] <- new.param$current.alpha[i]
-##         } else {
-##             new.param$current.alpha[i] <- param$current.alpha[i]
-##         }
-##     } # end for loop
-
-
-##     ## accept/reject
-##     if(logratio >= rand$log.runif1()) return(new.param)
-##     return(param)
-## } # end move.kappa
+    ## accept/reject
+    if(logratio >= rand$log.runif1()) return(new.param)
+    return(param)
+} # end move.kappa

@@ -29,6 +29,26 @@ modify.defaults <- function(defaults, x, strict=TRUE){
 
 
 
+#' @rdname internals
+#' @export
+#' @param t.inf a vector of infection dates
+#'
+ralpha <- function(t.inf){
+    ## choose.possible.ancestors
+    canBeAnces <- outer(t.inf,t.inf,FUN="<") # strict < is needed as we impose w(0)=0
+    diag(canBeAnces) <- FALSE
+
+    ## pick possible ancestors at random
+    alpha <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
+
+    ## return
+    return(alpha)
+} # end ralpha
+
+
+
+
+
 
 
 ##############################

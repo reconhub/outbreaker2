@@ -4,7 +4,7 @@
 \alias{move.alpha}
 \alias{move.mu}
 \alias{move.pi}
-\alias{move.swap.alpha}
+\alias{move.swap.cases}
 \alias{move.t.inf}
 \alias{ralpha}
 \title{Movements of augmented data and parameters for outbreaker2}
@@ -15,7 +15,7 @@ move.t.inf(data, param, config, rand)
 
 move.alpha(data, param, config, rand)
 
-move.swap.alpha(data, param, config, rand)
+move.swap.cases(data, param, config, rand)
 
 ralpha(t.inf)
 

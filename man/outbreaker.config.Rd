@@ -38,7 +38,7 @@ including the burnin period}
 
 \item{init.pi}{initial value for the reporting probability}
 
-\item{move.ances}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
+\item{move.alpha}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 
 \item{move.t.inf}{a vector of logicals indicating, for each case, if the dates of infection should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 
@@ -62,7 +62,7 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
 
-\item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
+\item{prop.alpha.move}{the proportion of ancestries to move at each iteration of the MCMC}
 
 \item{batch.size}{the size of the batch of random number pre-generated}
 
@@ -78,7 +78,7 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 outbreaker.config()
 
 ## change defaults
-outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
+outbreaker.config(move.alpha=FALSE, n.iter=2e5, sample.every=1000)
 
 
 }

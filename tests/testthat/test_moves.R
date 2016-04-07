@@ -10,7 +10,8 @@ test_that("parameters and augmented data move", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    config.no.move <- outbreaker.config(data=data, move.alpha=FALSE, move.t.inf=FALSE, move.mu=FALSE)
+    config.no.move <- outbreaker.config(data=data, move.alpha=FALSE, move.t.inf=FALSE,
+                                        move.mu=FALSE, move.pi=FALSE, move.kappa=FALSE)
     param <- outbreaker.mcmc.init(data=data, config=config)
     rand <- outbreaker.rand.vec(config=config)
     moves <- outbreaker.create.moves(config=config)

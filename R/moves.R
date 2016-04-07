@@ -12,12 +12,10 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
 #'
-#' @importFrom stats rnorm
-#'
 move.mu <- function(data, param, config, rand){
     ## get new proposed values
     new.param <- param
-    new.param$current.mu <- new.param$current.mu + rand$rnorm1()
+    new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
 
     ## escape if new.mu<0 or >1
     if(new.param$current.mu<0 || new.param$current.mu>1) return(param)
@@ -151,7 +149,7 @@ move.swap.cases <- function(data, param, config, rand){
 move.pi <- function(data, param, config, rand){
     ## get new proposed values
     new.param <- param
-    new.param$current.pi <- new.param$current.pi + rand$rnorm1()
+    new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
 
     ## escape if new.pi<0 or >1
     if(new.param$current.pi<0 || new.param$current.pi>1) return(param)

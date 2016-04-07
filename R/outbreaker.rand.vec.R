@@ -17,7 +17,8 @@ outbreaker.rand.vec <- function(config)
 
     ## CREATE FAST RANDOM NUMBER GENERATORS ##
     out$log.runif1 <- make.fast.rand1(f=runif, batch.size=config$batch.size, log=TRUE)
-    out$rnorm1 <- make.fast.rand1(mean=0, sd=config$sd.mu, f=rnorm, batch.size=config$batch.size, log=FALSE)
+    out$mu.rnorm1 <- make.fast.rand1(mean=0, sd=config$sd.mu, f=rnorm, batch.size=config$batch.size, log=FALSE)
+    out$pi.rnorm1 <- make.fast.rand1(mean=0, sd=config$sd.pi, f=rnorm, batch.size=config$batch.size, log=FALSE)
 
     ## RETURN ##
     return(out)

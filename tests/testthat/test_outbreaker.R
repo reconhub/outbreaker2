@@ -25,6 +25,7 @@ test_that("test: outbreaker's output have expected format", {
     expect_equal(nrow(out), 11)
     expect_true(!any(is.na(out.df$post)))
     expect_true(all(out.df$post> -1e30))
+
 })
 
 
@@ -61,7 +62,7 @@ test_that("test: convergence to decent results for toy example", {
     ## check that tree is OK
     out.no.dna.smry <- summary(out.no.dna, burn=1000)
     expect_true(min(out.no.dna.smry$post) > -100) # approx log post values
-    expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .10) # at least 10% ancestries correct
+    expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .05) # at least 5% ancestries correct
     expect_true(mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
 
 })

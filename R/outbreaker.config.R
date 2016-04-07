@@ -95,7 +95,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.pi=0.9,
                      move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      move.kappa=TRUE, move.pi=TRUE,
-                     n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.0001,
+                     n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.01,
                      prop.alpha.move=1/4,
                      batch.size=1e6,
                      paranoid=FALSE,

@@ -18,7 +18,7 @@ ll.timing.infections <- function(data, param, i=NULL){
     i <- check.i(data=data, i=i)
 
     ## compute delays
-    T <- param$current.t.inf[i] - param$current.t.inf[param$current.ances[i]]
+    T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
 
     ## avoid over-shooting
     if(any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
@@ -86,10 +86,10 @@ ll.genetic <- function(data, param, i=NULL){
     i <- check.i(data=data, i=i)
 
     ## discard cases with no ancestors
-    i <- i[!is.na(param$current.ances[i])]
+    i <- i[!is.na(param$current.alpha[i])]
 
     ## compute likelihood
-    nmut <- diag(data$D[i, param$current.ances[i], drop=FALSE])
+    nmut <- diag(data$D[i, param$current.alpha[i], drop=FALSE])
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
 } # end ll.genetic
 

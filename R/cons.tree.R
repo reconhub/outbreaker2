@@ -88,7 +88,7 @@
 ## #'
 ## #' ## show match data/consensus ancestries
 ## #' col <- rep("lightgrey", 30)
-## #' col[which(dat$ances != tre$ances)] <- "pink"
+## #' col[which(dat$ances != tre$alpha)] <- "pink"
 ## #' plot(tre, annot="", vertex.color=col, main="Consensus ancestries")
 ## #' mtext(side=3, text="cases with erroneous ancestries in pink")
 ## #'

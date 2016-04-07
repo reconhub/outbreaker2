@@ -23,7 +23,7 @@
 #'
 #' \item{init.pi}{initial value for the reporting probability}
 #'
-#' \item{move.ances}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
+#' \item{move.alpha}{a vector of logicals indicating, for each case, if the ancestry should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 #'
 #' \item{move.t.inf}{a vector of logicals indicating, for each case, if the dates of infection should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 #'
@@ -47,7 +47,7 @@
 #'
 #' \item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
 #'
-#' \item{prop.ances.move}{the proportion of ancestries to move at each iteration of the MCMC}
+#' \item{prop.alpha.move}{the proportion of ancestries to move at each iteration of the MCMC}
 #'
 #' \item{batch.size}{the size of the batch of random number pre-generated}
 #'
@@ -75,7 +75,7 @@
 #' outbreaker.config()
 #'
 #' ## change defaults
-#' outbreaker.config(move.ances=FALSE, n.iter=2e5, sample.every=1000)
+#' outbreaker.config(move.alpha=FALSE, n.iter=2e5, sample.every=1000)
 #'
 #'
 #' @importFrom utils modifyList
@@ -90,13 +90,13 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     defaults <- list(init.tree=c("seqTrack","star","random"),
                      init.mu=1e-4,
                      init.t.inf=NULL,
-                     init.ances=NULL,
+                     init.alpha=NULL,
                      init.kappa=1,
                      init.pi=0.9,
-                     move.ances=TRUE, move.swap.ances=TRUE, move.t.inf=TRUE, move.mu=TRUE,
+                     move.alpha=TRUE, move.swap.alpha=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      move.kappa=TRUE, move.pi=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.0001,
-                     prop.ances.move=1/4,
+                     prop.alpha.move=1/4,
                      batch.size=1e6,
                      paranoid=FALSE,
                      min.date=-10,
@@ -111,7 +111,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
         config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
     }
     if(is.numeric(config$init.tree)){
-        config$init.ances <- config$init.tree
+        config$init.alpha <- config$init.tree
     }
 
     ## check / process init.t.inf
@@ -140,11 +140,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(config$init.pi < 0) stop("init.pi is negative")
     if(config$init.pi > 1) stop("init.pi is greater than 1")
 
-    ## check move.ances
-    if(!is.logical(config$move.ances)) stop("move.ances is not a logical")
+    ## check move.alpha
+    if(!is.logical(config$move.alpha)) stop("move.alpha is not a logical")
 
-    ## check move.swap.ances
-    if(!is.logical(config$move.swap.ances)) stop("move.swap.ances is not a logical")
+    ## check move.swap.alpha
+    if(!is.logical(config$move.swap.alpha)) stop("move.swap.alpha is not a logical")
 
     ## check move.t.inf
     if(!is.logical(config$move.t.inf)) stop("move.t.inf is not a logical")
@@ -174,10 +174,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(!is.numeric(config$sd.pi)) stop("sd.pi is not a numeric value")
     if(config$sd.pi < 0) stop("sd.pi is negative")
 
-    ## check prop.ances.move
-    if(!is.numeric(config$prop.ances.move)) stop("prop.ances.move is not a numeric value")
-    if(config$prop.ances.move < 0 ) stop("prop.ances.move is negative")
-    if(config$prop.ances.move > 1 ) stop("prop.ances.move is greater than one")
+    ## check prop.alpha.move
+    if(!is.numeric(config$prop.alpha.move)) stop("prop.alpha.move is not a numeric value")
+    if(config$prop.alpha.move < 0 ) stop("prop.alpha.move is negative")
+    if(config$prop.alpha.move > 1 ) stop("prop.alpha.move is greater than one")
 
     ## check batch.size
     if(!is.numeric(config$batch.size)) stop("batch.size is not numeric")
@@ -205,21 +205,21 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
             if(config$init.tree=="seqTrack"){
                 D.temp <- data$D
                 D.temp[!data$CAN.BE.ANCES] <- 1e30
-                config$init.ances <- apply(D.temp,2,which.min)
-                config$init.ances[data$dates==min(data$dates)] <- NA
-                config$init.ances <- as.integer(config$init.ances)
+                config$init.alpha <- apply(D.temp,2,which.min)
+                config$init.alpha[data$dates==min(data$dates)] <- NA
+                config$init.alpha <- as.integer(config$init.alpha)
             } else if(config$init.tree=="star"){
-                config$init.ances <- rep(which.min(data$dates), length(data$dates))
-                config$init.ances[data$dates==min(data$dates)] <- NA
+                config$init.alpha <- rep(which.min(data$dates), length(data$dates))
+                config$init.alpha[data$dates==min(data$dates)] <- NA
             } else if(config$init.tree=="random"){
-                config$init.ances <- rances(data$dates)
+                config$init.alpha <- ralpha(data$dates)
             }
         } else { ## if ancestries are provided
-            if(length(config$init.ances) != data$N) stop("inconvenient length for init.ances")
-            unknownAnces <- config$init.ances<1 | config$init.ances>data$N
+            if(length(config$init.alpha) != data$N) stop("inconvenient length for init.alpha")
+            unknownAnces <- config$init.alpha<1 | config$init.alpha>data$N
             if(any(na.omit(unknownAnces))){
                 warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
-                config$init.ances[unknownAnces] <- NA
+                config$init.alpha[unknownAnces] <- NA
             }
         }
 
@@ -228,8 +228,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
             if(any(config$init.t.inf >= data$dates)) stop("Initial dates of infection come after sampling dates / dates of onset.")
         }
 
-        ## recycle move.ances
-        config$move.ances <- rep(config$move.ances, length=data$N)
+        ## recycle move.alpha
+        config$move.alpha <- rep(config$move.alpha, length=data$N)
 
         ## recycle move.t.inf
         config$move.t.inf <- rep(config$move.t.inf, length=data$N)

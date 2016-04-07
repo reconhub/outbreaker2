@@ -21,10 +21,16 @@ outbreaker.mcmc.shape <- function(param, data)
     param$t.inf <- matrix(unlist(param$t.inf), ncol=data$N, byrow=TRUE)
     colnames(param$t.inf) <- paste("t.inf",1:data$N, sep=".")
 
+    ## UNFOLD NUMBER OF GENERATIONS ##
+    if(!all(sapply(param$kappa, length)==data$N)) stop("some ancestries are missing in the param")
+    param$kappa <- matrix(unlist(param$kappa), ncol=data$N, byrow=TRUE)
+    colnames(param$kappa) <- paste("kappa",1:data$N, sep=".")
+
     ## SHAPE DATA.FRAME AND CONVERT ##
     param <- data.frame(step=param$step,
                         post=param$post, like=param$like, prior=param$prior,
-                        mu=param$mu, pi=param$pi, param$alpha, param$t.inf)
+                        mu=param$mu, pi=param$pi,
+                        param$alpha, param$t.inf, param$kappa)
 
     ## RETURN ##
     class(param) <- c("outbreaker.chains","data.frame")

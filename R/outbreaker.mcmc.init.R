@@ -15,14 +15,14 @@ outbreaker.mcmc.init <- function(data, config){
     size <- round(config$n.iter/config$sample.every)
     step <- integer(size)
     post <- prior <- like <- mu <- pi <- double(size)
-    ances <- as.list(integer(size))
+    alpha <- as.list(integer(size))
     t.inf <- as.list(integer(size))
     kappa <- as.list(integer(size))
 
     ## SET CURRENT VALUES AND COUNTER ##
     step[1] <- 1L
     current.mu <- mu[1] <- config$init.mu
-    current.ances <- ances[[1]] <- config$init.ances
+    current.alpha <- alpha[[1]] <- config$init.alpha
     current.kappa <- kappa[[1]] <- config$init.kappa
     current.pi <- pi[1] <- config$init.pi
     if(is.null(config$init.t.inf)){
@@ -36,8 +36,8 @@ outbreaker.mcmc.init <- function(data, config){
     ## SHAPE CHAIN ##
     out <- list(size=size, step=step,
                 post=post, like=like, prior=prior,
-                ances=ances, t.inf=t.inf, mu=mu, kappa=kappa, pi=pi,
-                current.ances=current.ances, current.t.inf=current.t.inf, current.mu=current.mu,
+                alpha=alpha, t.inf=t.inf, mu=mu, kappa=kappa, pi=pi,
+                current.alpha=current.alpha, current.t.inf=current.t.inf, current.mu=current.mu,
                 current.kappa=current.kappa, current.pi=current.pi,
                 counter=counter)
 

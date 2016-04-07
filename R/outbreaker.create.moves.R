@@ -22,8 +22,8 @@
 #' \describe{
 #' \item{move.mu}{a function to move mutation rates}
 #' \item{move.t.inf}{a function to move dates of infection}
-#' \item{move.ances}{a function to move ancestries, i.e. the transmission tree}
-#' \item{move.swap.ances}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
+#' \item{move.alpha}{a function to move ancestries, i.e. the transmission tree}
+#' \item{move.swap.alpha}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
 #' }
 #'
 #'
@@ -39,8 +39,8 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
     ## SET DEFAULTS ##
     defaults <- list(move.mu = move.mu,
                      move.t.inf = move.t.inf,
-                     move.ances = move.ances,
-                     move.swap.ances = move.swap.ances
+                     move.alpha = move.alpha,
+                     move.swap.alpha = move.swap.alpha
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
@@ -48,19 +48,19 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
 
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
-    ## remove move.ances if no ancestry can be moved
-    if(!any(config$move.ances)) moves$move.ances <-  moves$move.swap.ances <- NULL
+    ## remove move.alpha if no ancestry can be moved
+    if(!any(config$move.alpha)) moves$move.alpha <-  moves$move.swap.alpha <- NULL
 
     ## remove move.t.inf if disabled
-    if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.ances <- NULL
+    if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.alpha <- NULL
 
     ## remove move.mu if disabled
     if(!any(config$move.mu)) moves$move.mu <- NULL
 
-    ## remove swap if disabled, or if some ances/t.inf cannot be moved
-    if(!any(config$move.swap.ances) ||
-       !any(config$move.ances) ||
-       !any(config$move.t.inf)) moves$move.swap.ances <- NULL
+    ## remove swap if disabled, or if some alpha/t.inf cannot be moved
+    if(!any(config$move.swap.alpha) ||
+       !any(config$move.alpha) ||
+       !any(config$move.t.inf)) moves$move.swap.alpha <- NULL
 
     ## CHECK FUNCTIONS ##
     check.function.args <- function(f){

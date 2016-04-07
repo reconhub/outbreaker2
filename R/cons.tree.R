@@ -47,11 +47,11 @@
 ## #'
 ## #' \item idx.dna: the index of the cases to which each DNA sequence corresponds
 ## #'
-## #' \item ances: the index of the inferred ancestor, for each case
+## #' \item alpha: the index of the inferred ancestor, for each case
 ## #'
 ## #' \item inf.dates: the inferred infection date, for each case
 ## #'
-## #' \item p.ances: the posterior probability of the inferred ancestor (i.e.,
+## #' \item p.alpha: the posterior probability of the inferred ancestor (i.e.,
 ## #' proportion in the posterior distribution of ancestors)
 ## #'
 ## #' \item nb.mut: the number of mutations between isolates and their inferred
@@ -115,17 +115,17 @@
 ##     ## get ancestors ##
 ##     temp <- chains[,grep("alpha",names(chains))]
 ##     if(best=="ancestries"){
-##         res$ances <- apply(temp,2, function(e) names(table(e))[which.max(as.numeric(table(e)))])
+##         res$alpha <- apply(temp,2, function(e) names(table(e))[which.max(as.numeric(table(e)))])
 ##     }
 ##     if(best=="tree"){
 ##         ## be careful that trees order is not scrambled by table(...)
 ##         allTrees <- apply(temp,1,paste,collapse="-")
 ##         allTrees <- factor(allTrees, levels=unique(allTrees))
 ##         best.tree <- which.max(table(allTrees))
-##         res$ances <- temp[best.tree,,drop=TRUE]
+##         res$alpha <- temp[best.tree,,drop=TRUE]
 ##     }
-##     res$ances <- as.integer(res$ances)
-##     res$ances[res$ances<1] <- NA
+##     res$alpha <- as.integer(res$alpha)
+##     res$alpha[res$alpha<1] <- NA
 
 ##     ## get infection dates ##
 ##     temp <- chains[,grep("Tinf",names(chains))]
@@ -133,17 +133,17 @@
 
 ##     ## get probabilities of ancestries ##
 ##     temp <- chains[,grep("alpha",names(chains))]
-##     res$p.ances <- apply(temp,2, function(e) max(as.numeric(table(e)))/sum(table(e)))
+##     res$p.alpha <- apply(temp,2, function(e) max(as.numeric(table(e)))/sum(table(e)))
 
 ##     ## get ancestor->descendent mutations ##
 ##     D <- as.matrix(x$D)
 ##     findMut <- function(i){
-##         if(any(is.na(c(res$idx[i],res$ances[i])))) return(NA)
-##         if(!all(c(res$idx[i],res$ances[i]) %in% res$idx.dna)) return(NA)
-##         return(D[res$idx[i],res$ances[i]])
+##         if(any(is.na(c(res$idx[i],res$alpha[i])))) return(NA)
+##         if(!all(c(res$idx[i],res$alpha[i]) %in% res$idx.dna)) return(NA)
+##         return(D[res$idx[i],res$alpha[i]])
 ##     }
 ##     res$nb.mut <- sapply(1:length(res$idx), function(i) findMut(i))
-##     ##res$nb.mut <- sapply(1:length(res$idx), function(i) D[res$idx[i],res$ances[i]])
+##     ##res$nb.mut <- sapply(1:length(res$idx), function(i) D[res$idx[i],res$alpha[i]])
 
 ##     ## get kappa ##
 ##     temp <- chains[,grep("kappa",names(chains))]
@@ -186,7 +186,7 @@
 ## ##     if(!col.edge.by %in% c("dist","n.gen","prob")) stop("unknown col.edge.by specified")
 
 ## ##     ## GET DAG ##
-## ##     from.old <- x$ances
+## ##     from.old <- x$alpha
 ## ##     to.old <- x$idx
 ## ##     isNotNA <- !is.na(from.old) & !is.na(to.old)
 ## ##     vnames <- sort(unique(c(from.old,to.old)))
@@ -197,7 +197,7 @@
 
 ## ##     ## SET VARIOUS INFO ##
 ## ##     E(out)$dist <- x$nb.mut[isNotNA]
-## ##     E(out)$prob <- x$p.ances[isNotNA]
+## ##     E(out)$prob <- x$p.alpha[isNotNA]
 ## ##     E(out)$n.gen <- x$n.gen[isNotNA]
 ## ##     E(out)$p.kappa <- x$p.gen[isNotNA]
 
@@ -262,12 +262,12 @@
 ## ##     ## }
 
 ## ##     ## ## get mutations for each ancestry
-## ##     ## isNotNA <- which(!(is.na(x$ances) | is.na(x$idx)))
-## ##     ## out <- lapply(isNotNA, function(i) f1(x$ances[i], x$idx[i]))
+## ##     ## isNotNA <- which(!(is.na(x$alpha) | is.na(x$idx)))
+## ##     ## out <- lapply(isNotNA, function(i) f1(x$alpha[i], x$idx[i]))
 
 ## ##     ## GET PAIRS TO COMPARE ##
-## ##     pairs <- cbind(x$ances,x$idx)
-## ##     isNotNA <- which(!(is.na(x$ances) | is.na(x$idx)))
+## ##     pairs <- cbind(x$alpha,x$idx)
+## ##     isNotNA <- which(!(is.na(x$alpha) | is.na(x$idx)))
 ## ##     if(length(isNotNA)==0) return()
 ## ##     pairs <- pairs[isNotNA,,drop=FALSE]
 

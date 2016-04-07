@@ -138,27 +138,27 @@ look.for.trouble <- function(param, data){
 
     ## ANCESTRIES ##
     ## look for new imported cases (should not happen)
-    if(!identical(is.na(param$ances[[1]]), is.na(param$current.ances))){
+    if(!identical(is.na(param$alpha[[1]]), is.na(param$current.alpha))){
         out$pass <- FALSE
         out$msg <- c(out$msg, "imported cases have changed")
     }
 
     ## look for negative ancestries
-    if(any(param$current.ances<1,na.rm=TRUE)){
+    if(any(param$current.alpha<1,na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.ances<1)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.alpha<1)")
     }
 
     ## look for ancestries greater than 'N'
-    if(any(param$current.ances>length(param$ances[[1]]),na.rm=TRUE)){
+    if(any(param$current.alpha>length(param$alpha[[1]]),na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.ances>N)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.alpha>N)")
     }
 
     ## case infecting itself
-    if(any(param$current.ances==1:length(param$current.ances),na.rm=TRUE)){
+    if(any(param$current.alpha==1:length(param$current.alpha),na.rm=TRUE)){
        out$pass <- FALSE
-       out$msg <- c(out$msg, "auto-infections detected (param$current.ances[i]==i)")
+       out$msg <- c(out$msg, "auto-infections detected (param$current.alpha[i]==i)")
     }
 
 
@@ -182,7 +182,7 @@ look.for.trouble <- function(param, data){
     }
 
     ## check that delays between infections are > 0
-    if(any((param$current.t.inf - param$current.t.inf[param$current.ances]) < 1, na.rm=TRUE)){
+    if(any((param$current.t.inf - param$current.t.inf[param$current.alpha]) < 1, na.rm=TRUE)){
         out$pass <- FALSE
         out$msg <- c(out$msg, "some delays between succesive infections are less than 1 (param$current.t.inf)")
     }
@@ -203,59 +203,59 @@ look.for.trouble <- function(param, data){
 
 
 ## check which ancestries can move (returns a TRUE/FALSE vector)
-can.move.ances <- function(param, config){
-    out <- !is.na(param$current.ances) & # non-imported case
+can.move.alpha <- function(param, config){
+    out <- !is.na(param$current.alpha) & # non-imported case
         (param$current.t.inf > min(param$current.t.inf)) & # not the first date
-            config$move.ances # add user-specification through move.ances
+            config$move.alpha # add user-specification through move.alpha
     return(out)
 }
 
 
 ## check which ancestries can move (returns a TRUE/FALSE vector)
 can.be.swapped <- function(param, config){
-    out <- !is.na(param$current.ances) & # non-imported case
-            config$move.ances # add user-specification through move.ances
+    out <- !is.na(param$current.alpha) & # non-imported case
+            config$move.alpha # add user-specification through move.alpha
     return(out)
 }
 
 
 ## random selection of cases for which ancestries is moved
-select.ances.to.move <- function(param, config){
-    choices <- which(can.move.ances(param, config))
-    n.to.move <- max(round(config$prop.ances.move * length(choices)),0)
+select.alpha.to.move <- function(param, config){
+    choices <- which(can.move.alpha(param, config))
+    n.to.move <- max(round(config$prop.alpha.move * length(choices)),0)
     out <- sample(choices, n.to.move, replace=FALSE)
     return(out)
 }
 
 
 ## which cases are possible ancestors for a case 'i'
-are.possible.ances <- function(t.inf, i){
+are.possible.alpha <- function(t.inf, i){
     if(length(i)>1) stop("i has a length > 1")
     if(any(t.inf[i]==min(t.inf))) return(NA)
     return(which(t.inf < t.inf[i[1]]))
-} # end are.possible.ances
+} # end are.possible.alpha
 
 
 ## choose one possible ancestor for a case 'i'
-choose.possible.ances <- function(t.inf, i){
-    return(sample(are.possible.ances(t.inf=t.inf, i=i), 1))
-} # end choose.possible.ances
+choose.possible.alpha <- function(t.inf, i){
+    return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
+} # end choose.possible.alpha
 
 
 
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes
-swap.ances <- function(param, config, i){
+swap.alpha <- function(param, config, i){
     ## stop if 'i' out of range
-    if(i>length(param$current.ances)) stop("trying to swap ancestry of case ",
+    if(i>length(param$current.alpha)) stop("trying to swap ancestry of case ",
                                            i, " while there are only ",
-                                           length(param$current.ances), " cases")
+                                           length(param$current.alpha), " cases")
     ## find cases for which ancestries can move
     id.ok.to.swap <- which(can.be.swapped(param, config))
 
     ## find ancestor of 'i'
-    x <- param$current.ances[i]
+    x <- param$current.alpha[i]
 
     ## stop if case 'i' is imported - this should not happen
     if(is.na(x)){
@@ -269,18 +269,18 @@ swap.ances <- function(param, config, i){
     }
 
     ## find indices to swap
-    to.be.x <- intersect(which(param$current.ances==i), id.ok.to.swap)
-    to.be.i <- intersect(which(param$current.ances==x), id.ok.to.swap)
+    to.be.x <- intersect(which(param$current.alpha==i), id.ok.to.swap)
+    to.be.i <- intersect(which(param$current.alpha==x), id.ok.to.swap)
 
     ## swap 'i' and 'x' in ancestries
-    param$current.ances[to.be.x] <- x
-    param$current.ances[to.be.i] <- i
+    param$current.alpha[to.be.x] <- x
+    param$current.alpha[to.be.i] <- i
 
     ## the ancestor of 'i' is now has the ancestor of 'x'
-    param$current.ances[i] <- param$current.ances[x]
+    param$current.alpha[i] <- param$current.alpha[x]
 
     ## 'i' is now the ancestor of 'x'
-    param$current.ances[x] <- i
+    param$current.alpha[x] <- i
 
     ## swap t.inf
     param$current.t.inf[c(x,i)] <- param$current.t.inf[c(i,x)]
@@ -315,7 +315,7 @@ find.descendents <- function(data, param, i){
     check.i(data=data, i=i)
 
     ## find descendents
-    return(which(param$current.ances==i))
+    return(which(param$current.alpha==i))
 } # end find.descendents
 
 

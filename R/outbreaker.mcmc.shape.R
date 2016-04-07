@@ -12,9 +12,9 @@
 outbreaker.mcmc.shape <- function(param, data)
 {
     ## UNFOLD ANCESTRIES ##
-    if(!all(sapply(param$ances, length)==data$N)) stop("some ancestries are missing in the param")
-    param$ances <- matrix(unlist(param$ances), ncol=data$N, byrow=TRUE)
-    colnames(param$ances) <- paste("alpha",1:data$N, sep=".")
+    if(!all(sapply(param$alpha, length)==data$N)) stop("some ancestries are missing in the param")
+    param$alpha <- matrix(unlist(param$alpha), ncol=data$N, byrow=TRUE)
+    colnames(param$alpha) <- paste("alpha",1:data$N, sep=".")
 
     ## UNFOLD INFECTION DATES ##
     if(!all(sapply(param$t.inf, length)==data$N)) stop("some infection dates are missing in the param")
@@ -24,7 +24,7 @@ outbreaker.mcmc.shape <- function(param, data)
     ## SHAPE DATA.FRAME AND CONVERT ##
     param <- data.frame(step=param$step,
                         post=param$post, like=param$like, prior=param$prior,
-                        mu=param$mu, pi=param$pi, param$ances, param$t.inf)
+                        mu=param$mu, pi=param$pi, param$alpha, param$t.inf)
 
     ## RETURN ##
     class(param) <- c("outbreaker.chains","data.frame")

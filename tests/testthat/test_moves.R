@@ -16,8 +16,8 @@ test_that("parameters and augmented data move", {
     moves <- outbreaker.create.moves(config=config)
     moves.no.move <- outbreaker.create.moves(config=config.no.move)
 
-    ## test move.swap.alpha ##
-    res <- moves$move.swap.alpha(data=data, param=param, config=config, rand=rand)
+    ## test move.swap.cases ##
+    res <- moves$move.swap.cases(data=data, param=param, config=config, rand=rand)
     expect_equal(length(param), length(res))
     expect_equal(length(unlist(param)), length(unlist(res)))
     expect_equal(names(param), names(res))

@@ -110,7 +110,7 @@ move.alpha <- function(data, param, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.swap.alpha <- function(data, param, config, rand){
+move.swap.cases <- function(data, param, config, rand){
     ## find ancestries which can move
     to.move <- select.alpha.to.move(param, config)
 
@@ -120,7 +120,7 @@ move.swap.alpha <- function(data, param, config, rand){
     ## move all ancestries that should be moved
     for(i in to.move){
         ## swap ancestries
-        new.param <- swap.alpha(param, config, i)
+        new.param <- swap.cases(param, config, i)
 
         ## compute log ratio
         ## only use local changes:
@@ -139,7 +139,7 @@ move.swap.alpha <- function(data, param, config, rand){
     } # end for loop
 
     return(param)
-} # end move.swap.alpha
+} # end move.swap.cases
 
 
 

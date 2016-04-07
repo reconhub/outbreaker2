@@ -35,7 +35,7 @@ The movement functions which are used by default:
 \item{move.mu}{a function to move mutation rates}
 \item{move.t.inf}{a function to move dates of infection}
 \item{move.alpha}{a function to move ancestries, i.e. the transmission tree}
-\item{move.swap.alpha}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
+\item{move.swap.cases}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
 }
 }
 \author{

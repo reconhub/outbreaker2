@@ -27,7 +27,7 @@ test_that("test: choose.possible.alpha", {
 })
 
 
-## test swap.alpha ##
+## test swap.cases ##
 test_that("Auxiliary functions for ancestries are working", {
     ## skip on CRAN
     skip_on_cran()
@@ -54,15 +54,15 @@ test_that("Auxiliary functions for ancestries are working", {
     expect_equal(to.move2, c(1,1,4,3,6,3,4,6,3,6))
 
     ## tests non swapping (imported case)
-    expect_warning(res <- outbreaker2:::swap.alpha(param, config, 2))
+    expect_warning(res <- outbreaker2:::swap.cases(param, config, 2))
     expect_equal(param, res)
 
     ## trying swap x->i to i->x when x is imported (forbidden)
-    res <- outbreaker2:::swap.alpha(param, config, 1)
+    res <- outbreaker2:::swap.cases(param, config, 1)
     expect_equal(res$current.alpha, param$current.alpha)
 
     ## test full swapping
-    res <- outbreaker2:::swap.alpha(param, config, 3)
+    res <- outbreaker2:::swap.cases(param, config, 3)
     expect_equal(res$current.alpha, c(3,NA,2,1,1,3))
     expect_equal(res$current.t.inf, c(3,1,2,4,4,3))
 

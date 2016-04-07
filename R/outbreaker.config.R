@@ -93,7 +93,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.alpha=NULL,
                      init.kappa=1,
                      init.pi=0.9,
-                     move.alpha=TRUE, move.swap.alpha=TRUE, move.t.inf=TRUE, move.mu=TRUE,
+                     move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE, move.mu=TRUE,
                      move.kappa=TRUE, move.pi=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.0001,
                      prop.alpha.move=1/4,
@@ -143,8 +143,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## check move.alpha
     if(!is.logical(config$move.alpha)) stop("move.alpha is not a logical")
 
-    ## check move.swap.alpha
-    if(!is.logical(config$move.swap.alpha)) stop("move.swap.alpha is not a logical")
+    ## check move.swap.cases
+    if(!is.logical(config$move.swap.cases)) stop("move.swap.cases is not a logical")
 
     ## check move.t.inf
     if(!is.logical(config$move.t.inf)) stop("move.t.inf is not a logical")

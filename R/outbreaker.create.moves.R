@@ -23,7 +23,7 @@
 #' \item{move.mu}{a function to move mutation rates}
 #' \item{move.t.inf}{a function to move dates of infection}
 #' \item{move.alpha}{a function to move ancestries, i.e. the transmission tree}
-#' \item{move.swap.alpha}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
+#' \item{move.swap.cases}{another function to move ancestries, relying on swapping ancestries (a->b becomes b->a)}
 #' }
 #'
 #'
@@ -40,7 +40,7 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
     defaults <- list(move.mu = move.mu,
                      move.t.inf = move.t.inf,
                      move.alpha = move.alpha,
-                     move.swap.alpha = move.swap.alpha
+                     move.swap.cases = move.swap.cases
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##
@@ -49,18 +49,18 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
     ## remove move.alpha if no ancestry can be moved
-    if(!any(config$move.alpha)) moves$move.alpha <-  moves$move.swap.alpha <- NULL
+    if(!any(config$move.alpha)) moves$move.alpha <-  moves$move.swap.cases <- NULL
 
     ## remove move.t.inf if disabled
-    if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.alpha <- NULL
+    if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.cases <- NULL
 
     ## remove move.mu if disabled
     if(!any(config$move.mu)) moves$move.mu <- NULL
 
     ## remove swap if disabled, or if some alpha/t.inf cannot be moved
-    if(!any(config$move.swap.alpha) ||
+    if(!any(config$move.swap.cases) ||
        !any(config$move.alpha) ||
-       !any(config$move.t.inf)) moves$move.swap.alpha <- NULL
+       !any(config$move.t.inf)) moves$move.swap.cases <- NULL
 
     ## CHECK FUNCTIONS ##
     check.function.args <- function(f){

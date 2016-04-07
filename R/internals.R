@@ -246,7 +246,7 @@ choose.possible.alpha <- function(t.inf, i){
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
 ## plus all subsequent changes
-swap.alpha <- function(param, config, i){
+swap.cases <- function(param, config, i){
     ## stop if 'i' out of range
     if(i>length(param$current.alpha)) stop("trying to swap ancestry of case ",
                                            i, " while there are only ",

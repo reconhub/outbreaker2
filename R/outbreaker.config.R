@@ -100,7 +100,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      batch.size=1e6,
                      paranoid=FALSE,
                      min.date=-10,
-                     max.kappa=5)
+                     max.kappa=5,
+                     outlier.threshold=5)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -190,6 +191,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## check min.date
     if(!is.numeric(config$min.date)) stop("min.date is not numeric")
     if(config$min.date >= 0) stop("min.date is greater or equal to 0")
+
+    ## check outlier.threshold
+    if(!is.numeric(config$outlier.threshold)) stop("outlier.threshold is not a numeric value")
+    if(any(config$outlier.threshold < 1)) stop("outlier.threshold has values smaller than 1")
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

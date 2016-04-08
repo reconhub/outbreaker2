@@ -10,8 +10,8 @@
 \method{print}{outbreaker.chains}(x, n.row = 3, n.col = 8, ...)
 
 \method{plot}{outbreaker.chains}(x, y = "post", type = c("trace", "hist",
-  "density", "alpha", "t.inf", "network"), burnin = 0, min.support = 0.5,
-  ...)
+  "density", "alpha", "t.inf", "kappa", "network"), burnin = 0,
+  min.support = 0.5, ...)
 
 \method{summary}{outbreaker.chains}(object, burnin = 0, ...)
 }

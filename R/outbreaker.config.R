@@ -101,7 +101,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      paranoid=FALSE,
                      min.date=-10,
                      max.kappa=5,
-                     outlier.threshold=5)
+                     detect.import=TRUE,
+                     outlier.threshold=5,
+                     n.iter.import=5000,
+                     sample.every.import=100)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -192,9 +195,21 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(!is.numeric(config$min.date)) stop("min.date is not numeric")
     if(config$min.date >= 0) stop("min.date is greater or equal to 0")
 
+    ## check detect.import
+    if(!is.logical(config$detect.import)) stop("detect.import is not logical")
+    if(length(config$detect.import) != 1L) stop("detect.import should be a single logical value")
+
     ## check outlier.threshold
     if(!is.numeric(config$outlier.threshold)) stop("outlier.threshold is not a numeric value")
     if(any(config$outlier.threshold < 1)) stop("outlier.threshold has values smaller than 1")
+
+    ## check n.iter.import
+    if(!is.numeric(config$n.iter.import)) stop("n.iter.import is not a numeric value")
+    if(config$n.iter < 1000) stop("n.iter is smaller than 1000")
+
+    ## check sample.every.import
+    if(!is.numeric(config$sample.every.import)) stop("sample.every.import is not a numeric value")
+    if(config$sample.every.import < 1) stop("sample.every.import is smaller than 1")
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

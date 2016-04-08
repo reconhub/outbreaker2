@@ -20,7 +20,6 @@ Imports:
     igraph,
     adegenet,
     ggplot2,
-    dplyr,
     visNetwork,
     compiler
 Description: Bayesian reconstruction of disease outbreaks using epidemiological

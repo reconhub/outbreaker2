@@ -46,7 +46,7 @@ test_that("test: convergence to decent results for toy example", {
     ## analysis
     set.seed(1)
     out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=5000, sample.every=100, init.tree="star"))
+                      config=list(n.iter=5000, sample.every=100, init.tree="star", find.import=FALSE))
 
     ## checks
     out.smry <- summary(out, burn=1000)
@@ -59,7 +59,7 @@ test_that("test: convergence to decent results for toy example", {
     ## analysis
     set.seed(1)
     out.no.dna <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-                      config=list(n.iter=5000, sample.every=100, init.tree="star"))
+                      config=list(n.iter=5000, sample.every=100, init.tree="star", find.import=FALSE))
 
     ## checks
     out.no.dna.smry <- summary(out.no.dna, burn=1000)
@@ -73,7 +73,7 @@ test_that("test: convergence to decent results for toy example", {
     set.seed(1)
     out.no.missing <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
                       config=list(n.iter=5000, sample.every=100, init.tree="star",
-                                 move.kappa=FALSE, move.pi=FALSE, init.pi=1)
+                                 move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=FALSE)
                                  )
 
     ## checks

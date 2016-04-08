@@ -88,7 +88,7 @@ test_that("ll.reporting gives expected results", {
     ## tests
     out <- ll.reporting(data=data, param=param)
     expect_is(out, "numeric")
-    expect_equal(out, -3.16081546973)
+    expect_equal(out, -3.05545495408)
 
 })
 
@@ -116,7 +116,7 @@ test_that("ll.all gives expected results", {
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -1115.31974593)
+    expect_equal(out, -1115.21438541)
 
     ## test that likelihoods add up
     expect_equal(out.timing + out.genetic + out.reporting, out)

@@ -93,8 +93,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.alpha=NULL,
                      init.kappa=1,
                      init.pi=0.9,
-                     move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE, move.mu=TRUE,
-                     move.kappa=TRUE, move.pi=TRUE,
+                     move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE,
+                     move.mu=TRUE, move.kappa=TRUE, move.pi=TRUE,
                      n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.01,
                      prop.alpha.move=1/4,
                      batch.size=1e6,
@@ -239,12 +239,15 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
         ## recycle move.t.inf
         config$move.t.inf <- rep(config$move.t.inf, length=data$N)
 
-        ## recycle kappa
+        ## recycle move.kappa
+        config$move.kappa <- rep(config$move.kappa, length=data$N)
+
+        ## recycle init.kappa
         config$init.kappa <- rep(config$init.kappa, length=data$N)
 
         ## disable moves for imported cases
-        config$move.alpha[is.na(config$init.alpha)] <- NA
-        config$move.kappa[is.na(config$init.alpha)] <- NA
+        config$move.alpha[is.na(config$init.alpha)] <- FALSE
+        config$move.kappa[is.na(config$init.alpha)] <- FALSE
     }
 
     ## RETURN CONFIG ##

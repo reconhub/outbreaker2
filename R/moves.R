@@ -173,7 +173,7 @@ move.pi <- function(data, param, config, rand){
 move.kappa <- function(data, param, config, rand){
 
     ## determine which cases to move
-    kappa.can.move <- !is.na(param$current.alpha)
+    kappa.can.move <- !is.na(param$current.kappa)
     n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
     to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
 

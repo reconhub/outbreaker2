@@ -46,14 +46,15 @@ test_that("test: convergence to decent results for toy example", {
     ## analysis
     set.seed(1)
     out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=5000, sample.every=100, init.tree="star", find.import=FALSE))
+                      config=list(n.iter=5000, sample.every=100,
+                      init.tree="star", find.import=FALSE))
 
     ## checks
     out.smry <- summary(out, burn=1000)
-    expect_true(min(out.smry$post) > -940) # approx log post values
-    expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .8) # at least 80% ancestries correct
+    expect_true(min(out.smry$post) > -950) # approx log post values
+    expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .75) # at least 75% ancestries correct
     expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
-    expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.0004) # mu between 2e-4 and 4 e-4
+    expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.00041) # mu between 2e-4 and 4 e-4
 
     ## outbreaker time, no DNA ##
     ## analysis
@@ -64,11 +65,11 @@ test_that("test: convergence to decent results for toy example", {
     ## checks
     out.no.dna.smry <- summary(out.no.dna, burn=1000)
     expect_true(min(out.no.dna.smry$post) > -100) # approx log post values
-    expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .1) # at least 5% ancestries correct
+    expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .05) # at least 5% ancestries correct
     expect_true(mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 
-    ## outbreaker, no missing cases
+    ## outbreaker, no missing cases ##
     ## analysis
     set.seed(1)
     out.no.missing <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
@@ -81,5 +82,22 @@ test_that("test: convergence to decent results for toy example", {
     expect_true(min(out.no.missing.smry$post) > -910) # approx log post values
     expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .90) # at least 90% ancestries correct
     expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
+
+
+    ## outbreaker, no missing cases, detect imported cases ##
+    ## analysis
+    set.seed(1)
+    out.with.import <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
+                      config=list(n.iter=5000, sample.every=100, init.tree="star",
+                                 move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=TRUE)
+                                 )
+
+    ## checks
+    out.with.import.smry <- summary(out.with.import, burn=1000)
+    out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
+    dat$ances[is.na(dat$ances)] <- 0
+    expect_true(min(out.with.import.smry$post) > -440) # approx log post values
+    expect_true(mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE) > .90) # at least 90% ancestries correct
+    expect_true(mean(abs(out.with.import.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 })

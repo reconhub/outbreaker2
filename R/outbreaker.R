@@ -81,10 +81,14 @@ outbreaker <- function(data = outbreaker.data(),
     ## CREATE MOVEMENTS ##
     moves <- outbreaker.create.moves(config=config, moves=moves)
 
+    ## ADD LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS TO CURRENT CONTEXT
+    add.to.context(environment(), c(loglike=loglike, priors=priors, posteriors=posteriors))
 
     ## MCMC ##
-    ## add likelihood, prior and posterior functions to current context
-    add.to.context(environment(), c(loglike=loglike, priors=priors, posteriors=posteriors))
+    ## preliminary run to detect imported cases
+    temp <- outbreaker.find.imports(moves=moves, data=data, config=config, param=param, rand=rand)
+    param <- temp$param
+    config <- temp$config
 
     ## perform mcmc
     param <- outbreaker.move(moves=moves, data=data, config=config, param=param, rand=rand)

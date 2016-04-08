@@ -52,7 +52,7 @@ test_that("test: convergence to decent results for toy example", {
     out.smry <- summary(out, burn=1000)
     expect_true(min(out.smry$post) > -940) # approx log post values
     expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .8) # at least 80% ancestries correct
-    expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
+    expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
     expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.0004) # mu between 2e-4 and 4 e-4
 
     ## outbreaker time, no DNA ##
@@ -65,7 +65,7 @@ test_that("test: convergence to decent results for toy example", {
     out.no.dna.smry <- summary(out.no.dna, burn=1000)
     expect_true(min(out.no.dna.smry$post) > -100) # approx log post values
     expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .1) # at least 5% ancestries correct
-    expect_true(mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
+    expect_true(mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 
     ## outbreaker, no missing cases
@@ -80,6 +80,6 @@ test_that("test: convergence to decent results for toy example", {
     out.no.missing.smry <- summary(out.no.missing, burn=1000)
     expect_true(min(out.no.missing.smry$post) > -910) # approx log post values
     expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .90) # at least 90% ancestries correct
-    expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3) # infection datewithin 3 days on average
+    expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 })

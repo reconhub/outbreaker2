@@ -225,16 +225,19 @@ summary.outbreaker.chains <- function(object, burnin=0, ...){
     out$tree$from <- apply(alpha, 2, f1)
     out$tree$to <- 1:ncol(alpha)
 
-
     ## summary of t.inf ##
     t.inf <- as.matrix(x[,grep("t.inf", names(x))])
-    out$tree$time <- apply(alpha, 2, median)
+    out$tree$time <- apply(t.inf, 2, median)
 
     ## function to get frequency of most frequent item
     f2 <- function(x) {
         (sort(table(x), decreasing=TRUE)/length(x))[1]
     }
     out$tree$support <- apply(alpha, 2, f2)
+
+    ## summary of kappa ##
+    kappa <- as.matrix(x[,grep("kappa", names(x))])
+    out$tree$generations <- apply(kappa, 2, median)
 
     ## shape tree as a data.frame
     out$tree <- as.data.frame(out$tree)

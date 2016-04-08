@@ -14,7 +14,7 @@
 #'
 outbreaker.find.imports <- function(moves, data, config, param, rand){
     ## return if not import ##
-    if(!config$detect.import) return(list(config=config, param=param))
+    if(!config$find.import) return(list(config=config, param=param))
 
 
     ## store initial param values ##

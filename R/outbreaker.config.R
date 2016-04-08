@@ -101,7 +101,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      paranoid=FALSE,
                      min.date=-10,
                      max.kappa=5,
-                     detect.import=TRUE,
+                     find.import=TRUE,
                      outlier.threshold=5,
                      n.iter.import=5000,
                      sample.every.import=100)
@@ -195,9 +195,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if(!is.numeric(config$min.date)) stop("min.date is not numeric")
     if(config$min.date >= 0) stop("min.date is greater or equal to 0")
 
-    ## check detect.import
-    if(!is.logical(config$detect.import)) stop("detect.import is not logical")
-    if(length(config$detect.import) != 1L) stop("detect.import should be a single logical value")
+    ## check find.import
+    if(!is.logical(config$find.import)) stop("find.import is not logical")
+    if(length(config$find.import) != 1L) stop("find.import should be a single logical value")
 
     ## check outlier.threshold
     if(!is.numeric(config$outlier.threshold)) stop("outlier.threshold is not a numeric value")

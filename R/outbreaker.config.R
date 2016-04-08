@@ -95,7 +95,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      init.pi=0.9,
                      move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE,
                      move.mu=TRUE, move.kappa=TRUE, move.pi=TRUE,
-                     n.iter=100, sample.every=10, sd.mu=0.0001, sd.pi=0.01,
+                     n.iter=1e4, sample.every=200, sd.mu=0.0001, sd.pi=0.01,
                      prop.alpha.move=1/4,
                      batch.size=1e6,
                      paranoid=FALSE,
@@ -205,7 +205,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
     ## check n.iter.import
     if(!is.numeric(config$n.iter.import)) stop("n.iter.import is not a numeric value")
-    if(config$n.iter < 1000) stop("n.iter is smaller than 1000")
+    if(config$n.iter.import < 1000) stop("n.iter is smaller than 1000")
 
     ## check sample.every.import
     if(!is.numeric(config$sample.every.import)) stop("sample.every.import is not a numeric value")

@@ -62,7 +62,6 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
 #' @importFrom visNetwork visNetwork visEdges visNodes
-#' @importFrom dplyr "%>%"
 #' @importFrom grDevices xyTable
 plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf", "network"),
                                    burnin=0, min.support=0.5, ...){
@@ -143,11 +142,12 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
         nodes$value <- sapply(nodes$id, function(i) sum(from==i, na.rm=TRUE))/nrow(alpha)
 
         ## generate graph
-        out <- visNetwork::visNetwork(nodes=nodes, edges=edges, ...) %>%
-            visEdges(arrows = list(to = list(enabled = TRUE, scaleFactor = 0.2)),
-                     color = list(highlight = "red")) %>%
-                         visNodes(shadow = list(enabled = TRUE, size = 10),
-                                  color = list(highlight = "red"))
+        out <- visNetwork::visNetwork(nodes=nodes, edges=edges, ...)
+        out <- visNodes(out, shadow = list(enabled = TRUE, size = 10),
+                        color = list(highlight = "red"))
+        out <- visEdges(out, arrows = list(
+                             to = list(enabled = TRUE, scaleFactor = 0.2)),
+                        color = list(highlight = "red"))
 
     }
 

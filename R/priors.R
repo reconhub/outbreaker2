@@ -9,6 +9,7 @@
 #' @export
 #'
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
+#' @importFrom stats dexp dbeta
 #'
 prior.mu <- function(param){
     return(dexp(param$current.mu, 1000, log=TRUE))

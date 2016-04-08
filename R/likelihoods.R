@@ -99,7 +99,7 @@ ll.genetic <- function(data, param, i=NULL){
 
 #' @rdname likelihoods
 #' @export
-#'
+#' @importFrom stats dgeom
 ll.reporting <- function(data, param, i=NULL){
     ## return 0 if no data
     if(data$N==0) return(0)

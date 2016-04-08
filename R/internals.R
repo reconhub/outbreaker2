@@ -354,7 +354,7 @@ add.convolutions <- function(data, config){
         ## first compute convolutions on natural scale
         for(i in 2:config$max.kappa){
             data$log.w.dens <- rbind(data$log.w.dens,
-                                     convolve(data$log.w.dens[i-1,], rev(data$w.dens), type="open")[1:ncol(data$log.w.dens)]
+                                     stats::convolve(data$log.w.dens[i-1,], rev(data$w.dens), type="open")[1:ncol(data$log.w.dens)]
                                      )
         }
 

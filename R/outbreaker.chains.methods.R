@@ -143,9 +143,9 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
 
         ## generate graph
         out <- visNetwork::visNetwork(nodes=nodes, edges=edges, ...)
-        out <- visNodes(out, shadow = list(enabled = TRUE, size = 10),
+        out <- visNetwork::visNodes(out, shadow = list(enabled = TRUE, size = 10),
                         color = list(highlight = "red"))
-        out <- visEdges(out, arrows = list(
+        out <- visNetwork::visEdges(out, arrows = list(
                              to = list(enabled = TRUE, scaleFactor = 0.2)),
                         color = list(highlight = "red"))
 

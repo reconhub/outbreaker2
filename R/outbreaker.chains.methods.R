@@ -30,9 +30,11 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 
         alpha.txt <- paste(not.shown[range(grep("alpha", not.shown))], collapse=" - ")
         t.inf.txt <- paste(not.shown[range(grep("t.inf", not.shown))], collapse=" - ")
+        kappa.txt <- paste(not.shown[range(grep("kappa", not.shown))], collapse=" - ")
 
         cat("\nancestries not shown:", alpha.txt)
         cat("\ninfection dates not shown:", t.inf.txt)
+        cat("\nintermediate generatinons not shown:", kappa.txt)
     }
 
     ## heads and tails
@@ -63,7 +65,8 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
 #' @importFrom visNetwork visNetwork visEdges visNodes
 #' @importFrom grDevices xyTable
-plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density", "alpha", "t.inf", "network"),
+plot.outbreaker.chains <- function(x, y="post",
+                                   type=c("trace", "hist", "density", "alpha", "t.inf", "kappa", "network"),
                                    burnin=0, min.support=0.5, ...){
 
     ## CHECKS ##
@@ -117,6 +120,20 @@ plot.outbreaker.chains <- function(x, y="post", type=c("trace", "hist", "density
             geom_violin(aes(x=cases, y=dates, fill=cases)) +
                 coord_flip() + guides(fill=FALSE) +
                     labs(title="infection times")
+    }
+
+    if(type=="kappa"){
+        kappa <- as.matrix(x[,grep("kappa", names(x))])
+        generations <- as.vector(kappa)
+        cases <- as.vector(col(kappa))
+        out.dat <- data.frame(xyTable(generations,cases))
+        out.dat[3] <- out.dat[3]/nrow(x)
+        names(out.dat) <- c("generations", "cases", "frequency")
+
+        out <- ggplot(out.dat) +
+            geom_point(aes(x=generations, y=cases, size=frequency, color=factor(cases))) +
+                guides(colour=FALSE) +
+                    labs(title="number of generations between cases", x="number of generations to ancestor")
     }
 
     if(type=="network"){

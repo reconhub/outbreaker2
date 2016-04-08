@@ -259,6 +259,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
         ## recycle init.kappa
         config$init.kappa <- rep(config$init.kappa, length=data$N)
+        config$init.kappa[is.na(config$init.alpha)] <- NA
 
         ## disable moves for imported cases
         config$move.alpha[is.na(config$init.alpha)] <- FALSE

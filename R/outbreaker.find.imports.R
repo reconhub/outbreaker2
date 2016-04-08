@@ -24,12 +24,12 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
     J <- length(moves)
 
     ## create matrix of individual influences ##
-    n.measures <- floor(config$n.iter-1000/config$sample.every)
+    n.measures <- floor(config$n.iter.import-1000/config$sample.every.import)
     influences <- matrix(0, ncol=data$N, nrow=n.measures)
     counter <- 1L
 
     ## RUN MCMC ##
-    for(i in seq.int(2, config$n.iter, 1)){
+    for(i in seq.int(2, config$n.iter.import, 1)){
         ## move parameters / augmented data
         for(j in seq.int(J)){
             ## safemode
@@ -54,7 +54,7 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
         }
 
         ## store outputs if needed
-        if((i %% config$sample.every) == 0 && i>1000){
+        if((i %% config$sample.every.import) == 0 && i>1000){
             influences[counter,] <- - sapply(seq.int(data$N), function(i) ll.all(data=data, param=param, i=i))
             counter <- counter + 1L
         }
@@ -72,6 +72,8 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
     ## RETURN ##
     ini.param$alpha[[1]][outliers] <- ini.param$current.alpha[outliers] <- NA
     ini.param$kappa[[1]][outliers] <- ini.param$current.kappa[outliers] <- NA
+    ini.param$influences <- mean.influence
+    ini.param$threshold <- threshold
     config$move.alpha[outliers] <- FALSE
     config$move.kappa[outliers] <- FALSE
 

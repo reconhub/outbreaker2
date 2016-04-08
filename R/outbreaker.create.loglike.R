@@ -37,12 +37,12 @@ outbreaker.create.loglike <- function(..., loglike=NULL){
 
 
     ## SET DEFAULTS ##
-    defaults <- list(timing.infections = ll.timing.infections,
-                     timing.sampling = ll.timing.sampling,
-                     timing = ll.timing,
-                     genetic = ll.genetic,
-                     reporting = ll.reporting,
-                     all = ll.all
+    defaults <- list(ll.timing.infections = ll.timing.infections,
+                     ll.timing.sampling = ll.timing.sampling,
+                     ll.timing = ll.timing,
+                     ll.genetic = ll.genetic,
+                     ll.reporting = ll.reporting,
+                     ll.all = ll.all
                      )
 
     ## MODIFY DEFAULTS WITH ARGUMENTS ##

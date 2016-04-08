@@ -13,6 +13,10 @@
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
 #'
 outbreaker.find.imports <- function(moves, data, config, param, rand){
+    ## return if not import ##
+    if(!config$detect.import) return(list(config=config, param=param))
+
+
     ## store initial param values ##
     ini.param <- param
 
@@ -20,7 +24,7 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
     J <- length(moves)
 
     ## create matrix of individual influences ##
-    n.measures <- floor(config$n.iter/config$sample.every)
+    n.measures <- floor(config$n.iter-1000/config$sample.every)
     influences <- matrix(0, ncol=data$N, nrow=n.measures)
     counter <- 1L
 
@@ -50,7 +54,7 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
         }
 
         ## store outputs if needed
-        if((i %% config$sample.every) == 0){
+        if((i %% config$sample.every) == 0 && i>1000){
             influences[counter,] <- - sapply(seq.int(data$N), function(i) ll.all(data=data, param=param, i=i))
             counter <- counter + 1L
         }
@@ -71,5 +75,5 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
     config$move.alpha[outliers] <- FALSE
     config$move.kappa[outliers] <- FALSE
 
-    return(param)
+    return(list(config=config, param=ini.param))
 } # end outbreaker.find.imports

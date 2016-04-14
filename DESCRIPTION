@@ -14,11 +14,8 @@ Depends:
 Imports:
     utils,
     stats,
-    graphics,
     grDevices,
     ape,
-    igraph,
-    adegenet,
     ggplot2,
     visNetwork,
     compiler

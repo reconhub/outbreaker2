@@ -63,7 +63,6 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
 #'  'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
-#' @importFrom visNetwork visNetwork visEdges visNodes
 #' @importFrom grDevices xyTable
 plot.outbreaker.chains <- function(x, y="post",
                                    type=c("trace", "hist", "density", "alpha", "t.inf", "kappa", "network"),

@@ -18,8 +18,6 @@
 #'
 #' @export
 #'
-#' @importFrom compiler cmpfun
-#'
 #' @examples
 #' ## from Unif(0,1)
 #' x <- make.fast.rand()

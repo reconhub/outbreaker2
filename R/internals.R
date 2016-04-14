@@ -15,7 +15,6 @@
 #'
 #' @author Rich Fitzjohn, Thibaut Jombart
 #'
-#' @importFrom utils "modifyList"
 #'
 modify.defaults <- function(defaults, x, strict=TRUE){
     extra <- setdiff(names(x), names(defaults))

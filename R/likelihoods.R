@@ -17,6 +17,9 @@ ll.timing.infections <- function(data, param, i=NULL){
     ## check i
     i <- check.i(data=data, i=i)
 
+    ## TODO: It will likely be more efficient to params so that the
+    ## condition below is never violated.
+
     ## compute delays
     T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
 
@@ -72,8 +75,15 @@ ll.timing <- function(data, param, i=NULL){
 } # end ll.timing
 
 
-
-
+## NOTE: if the data can be bound to the ll functions via closures, we
+## can get about a 1 us (50%) speed up on the calls.  The same is not
+## really possible for param of course.  Moving from $... to [["..."]]
+## looks to save a small amount too.
+##
+## You _might_ get slightly better performance, especially as the
+## number of things grows, by factoring as
+##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
+## which limits to 2 operations rather than 2*n
 
 #' @rdname likelihoods
 #' @export
@@ -89,8 +99,9 @@ ll.genetic <- function(data, param, i=NULL){
     i <- i[!is.na(param$current.alpha[i])]
 
     ## compute likelihood
-    nmut <- diag(data$D[i, param$current.alpha[i], drop=FALSE])
-    return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*(data$L - nmut), na.rm=TRUE))
+    nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
+    return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*
+               (data$L - nmut), na.rm=TRUE))
 } # end ll.genetic
 
 

@@ -315,13 +315,14 @@ swap.cases <- function(param, config, i){
 ## and return correct IDs
 ## (non-exported)
 check.i <- function(data, i){
-    if(is.null(i)) return(seq.int(data$N))
-    if(!is.numeric(i)) stop("i is not numeric")
-    if(any(is.na(i))) stop("NA detected in case IDs")
-    if(length(i)==0L) stop("i has length zero")
-    if(any(i < 1)) stop("i contains invalid case indices (i<1)")
-    if(any(i > data$N)) stop("i contains invalid case indices (i>dat$N)")
-    return(i)
+    if (is.null(i)) seq_len(data$N) else i
+    ## if(is.null(i)) return(seq.int(data$N))
+    ## if(!is.numeric(i)) stop("i is not numeric")
+    ## if(any(is.na(i))) stop("NA detected in case IDs")
+    ## if(length(i)==0L) stop("i has length zero")
+    ## if(any(i < 1)) stop("i contains invalid case indices (i<1)")
+    ## if(any(i > data$N)) stop("i contains invalid case indices (i>dat$N)")
+    ## return(i)
 } # end check.i
 
 

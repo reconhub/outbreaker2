@@ -49,10 +49,8 @@
 #' }
 outbreaker <- function(data = outbreaker.data(),
                        config = outbreaker.config(),
-                       loglike = outbreaker.create.loglike(),
-                       priors = outbreaker.create.priors(),
-                       posteriors = outbreaker.create.posteriors(),
-                       moves = outbreaker.create.moves()){
+                       priors = outbreaker.create.priors()
+                       ){
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker.data(data=data)
@@ -69,29 +67,15 @@ outbreaker <- function(data = outbreaker.data(),
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
 
-    ## CREATE LOGLIKE ##
-    loglike <- outbreaker.create.loglike(loglike=loglike)
-
-    ## CREATE PRIORS ##
-    priors <- outbreaker.create.priors(priors=priors)
-
-    ## CREATE POSTERIORS ##
-    posteriors <- outbreaker.create.posteriors(posteriors=posteriors)
-
-    ## CREATE MOVEMENTS ##
-    moves <- outbreaker.create.moves(config=config, moves=moves)
-
-    ## ADD LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS TO CURRENT CONTEXT
-    add.to.context(environment(), c(loglike=loglike, priors=priors, posteriors=posteriors))
 
     ## MCMC ##
     ## preliminary run to detect imported cases
-    temp <- outbreaker.find.imports(moves=moves, data=data, config=config, param=param, rand=rand)
+    temp <- outbreaker.find.imports(data=data, config=config, param=param, rand=rand)
     param <- temp$param
     config <- temp$config
 
     ## perform mcmc
-    param <- outbreaker.move(moves=moves, data=data, config=config, param=param, rand=rand)
+    param <- outbreaker.move(data=data, config=config, param=param, rand=rand)
 
     ## SHAPE RESULTS ##
     param <- outbreaker.mcmc.shape(param=param, data=data)

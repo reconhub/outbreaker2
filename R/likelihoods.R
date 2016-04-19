@@ -99,6 +99,8 @@ make.ll.genetic <- function(data){
 make.ll.reporting <- function(data){
 
     ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
+    ## 'kappa' is the number of generation between two successive cases
+    ## 'kappa-1' is the number of unreported cases
     function(param, i=NULL){
         sum(stats::dgeom(param$current.kappa[i]-1,
                   prob=param$current.pi,

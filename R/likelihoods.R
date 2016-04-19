@@ -76,7 +76,7 @@ ll.genetic <- function(data, param, i=NULL){
     nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
     sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*
                (data$L - nmut), na.rm=TRUE)
-} # end ll.genetic
+}
 
 
 
@@ -87,7 +87,7 @@ ll.genetic <- function(data, param, i=NULL){
 #' @importFrom stats dgeom
 ll.reporting <- function(data, param, i=NULL){
     sum(dgeom(param$current.kappa[i]-1, prob=param$current.pi, log=TRUE),na.rm=TRUE)
-} # end ll.reporting
+}
 
 
 
@@ -102,5 +102,5 @@ ll.all <- function(data, param, i=NULL){
         ll.genetic(data=data, param=param, i=i) +
             ll.reporting(data=data, param=param, i=i)
 
-} # end ll.all
+}
 

@@ -17,11 +17,11 @@
 #'
 #' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
 #' @param config a set of settings as returned by \code{\link{outbreaker.config}}
-#' @param loglike a set of log-likelihood functions as returned by \code{\link{outbreaker.create.loglike}}
-#' @param priors a set of prior functions as returned by \code{\link{outbreaker.create.priors}}
-#' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker.create.posteriors}}
-#' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
-#'
+## #' @param loglike a set of log-likelihood functions as returned by \code{\link{outbreaker.create.loglike}}
+## #' @param priors a set of prior functions as returned by \code{\link{outbreaker.create.priors}}
+## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker.create.posteriors}}
+## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
+## #'
 #' @seealso \code{\link{outbreaker.config}} to see default parameters / set parameters and \code{\link{outbreaker.data}} to process input data
 #'
 #' @importFrom stats dexp rnorm runif
@@ -48,8 +48,7 @@
 #'
 #' }
 outbreaker <- function(data = outbreaker.data(),
-                       config = outbreaker.config(),
-                       priors = outbreaker.create.priors()
+                       config = outbreaker.config()
                        ){
 
     ## CHECKS / PROCESS DATA ##

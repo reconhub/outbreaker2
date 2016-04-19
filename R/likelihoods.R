@@ -11,15 +11,6 @@
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
 #' @param i an optional vector of integers, indicating subset of cases included in the likelihood computation; if NULL (default), all cases are used.
 ll.timing.infections <- function(data, param, i=NULL){
-   ## return 0 if no data
-    if(data$N==0) return(0)
-
-    ## check i
-    i <- check.i(data=data, i=i)
-
-    ## TODO: It will likely be more efficient to params so that the
-    ## condition below is never violated.
-
     ## compute delays
     T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
 
@@ -38,12 +29,6 @@ ll.timing.infections <- function(data, param, i=NULL){
 #' @export
 #'
 ll.timing.sampling <- function(data, param, i=NULL){
-   ## return 0 if no data
-    if(data$N==0) return(0)
-
-    ## check i
-    i <- check.i(data=data, i=i)
-
     ## compute delays
     T <- data$dates[i] - param$current.t.inf[i]
     T <- T[!is.na(T)]
@@ -63,12 +48,6 @@ ll.timing.sampling <- function(data, param, i=NULL){
 #' @export
 #'
 ll.timing <- function(data, param, i=NULL){
-    ## return 0 if no data
-    if(data$N==0) return(0)
-
-    ## check i
-    i <- check.i(data=data, i=i)
-
     ## compute likelihood
     return(ll.timing.infections(data=data, param=param, i=i) +
            ll.timing.sampling(data=data, param=param, i=i))
@@ -89,16 +68,11 @@ ll.timing <- function(data, param, i=NULL){
 #' @export
 #'
 ll.genetic <- function(data, param, i=NULL){
-    ## return 0 if no data
-    if(is.null(data$dna)) return(0)
-
-    ## check i
-    i <- check.i(data=data, i=i)
-
-    ## discard cases with no ancestors
+    ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
     i <- i[!is.na(param$current.alpha[i])]
 
-    ## compute likelihood
+    ## likelihood is based on the number of mutations between a case and its ancestor;
+    ## these are extracted from a pairwise genetic distance matrix (data$D)
     nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
     return(sum(log(param$current.mu)*nmut + log(1 - param$current.mu)*
                (data$L - nmut), na.rm=TRUE))
@@ -112,13 +86,6 @@ ll.genetic <- function(data, param, i=NULL){
 #' @export
 #' @importFrom stats dgeom
 ll.reporting <- function(data, param, i=NULL){
-    ## return 0 if no data
-    if(data$N==0) return(0)
-
-    ## check i
-    i <- check.i(data=data, i=i)
-
-    ## compute likelihood
     return(sum(dgeom(param$current.kappa[i]-1, prob=param$current.pi, log=TRUE),na.rm=TRUE))
 } # end ll.reporting
 
@@ -130,13 +97,7 @@ ll.reporting <- function(data, param, i=NULL){
 #' @export
 #'
 ll.all <- function(data, param, i=NULL){
-    ## return 0 if no data
-    if(data$N==0) return(0)
-
-    ## check i
-    i <- check.i(data=data, i=i)
-
-    ## compute likelihood
+    ## NOTE: this should probably be replaced by a function iterating over all likelihood functions
     return(ll.timing(data=data, param=param, i=i) +
            ll.genetic(data=data, param=param, i=i) +
            ll.reporting(data=data, param=param, i=i)

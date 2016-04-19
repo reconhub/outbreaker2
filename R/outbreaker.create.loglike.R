@@ -35,8 +35,8 @@
 ##
 outbreaker.create.loglike <- function(data){
 
-    ## These are all the functions generating various log-likelihood functions; they are assumed to
-    ## follow alphabetic order
+    ## These are all the functions generating various log-likelihood functions;
+    ## we list them by alphabetic order
 
     default.functions <- list(genetic = make.ll.genetic,
                               reporting = make.ll.reporting,
@@ -45,4 +45,18 @@ outbreaker.create.loglike <- function(data){
                               )
     out <- lapply(default.functions, function(f) f(data))
 
+
+    ## Here we add a function summing all log-likelihoods - useful as a shortcut for several
+    ## movements of parameters and augmented data.
+
+    ## NOTE: need to see which is the best way to do this!
+
+    out$all <- function(param, i=NULL){
+        out$genetic(param, i) +
+            out$reporting(param, i) +
+                out$timing.infections(param, i) +
+                    out$timing.sampling(param, i)
+    }
+
+    return(out)
 }

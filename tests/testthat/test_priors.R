@@ -8,13 +8,16 @@ test_that("priors have plausible values", {
     rm(list=ls())
 
     ## generate data
-    param <- lapply(1:30, function(i) outbreaker.mcmc.init(
-        config=outbreaker.config(init.mu=runif(1)),
-        data=outbreaker.data()))
+    param <- outbreaker.create.mcmc(config=outbreaker.config(),
+                                    data=outbreaker.data())
+
 
     ## tests
-    out <- sapply(param, prior.mu)
+    out.mu <- priors$mu(param)
+    out.pi <- priors$pi(param)
+    out.all <- priors$all(param)
     expect_true(!any(is.na(out)))
+
 })
 
 
@@ -27,12 +30,12 @@ test_that("outbreaker.create.priors gives expected results", {
 
     ## generate data
     out <- outbreaker.create.priors()
-    
+
     ## tests
     expect_is(out, "list")
     expect_equal(length(out), 2)
     expect_equal(names(out), c("mu",
                                "all")
                  )
-                 
+
 })

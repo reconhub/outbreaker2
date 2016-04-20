@@ -52,11 +52,8 @@ create.loglike <- function(data){
     ## We need a function summing all log-likelihoods - useful as a shortcut for several
     ## movements of parameters and augmented data.
 
-    template <- numeric(length(out))
-    names(template) <- ll.function.names
-
     out$all <- function(param, i=NULL){
-        sum(vapply(out[ll.function.names], function(f) f(param, i), FUN.VALUE=template), na.rm=TRUE)
+        sum(vapply(out[ll.function.names], function(f) f(param, i), FUN.VALUE=numeric(1)), na.rm=TRUE)
     }
 
 

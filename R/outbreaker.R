@@ -98,7 +98,7 @@ outbreaker <- function(data = outbreaker.data(),
     ## perform mcmc
     ## procedure is the same as before, with some cases fixed as 'imported'
     moves <- outbreaker.create.moves(config=config)
-    outbreaker.move(moves=moves, data=data, param=param,
+    param <- outbreaker.move(moves=moves, data=data, param=param,
                     config=config, densities=densities, rand=rand)
 
 

@@ -33,7 +33,7 @@
 ##
 ## This function creates a named list of log-likelihood functions with enclosed data
 ##
-outbreaker.create.loglike <- function(data){
+create.loglike <- function(data){
 
     ## These are all the functions generating various log-likelihood functions;
     ## we list them by alphabetic order
@@ -43,20 +43,26 @@ outbreaker.create.loglike <- function(data){
                               timing.infections = make.ll.timing.infections,
                               timing.sampling = make.ll.timing.sampling
                               )
+    ll.function.names <- names(default.functions)
     out <- lapply(default.functions, function(f) f(data))
 
 
-    ## Here we add a function summing all log-likelihoods - useful as a shortcut for several
+    ## We need a function summing all log-likelihoods - useful as a shortcut for several
     ## movements of parameters and augmented data.
 
-    ## NOTE: need to see which is the best way to do this!
-
     out$all <- function(param, i=NULL){
-        out$genetic(param, i) +
-            out$reporting(param, i) +
-                out$timing.infections(param, i) +
-                    out$timing.sampling(param, i)
+        sum(vapply(out[ll.function.names], function(f) f(param, i)), na.rm=TRUE)
     }
+
+
+    ## We need a function computing likelihood relating to timing, which includes:
+    ## - p(sampling dates | infections dates)
+    ## - p(infection dates | ancestral infection dates)
+
+    out$timing <- function(param, i=NULL){
+        out$timing.infections(param, i) + out$timing.sampling(param, i)
+    }
+
 
     return(out)
 }

@@ -21,8 +21,10 @@
 ## infection dates of their ancestors.
 
 make.ll.timing.infections <- function(data){
+    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
+    cases <- seq.int(data$N)
 
-     function(param, i=NULL){
+     function(param, i=cases){
 
         ## compute delays between infection dates of cases and of their ancestors
         T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
@@ -43,8 +45,10 @@ make.ll.timing.infections <- function(data){
 ## infection dates.
 
 make.ll.timing.sampling <- function(data){
+    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
+    cases <- seq.int(data$N)
 
-    function(param, i=NULL){
+    function(param, i=cases){
 
         ## compute delays
         T <- data$dates[i] - param$current.t.inf[i]
@@ -65,8 +69,10 @@ make.ll.timing.sampling <- function(data){
 ## and their ancestors.
 
 make.ll.genetic <- function(data){
+    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
+    cases <- seq.int(data$N)
 
-    function(param, i=NULL){
+    function(param, i=cases){
 
         ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
         i <- i[!is.na(param$current.alpha[i])]
@@ -97,11 +103,13 @@ make.ll.genetic <- function(data){
 ## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
 
 make.ll.reporting <- function(data){
+    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
+    cases <- seq.int(data$N)
 
     ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
     ## 'kappa' is the number of generation between two successive cases
     ## 'kappa-1' is the number of unreported cases
-    function(param, i=NULL){
+    function(param, i=cases){
         sum(stats::dgeom(param$current.kappa[i]-1,
                   prob=param$current.pi,
                   log=TRUE), na.rm=TRUE)

@@ -14,15 +14,4 @@ create.posteriors <- function(loglike, priors){
     post.function.names <- names(default.functions)
     out <- lapply(default.functions, function(f) f(loglike=loglike, priors=priors))
 
-
-    ## We add a function summing all posteriors
-
-    out$all <- function(param){
-        sum(vapply(out[post.function.names], function(f) f(param), FUN.VALUE=numeric(1)), na.rm=TRUE)
-    }
-
-
-    return(out)
-
-
 }

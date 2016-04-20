@@ -1,8 +1,6 @@
 context("Test posterior functions")
 
 
-
-
 ## test create.posteriors ##
 test_that("create.posteriors gives expected results", {
     ## skip on CRAN
@@ -38,8 +36,10 @@ test_that("create.posteriors gives expected results", {
 
 
 
+
+
 ## test posterior computation ##
-test_that("post = like + prior", {
+test_that("posteriors computations give expected values", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
@@ -50,39 +50,18 @@ test_that("post = like + prior", {
     config <- outbreaker.config(data=data)
     param <- outbreaker.create.mcmc(data=data, config=config)
     ll <- create.loglike(data)
+    priors <- create.priors(config)
+    posteriors <- create.posteriors(ll, priors)
+
 
 
     ## generate outputs
+    like <-ll$all(param)
+    prior <- priors$all(param)
+    post <- posteriors$all(param)
 
     ## tests
-    like <-ll.all(data=dat, param=param)
-    prior <- prior.all(param)
-    post <- post.all(data=dat, param=param)
-    post.check <- like+prior
+    expect_equal(posteriors$genetic(param), ll$genetic(param) + priors$mu(param))
     expect_equal(post, post.check)
 })
-
-
-
-## test posterior computation ##
-test_that("posterior is atomic", {
-   ## skip on CRAN
-    skip_on_cran()
-
-    ## generate data
-    data(fakeOutbreak)
-    dat <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
-    config <- outbreaker.config(data=dat)
-    param <- outbreaker.mcmc.init(data=dat, config=config)
-
-    ## tests
-    like <-ll.all(data=dat, param=param)
-    prior <- prior.all(param)
-    post <- post.all(data=dat, param=param)
-
-    expect_equal(length(like), 1)
-    expect_equal(length(prior), 1)
-    expect_equal(length(post), 1)
-})
-
 

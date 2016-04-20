@@ -34,3 +34,15 @@ make.post.reporting <- function(loglike, priors){
 }
 
 
+
+## The global posterior includes the all likelihoods and priors
+
+make.post.all <- function(loglike, priors){
+    ll.all <- loglike$all
+    prior.all <- priors$all
+    function(param){
+        ll.all(param) + prior.all(param)
+    }
+}
+
+

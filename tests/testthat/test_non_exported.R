@@ -128,7 +128,7 @@ test_that("Testing add.convolutions", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
     out <- add.convolutions(data=data, config=config)
 

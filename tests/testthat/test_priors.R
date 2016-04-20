@@ -37,7 +37,8 @@ test_that("create.priors gives expected results", {
     rm(list=ls())
 
     ## generate data
-    out <- create.priors(outbreaker.config())
+    config <- outbreaker.config()
+    out <- create.priors()
 
     ## tests
     expect_is(out, "list")
@@ -52,6 +53,6 @@ test_that("create.priors gives expected results", {
     ## check that closure worked
     expect_identical(config$prior.mu, environment(out$mu)$rate)
     expect_identical(config$prior.pi,
-                     c(environment(out$mu)$shape1, environment(out$mu)$shape1))
+                     c(environment(out$pi)$shape1, environment(out$pi)$shape2))
 
 })

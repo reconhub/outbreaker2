@@ -72,18 +72,32 @@ outbreaker <- function(data = outbreaker.data(),
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
 
+    ## We put all density functions in a single list 'densities'; all functions have enclosed items
+    ## so that only the 'param' argument is needed, which describes the current state of the system
+    ## (it is a list including past retained, and current augmented data and parameters).
+    ##
+    ## Included funcitons are:
+    ## - $loglike: log-likelihood functions with enclosed data
+    ## - $priors: prior functions with enclosed parameters
+    ## - $posteriors: posterior functions with enclosed loglike and parameter functions
+
+    densities <- list(loglike=loglike, priors=priors, posteriors=posteriors)
+
+
     ## MCMC ##
+
     ## preliminary run to detect imported cases this relies on a shorter run of the MCMC,
     ## then computing the average 'global influence' (-loglike) of each data point, identifying
     ## outliers (based on fixed threshold) and marking outliers down as 'imported cases'.
+    ## DISABLED FOR NOW - WE NEED TO USE OUTBREAKER.MOVE HERE!
+    ##
     ## temp <- outbreaker.find.imports(data=data, config=config, param=param, rand=rand)
     ## param <- temp$param
     ## config <- temp$config
 
     ## perform mcmc
-    ## procedure is the same as before, with some cases fixed as 'imported'
-    param <- outbreaker.move(param=param, rand=rand,
-                             loglike=loglike, priors=priors, posteriors=posteriors)
+    ## procedure is the same as before, with some cases fixed as 'imported' param <-
+    outbreaker.move(param=param, config=config, densities=densities, rand=rand)
 
 
     ## SHAPE RESULTS ##

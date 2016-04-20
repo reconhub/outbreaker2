@@ -13,7 +13,7 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.move <- function(param, rand, loglike, priors, posteriors){
+outbreaker.move <- function(param, config, densities, rand){
     ## get number of moves ##
     J <- length(moves)
 
@@ -27,7 +27,7 @@ outbreaker.move <- function(param, rand, loglike, priors, posteriors){
             }
 
             ## move parameters
-            param <- moves[[j]](data=data, param=param, config=config, rand=rand)
+            param <- moves[[j]](param=param, config=config, densities=densities, rand=rand)
 
             ## safemode
             if(config$paranoid){

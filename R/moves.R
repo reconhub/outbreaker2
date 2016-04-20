@@ -6,12 +6,13 @@
 #'
 #' @rdname moves
 #'
+#' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param param a list of parameters as returned by \code{outbreaker.mcmc.init}
 #' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
 #'
-make.move.mu <- function(param, loglike, priors, posteriors, rand){
+move.mu <- function(param, config, rand){
     ## get new proposed values
     new.param <- param
     new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
@@ -20,13 +21,13 @@ make.move.mu <- function(param, loglike, priors, posteriors, rand){
     if(new.param$current.mu<0 || new.param$current.mu>1) return(param)
 
     ## compute log ratio  (assumes symmetric proposal)
-    logratio <- post.genetic(data=data, param=new.param) -
-        post.genetic(data=data, param=param)
+    logratio <- post.genetic(new.param) -
+        post.genetic(param)
 
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.param)
     return(param)
-}
+} # end move.mu
 
 
 
@@ -35,7 +36,7 @@ make.move.mu <- function(param, loglike, priors, posteriors, rand){
 #' @rdname moves
 #' @export
 #'
-make.move.t.inf <- function(param, loglike, priors, posteriors, rand){ # assumes symmetric proposal
+move.t.inf <- function(param, config, rand){ # assumes symmetric proposal
 
     ## propose new t.inf
     new.param <- param
@@ -43,7 +44,7 @@ make.move.t.inf <- function(param, loglike, priors, posteriors, rand){ # assumes
         sample(-1:1, size=data$N, replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
-    logratio <- ll.timing(data=data, param=new.param) - ll.timing(data=data, param=param)
+    logratio <- ll.timing(new.param) - ll.timing(param)
 
     ## accept/reject
     if(logratio >= rand$log.runif1()){
@@ -51,7 +52,7 @@ make.move.t.inf <- function(param, loglike, priors, posteriors, rand){ # assumes
     } else {
         return(param)
     }
-}
+} # end move.t.inf
 
 
 
@@ -60,7 +61,7 @@ make.move.t.inf <- function(param, loglike, priors, posteriors, rand){ # assumes
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
 #'
-make.move.alpha <- function(param, loglike, priors, posteriors, rand){
+move.alpha <- function(param, config, rand){
     ## create new parameters
     new.param <- param
 
@@ -82,7 +83,7 @@ make.move.alpha <- function(param, loglike, priors, posteriors, rand){
         new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
 
         ## compute log ratio
-        logratio <-  ll.all(data=data, param=new.param) - ll.all(data=data, param=param)
+        logratio <-  ll.all(new.param) - ll.all(param)
 
         ## compute correction factor
         logratio <- logratio + log(sum(are.possible.alpha(new.param$current.t.inf, i))) -
@@ -97,7 +98,7 @@ make.move.alpha <- function(param, loglike, priors, posteriors, rand){
     } # end for loop
 
     return(param)
-}
+} # end move.alpha
 
 
 
@@ -107,7 +108,7 @@ make.move.alpha <- function(param, loglike, priors, posteriors, rand){
 #' @rdname moves
 #' @export
 #'
-make.move.swap.cases <- function(param, loglike, priors, posteriors, rand){
+move.swap.cases <- function(param, config, rand){
     ## find ancestries which can move
     to.move <- select.alpha.to.move(param, config)
 
@@ -124,10 +125,10 @@ make.move.swap.cases <- function(param, loglike, priors, posteriors, rand){
         ## descendents of to.move
         ## descendents of alpha[to.move]
         ## alpha[to.move]
-        affected.cases <- c(find.descendents(data=data, param=param, i=i),
-                            find.descendents(data=data, param=param, i=param$current.alpha[i]),
+        affected.cases <- c(find.descendents(param, i=i),
+                            find.descendents(param, i=param$current.alpha[i]),
                             param$current.alpha[i])
-        logratio <- ll.all(data=data, param=new.param, i=affected.cases) - ll.all(data=data, param=param, i=affected.cases)
+        logratio <- ll.all(new.param, i=affected.cases) - ll.all(param, i=affected.cases)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){
@@ -136,7 +137,7 @@ make.move.swap.cases <- function(param, loglike, priors, posteriors, rand){
     } # end for loop
 
     return(param)
-}
+} # end move.swap.cases
 
 
 
@@ -145,7 +146,7 @@ make.move.swap.cases <- function(param, loglike, priors, posteriors, rand){
 #' @rdname moves
 #' @export
 #'
-make.move.pi <- function(param, loglike, priors, posteriors, rand){
+move.pi <- function(param, config, rand){
     ## get new proposed values
     new.param <- param
     new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
@@ -154,13 +155,13 @@ make.move.pi <- function(param, loglike, priors, posteriors, rand){
     if(new.param$current.pi<0 || new.param$current.pi>1) return(param)
 
     ## compute log ratio  (assumes symmetric proposal)
-    logratio <- post.reporting(data=data, param=new.param) -
-        post.reporting(data=data, param=param)
+    logratio <- post.reporting(new.param) -
+        post.reporting(param)
 
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.param)
     return(param)
-}
+} # end move.pi
 
 
 
@@ -169,7 +170,7 @@ make.move.pi <- function(param, loglike, priors, posteriors, rand){
 #' @rdname moves
 #' @export
 #'
-make.move.kappa <- function(param, loglike, priors, posteriors, rand){
+move.kappa <- function(param, config, rand){
 
     ## determine which cases to move
     kappa.can.move <- !is.na(param$current.kappa)
@@ -190,12 +191,12 @@ make.move.kappa <- function(param, loglike, priors, posteriors, rand){
             new.param$current.kappa[i] <- param$current.kappa[i]
         } else {
             ## compute log ratio
-            logratio <- ll.timing.infections(data=data, param=new.param, i=i) +
-                ll.genetic(data=data, param=new.param, i=i) +
-                ll.reporting(data=data, param=new.param, i=i) -
-                ll.timing.infections(data=data, param=param, i=i) -
-                ll.genetic(data=data, param=param, i=i) -
-                ll.reporting(data=data, param=param, i=i)
+            logratio <- ll.timing.infections(new.param, i) +
+                ll.genetic(new.param, i) +
+                ll.reporting(new.param, i) -
+                ll.timing.infections(param, i) -
+                ll.genetic(param, i) -
+                ll.reporting(param, i)
 
             ## accept/reject
             if(logratio >= rand$log.runif1()){
@@ -209,4 +210,4 @@ make.move.kappa <- function(param, loglike, priors, posteriors, rand){
 
     ## return potentially modified parameters
     return(param)
-}
+} # end move.kappa

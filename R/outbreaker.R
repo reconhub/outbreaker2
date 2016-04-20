@@ -76,13 +76,14 @@ outbreaker <- function(data = outbreaker.data(),
     ## preliminary run to detect imported cases this relies on a shorter run of the MCMC,
     ## then computing the average 'global influence' (-loglike) of each data point, identifying
     ## outliers (based on fixed threshold) and marking outliers down as 'imported cases'.
-    temp <- outbreaker.find.imports(data=data, config=config, param=param, rand=rand)
-    param <- temp$param
-    config <- temp$config
+    ## temp <- outbreaker.find.imports(data=data, config=config, param=param, rand=rand)
+    ## param <- temp$param
+    ## config <- temp$config
 
     ## perform mcmc
     ## procedure is the same as before, with some cases fixed as 'imported'
-    param <- outbreaker.move(data=data, config=config, param=param, rand=rand)
+    param <- outbreaker.move(param=param, rand=rand,
+                             loglike=loglike, priors=priors, posteriors=posteriors)
 
 
     ## SHAPE RESULTS ##

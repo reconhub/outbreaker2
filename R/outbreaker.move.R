@@ -4,15 +4,16 @@
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
-#' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
-#' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param param a list of parameters as returned by \code{outbreaker.mcmc.init}
-#' @param config a list of settings as returned by \code{outbreaker.config}
+#' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
 #' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
+#' @param loglike  a list of log-likelihood functions with enclosed data as returned by \code{create.loglike}
+#' @param priors  a list of prior functions with enclosed parameters as returned by \code{create.priors}
+#' @param posteriors a list of posterior functions with enclosed likelihood and prior functions as
+#' returned by \code{create.posteriors}
 #'
-#' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
+#' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.move <- function(moves, data, config, param, rand){
+outbreaker.move <- function(param, rand, loglike, priors, posteriors){
     ## get number of moves ##
     J <- length(moves)
 

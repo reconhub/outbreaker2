@@ -6,13 +6,12 @@
 #'
 #' @rdname moves
 #'
-#' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param param a list of parameters as returned by \code{outbreaker.mcmc.init}
 #' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
 #'
-move.mu <- function(data, param, config, rand){
+make.move.mu <- function(param, loglike, priors, posteriors, rand){
     ## get new proposed values
     new.param <- param
     new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
@@ -27,7 +26,7 @@ move.mu <- function(data, param, config, rand){
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.param)
     return(param)
-} # end move.mu
+}
 
 
 
@@ -36,7 +35,7 @@ move.mu <- function(data, param, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.t.inf <- function(data, param, config, rand){ # assumes symmetric proposal
+make.move.t.inf <- function(param, loglike, priors, posteriors, rand){ # assumes symmetric proposal
 
     ## propose new t.inf
     new.param <- param
@@ -52,7 +51,7 @@ move.t.inf <- function(data, param, config, rand){ # assumes symmetric proposal
     } else {
         return(param)
     }
-} # end move.t.inf
+}
 
 
 
@@ -61,7 +60,7 @@ move.t.inf <- function(data, param, config, rand){ # assumes symmetric proposal
 #' @export
 #' @param config a list of settings as returned by \code{outbreaker.config}
 #'
-move.alpha <- function(data, param, config, rand){
+make.move.alpha <- function(param, loglike, priors, posteriors, rand){
     ## create new parameters
     new.param <- param
 
@@ -98,7 +97,7 @@ move.alpha <- function(data, param, config, rand){
     } # end for loop
 
     return(param)
-} # end move.alpha
+}
 
 
 
@@ -108,7 +107,7 @@ move.alpha <- function(data, param, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.swap.cases <- function(data, param, config, rand){
+make.move.swap.cases <- function(param, loglike, priors, posteriors, rand){
     ## find ancestries which can move
     to.move <- select.alpha.to.move(param, config)
 
@@ -137,7 +136,7 @@ move.swap.cases <- function(data, param, config, rand){
     } # end for loop
 
     return(param)
-} # end move.swap.cases
+}
 
 
 
@@ -146,7 +145,7 @@ move.swap.cases <- function(data, param, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.pi <- function(data, param, config, rand){
+make.move.pi <- function(param, loglike, priors, posteriors, rand){
     ## get new proposed values
     new.param <- param
     new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
@@ -161,7 +160,7 @@ move.pi <- function(data, param, config, rand){
     ## accept/reject
     if(logratio >= rand$log.runif1()) return(new.param)
     return(param)
-} # end move.pi
+}
 
 
 
@@ -170,7 +169,7 @@ move.pi <- function(data, param, config, rand){
 #' @rdname moves
 #' @export
 #'
-move.kappa <- function(data, param, config, rand){
+make.move.kappa <- function(param, loglike, priors, posteriors, rand){
 
     ## determine which cases to move
     kappa.can.move <- !is.na(param$current.kappa)
@@ -210,4 +209,4 @@ move.kappa <- function(data, param, config, rand){
 
     ## return potentially modified parameters
     return(param)
-} # end move.kappa
+}

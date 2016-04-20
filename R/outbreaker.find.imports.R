@@ -12,8 +12,8 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.find.imports <- function(moves, data, config, param, rand){
-    ## return if not import ##
+outbreaker.find.imports <- function(moves, data, param, config, densities, rand){
+    ## send back unchanged chains if config disabled the detection of imported cases ##
     if(!config$find.import) return(list(config=config, param=param))
 
 
@@ -38,7 +38,7 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
             }
 
             ## move parameters
-            param <- moves[[j]](data=data, param=param, config=config, rand=rand)
+            param <- moves[[j]](param=param, config=config, densities=densities, rand=rand)
 
             ## safemode
             if(config$paranoid){
@@ -55,7 +55,8 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
 
         ## store outputs if needed
         if((i %% config$sample.every.import) == 0 && i>1000){
-            influences[counter,] <- - sapply(seq.int(data$N), function(i) ll.all(data=data, param=param, i=i))
+            influences[counter,] <- - sapply(seq.int(data$N),
+                                             function(i) densities$loglike$all(param=param, i=i))
             counter <- counter + 1L
         }
 
@@ -69,7 +70,12 @@ outbreaker.find.imports <- function(moves, data, config, param, rand){
     outliers <- mean.influences > threshold
 
 
-    ## RETURN ##
+    ## All outliers are considered as introductions, so that ancestries (alpha) are set to 'NA' and
+    ## the number of generations between cases and their ancestor (kappa) is set to NA; the
+    ## movements of alpha and kappa for these cases is also disabled; because the config has been
+    ## altered in these cases, we systematically return the config as well as the initial
+    ## parameters.
+
     ini.param$alpha[[1]][outliers] <- ini.param$current.alpha[outliers] <- NA
     ini.param$kappa[[1]][outliers] <- ini.param$current.kappa[outliers] <- NA
     ini.param$influences <- mean.influence

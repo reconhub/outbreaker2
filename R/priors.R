@@ -9,14 +9,13 @@
 
 ## Arguments are:
 ##
-## 'param' a list containing parameters as returned by \code{outbreaker.mcmc.init}
 ## 'config' a list of named items containing input data as returned by \code{\link{outbreaker.config}}
 
 
 ## We use an exponential prior for the mutation rate; the prior rate, which does not change in the
 ## MCMC, is enclosed in the returned function.
 
-make.prior.mu <- function(param, config){
+make.prior.mu <- function(config){
     rate <- config$prior.mu
     function(param) {
         stats::dexp(param$current.mu, rate, log=TRUE)
@@ -29,7 +28,7 @@ make.prior.mu <- function(param, config){
 ## We use a beta prior for the reporting probability (which contrains it to lie between 0 and 1);
 ## the 2 shape parameters, which do not change in the MCMC, are enclosed in the returned function.
 
-make.prior.pi <- function(param, config){
+make.prior.pi <- function(config){
     shape1 <- config$prior.pi[1]
     shape2 <- config$prior.pi[2]
     function(param){

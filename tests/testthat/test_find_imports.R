@@ -6,17 +6,27 @@ test_that("Test detection of imported cases", {
     skip_on_cran()
     rm(list=ls())
 
-    ## generate data
+    ## generate inputs
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
-    config <- outbreaker.config(data=data, n.iter=100, sample.every=10)
+    config <- outbreaker.config(data=data)
+    data <- add.convolutions(data=data, config=config)
     param <- outbreaker.create.mcmc(data=data, config=config)
+
+    ll <- create.loglike(data)
+    priors <- create.priors(config)
+    post <- create.posteriors(ll, priors)
+    densities <- list(loglike=ll, priors=priors, posteriors=post)
+
     rand <- outbreaker.rand.vec(config=config)
     moves <- outbreaker.create.moves(config=config)
-    data <- add.convolutions(data=data, config=config)
+
+    rand <- outbreaker.rand.vec(config=config)
+    moves <- outbreaker.create.moves(config=config)
 
     ## detect imported cases
-    out <- outbreaker.find.imports(moves=moves, data=data, config=config, param=param, rand=rand)
+    out <- outbreaker.find.imports(moves=moves, data=data, param=param,
+                                   config=config, densities=densities, rand=rand)
 
     ## tests ##
     expect_identical(which(!out$config$move.alpha), which(!out$config$move.kappa))

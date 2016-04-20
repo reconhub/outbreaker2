@@ -68,9 +68,14 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for performing additional tests during outbreaker; it makes computations substantially slower and is mostly used for debugging purposes.}
 
-\item{min.date}{earliest infection date possible, expressed as days since the first sampling;}
+\item{min.date}{earliest infection date possible, expressed as days since the first sampling}
 
 \item{max.kappa}{an integer indicating the largest number of generations between any two linked cases; defaults to 5}
+
+\item{prior.mu}{a numeric value indicating the rate of the exponential prior for the mutation rate 'mu'}
+
+\item{prior.pi}{a numeric vector of length 2 indicating the first and second parameter of the beta prior for the reporting probability 'pi'}
+
 }
 }
 \examples{

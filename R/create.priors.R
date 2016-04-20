@@ -17,7 +17,7 @@ create.priors <- function(config){
     ## We add a function summing all priors
 
     out$all <- function(param){
-        sum(vapply(out[priors.function.names], function(f) f(param), FUN.VALUE=numeric(1)), nae.rm=TRUE)
+        sum(vapply(out[priors.function.names], function(f) f(param), FUN.VALUE=numeric(1)), na.rm=TRUE)
     }
 
 

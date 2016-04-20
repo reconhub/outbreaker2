@@ -7,15 +7,21 @@ test_that("priors have plausible values", {
     skip_on_cran()
     rm(list=ls())
 
-    ## generate data
-    param <- outbreaker.create.mcmc(config=outbreaker.config(),
+    ## generate inputs
+    config <- outbreaker.config()
+    param <- outbreaker.create.mcmc(config,
                                     data=outbreaker.data())
 
+    priors <- create.priors(config)
 
-    ## tests
+    ## generate outputs
     out.mu <- priors$mu(param)
     out.pi <- priors$pi(param)
     out.all <- priors$all(param)
+
+    ## tests
+    expect_equal(out.mu + out.pi, out.all)
+
     expect_true(!any(is.na(out)))
 
 })

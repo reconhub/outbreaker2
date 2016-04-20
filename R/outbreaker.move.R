@@ -13,7 +13,7 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.move <- function(param, config, densities, rand){
+outbreaker.move <- function(moves, data, param, config, densities, rand){
     ## get number of moves ##
     J <- length(moves)
 
@@ -44,7 +44,7 @@ outbreaker.move <- function(param, config, densities, rand){
 
         ## store outputs if needed
         if((i %% config$sample.every) == 0){
-            param <- outbreaker.mcmc.store(param=param, data=data, step=i)
+            param <- outbreaker.mcmc.store(param=param, data=data, densities=densities, step=i)
         }
 
     } # end of the chain

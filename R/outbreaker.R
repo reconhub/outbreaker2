@@ -67,7 +67,7 @@ outbreaker <- function(data = outbreaker.data(),
 
     ## CREATE AND INITIALIZE MCMC CHAIN ##
     param <- outbreaker.create.mcmc(data=data, config=config)
-    param <- outbreaker.init.mcmc(loglike=loglike, priors=priors)
+    param <- outbreaker.init.mcmc(param=param, loglike=loglike, priors=priors)
 
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
@@ -98,7 +98,8 @@ outbreaker <- function(data = outbreaker.data(),
     ## perform mcmc
     ## procedure is the same as before, with some cases fixed as 'imported'
     moves <- outbreaker.create.moves(config=config)
-    outbreaker.move(param=param, config=config, densities=densities, rand=rand)
+    outbreaker.move(moves=moves, data=data, param=param,
+                    config=config, densities=densities, rand=rand)
 
 
     ## SHAPE RESULTS ##

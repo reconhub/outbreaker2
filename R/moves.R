@@ -41,7 +41,7 @@ move.t.inf <- function(param, config, densities, rand){ # assumes symmetric prop
     ## propose new t.inf
     new.param <- param
     new.param$current.t.inf <- new.param$current.t.inf +
-        sample(-1:1, size=data$N, replace=TRUE, prob=c(.1,8,.1))
+        sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
 
     ## compute log ratio
     logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)

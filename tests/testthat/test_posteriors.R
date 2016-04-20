@@ -27,8 +27,8 @@ test_that("create.posteriors gives expected results", {
     expect_true(all(vapply(out, is.function, logical(1))))
 
     ## check that closure worked
-    expect_identical(ll$genetic, environment(out$genetic)$ll.genetic)
-    expect_identical(ll$reporting, environment(out$reporting)$ll.reporting)
+    expect_identical(ll$genetic, environment(out$genetic)$genetic)
+    expect_identical(ll$reporting, environment(out$reporting)$reporting)
     expect_identical(priors$mu, environment(out$genetic)$prior.mu)
     expect_identical(priors$pi, environment(out$reporting)$prior.pi)
 

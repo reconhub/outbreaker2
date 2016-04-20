@@ -53,9 +53,14 @@
 #'
 #' \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for performing additional tests during outbreaker; it makes computations substantially slower and is mostly used for debugging purposes.}
 #'
-#' \item{min.date}{earliest infection date possible, expressed as days since the first sampling;}
+#' \item{min.date}{earliest infection date possible, expressed as days since the first sampling}
 #'
 #' \item{max.kappa}{an integer indicating the largest number of generations between any two linked cases; defaults to 5}
+#'
+#' \item{prior.mu}{a numeric value indicating the rate of the exponential prior for the mutation rate 'mu'}
+#'
+#' \item{prior.pi}{a numeric vector of length 2 indicating the first and second parameter of the beta prior for the reporting probability 'pi'}
+#'
 #' }
 #'
 #' @param ... settings to be passed to outbreaker
@@ -104,7 +109,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                      find.import=TRUE,
                      outlier.threshold=5,
                      n.iter.import=5000,
-                     sample.every.import=100)
+                     sample.every.import=100,
+                     prior.mu=1000,
+                     prior.pi=c(10,1))
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -210,6 +217,15 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     ## check sample.every.import
     if(!is.numeric(config$sample.every.import)) stop("sample.every.import is not a numeric value")
     if(config$sample.every.import < 1) stop("sample.every.import is smaller than 1")
+
+    ## check prior value for mu
+    if(!is.numeric(config$prior.mu)) stop("prior.mu is not a numeric value")
+    if(config$prior.mu < 0) stop("prior.mu is negative (it should be a rate)")
+
+    ## check prior value for pi
+    if(!all(is.numeric(config$prior.pi))) stop("prior.pi has non-numeric values")
+    if(any(config$prior.pi < 0)) stop("prior.pi has negative values")
+    if(length(config$prior.pi)!=2L) stop("prior.pi should be a vector of length 2")
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

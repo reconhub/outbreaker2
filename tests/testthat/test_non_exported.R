@@ -109,10 +109,10 @@ test_that("Testing find.descendents", {
     param <- outbreaker.create.mcmc(data=data, config=config)
 
     ## tests
-    expect_error(find.descendents(data, param, 0))
-    expect_error(find.descendents(data, param, 666))
-    expect_equal(find.descendents(data, param, 1), c(2,4,28))
-    expect_equal(find.descendents(data, param, 30), integer(0))
+    expect_error(find.descendents(param, 0))
+    expect_error(find.descendents(param, 666))
+    expect_equal(find.descendents(param, 1), c(2,4,28))
+    expect_equal(find.descendents(param, 30), integer(0))
 
 })
 

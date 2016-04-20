@@ -13,10 +13,11 @@ test_that("ll.timing.infections gives expected results", {
     w <- c(.1, .2, .5, .2, .1)
     data <- outbreaker.data(dates=times, w.dens=w)
     config <- outbreaker.config(data=data, init.tree=alpha)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    ll <- outbreaker2:::create.loglike(data)
+    param <- outbreaker.mcmc.init(data=data, config=config, loglike=ll)
 
     ## tests
-    out <- ll.timing.infections(data=data, param=param)
+    out <- ll$timing.infections(data=data, param=param)
     expect_is(out, "numeric")
     expect_equal(out, -6.214608098)
 })
@@ -24,8 +25,8 @@ test_that("ll.timing.infections gives expected results", {
 
 
 
-## test ll.timing.sampling ##
-test_that("ll.timing.sampling gives expected results", {
+## test ll$timing.sampling ##
+test_that("ll$timing.sampling gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
@@ -40,7 +41,7 @@ test_that("ll.timing.sampling gives expected results", {
     param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## tests
-    out <- ll.timing.sampling(data=data, param=param)
+    out <- ll$timing.sampling(data=data, param=param)
     expect_is(out, "numeric")
     expect_equal(out, -8.51719319142)
 })
@@ -48,8 +49,8 @@ test_that("ll.timing.sampling gives expected results", {
 
 
 
-## test ll.genetic ##
-test_that("ll.genetic gives expected results", {
+## test ll$genetic ##
+test_that("ll$genetic gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
@@ -62,7 +63,7 @@ test_that("ll.genetic gives expected results", {
 
 
     ## tests
-    out <- ll.genetic(data=data, param=param)
+    out <- ll$genetic(data=data, param=param)
     expect_is(out, "numeric")
     expect_equal(out, -997.840630502)
 })
@@ -72,8 +73,8 @@ test_that("ll.genetic gives expected results", {
 
 
 
-## test ll.reporting ##
-test_that("ll.reporting gives expected results", {
+## test ll$reporting ##
+test_that("ll$reporting gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
@@ -86,7 +87,7 @@ test_that("ll.reporting gives expected results", {
 
 
     ## tests
-    out <- ll.reporting(data=data, param=param)
+    out <- ll$reporting(data=data, param=param)
     expect_is(out, "numeric")
     expect_equal(out, -3.05545495408)
 
@@ -96,8 +97,8 @@ test_that("ll.reporting gives expected results", {
 
 
 
-## test ll.all ##
-test_that("ll.all gives expected results", {
+## test ll$all ##
+test_that("ll$all gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
@@ -109,10 +110,10 @@ test_that("ll.all gives expected results", {
     param <- outbreaker.mcmc.init(data=data, config=config)
 
     ## compute likelihoods
-    out <- ll.all(data=data, param=param)
-    out.timing <- ll.timing(data=data, param=param)
-    out.genetic <- ll.genetic(data=data, param=param)
-    out.reporting <- ll.reporting(data=data, param=param)
+    out <- ll$all(data=data, param=param)
+    out.timing <- ll$timing(data=data, param=param)
+    out.genetic <- ll$genetic(data=data, param=param)
+    out.reporting <- ll$reporting(data=data, param=param)
 
     ## test expected values
     expect_is(out, "numeric")
@@ -130,7 +131,7 @@ test_that("ll.all gives expected results", {
 
 
 ## test local likelihoods ##
-test_that("ll.all with i specified gives expected results", {
+test_that("ll$all with i specified gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())

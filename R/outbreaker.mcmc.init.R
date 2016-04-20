@@ -4,48 +4,19 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
-#' @param data a list of data items as returned by \code{outbreaker.data}
+#' @param param a list of data items as returned by \code{outbreaker.create.mcmc}
 #'
-#' @param config a list of settings as returned by \code{outbreaker.config}
+#' @param loglike a list of loglikelihood functions with enclosed data as returned by \code{create.loglike}
 #'
 #' @export
 #'
-outbreaker.mcmc.init <- function(data, config){
-  ## CREATE EMPTY OUTPUT VECTORS ##
-    size <- round(config$n.iter/config$sample.every)
-    step <- integer(size)
-    post <- prior <- like <- mu <- pi <- double(size)
-    alpha <- as.list(integer(size))
-    t.inf <- as.list(integer(size))
-    kappa <- as.list(integer(size))
-
-    ## SET CURRENT VALUES AND COUNTER ##
-    step[1] <- 1L
-    current.mu <- mu[1] <- config$init.mu
-    current.alpha <- alpha[[1]] <- config$init.alpha
-    current.kappa <- kappa[[1]] <- config$init.kappa
-    current.pi <- pi[1] <- config$init.pi
-    if(is.null(config$init.t.inf)){
-        current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
-    } else {
-        current.t.inf <- config$init.t.inf
-    }
-    counter <- 1L
-
-
-    ## SHAPE CHAIN ##
-    out <- list(size=size, step=step,
-                post=post, like=like, prior=prior,
-                alpha=alpha, t.inf=t.inf, mu=mu, kappa=kappa, pi=pi,
-                current.alpha=current.alpha, current.t.inf=current.t.inf, current.mu=current.mu,
-                current.kappa=current.kappa, current.pi=current.pi,
-                counter=counter)
+outbreaker.init.mcmc <- function(param, loglike){
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##
-    out$like[1] <- ll.all(data=data, param=out)
-    out$prior[1] <- prior.all(param=out)
-    out$post[1] <- out$like[1] + out$prior[1]
+    param$like[1] <- loglike$all(param)
+    param$prior[1] <- prior.all(param=param)
+    param$post[1] <- param$like[1] + param$prior[1]
 
-    return(out)
-} # end outbreaker.mcmc.init
+    return(param)
+}
 

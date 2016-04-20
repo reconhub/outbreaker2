@@ -17,7 +17,7 @@
 #'
 #' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
 #' @param config a set of settings as returned by \code{\link{outbreaker.config}}
-## #' @param loglike a set of log-likelihood functions as returned by \code{\link{outbreaker.create.loglike}}
+## #' @param loglike a set of log-likelihood functions as returned by \code{\link{create.loglike}}
 ## #' @param priors a set of prior functions as returned by \code{\link{outbreaker.create.priors}}
 ## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker.create.posteriors}}
 ## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
@@ -60,8 +60,12 @@ outbreaker <- function(data = outbreaker.data(),
     ## ADD CONVOLUTIONS TO DATA ##
     data <- add.convolutions(data=data, config=config)
 
-    ## INITIALIZE MCMC CHAIN ##
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    ## MAKE A LIST OF LIKELIHOOD FUNCTIONS WITH ENCLOSED DATA ##
+    loglike <- create.loglike(data=data)
+
+    ## CREATE AND INITIALIZE MCMC CHAIN ##
+    param <- outbreaker.create.mcmc(data=data, config=config)
+    param <- outbreaker.init.mcmc(loglike=loglike)
 
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)

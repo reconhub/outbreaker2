@@ -330,10 +330,7 @@ check.i <- function(data, i){
 
 
 ## find descendents of a case 'i'
-find.descendents <- function(data, param, i){
-    ## check i
-    check.i(data=data, i=i)
-
+find.descendents <- function(param, i){
     ## find descendents
     return(which(param$current.alpha==i))
 } # end find.descendents

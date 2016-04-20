@@ -56,7 +56,6 @@ test_that("posteriors computations give expected values", {
     ## tests
     expect_equal(posteriors$genetic(param), ll$genetic(param) + priors$mu(param))
     expect_equal(posteriors$reporting(param), ll$reporting(param) + priors$pi(param))
-    
-    expect_equal(post, post.check)
+    expect_equal(posteriors$all(param), ll$all(param) + priors$all(param))
 })
 

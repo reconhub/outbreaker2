@@ -60,12 +60,14 @@ outbreaker <- function(data = outbreaker.data(),
     ## ADD CONVOLUTIONS TO DATA ##
     data <- add.convolutions(data=data, config=config)
 
-    ## MAKE A LIST OF LIKELIHOOD FUNCTIONS WITH ENCLOSED DATA ##
-    loglike <- create.loglike(data=data)
+    ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
+    loglike <- create.loglike(data)
+    priors <- create.priors(config)
+    posteriors <- create.posteriors(loglike, priors)
 
     ## CREATE AND INITIALIZE MCMC CHAIN ##
     param <- outbreaker.create.mcmc(data=data, config=config)
-    param <- outbreaker.init.mcmc(loglike=loglike)
+    param <- outbreaker.init.mcmc(loglike=loglike, priors=priors)
 
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)

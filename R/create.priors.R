@@ -2,6 +2,7 @@
 ##
 ## This function creates a named list of prior functions with enclosed prior parameters
 ##
+
 create.priors <- function(config){
 
     ## These are all the functions generating various prior functions;

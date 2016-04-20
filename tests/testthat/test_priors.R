@@ -21,27 +21,37 @@ test_that("priors have plausible values", {
 
     ## tests
     expect_equal(out.mu + out.pi, out.all)
-
-    expect_true(!any(is.na(out)))
+    expect_true(!any(is.na(out.mu)))
+    expect_true(!any(is.na(out.pi)))
+    expect_true(!any(is.na(out.all)))
+    expect_equal(out.all, 8.16209573106)
 
 })
 
 
 
 ## test outbreaker.create.priors ##
-test_that("outbreaker.create.priors gives expected results", {
+test_that("create.priors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
 
     ## generate data
-    out <- outbreaker.create.priors()
+    out <- create.priors(outbreaker.config())
 
     ## tests
     expect_is(out, "list")
-    expect_equal(length(out), 2)
+    expect_equal(length(out), 3)
     expect_equal(names(out), c("mu",
+                               "pi",
                                "all")
                  )
+    ## check that all items are functions
+    expect_true(all(vapply(out, is.function, logical(1))))
+
+    ## check that closure worked
+    expect_identical(config$prior.mu, environment(out$mu)$rate)
+    expect_identical(config$prior.pi,
+                     c(environment(out$mu)$shape1, environment(out$mu)$shape1))
 
 })

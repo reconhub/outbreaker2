@@ -17,7 +17,7 @@ test_that("ll.timing.infections gives expected results", {
     param <- outbreaker.mcmc.init(data=data, config=config, loglike=ll)
 
     ## tests
-    out <- ll$timing.infections(data=data, param=param)
+    out <- ll$timing.infections(param)
     expect_is(out, "numeric")
     expect_equal(out, -6.214608098)
 })

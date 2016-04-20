@@ -38,7 +38,7 @@ test_that("create.priors gives expected results", {
 
     ## generate data
     config <- outbreaker.config()
-    out <- create.priors()
+    out <- create.priors(config)
 
     ## tests
     expect_is(out, "list")

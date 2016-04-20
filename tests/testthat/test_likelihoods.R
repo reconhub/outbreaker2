@@ -14,7 +14,7 @@ test_that("ll.timing.infections gives expected results", {
     data <- outbreaker.data(dates=times, w.dens=w)
     config <- outbreaker.config(data=data, init.tree=alpha)
     ll <- outbreaker2:::create.loglike(data)
-    param <- outbreaker.mcmc.init(data=data, config=config, loglike=ll)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
     ## tests
     out <- ll$timing.infections(param)
@@ -37,11 +37,12 @@ test_that("ll$timing.sampling gives expected results", {
     samp.times <- times + c(1, 1, 2, 3, 4)
     f <- c(.1, .2, .5, .2, .1)
     data <- outbreaker.data(dates=samp.times, f.dens=f)
+    ll <- outbreaker2:::create.loglike(data)
     config <- outbreaker.config(data=data, init.t.inf=times, init.tree=alpha)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
     ## tests
-    out <- ll$timing.sampling(data=data, param=param)
+    out <- ll$timing.sampling(param=param)
     expect_is(out, "numeric")
     expect_equal(out, -8.51719319142)
 })
@@ -58,12 +59,13 @@ test_that("ll$genetic gives expected results", {
     ## generate data
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    ll <- outbreaker2:::create.loglike(data)
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
 
     ## tests
-    out <- ll$genetic(data=data, param=param)
+    out <- ll$genetic(param=param)
     expect_is(out, "numeric")
     expect_equal(out, -997.840630502)
 })
@@ -83,11 +85,12 @@ test_that("ll$reporting gives expected results", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    ll <- outbreaker2:::create.loglike(data)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
 
     ## tests
-    out <- ll$reporting(data=data, param=param)
+    out <- ll$reporting(param=param)
     expect_is(out, "numeric")
     expect_equal(out, -3.05545495408)
 
@@ -107,13 +110,14 @@ test_that("ll$all gives expected results", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    ll <- outbreaker2:::create.loglike(data)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
     ## compute likelihoods
-    out <- ll$all(data=data, param=param)
-    out.timing <- ll$timing(data=data, param=param)
-    out.genetic <- ll$genetic(data=data, param=param)
-    out.reporting <- ll$reporting(data=data, param=param)
+    out <- ll$all(param=param)
+    out.timing <- ll$timing(param=param)
+    out.genetic <- ll$genetic(param=param)
+    out.reporting <- ll$reporting(param=param)
 
     ## test expected values
     expect_is(out, "numeric")
@@ -140,8 +144,8 @@ test_that("ll$all with i specified gives expected results", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    ll <- outbreaker.create.loglike(data=data)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    ll <- outbreaker2:::create.loglike(data)
+    param <- outbreaker.create.mcmc(data=data, config=config)
 
     ## compute local likelihoods
     sum.local.timing.sampling <- sum(sapply(seq.int(data$N), ll$timing.sampling, data=data, param=param))
@@ -182,7 +186,7 @@ test_that("outbreaker.create.loglike gives expected results", {
     rm(list=ls())
 
     ## generate data
-    out <- outbreaker.create.loglike(data=1)
+    out <- outbreaker2:::create.loglike(data)
 
     ## tests
     expect_is(out, "list")

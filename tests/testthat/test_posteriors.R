@@ -53,15 +53,10 @@ test_that("posteriors computations give expected values", {
     priors <- create.priors(config)
     posteriors <- create.posteriors(ll, priors)
 
-
-
-    ## generate outputs
-    like <-ll$all(param)
-    prior <- priors$all(param)
-    post <- posteriors$all(param)
-
     ## tests
     expect_equal(posteriors$genetic(param), ll$genetic(param) + priors$mu(param))
+    expect_equal(posteriors$reporting(param), ll$reporting(param) + priors$pi(param))
+    
     expect_equal(post, post.check)
 })
 

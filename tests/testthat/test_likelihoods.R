@@ -179,14 +179,15 @@ test_that("ll$all with i specified gives expected results", {
 
 
 
-## test outbreaker.create.loglike ##
-test_that("outbreaker.create.loglike gives expected results", {
+## test create.loglike ##
+test_that("create.loglike create functions with closure", {
     ## skip on CRAN
     skip_on_cran()
     rm(list=ls())
 
     ## generate data
-    out <- outbreaker2:::create.loglike(outbreaker.data())
+    data <- outbreaker.data()
+    out <- outbreaker2:::create.loglike(data)
 
     ## tests
     expect_is(out, "list")
@@ -199,7 +200,14 @@ test_that("outbreaker.create.loglike gives expected results", {
                                "all"
                               )
                  )
-    ## check that they are all functions
-    for(f in out) expect_is(f, "function")
+
+    ## check that all items are functions
+    expect_true(all(vapply(out, is.function, logical(1))))
+
+    ## check that closure worked
+    expect_identical(data, environment(out$genetic)$data)
+    expect_identical(data, environment(out$reporting)$data)
+    expect_identical(data, environment(out$timing.infections)$data)
+    expect_identical(data, environment(out$timing.sampling)$data)
 
 })

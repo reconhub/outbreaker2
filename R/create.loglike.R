@@ -30,6 +30,8 @@
 ## #' @return a list of named functions
 ## #'
 
+
+
 ##
 ## This function creates a named list of log-likelihood functions with enclosed data
 ##

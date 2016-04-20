@@ -186,15 +186,17 @@ test_that("outbreaker.create.loglike gives expected results", {
     rm(list=ls())
 
     ## generate data
-    out <- outbreaker2:::create.loglike(data)
+    out <- outbreaker2:::create.loglike(outbreaker.data())
 
     ## tests
     expect_is(out, "list")
-    expect_equal(length(out), 4)
+    expect_equal(length(out), 6)
     expect_equal(names(out), c("genetic",
                                "reporting",
                                "timing.infections",
-                               "timing.sampling"
+                               "timing.sampling",
+                               "timing",
+                               "all"
                               )
                  )
     ## check that they are all functions

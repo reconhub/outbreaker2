@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.store <- function(param, data, densities, step){
+outbreaker.mcmc.store <- function(param, densities, step){
     ## UPDATE COUNTER
     counter <- param$counter <- param$counter + 1
 

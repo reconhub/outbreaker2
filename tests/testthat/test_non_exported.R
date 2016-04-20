@@ -69,30 +69,30 @@ test_that("Auxiliary functions for ancestries are working", {
 })
 
 
-## test check.i ##
-test_that("Testing check.i", {
-    ## skip on CRAN
-    skip_on_cran()
-    rm(list=ls())
+## ## test check.i ##
+## test_that("Testing check.i", {
+##     ## skip on CRAN
+##     skip_on_cran()
+##     rm(list=ls())
 
-    ## generate data
-    alpha <- c(2, NA, 1, 3, 3, 1)
-    t.inf <- c(2, 1, 3, 4, 4, 3)
-    data <- outbreaker.data(dates=t.inf+1)
+##     ## generate data
+##     alpha <- c(2, NA, 1, 3, 3, 1)
+##     t.inf <- c(2, 1, 3, 4, 4, 3)
+##     data <- outbreaker.data(dates=t.inf+1)
 
-    ## tests
-    expect_error(check.i(data, 0:10))
-    expect_error(check.i(data, -13))
-    expect_error(check.i(data, 5:11))
-    expect_error(check.i(data, c(NA,2)))
-    expect_error(check.i(data, "1"))
-    expect_error(check.i(data, TRUE))
-    expect_equal(check.i(data, NULL), 1:6)
-    expect_equal(check.i(data, 6),6)
-    expect_equal(check.i(data, c(1,3,2)), c(1,3,2))
-    expect_equal(check.i(data, 1:6), 1:6)
+##     ## tests
+##     expect_error(check.i(data, 0:10))
+##     expect_error(check.i(data, -13))
+##     expect_error(check.i(data, 5:11))
+##     expect_error(check.i(data, c(NA,2)))
+##     expect_error(check.i(data, "1"))
+##     expect_error(check.i(data, TRUE))
+##     expect_equal(check.i(data, NULL), 1:6)
+##     expect_equal(check.i(data, 6),6)
+##     expect_equal(check.i(data, c(1,3,2)), c(1,3,2))
+##     expect_equal(check.i(data, 1:6), 1:6)
 
-})
+## })
 
 
 

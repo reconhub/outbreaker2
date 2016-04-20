@@ -29,6 +29,7 @@ test_that("parameters and augmented data move", {
     expect_true(all(vapply(moves, is.function, logical(1))))
 
     for(i in seq.int(length(moves))) {
+        set.seed(j)
         res <- moves[[i]](param=param, config=config, densities=densities, rand=rand)
 
         ## check that content in param after movements has identical shape

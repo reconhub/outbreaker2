@@ -10,7 +10,7 @@ test_that("Test detection of imported cases", {
     data(fakeOutbreak)
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data, n.iter=100, sample.every=10)
-    param <- outbreaker.mcmc.init(data=data, config=config)
+    param <- outbreaker.create.mcmc(data=data, config=config)
     rand <- outbreaker.rand.vec(config=config)
     moves <- outbreaker.create.moves(config=config)
     data <- add.convolutions(data=data, config=config)

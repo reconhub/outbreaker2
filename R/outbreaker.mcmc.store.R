@@ -4,7 +4,7 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
-#' @param param a list of output items as returned by \code{outbreaker.mcmc.init}
+#' @param param a list of output items as returned by \code{outbreaker.create.mcmc}
 #' @param data a list of settings as returned by \code{outbreaker.data}
 #' @param step an integer indicating the MCMC iteration being stored
 #'

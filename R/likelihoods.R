@@ -11,7 +11,7 @@
 ## Arguments are:
 ##
 ## 'data' a list of named items containing input data as returned by \code{\link{outbreaker.data}}
-## 'param' a list containing parameters as returned by \code{outbreaker.mcmc.init}
+## 'param' a list containing parameters as returned by \code{outbreaker.create.mcmc}
 ## 'i' an optional vector of integers, indicating subset of cases included in the likelihood computation; if NULL (default), all cases are used.
 
 

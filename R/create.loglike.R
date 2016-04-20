@@ -6,7 +6,7 @@
 ## #' User-provided functions will be checked to ensure the right arguments are present. All log-likelihood functions should have to following arguments:
 ## #' \describe{
 ## #' \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
-## #' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
+## #' \item{param}{a list of parameters as returned by \code{outbreaker.create.mcmc}}
 ## #' }
 ## #'
 ## #' Note that unlike \code{outbreaker.create.moves}, likelihood functions have no mandatory names. They only need to be compatible with the movement functions used in \code{outbreaker.create.moves}. See 'details' for defaults.

@@ -6,11 +6,11 @@
 #'
 #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
 #' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param param a list of parameters as returned by \code{outbreaker.mcmc.init}
+#' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
 #' @param config a list of settings as returned by \code{outbreaker.config}
 #' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #'
-#' @return a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
+#' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
 outbreaker.find.imports <- function(moves, data, config, param, rand){
     ## return if not import ##

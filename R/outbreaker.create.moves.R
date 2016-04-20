@@ -7,7 +7,7 @@
 #' \describe{
 #' \item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
 #' \item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
-#' \item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
+#' \item{param}{a list of parameters as returned by \code{outbreaker.create.mcmc}}
 #' \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 #' }
 #'

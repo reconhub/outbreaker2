@@ -96,7 +96,8 @@ outbreaker <- function(data = outbreaker.data(),
     ## config <- temp$config
 
     ## perform mcmc
-    ## procedure is the same as before, with some cases fixed as 'imported' param <-
+    ## procedure is the same as before, with some cases fixed as 'imported'
+    moves <- outbreaker.create.moves(config=config)
     outbreaker.move(param=param, config=config, densities=densities, rand=rand)
 
 

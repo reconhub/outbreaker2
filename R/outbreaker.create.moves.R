@@ -71,25 +71,26 @@ outbreaker.create.moves <- function(..., moves=NULL, config=outbreaker.config())
     if(!any(config$move.kappa)) moves$move.kappa <- NULL
 
 
-    ## CHECK FUNCTIONS ##
-    check.function.args <- function(f){
-        if(is.null(f)) return(TRUE)
-        args <- names(formals(f))
-        if(!identical(sort(args), c("config","data","param", "rand"))) {
-            return(FALSE)
-        } else {
-            return(TRUE)
-        }
-    }
+    ## ## CHECK FUNCTIONS ##
+    ## check.function.args <- function(f){
+    ##     if(is.null(f)) return(TRUE)
+    ##     args <- names(formals(f))
+    ##     if(!identical(sort(args), c("config","data","param", "rand"))) {
+    ##         return(FALSE)
+    ##     } else {
+    ##         return(TRUE)
+    ##     }
+    ## }
 
-    args.checks <- sapply(unlist(moves), check.function.args)
-    if(!all(args.checks)){
-        culprits <- names(args.checks)[!args.checks]
-        culprits <- paste(culprits, collapse=",")
-        stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'config', 'param', 'rand'")
-    }
+    ## args.checks <- sapply(unlist(moves), check.function.args)
+    ## if(!all(args.checks)){
+    ##     culprits <- names(args.checks)[!args.checks]
+    ##     culprits <- paste(culprits, collapse=",")
+    ##     stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'config', 'param', 'rand'")
+    ## }
 
     ## RETURN ##
     return(moves)
 
 } # end outbreaker.create.moves
+

@@ -83,6 +83,9 @@ outbreaker <- function(data = outbreaker.data(),
 
     densities <- list(loglike=loglike, priors=priors, posteriors=posteriors)
 
+    ## here we create a list of function for moving parameters
+    moves <- outbreaker.create.moves(config=config)
+
 
     ## MCMC ##
 
@@ -97,7 +100,6 @@ outbreaker <- function(data = outbreaker.data(),
 
     ## perform mcmc
     ## procedure is the same as before, with some cases fixed as 'imported'
-    moves <- outbreaker.create.moves(config=config)
     param <- outbreaker.move(moves=moves, data=data, param=param,
                     config=config, densities=densities, rand=rand)
 

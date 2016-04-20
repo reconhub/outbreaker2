@@ -9,10 +9,11 @@
 #' @export
 #'
 #' @param param a list containing parameters as returned by \code{outbreaker.mcmc.init}
-#' @importFrom stats dexp dbeta
+#' @param config a set of settings as returned by \code{\link{outbreaker.config}}
 #'
-prior.mu <- function(param){
-    return(dexp(param$current.mu, 1000, log=TRUE))
+#'
+prior.mu <- function(param, config){
+    return(stats::dexp(param$current.mu, 1000, log=TRUE))
 } # end prior.mu
 
 
@@ -20,8 +21,8 @@ prior.mu <- function(param){
 #' @rdname priors
 #' @export
 #'
-prior.pi <- function(param){
-    return(dbeta(param$current.pi, 10, 1, log=TRUE))
+prior.pi <- function(param, config){
+    return(stats::dbeta(param$current.pi, 10, 1, log=TRUE))
 }
 
 
@@ -29,7 +30,7 @@ prior.pi <- function(param){
 #' @rdname priors
 #' @export
 #'
-prior.all <- function(param){
+prior.all <- function(param, config){
     return(prior.mu(param=param) + prior.pi(param=param))
 } # end prior.all
 

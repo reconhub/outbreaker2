@@ -8,11 +8,10 @@
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
 #' @param config a list of settings as returned by \code{outbreaker.config}
-#' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.find.imports <- function(moves, data, param, config, densities, rand){
+outbreaker.find.imports <- function(moves, data, param, config, densities){
     ## send back unchanged chains if config disabled the detection of imported cases ##
     if(!config$find.import) return(list(config=config, param=param))
 
@@ -38,7 +37,7 @@ outbreaker.find.imports <- function(moves, data, param, config, densities, rand)
             }
 
             ## move parameters
-            param <- moves[[j]](param=param, config=config, densities=densities, rand=rand)
+            param <- moves[[j]](param)
 
             ## safemode
             if(config$paranoid){

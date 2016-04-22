@@ -72,19 +72,15 @@ outbreaker <- function(data = outbreaker.data(),
     ## CREATE FAST RANDOM VARIABLE GENERATORS ##
     rand <- outbreaker.rand.vec(config)
 
-    ## We put all density functions in a single list 'densities'; all functions have enclosed items
-    ## so that only the 'param' argument is needed, which describes the current state of the system
-    ## (it is a list including past retained, and current augmented data and parameters).
-    ##
-    ## Included funcitons are:
-    ## - $loglike: log-likelihood functions with enclosed data
-    ## - $priors: prior functions with enclosed parameters
-    ## - $posteriors: posterior functions with enclosed loglike and parameter functions
+    ## We put all density functions in a single list 'densities'. This includes 3 lists, for:
+    ## log-likelihood, priors, and posteriors. All functions have enclosed items so that only the
+    ## 'param' argument is needed.
 
     densities <- list(loglike=loglike, priors=priors, posteriors=posteriors)
 
     ## here we create a list of function for moving parameters
-    moves <- outbreaker.create.moves(config=config)
+    moves <- outbreaker.create.moves(config=config, densities=densities, rand=rand)
+
 
 
     ## MCMC ##
@@ -92,16 +88,16 @@ outbreaker <- function(data = outbreaker.data(),
     ## preliminary run to detect imported cases this relies on a shorter run of the MCMC,
     ## then computing the average 'global influence' (-loglike) of each data point, identifying
     ## outliers (based on fixed threshold) and marking outliers down as 'imported cases'.
-    ##
-    temp <- outbreaker.find.imports(moves=moves, data=data, param=param,
-                    config=config, densities=densities, rand=rand)
+
+    temp <- outbreaker.find.imports(moves=moves, data=data, param=param, config=config,
+                                    densities=densities)
     param <- temp$param
     config <- temp$config
 
     ## perform mcmc
     ## procedure is the same as before, with some cases fixed as 'imported'
     param <- outbreaker.move(moves=moves, data=data, param=param,
-                    config=config, densities=densities, rand=rand)
+                    config=config, densities=densities)
 
 
     ## SHAPE RESULTS ##

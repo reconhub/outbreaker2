@@ -23,46 +23,28 @@ create.moves <- function(config, densities, rand){
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
     ## remove move.alpha if no ancestry can be moved
-    if(!any(config$move.alpha)) moves$move.alpha <-  moves$move.swap.cases <- NULL
+    if(!any(config$move.alpha)) out$move.alpha <-  out$move.swap.cases <- NULL
 
     ## remove move.t.inf if disabled
-    if(!any(config$move.t.inf)) moves$move.t.inf <-  moves$move.swap.cases <- NULL
+    if(!any(config$move.t.inf)) out$move.t.inf <-  out$move.swap.cases <- NULL
 
     ## remove move.mu if disabled
-    if(!any(config$move.mu)) moves$move.mu <- NULL
+    if(!any(config$move.mu)) out$move.mu <- NULL
 
     ## remove swap if disabled, or if some alpha/t.inf cannot be moved
     if(!any(config$move.swap.cases) ||
        !any(config$move.alpha) ||
-       !any(config$move.t.inf)) moves$move.swap.cases <- NULL
+       !any(config$move.t.inf)) out$move.swap.cases <- NULL
 
     ## remove move.pi if disabled
-    if(!any(config$move.pi)) moves$move.pi <- NULL
+    if(!any(config$move.pi)) out$move.pi <- NULL
 
     ## remove move.kappa if disabled
-    if(!any(config$move.kappa)) moves$move.kappa <- NULL
+    if(!any(config$move.kappa)) out$move.kappa <- NULL
 
 
-    ## ## CHECK FUNCTIONS ##
-    ## check.function.args <- function(f){
-    ##     if(is.null(f)) return(TRUE)
-    ##     args <- names(formals(f))
-    ##     if(!identical(sort(args), c("config","data","param", "rand"))) {
-    ##         return(FALSE)
-    ##     } else {
-    ##         return(TRUE)
-    ##     }
-    ## }
+    ## return list of movement functions with enclosed stuff ##
+    return(out)
 
-    ## args.checks <- sapply(unlist(moves), check.function.args)
-    ## if(!all(args.checks)){
-    ##     culprits <- names(args.checks)[!args.checks]
-    ##     culprits <- paste(culprits, collapse=",")
-    ##     stop("problems in movements of: ", culprits, "\narguments shoud be: 'data', 'config', 'param', 'rand'")
-    ## }
-
-    ## RETURN ##
-    return(moves)
-
-} # end outbreaker.create.moves
+}
 

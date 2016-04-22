@@ -136,92 +136,170 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
     ## check / process init.t.inf
     if (!is.null(config$init.t.inf)){
-        if (inherits(config$init.t.inf, "Date")) config$init.t.inf <- config$init.t.inf-min(config$init.t.inf)
-        if (inherits(config$init.t.inf, "POSIXct")) config$init.t.inf <- difftime(config$init.t.inf, min(config$init.t.inf), units="days")
+        if (inherits(config$init.t.inf, "Date")) {
+            config$init.t.inf <- config$init.t.inf-min(config$init.t.inf)
+        }
+        if (inherits(config$init.t.inf, "POSIXct")) {
+            config$init.t.inf <- difftime(config$init.t.inf, min(config$init.t.inf), units="days")
+        }
         config$init.t.inf <- as.integer(round(config$init.t.inf))
     }
 
     ## check init.mu
-    if (!is.numeric(config$init.mu)) stop("init.mu is not a numeric value")
-    if (config$init.mu < 0) stop("init.mu is negative")
-    if (config$init.mu > 1) stop("init.mu is greater than 1")
+    if (!is.numeric(config$init.mu)) {
+        stop("init.mu is not a numeric value")
+    }
+    if (config$init.mu < 0) {
+        stop("init.mu is negative")
+    }
+    if (config$init.mu > 1) {
+        stop("init.mu is greater than 1")
+    }
 
     ## check init.kappa
-    if (!is.numeric(config$init.kappa)) stop("init.kappa is not a numeric value")
+    if (!is.numeric(config$init.kappa)) {
+        stop("init.kappa is not a numeric value")
+    }
     config$init.kappa <- as.integer(round(config$init.kappa))
-    if (any(config$init.kappa < 1)) stop("init.kappa has values smaller than 1")
+    if (any(config$init.kappa < 1)) {
+        stop("init.kappa has values smaller than 1")
+    }
     if (any(config$init.kappa > config$max.kappa)){
         config$init.kappa[config$init.kappa > config$max.kappa] <- config$max.kappa
         warning("values of init.kappa greater than max.kappa have been set to max.kappa")
     }
 
     ## check init.pi
-    if (!is.numeric(config$init.pi)) stop("init.pi is not a numeric value")
-    if (config$init.pi < 0) stop("init.pi is negative")
-    if (config$init.pi > 1) stop("init.pi is greater than 1")
+    if (!is.numeric(config$init.pi)) {
+        stop("init.pi is not a numeric value")
+    }
+    if (config$init.pi < 0) {
+        stop("init.pi is negative")
+    }
+    if (config$init.pi > 1) {
+        stop("init.pi is greater than 1")
+    }
 
     ## check move.alpha
-    if (!is.logical(config$move.alpha)) stop("move.alpha is not a logical")
+    if (!is.logical(config$move.alpha)) {
+        stop("move.alpha is not a logical")
+    }
 
     ## check move.swap.cases
-    if (!is.logical(config$move.swap.cases)) stop("move.swap.cases is not a logical")
+    if (!is.logical(config$move.swap.cases)) {
+        stop("move.swap.cases is not a logical")
+    }
 
     ## check move.t.inf
-    if (!is.logical(config$move.t.inf)) stop("move.t.inf is not a logical")
+    if (!is.logical(config$move.t.inf)) {
+        stop("move.t.inf is not a logical")
+    }
 
     ## check move.mu
-    if (!is.logical(config$move.mu)) stop("move.mu is not a logical")
+    if (!is.logical(config$move.mu)) {
+        stop("move.mu is not a logical")
+    }
 
     ## check move.kappa
-    if (!is.logical(config$move.kappa)) stop("move.kappa is not a logical")
+    if (!is.logical(config$move.kappa)) {
+        stop("move.kappa is not a logical")
+    }
 
     ## check move.pi
-    if (!is.logical(config$move.pi)) stop("move.pi is not a logical")
+    if (!is.logical(config$move.pi)) {
+        stop("move.pi is not a logical")
+    }
 
     ## check n.iter
-    if (!is.numeric(config$n.iter)) stop("n.iter is not a numeric value")
-    if (config$n.iter < 2 ) stop("n.iter is smaller than 2")
+    if (!is.numeric(config$n.iter)) {
+        stop("n.iter is not a numeric value")
+    }
+    if (config$n.iter < 2 ) {
+        stop("n.iter is smaller than 2")
+    }
 
     ## check sample.every
-    if (!is.numeric(config$sample.every)) stop("sample.every is not a numeric value")
-    if (config$sample.every < 1 ) stop("sample.every is smaller than 1")
+    if (!is.numeric(config$sample.every)) {
+        stop("sample.every is not a numeric value")
+    }
+    if (config$sample.every < 1 ) {
+        stop("sample.every is smaller than 1")
+    }
 
     ## check sd.mu
-    if (!is.numeric(config$sd.mu)) stop("sd.mu is not a numeric value")
-    if (config$sd.mu < 0) stop("sd.mu is negative")
+    if (!is.numeric(config$sd.mu)) {
+        stop("sd.mu is not a numeric value")
+    }
+    if (config$sd.mu < 0) {
+        stop("sd.mu is negative")
+    }
 
     ## check sd.pi
-    if (!is.numeric(config$sd.pi)) stop("sd.pi is not a numeric value")
-    if (config$sd.pi < 0) stop("sd.pi is negative")
+    if (!is.numeric(config$sd.pi)) {
+        stop("sd.pi is not a numeric value")
+    }
+    if (config$sd.pi < 0) {
+        stop("sd.pi is negative")
+    }
 
     ## check prop.alpha.move
-    if (!is.numeric(config$prop.alpha.move)) stop("prop.alpha.move is not a numeric value")
-    if (config$prop.alpha.move < 0 ) stop("prop.alpha.move is negative")
-    if (config$prop.alpha.move > 1 ) stop("prop.alpha.move is greater than one")
+    if (!is.numeric(config$prop.alpha.move)) {
+        stop("prop.alpha.move is not a numeric value")
+    }
+    if (config$prop.alpha.move < 0 ) {
+        stop("prop.alpha.move is negative")
+    }
+    if (config$prop.alpha.move > 1 ) {
+        stop("prop.alpha.move is greater than one")
+    }
 
     ## check batch.size
-    if (!is.numeric(config$batch.size)) stop("batch.size is not numeric")
-    if (config$batch.size<1) stop("batch.size is less than 1")
+    if (!is.numeric(config$batch.size)) {
+        stop("batch.size is not numeric")
+    }
+    if (config$batch.size<1) {
+        stop("batch.size is less than 1")
+    }
 
     ## check paranoid
-    if (!is.logical(config$paranoid)) stop("paranoid is not logical")
-    if (length(config$paranoid) != 1L) stop("paranoid should be a single logical value")
+    if (!is.logical(config$paranoid)) {
+        stop("paranoid is not logical")
+    }
+    if (length(config$paranoid) != 1L) {
+        stop("paranoid should be a single logical value")
+    }
 
     ## check min.date
-    if (!is.numeric(config$min.date)) stop("min.date is not numeric")
-    if (config$min.date >= 0) stop("min.date is greater or equal to 0")
+    if (!is.numeric(config$min.date)) {
+        stop("min.date is not numeric")
+    }
+    if (config$min.date >= 0) {
+        stop("min.date is greater or equal to 0")
+    }
 
     ## check find.import
-    if (!is.logical(config$find.import)) stop("find.import is not logical")
-    if (length(config$find.import) != 1L) stop("find.import should be a single logical value")
+    if (!is.logical(config$find.import)) {
+        stop("find.import is not logical")
+    }
+    if (length(config$find.import) != 1L) {
+        stop("find.import should be a single logical value")
+    }
 
     ## check outlier.threshold
-    if (!is.numeric(config$outlier.threshold)) stop("outlier.threshold is not a numeric value")
-    if (any(config$outlier.threshold < 1)) stop("outlier.threshold has values smaller than 1")
+    if (!is.numeric(config$outlier.threshold)) {
+        stop("outlier.threshold is not a numeric value")
+    }
+    if (any(config$outlier.threshold < 1)) {
+        stop("outlier.threshold has values smaller than 1")
+    }
 
     ## check n.iter.import
-    if (!is.numeric(config$n.iter.import)) stop("n.iter.import is not a numeric value")
-    if (config$n.iter.import < 1000) stop("n.iter is smaller than 1000")
+    if (!is.numeric(config$n.iter.import)) {
+        stop("n.iter.import is not a numeric value")
+    }
+    if (config$n.iter.import < 1000) {
+        stop("n.iter is smaller than 1000")
+    }
 
     ## check sample.every.import
     if (!is.numeric(config$sample.every.import)) stop("sample.every.import is not a numeric value")
@@ -260,7 +338,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                 config$init.alpha <- ralpha(data$dates)
             }
         } else { ## if ancestries are provided
-            if (length(config$init.alpha) != data$N) stop("inconvenient length for init.alpha")
+            if (length(config$init.alpha) != data$N) {
+                stop("inconvenient length for init.alpha")
+            }
             unknownAnces <- config$init.alpha<1 | config$init.alpha>data$N
             if (any(na.omit(unknownAnces))){
                 warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
@@ -270,7 +350,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
         ## check initial t.inf
         if (!is.null(config$init.t.inf)){
-            if (any(config$init.t.inf >= data$dates)) stop("Initial dates of infection come after sampling dates / dates of onset.")
+            if (any(config$init.t.inf >= data$dates)) {
+                stop("Initial dates of infection come after sampling dates / dates of onset.")
+            }
         }
 
         ## recycle move.alpha

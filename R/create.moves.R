@@ -23,24 +23,36 @@ create.moves <- function(config, densities, rand){
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
     ## remove move$alpha if no ancestry can be moved
-    if (!any(config$move.alpha)) out$alpha <-  out$swap.cases <- NULL
+    if (!any(config$move.alpha)) {
+        out$alpha <-  out$swap.cases <- NULL
+    }
 
     ## remove move$t.inf if disabled
-    if (!any(config$move.t.inf)) out$t.inf <-  out$swap.cases <- NULL
+    if (!any(config$move.t.inf)) {
+        out$t.inf <-  out$swap.cases <- NULL
+    }
 
     ## remove move$mu if disabled
-    if (!any(config$move.mu)) out$mu <- NULL
+    if (!any(config$move.mu)) {
+        out$mu <- NULL
+    }
 
     ## remove swap if disabled, or if some alpha/t.inf cannot be moved
     if (!any(config$move.swap.cases) ||
        !any(config$move.alpha) ||
-       !any(config$move.t.inf)) out$swap.cases <- NULL
+       !any(config$move.t.inf)) {
+        out$swap.cases <- NULL
+    }
 
     ## remove move$pi if disabled
-    if (!any(config$move.pi)) out$pi <- NULL
+    if (!any(config$move.pi)) {
+        out$pi <- NULL
+    }
 
     ## remove move$kappa if disabled
-    if (!any(config$move.kappa)) out$kappa <- NULL
+    if (!any(config$move.kappa)) {
+        out$kappa <- NULL
+    }
 
 
     ## return list of movement functions with enclosed stuff ##

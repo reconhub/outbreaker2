@@ -13,7 +13,9 @@
 #'
 outbreaker.find.imports <- function(moves, data, param, config, densities){
     ## send back unchanged chains if config disabled the detection of imported cases ##
-    if (!config$find.import) return(list(config=config, param=param))
+    if (!config$find.import) {
+        return(list(config=config, param=param))
+    }
 
 
     ## store initial param values ##

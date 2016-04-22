@@ -39,7 +39,9 @@
 make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## initialize array
     values <- f(batch.size, ...)
-    if (log) values <- log(values)
+    if (log) {
+        values <- log(values)
+    }
 
     ## initialize counter
     counter <- 0
@@ -76,7 +78,9 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
 make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## initialize array
     values <- f(batch.size, ...)
-    if (log) values <- log(values)
+    if (log) {
+        values <- log(values)
+    }
 
     ## initialize counter
     counter <- 0
@@ -90,7 +94,9 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
         } else {
             ## else, regenerate vector of values
             values <<- f(batch.size, ...)
-            if (log) values <<- log(values)
+            if (log) {
+                values <<- log(values)
+            }
             counter <<- 0
             return(out())
         }

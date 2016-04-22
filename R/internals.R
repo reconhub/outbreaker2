@@ -66,7 +66,9 @@ add.to.context <- function(x, objects){
     }
 
     ## escape if object is empty
-    if (length(objects) < 1L) return(invisible(NULL))
+    if (length(objects) < 1L) {
+        return(invisible(NULL))
+    }
 
     ## check that all objects are named
     if (any(names(objects) == "")) {
@@ -249,8 +251,12 @@ select.alpha.to.move <- function(param, config){
 
 ## which cases are possible ancestors for a case 'i'
 are.possible.alpha <- function(t.inf, i){
-    if (length(i)>1) stop("i has a length > 1")
-    if (any(t.inf[i]==min(t.inf))) return(NA)
+    if (length(i)>1) {
+        stop("i has a length > 1")
+    }
+    if (any(t.inf[i]==min(t.inf))) {
+        return(NA)
+    }
     return(which(t.inf < t.inf[i[1]]))
 } # end are.possible.alpha
 
@@ -267,9 +273,12 @@ choose.possible.alpha <- function(t.inf, i){
 ## plus all subsequent changes
 swap.cases <- function(param, config, i){
     ## stop if 'i' out of range
-    if (i>length(param$current.alpha)) stop("trying to swap ancestry of case ",
-                                           i, " while there are only ",
-                                           length(param$current.alpha), " cases")
+    if (i>length(param$current.alpha)) {
+        stop("trying to swap ancestry of case ",
+             i, " while there are only ",
+             length(param$current.alpha), " cases")
+    }
+
     ## find cases for which ancestries can move
     id.ok.to.swap <- which(can.be.swapped(param, config))
 

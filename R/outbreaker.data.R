@@ -39,11 +39,7 @@
 #' x <- fakeOutbreak
 #' outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
 #'
-outbreaker.data <- function(..., data=NULL){
-    ## PROCESS ... ONLY IF NO DATA IS PASSED
-    if (is.null(data)){
-        data <- list(...)
-    }
+outbreaker.data <- function(..., data=list(...)){
 
     ## SET DEFAULTS ##
     defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL,
@@ -100,8 +96,7 @@ outbreaker.data <- function(..., data=NULL){
     }
 
     ## CHECK DNA
-    if (!is.null(data$dna))
-    {
+    if (!is.null(data$dna)){
         if (!inherits(data$dna, "DNAbin")) stop("dna is not a DNAbin object.")
         if (!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
         data$L <- ncol(data$dna) #  (genome length)

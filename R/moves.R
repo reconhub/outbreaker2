@@ -31,14 +31,18 @@ make.move.mu <- function(config, densities, rand){
         new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
 
         ## escape if new.mu<0 or >1
-        if (new.param$current.mu<0 || new.param$current.mu>1) return(param)
+        if (new.param$current.mu<0 || new.param$current.mu>1){
+            return(param)
+        }
 
         ## compute log ratio  (assumes symmetric proposal)
         logratio <- densities$posteriors$genetic(new.param) -
             densities$posteriors$genetic(param)
 
         ## accept/reject
-        if (logratio >= rand$log.runif1()) return(new.param)
+        if (logratio >= rand$log.runif1()) {
+            return(new.param)
+        }
         return(param)
     }
 }
@@ -141,7 +145,9 @@ make.move.swap.cases <- function(config, densities, rand){
         to.move <- select.alpha.to.move(param, config)
 
         ## leave if nothing moves
-        if (length(to.move)<1) return(param)
+        if (length(to.move)<1) {
+            return(param)
+        }
 
         ## move all ancestries that should be moved
         for (i in to.move){
@@ -185,14 +191,18 @@ make.move.pi <- function(config, densities, rand){
         new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
 
         ## escape if new.pi<0 or >1
-        if (new.param$current.pi<0 || new.param$current.pi>1) return(param)
+        if (new.param$current.pi<0 || new.param$current.pi>1) {
+            return(param)
+        }
 
         ## compute log ratio  (assumes symmetric proposal)
         logratio <- densities$posteriors$reporting(new.param) -
             densities$posteriors$reporting(param)
 
         ## accept/reject
-        if (logratio >= rand$log.runif1()) return(new.param)
+        if (logratio >= rand$log.runif1()) {
+            return(new.param)
+        }
         return(param)
     }
 }

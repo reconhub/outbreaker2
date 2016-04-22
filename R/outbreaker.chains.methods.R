@@ -70,11 +70,15 @@ plot.outbreaker.chains <- function(x, y="post",
 
     ## CHECKS ##
     type <- match.arg(type)
-    if (!y %in% names(x)) stop(paste(y,"is not a column of x"))
+    if (!y %in% names(x)) {
+        stop(paste(y,"is not a column of x"))
+    }
 
 
     ## GET DATA TO PLOT ##
-    if (burnin > max(x$step)) stop("burnin exceeds the number of steps in x")
+    if (burnin > max(x$step)) {
+        stop("burnin exceeds the number of steps in x")
+    }
     x <- x[x$step>burnin,,drop=FALSE]
 
     ## MAKE PLOT ##
@@ -181,7 +185,9 @@ plot.outbreaker.chains <- function(x, y="post",
 summary.outbreaker.chains <- function(object, burnin=0, ...){
     ## check burnin ##
     x <- object
-    if (burnin > max(x$step)) stop("burnin exceeds the number of steps in object")
+    if (burnin > max(x$step)) {
+        stop("burnin exceeds the number of steps in object")
+    }
     x <- x[x$step>burnin,,drop=FALSE]
 
 

@@ -327,7 +327,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
             ## seqTrack init
             if (config$init.tree=="seqTrack") {
                 D.temp <- data$D
-                D.temp[!data$CAN.BE.ANCES] <- 1e30
+                D.temp[!data$can.be.ances] <- 1e30
                 config$init.alpha <- apply(D.temp,2,which.min)
                 config$init.alpha[data$dates==min(data$dates)] <- NA
                 config$init.alpha <- as.integer(config$init.alpha)

@@ -26,7 +26,7 @@ These functions use pre-generation of large random vectors to speed up random nu
 }
 }
 \examples{
-## from Unif(0,1)
+## from Unif (0,1)
 x <- make.fast.rand()
 environment(x)$values
 x(6)
@@ -38,9 +38,9 @@ environment(x)$counter
 environment(x)$values
 
 ## check with microbenchmark
-if(require(microbenchmark)){
+if (require(microbenchmark)) {
 x1 <- make.fast.rand1()
-plot(microbenchmark(x1(), runif(1), times=1e3L), ylim=c(1000,3000))
+plot(microbenchmark(x1(), runif (1), times=1e3L), ylim=c(1000,3000))
 }
 
 }

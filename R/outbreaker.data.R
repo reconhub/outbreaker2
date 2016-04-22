@@ -43,7 +43,7 @@ outbreaker.data <- function(..., data=list(...)) {
 
     ## SET DEFAULTS ##
     defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL,
-                     N=0L, L=0L, D=NULL, MAX.RANGE=NA, CAN.BE.ANCES=NULL,
+                     N=0L, L=0L, D=NULL, max.range=NA, can.be.ances=NULL,
                      log.w.dens=NULL, log.f.dens=NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
@@ -57,11 +57,11 @@ outbreaker.data <- function(..., data=list(...)) {
         if (inherits(data$dates, "POSIXct")) data$dates <- difftime(data$dates, min(data$dates), units="days")
         data$dates <- as.integer(round(data$dates))
         data$N <- length(data$dates)
-        data$MAX.RANGE <- diff(range(data$dates))
+        data$max.range <- diff(range(data$dates))
         ## get temporal ordering constraint:
         ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
-        data$CAN.BE.ANCES <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
-        diag(data$CAN.BE.ANCES) <- FALSE
+        data$can.be.ances <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
+        diag(data$can.be.ances) <- FALSE
     }
 
     ## CHECK W.DENS
@@ -73,8 +73,8 @@ outbreaker.data <- function(..., data=list(...)) {
         ## add an exponential tail summing to 1e-4 to 'w'
         ## to cover the span of the outbreak
         ## (avoids starting with -Inf temporal loglike)
-        if (length(data$w.dens)<data$MAX.RANGE) {
-            length.to.add <- (data$MAX.RANGE-length(data$w.dens)) + 10 # +10 to be on the safe side
+        if (length(data$w.dens)<data$max.range) {
+            length.to.add <- (data$max.range-length(data$w.dens)) + 10 # +10 to be on the safe side
             val.to.add <- dexp(seq_len(length.to.add), 1)
             val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
             data$w.dens <- c(data$w.dens, val.to.add)

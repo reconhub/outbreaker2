@@ -4,7 +4,7 @@
 \alias{outbreaker.data}
 \title{Process input data for outbreaker}
 \usage{
-outbreaker.data(..., data = NULL)
+outbreaker.data(..., data = list(...))
 }
 \arguments{
 \item{...}{a list of data items to be processed (see description)}

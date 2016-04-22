@@ -4,21 +4,19 @@
 \alias{outbreaker.find.imports}
 \title{Detection of imported cases for outbreaker2}
 \usage{
-outbreaker.find.imports(moves, data, config, param, rand)
+outbreaker.find.imports(moves, data, param, config, densities)
 }
 \arguments{
 \item{moves}{a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}}
 
 \item{data}{a list of data items as returned by \code{outbreaker.data}}
 
+\item{param}{a list of parameters as returned by \code{outbreaker.create.mcmc}}
+
 \item{config}{a list of settings as returned by \code{outbreaker.config}}
-
-\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
-
-\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
 }
 \value{
-a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
+a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 }
 \description{
 This function moves all parameters for outbreaker2.

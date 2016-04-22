@@ -4,21 +4,22 @@
 \alias{outbreaker.move}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
-outbreaker.move(moves, data, config, param, rand)
+outbreaker.move(moves, data, param, config, densities)
 }
 \arguments{
-\item{moves}{a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}}
-
-\item{data}{a list of data items as returned by \code{outbreaker.data}}
-
-\item{config}{a list of settings as returned by \code{outbreaker.config}}
-
-\item{param}{a list of parameters as returned by \code{outbreaker.mcmc.init}}
+\item{param}{a list of parameters as returned by \code{outbreaker.create.mcmc}}
 
 \item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
+
+\item{loglike}{a list of log-likelihood functions with enclosed data as returned by \code{create.loglike}}
+
+\item{priors}{a list of prior functions with enclosed parameters as returned by \code{create.priors}}
+
+\item{posteriors}{a list of posterior functions with enclosed likelihood and prior functions as
+returned by \code{create.posteriors}}
 }
 \value{
-a potentially modified list of parameters as returned by \code{outbreaker.mcmc.init}
+a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 }
 \description{
 This function moves all parameters for outbreaker2.

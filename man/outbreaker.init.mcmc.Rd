@@ -4,12 +4,14 @@
 \alias{outbreaker.init.mcmc}
 \title{Initianilizes outputs for outbreaker}
 \usage{
-outbreaker.init.mcmc(param, loglike)
+outbreaker.init.mcmc(param, loglike, priors)
 }
 \arguments{
 \item{param}{a list of data items as returned by \code{outbreaker.create.mcmc}}
 
 \item{loglike}{a list of loglikelihood functions with enclosed data as returned by \code{create.loglike}}
+
+\item{priors}{a list of prior functions with enclosed parameters as returned by \code{create.priors}}
 }
 \description{
 This function creates initial outputs and parameter states for outbreaker.

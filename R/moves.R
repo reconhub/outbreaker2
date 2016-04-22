@@ -1,151 +1,177 @@
-#' Movements of augmented data and parameters for outbreaker2
-#'
-#' These functions are used to move in the parameter space in the MCMC.
-#'
-#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
-#'
-#' @rdname moves
-#'
-#' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
-#' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
-#'
-#' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
-#'
-move.mu <- function(param, config, densities, rand){
-    ## get new proposed values
-    new.param <- param
-    new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
 
-    ## escape if new.mu<0 or >1
-    if(new.param$current.mu<0 || new.param$current.mu>1) return(param)
+## In all of these functions:
+## --------------------------
+##
+## We return a function in which all elements required for moving parameters are enclosed; this
+## includes:
 
-    ## compute log ratio  (assumes symmetric proposal)
-    logratio <- densities$posteriors$genetic(new.param) -
-        densities$posteriors$genetic(param)
+## - config: a list containing info about general settings of the method
 
-    ## accept/reject
-    if(logratio >= rand$log.runif1()) return(new.param)
-    return(param)
-} # end move.mu
+## - densities: a named list with 3 components (loglike, priors, posteriors), each being a list of
+## functions with a single argument 'param' (the rest is enclosed in the functions
+
+## - rand: a list containing pre-generated random numbers
+
+## See 'likelihood.R' for more detail about the motivation (but basically, it's faster). These
+## functions are later called by 'create.moves()' which will make a list of functions with enclosed
+## items.
 
 
 
 
+## Movement of the mutation rate 'mu' is done using a dumb normal proposal. This is satisfying for
+## now - we only reject a few non-sensical values outside the range [0;1]. The SD of the proposal
+## (implicitely contained in rand$mu.rnorm1, but really provided through 'config', seems fine as the
+## range of real values will never change much. Probably not much point in using auto-tuning here.
 
-#' @rdname moves
-#' @export
-#'
-move.t.inf <- function(param, config, densities, rand){ # assumes symmetric proposal
+create.move.mu <- function(param, config, densities, rand){
+    function(param){
+        ## get new proposed values
+        new.param <- param
+        new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
 
-    ## propose new t.inf
-    new.param <- param
-    new.param$current.t.inf <- new.param$current.t.inf +
-        sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
+        ## escape if new.mu<0 or >1
+        if(new.param$current.mu<0 || new.param$current.mu>1) return(param)
 
-    ## compute log ratio
-    logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
+        ## compute log ratio  (assumes symmetric proposal)
+        logratio <- densities$posteriors$genetic(new.param) -
+            densities$posteriors$genetic(param)
 
-    ## accept/reject
-    if(logratio >= rand$log.runif1()){
-        return(new.param)
-    } else {
+        ## accept/reject
+        if(logratio >= rand$log.runif1()) return(new.param)
         return(param)
     }
-} # end move.t.inf
+}
 
 
 
 
-#' @rdname moves
-#' @export
-#' @param config a list of settings as returned by \code{outbreaker.config}
-#'
-move.alpha <- function(param, config, densities, rand){
-    ## create new parameters
-    new.param <- param
+## Movement of infection dates are +/- 1 from current states. These movements are currently
+## vectorised, i.e. a bunch of dates are proposed all together; this may not be sustainable for
+## larger datasets. The non-vectorised option will be slower and speed-up with C/C++ will be more
+## substantial then.
 
-    ## find out which ancestries to move
-    alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
-    if(!any(alpha.can.move)){
-        warning("trying to move ancestries but none can move")
-        return(param$current.alpha)
-    }
-    n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)),1)
-    to.move <- sample(which(alpha.can.move), n.to.move, replace=FALSE)
-
-    ## initialize new alpha
-    new.param$current.alpha <- param$current.alpha
-
-    ## move all ancestries that should be moved
-    for(i in to.move){
-        ## propose new ancestor
-        new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
+create.move.t.inf <- function(param, config, densities, rand){
+    function(param){
+        ## propose new t.inf
+        new.param <- param
+        new.param$current.t.inf <- new.param$current.t.inf +
+            sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=c(.1,8,.1))
 
         ## compute log ratio
-        logratio <-  densities$loglike$all(new.param) - densities$loglike$all(param)
-
-        ## compute correction factor
-        logratio <- logratio + log(sum(are.possible.alpha(new.param$current.t.inf, i))) -
-            log(sum(are.possible.alpha(param$current.t.inf, i)))
+        logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
 
         ## accept/reject
         if(logratio >= rand$log.runif1()){
-            param$current.alpha[i] <- new.param$current.alpha[i]
+            return(new.param)
         } else {
-            new.param$current.alpha[i] <- param$current.alpha[i]
+            return(param)
         }
-    } # end for loop
-
-    return(param)
-} # end move.alpha
+    }
+}
 
 
 
 
 
+## Movement of ancestries ('alpha') is not vectorised, movements are made one case at a time. This
+## procedure is simply about picking an infector at random amongst cases preceeding the case
+## considered. This movement is not symmetric, as the number of choices may change. The original
+## version in 'outbreaker' used to move simultaneously 'alpha', 'kappa' and 't.inf', but current
+## implementation is simpler and seems to mix at least as well. Proper movement of 'alpha' needs
+## this procedure as well as a swapping procedure (swaps are not possible through move.alpha only).
 
-#' @rdname moves
-#' @export
-#'
-move.swap.cases <- function(param, config, densities, rand){
-    ## find ancestries which can move
-    to.move <- select.alpha.to.move(param, config)
+create.move.alpha <- function(param, config, densities, rand){
+    function(param){
+        ## create new parameters
+        new.param <- param
 
-    ## leave if nothing moves
-    if(length(to.move)<1) return(param)
-
-    ## move all ancestries that should be moved
-    for(i in to.move){
-        ## swap ancestries
-        new.param <- swap.cases(param, config, i)
-
-        ## compute log ratio
-        ## only use local changes:
-        ## descendents of to.move
-        ## descendents of alpha[to.move]
-        ## alpha[to.move]
-        affected.cases <- c(find.descendents(param, i=i),
-                            find.descendents(param, i=param$current.alpha[i]),
-                            param$current.alpha[i])
-        logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
-
-        ## accept/reject
-        if(logratio >= rand$log.runif1()){
-            param <- new.param
+        ## find out which ancestries to move
+        alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
+        if(!any(alpha.can.move)){
+            warning("trying to move ancestries but none can move")
+            return(param$current.alpha)
         }
-    } # end for loop
+        n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)),1)
+        to.move <- sample(which(alpha.can.move), n.to.move, replace=FALSE)
 
-    return(param)
-} # end move.swap.cases
+        ## initialize new alpha
+        new.param$current.alpha <- param$current.alpha
+
+        ## move all ancestries that should be moved
+        for(i in to.move){
+            ## propose new ancestor
+            new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
+
+            ## compute log ratio
+            logratio <-  densities$loglike$all(new.param) - densities$loglike$all(param)
+
+            ## compute correction factor
+            logratio <- logratio + log(sum(are.possible.alpha(new.param$current.t.inf, i))) -
+                log(sum(are.possible.alpha(param$current.t.inf, i)))
+
+            ## accept/reject
+            if(logratio >= rand$log.runif1()){
+                param$current.alpha[i] <- new.param$current.alpha[i]
+            } else {
+                new.param$current.alpha[i] <- param$current.alpha[i]
+            }
+        } # end for loop
+
+        return(param)
+    }
+}
 
 
 
 
 
-#' @rdname moves
-#' @export
-#'
+## This is the complementary procedure to the above one (move.alpha). This type of move swaps a case
+## 'a' with its ancestor, e.g.
+
+## x -> a -> b  becomes a -> x -> b
+
+## Obviously cases are moved one at a time. We need to used local likelihood changes for this move
+## to scale well with outbreak size. The complicated bit is that the move impacts all descendents
+## from 'a' as well as 'x'.
+
+create.move.swap.cases <- function(param, config, densities, rand){
+    function(param){
+        ## find ancestries which can move
+        to.move <- select.alpha.to.move(param, config)
+
+        ## leave if nothing moves
+        if(length(to.move)<1) return(param)
+
+        ## move all ancestries that should be moved
+        for(i in to.move){
+            ## swap ancestries
+            new.param <- swap.cases(param, config, i)
+
+            ## compute log ratio using local changes only; these include:
+
+            ## descendents of to.move
+            ## descendents of alpha[to.move]
+            ## alpha[to.move]
+
+            affected.cases <- c(find.descendents(param, i=i),
+                                find.descendents(param, i=param$current.alpha[i]),
+                                param$current.alpha[i])
+            logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
+
+            ## accept/reject
+            if(logratio >= rand$log.runif1()){
+                param <- new.param
+            }
+        } # end for loop
+
+        return(param)
+    }
+}
+
+
+
+
 move.pi <- function(param, config, densities, rand){
     ## get new proposed values
     new.param <- param

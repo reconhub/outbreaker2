@@ -10,37 +10,37 @@ create.moves <- function(config, densities, rand){
     ## order.
 
     ## SET DEFAULTS ##
-    default.functions <- list(move.mu = make.move.mu,
-                     move.t.inf = make.move.t.inf,
-                     move.alpha = make.move.alpha,
-                     move.swap.cases = make.move.swap.cases,
-                     move.pi = make.move.pi,
-                     move.kappa = make.move.kappa
+    default.functions <- list(mu = make.move.mu,
+                     t.inf = make.move.t.inf,
+                     alpha = make.move.alpha,
+                     swap.cases = make.move.swap.cases,
+                     pi = make.move.pi,
+                     kappa = make.move.kappa
                      )
 
     out <- lapply(default.functions, function(f) f(config, densities, rand))
 
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
-    ## remove move.alpha if no ancestry can be moved
-    if(!any(config$move.alpha)) out$move.alpha <-  out$move.swap.cases <- NULL
+    ## remove move$alpha if no ancestry can be moved
+    if(!any(config$move.alpha)) out$alpha <-  out$swap.cases <- NULL
 
-    ## remove move.t.inf if disabled
-    if(!any(config$move.t.inf)) out$move.t.inf <-  out$move.swap.cases <- NULL
+    ## remove move$t.inf if disabled
+    if(!any(config$move.t.inf)) out$t.inf <-  out$swap.cases <- NULL
 
-    ## remove move.mu if disabled
-    if(!any(config$move.mu)) out$move.mu <- NULL
+    ## remove move$mu if disabled
+    if(!any(config$move.mu)) out$mu <- NULL
 
     ## remove swap if disabled, or if some alpha/t.inf cannot be moved
     if(!any(config$move.swap.cases) ||
        !any(config$move.alpha) ||
-       !any(config$move.t.inf)) out$move.swap.cases <- NULL
+       !any(config$move.t.inf)) out$swap.cases <- NULL
 
-    ## remove move.pi if disabled
-    if(!any(config$move.pi)) out$move.pi <- NULL
+    ## remove move$pi if disabled
+    if(!any(config$move.pi)) out$pi <- NULL
 
-    ## remove move.kappa if disabled
-    if(!any(config$move.kappa)) out$move.kappa <- NULL
+    ## remove move$kappa if disabled
+    if(!any(config$move.kappa)) out$kappa <- NULL
 
 
     ## return list of movement functions with enclosed stuff ##

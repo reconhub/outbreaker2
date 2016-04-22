@@ -41,7 +41,7 @@ be sampled from the patient.}
 }
 \examples{
 
-x <- fakeOutbreak
+x <- fake.outbreak
 outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
 
 }

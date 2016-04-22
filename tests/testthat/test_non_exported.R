@@ -105,7 +105,7 @@ test_that("Testing find.descendents", {
 
 
     ## generate data
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     param <- outbreaker.create.mcmc(data=data, config=config)
 
@@ -124,8 +124,8 @@ test_that("Testing add.convolutions", {
 
 
     ## generate data
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     param <- outbreaker.create.mcmc(data=data, config=config)
 

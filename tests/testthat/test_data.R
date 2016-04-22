@@ -8,7 +8,7 @@ test_that("test: data are processed fine", {
 
 
     ## get data
-    x <- fakeOutbreak
+    x <- fake.outbreak
     out <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
     out.nodna <- outbreaker.data(dates=x$collecDates, w.dens=x$w)
 

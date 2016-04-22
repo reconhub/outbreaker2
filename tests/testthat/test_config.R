@@ -8,7 +8,7 @@ test_that("test: settings are processed fine", {
 
 
     ## get data
-    x <- fakeOutbreak
+    x <- fake.outbreak
     dat <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
     dat.nodna <- dat
     dat.nodna$dna <- NULL

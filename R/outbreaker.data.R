@@ -36,7 +36,7 @@
 #'
 #' @examples
 #'
-#' x <- fakeOutbreak
+#' x <- fake.outbreak
 #' outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
 #'
 outbreaker.data <- function(..., data=list(...)) {

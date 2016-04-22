@@ -5,7 +5,7 @@ context("Test likelihood functions")
 test_that("ll.timing.infections gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     times <- 0:4
@@ -29,7 +29,7 @@ test_that("ll.timing.infections gives expected results", {
 test_that("ll$timing.sampling gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     times <- 0:4
@@ -54,11 +54,11 @@ test_that("ll$timing.sampling gives expected results", {
 test_that("ll$genetic gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     ll <- outbreaker2:::create.loglike(data)
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
     param <- outbreaker.create.mcmc(data=data, config=config)
@@ -79,11 +79,11 @@ test_that("ll$genetic gives expected results", {
 test_that("ll$reporting gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
     ll <- outbreaker2:::create.loglike(data)
     param <- outbreaker.create.mcmc(data=data, config=config)
@@ -104,11 +104,11 @@ test_that("ll$reporting gives expected results", {
 test_that("ll$all gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     ll <- outbreaker2:::create.loglike(data)
     param <- outbreaker.create.mcmc(data=data, config=config)
@@ -138,11 +138,11 @@ test_that("ll$all gives expected results", {
 test_that("ll$all with i specified gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     ll <- outbreaker2:::create.loglike(data)
     param <- outbreaker.create.mcmc(data=data, config=config)
@@ -183,7 +183,7 @@ test_that("ll$all with i specified gives expected results", {
 test_that("create.loglike create functions with closure", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     data <- outbreaker.data()

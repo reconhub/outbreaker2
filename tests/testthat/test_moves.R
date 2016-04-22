@@ -4,11 +4,11 @@ context("Test movements")
 test_that("parameters and augmented data move", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate inputs
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     config.no.move <- outbreaker.config(data=data, move.alpha=FALSE, move.t.inf=FALSE,
                                         move.mu=FALSE, move.pi=FALSE, move.kappa=FALSE)

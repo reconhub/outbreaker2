@@ -4,11 +4,11 @@ context("Test detection of imported cases")
 test_that("Test detection of imported cases", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate inputs
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     data <- add.convolutions(data=data, config=config)
     param <- outbreaker.create.mcmc(data=data, config=config)

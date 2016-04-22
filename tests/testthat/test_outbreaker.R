@@ -4,12 +4,12 @@ context("Test outbreaker")
 test_that("test: outbreaker's output have expected format", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## get data
-    data(fakeOutbreak)
-    dat <- fakeOutbreak$dat
-    w <- fakeOutbreak$w
+    data(fake.outbreak)
+    dat <- fake.outbreak$dat
+    w <- fake.outbreak$w
 
     ## run outbreaker
     out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
@@ -37,12 +37,12 @@ test_that("test: outbreaker's output have expected format", {
 test_that("test: convergence to decent results for toy example", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## get data
-    data(fakeOutbreak)
-    dat <- fakeOutbreak$dat
-    w <- fakeOutbreak$w
+    data(fake.outbreak)
+    dat <- fake.outbreak$dat
+    w <- fake.outbreak$w
 
     ## outbreaker DNA + time ##
     ## analysis

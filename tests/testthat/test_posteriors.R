@@ -5,7 +5,7 @@ context("Test posterior functions")
 test_that("create.posteriors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     data <- outbreaker.data()
@@ -42,11 +42,11 @@ test_that("create.posteriors gives expected results", {
 test_that("posteriors computations give expected values", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate inputs
-    data(fakeOutbreak)
-    data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     param <- outbreaker.create.mcmc(data=data, config=config)
     ll <- create.loglike(data)

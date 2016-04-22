@@ -27,9 +27,9 @@
 #' @examples
 #'
 #' ## get data
-#' data(fakeOutbreak)
-#' dat <- fakeOutbreak$dat
-#' w <- fakeOutbreak$w
+#' data(fake.outbreak)
+#' dat <- fake.outbreak$dat
+#' w <- fake.outbreak$w
 #'
 #' \dontrun{
 #' ## run outbreaker

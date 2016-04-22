@@ -8,12 +8,6 @@
 #'
 #' @name outbreaker.package
 #'
-#' @import parallel
-#'
 #' @importFrom utils packageDescription
-#'
-#' @importFrom ape dist.dna as.DNAbin
-#'
-#' @importFrom stats na.omit
 #'
 NULL

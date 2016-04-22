@@ -100,7 +100,7 @@ outbreaker.data <- function(..., data=list(...)) {
         if (!inherits(data$dna, "DNAbin")) stop("dna is not a DNAbin object.")
         if (!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
         data$L <- ncol(data$dna) #  (genome length)
-        data$D <- as.matrix(dist.dna(data$dna, model="N")) # distance matrix
+        data$D <- as.matrix(ape::dist.dna(data$dna, model="N")) # distance matrix
     } else {
         data$L <- 0
         data$D <- matrix(numeric(0), ncol=0, nrow=0)
@@ -109,7 +109,7 @@ outbreaker.data <- function(..., data=list(...)) {
     ## RETURN DATA ##
     return(data)
 
-} 
+}
 
 
 

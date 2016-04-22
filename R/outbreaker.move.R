@@ -33,11 +33,10 @@ outbreaker.move <- function(moves, data, param, config, densities) {
             if (config$paranoid) {
                 diagnostic <- look.for.trouble(param, data)
                 if (!diagnostic$pass) {
-                    stop(paste("\n\n PARANOID MODE DETECTED AN ERROR:\n",
-                               "at iteration ", i, ", ",
-                               "movement ", j, " (", names(moves)[j], ")",
-                               " with the following diagnostics:\n", diagnostic$msg, "\n\n",
-                               sep=""))
+                    stop(paste0(
+                        "\n\n PARANOID MODE DETECTED AN ERROR WHILE FINDING IMPORTS:\n",
+                        sprintf("at iteration %d, movement %d (%s) with the following diagnostics:\n%s\n",
+                                i, j, names(moves)[j], diagnostic$msg)))
                 }
             }
         }
@@ -51,4 +50,4 @@ outbreaker.move <- function(moves, data, param, config, densities) {
 
     ## RETURN ##
     return(param)
-} 
+}

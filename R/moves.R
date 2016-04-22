@@ -172,68 +172,80 @@ create.move.swap.cases <- function(param, config, densities, rand){
 
 
 
-move.pi <- function(param, config, densities, rand){
-    ## get new proposed values
-    new.param <- param
-    new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
+## This movement of the reporting probability 'pi' is treated in a similar way to the mutation rate
+## 'mu'; the only difference lies in the default SD for the proposal Normal distribution, larger for
+## 'pi' (jumps are expected to be a bit larger as values are typically larger for 'pi'). Again, not
+## many dumb values proposed here, so it may not be worth it to use a non-symmetric proposal
+## (e.g. log-normal).
 
-    ## escape if new.pi<0 or >1
-    if(new.param$current.pi<0 || new.param$current.pi>1) return(param)
+create.move.pi <- function(param, config, densities, rand){
+    function(param){
+        ## get new proposed values
+        new.param <- param
+        new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
 
-    ## compute log ratio  (assumes symmetric proposal)
-    logratio <- densities$posteriors$reporting(new.param) -
-        densities$posteriors$reporting(param)
+        ## escape if new.pi<0 or >1
+        if(new.param$current.pi<0 || new.param$current.pi>1) return(param)
 
-    ## accept/reject
-    if(logratio >= rand$log.runif1()) return(new.param)
-    return(param)
-} # end move.pi
+        ## compute log ratio  (assumes symmetric proposal)
+        logratio <- densities$posteriors$reporting(new.param) -
+            densities$posteriors$reporting(param)
+
+        ## accept/reject
+        if(logratio >= rand$log.runif1()) return(new.param)
+        return(param)
+    }
+}
 
 
 
 
 
-#' @rdname moves
-#' @export
-#'
-move.kappa <- function(param, config, densities, rand){
+## Movement of the number of generations on transmission chains ('kappa') is done for one ancestry
+## at a time. As for infection times ('t.inf') we use a dumb, symmetric +/- 1 proposal. But because
+## values are typically in a short range (e.g. [1-3]) we probably propose more dumb values here. We
+## may eventually want to bounce back or use and correct for assymetric proposals.
 
-    ## determine which cases to move
-    kappa.can.move <- !is.na(param$current.kappa)
-    n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
-    to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
+create.move.kappa <- function(param, config, densities, rand){
+    function(param){
 
-    ## initialize new kappa
-    new.param <- param
+        ## determine which cases to move
+        kappa.can.move <- !is.na(param$current.kappa)
+        n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
+        to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
 
-    ## move all ancestries that should be moved
-    for(i in to.move){
-        ## propose new kappa
-        new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
+        ## initialize new kappa
+        new.param <- param
 
-        ## reject move automatically if new kappa < 1 or greater than allowed max
-        if(new.param$current.kappa[i] < 1 ||
-           new.param$current.kappa[i] > config$max.kappa){
-            new.param$current.kappa[i] <- param$current.kappa[i]
-        } else {
-            ## compute log ratio
-            logratio <- densities$loglike$timing.infections(new.param, i) +
-                densities$loglike$genetic(new.param, i) +
-                densities$loglike$reporting(new.param, i) -
-                densities$loglike$timing.infections(param, i) -
-                densities$loglike$genetic(param, i) -
-                densities$loglike$reporting(param, i)
+        ## move all ancestries that should be moved
+        for(i in to.move){
+            ## propose new kappa
+            new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
 
-            ## accept/reject
-            if(logratio >= rand$log.runif1()){
-                param$current.kappa[i] <- new.param$current.kappa[i]
-            } else {
+            ## reject move automatically if new kappa < 1 or greater than allowed max
+            if(new.param$current.kappa[i] < 1 ||
+               new.param$current.kappa[i] > config$max.kappa){
                 new.param$current.kappa[i] <- param$current.kappa[i]
+            } else {
+                ## compute log ratio
+                logratio <- densities$loglike$timing.infections(new.param, i) +
+                    densities$loglike$genetic(new.param, i) +
+                        densities$loglike$reporting(new.param, i) -
+                            densities$loglike$timing.infections(param, i) -
+                                densities$loglike$genetic(param, i) -
+                                    densities$loglike$reporting(param, i)
+
+                ## accept/reject
+                if(logratio >= rand$log.runif1()){
+                    param$current.kappa[i] <- new.param$current.kappa[i]
+                } else {
+                    new.param$current.kappa[i] <- param$current.kappa[i]
+                }
             }
-        }
-    } # end for loop
+        } # end for loop
 
 
-    ## return potentially modified parameters
-    return(param)
-} # end move.kappa
+        ## return potentially modified parameters
+        return(param)
+    }
+}

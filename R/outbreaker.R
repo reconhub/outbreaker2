@@ -79,7 +79,7 @@ outbreaker <- function(data = outbreaker.data(),
     densities <- list(loglike=loglike, priors=priors, posteriors=posteriors)
 
     ## here we create a list of function for moving parameters
-    moves <- outbreaker.create.moves(config=config, densities=densities, rand=rand)
+    moves <- create.moves(config=config, densities=densities, rand=rand)
 
 
 

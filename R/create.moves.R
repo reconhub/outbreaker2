@@ -10,12 +10,12 @@ create.moves <- function(config, densities, rand){
     ## order.
 
     ## SET DEFAULTS ##
-    default.functions <- list(move.mu = move.mu,
-                     move.t.inf = move.t.inf,
-                     move.alpha = move.alpha,
-                     move.swap.cases = move.swap.cases,
-                     move.pi = move.pi,
-                     move.kappa = move.kappa
+    default.functions <- list(move.mu = make.move.mu,
+                     move.t.inf = make.move.t.inf,
+                     move.alpha = make.move.alpha,
+                     move.swap.cases = make.move.swap.cases,
+                     move.pi = make.move.pi,
+                     move.kappa = make.move.kappa
                      )
 
     out <- lapply(default.functions, function(f) f(config, densities, rand))

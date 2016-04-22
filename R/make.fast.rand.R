@@ -49,7 +49,7 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
         ## read from array if enough values
         if ((counter+n) <= batch.size){
             counter <<- counter+n
-            return(values[seq_len(counter-n+1, counter)])
+            return(values[seq.int(counter-n+1, counter)])
         } else {
             ## else, regenerate vector of values
             if (n>batch.size) {

@@ -28,9 +28,9 @@ outbreaker.find.imports <- function(moves, data, param, config, densities){
     counter <- 1L
 
     ## RUN MCMC ##
-    for (i in seq.int(2, config$n.iter.import, 1)){
+    for (i in seq_len(2, config$n.iter.import, 1)){
         ## move parameters / augmented data
-        for (j in seq.int(J)){
+        for (j in seq_len(J)){
             ## safemode
             if (config$paranoid){
                 old.param <- param
@@ -54,7 +54,7 @@ outbreaker.find.imports <- function(moves, data, param, config, densities){
 
         ## store outputs if needed
         if ((i %% config$sample.every.import) == 0 && i>1000){
-            influences[counter,] <- - sapply(seq.int(data$N),
+            influences[counter,] <- - sapply(seq_len(data$N),
                                              function(i) densities$loglike$all(param=param, i=i))
             counter <- counter + 1L
         }

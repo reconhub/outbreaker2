@@ -316,7 +316,7 @@ swap.cases <- function(param, config, i){
 ## (non-exported)
 check.i <- function(data, i){
     if (is.null(i)) seq_len(data$N) else i
-    ## if (is.null(i)) return(seq.int(data$N))
+    ## if (is.null(i)) return(seq_len(data$N))
     ## if (!is.numeric(i)) stop("i is not numeric")
     ## if (any(is.na(i))) stop("NA detected in case IDs")
     ## if (length(i)==0L) stop("i has length zero")

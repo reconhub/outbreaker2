@@ -22,7 +22,7 @@
 
 make.ll.timing.infections <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq.int(data$N)
+    cases <- seq_len(data$N)
 
     if (data$N>1){
         function(param, i=cases){
@@ -50,7 +50,7 @@ make.ll.timing.infections <- function(data){
 
 make.ll.timing.sampling <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq.int(data$N)
+    cases <- seq_len(data$N)
 
     if (data$N>1){
         function(param, i=cases){
@@ -79,7 +79,7 @@ make.ll.timing.sampling <- function(data){
 
 make.ll.genetic <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq.int(data$N)
+    cases <- seq_len(data$N)
 
     if (nrow(data$D)>1){
 
@@ -117,7 +117,7 @@ make.ll.genetic <- function(data){
 
 make.ll.reporting <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq.int(data$N)
+    cases <- seq_len(data$N)
 
     ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
     ## 'kappa' is the number of generation between two successive cases

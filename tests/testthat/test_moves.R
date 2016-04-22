@@ -30,7 +30,7 @@ test_that("parameters and augmented data move", {
     expect_true(all(vapply(moves, is.function, logical(1))))
 
     ## test moves ##
-    for(i in seq.int(length(moves))) {
+    for (i in seq.int(length(moves))) {
         ## test closures
         identical(environment(moves[[i]])$config, config)
         identical(environment(moves[[i]])$densities, densities)

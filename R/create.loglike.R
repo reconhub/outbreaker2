@@ -50,7 +50,7 @@ create.loglike <- function(data){
 
 
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq.int(data$N)
+    cases <- seq_len(data$N)
 
 
     ## We need a function computing likelihood relating to timing, which includes:

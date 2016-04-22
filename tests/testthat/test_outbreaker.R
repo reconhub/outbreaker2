@@ -4,7 +4,7 @@ context("Test outbreaker")
 test_that("test: outbreaker's output have expected format", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## get data
     data(fakeOutbreak)
@@ -37,7 +37,7 @@ test_that("test: outbreaker's output have expected format", {
 test_that("test: convergence to decent results for toy example", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## get data
     data(fakeOutbreak)

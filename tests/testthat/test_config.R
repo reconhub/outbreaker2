@@ -5,7 +5,7 @@ context("Test outbreaker config")
 test_that("test: settings are processed fine", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## get data
     x <- fakeOutbreak

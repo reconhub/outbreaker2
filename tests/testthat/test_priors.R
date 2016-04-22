@@ -6,7 +6,7 @@ context("Test prior functions")
 test_that("create.priors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## generate data
     config <- outbreaker.config()
@@ -37,7 +37,7 @@ test_that("create.priors gives expected results", {
 test_that("priors have expected values", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## generate inputs
     config <- outbreaker.config()

@@ -5,7 +5,7 @@ context("Test posterior functions")
 test_that("create.posteriors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## generate data
     data <- outbreaker.data()
@@ -42,7 +42,7 @@ test_that("create.posteriors gives expected results", {
 test_that("posteriors computations give expected values", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## generate inputs
     data(fakeOutbreak)

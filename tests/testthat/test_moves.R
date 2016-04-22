@@ -4,7 +4,7 @@ context("Test movements")
 test_that("parameters and augmented data move", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## generate inputs
     data(fakeOutbreak)

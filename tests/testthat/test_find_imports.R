@@ -4,7 +4,7 @@ context("Test detection of imported cases")
 test_that("Test detection of imported cases", {
     ## skip on CRAN
     skip_on_cran()
-    rm(list=ls())
+    
 
     ## generate inputs
     data(fakeOutbreak)

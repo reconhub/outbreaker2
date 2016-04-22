@@ -76,7 +76,7 @@ add.to.context <- function(x, objects){
     }
 
     ## add objects to environment
-    for(i in seq_along(objects)){
+    for (i in seq_along(objects)){
         ## recursive behaviour if object is a list
         if (is.list(objects[[i]])){
             add.to.context(env, objects[[i]])
@@ -349,7 +349,7 @@ add.convolutions <- function(data, config){
         data$log.w.dens[1,] <- data$w.dens
 
         ## first compute convolutions on natural scale
-        for(i in 2:config$max.kappa){
+        for (i in 2:config$max.kappa){
             data$log.w.dens <- rbind(data$log.w.dens,
                                      stats::convolve(data$log.w.dens[i-1,], rev(data$w.dens), type="open")[seq_len(ncol(data$log.w.dens))]
                                      )

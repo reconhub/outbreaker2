@@ -99,7 +99,7 @@ make.move.alpha <- function(config, densities, rand){
         new.param$current.alpha <- param$current.alpha
 
         ## move all ancestries that should be moved
-        for(i in to.move){
+        for (i in to.move){
             ## propose new ancestor
             new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
 
@@ -144,7 +144,7 @@ make.move.swap.cases <- function(config, densities, rand){
         if (length(to.move)<1) return(param)
 
         ## move all ancestries that should be moved
-        for(i in to.move){
+        for (i in to.move){
             ## swap ancestries
             new.param <- swap.cases(param, config, i)
 
@@ -218,7 +218,7 @@ make.move.kappa <- function(config, densities, rand){
         new.param <- param
 
         ## move all ancestries that should be moved
-        for(i in to.move){
+        for (i in to.move){
             ## propose new kappa
             new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
 

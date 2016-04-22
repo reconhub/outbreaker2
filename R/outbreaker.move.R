@@ -18,9 +18,9 @@ outbreaker.move <- function(moves, data, param, config, densities){
     J <- length(moves)
 
     ## RUN MCMC ##
-    for(i in seq.int(2, config$n.iter, 1)){
+    for (i in seq.int(2, config$n.iter, 1)){
         ## move parameters / augmented data
-        for(j in seq.int(J)){
+        for (j in seq.int(J)){
             ## safemode
             if (config$paranoid){
                 old.param <- param

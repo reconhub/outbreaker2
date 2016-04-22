@@ -5,7 +5,7 @@ context("Test outbreaker config")
 test_that("test: settings are processed fine", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## get data
     x <- fakeOutbreak
@@ -21,14 +21,22 @@ test_that("test: settings are processed fine", {
     expect_equal(outbreaker.config(init.tree=alpha)$init.tree, outbreaker.config(init.tree=alpha)$init.alpha)
     expect_equal(length(outbreaker.config(init.tree="random",data=dat)$init.alpha), dat$N)
     expect_equal(sort(unique(outbreaker.config(data=dat, init.kappa=1:2)$init.kappa)), 1:2)
-    expect_error(outbreaker.config(uknownarg=123))
-    expect_error(outbreaker.config(init.tree="wrongtreeinit"))
-    expect_error(outbreaker.config(init.mu=-5))
-    expect_error(outbreaker.config(n.iter=0))
-    expect_error(outbreaker.config(sample.every=0))
-    expect_error(outbreaker.config(init.tree=1:5, data=dat))
-    expect_message(outbreaker.config(init.tree="seqTrack", data=dat.nodna))
-    expect_warning(outbreaker.config(init.tree=rep(-1,dat$N), data=dat))
+    expect_error(outbreaker.config(uknownarg=123),
+                 "Additional invalid options: uknownarg")
+    expect_error(outbreaker.config(init.tree="wrongtreeinit"),
+                 "should be one of “seqTrack”, “star”, “random”")
+    expect_error(outbreaker.config(init.mu=-5),
+                 "init.mu is negative")
+    expect_error(outbreaker.config(n.iter=0),
+                 "n.iter is smaller than 2")
+    expect_error(outbreaker.config(sample.every=0),
+                 "sample.every is smaller than 1")
+    expect_error(outbreaker.config(init.tree=1:5, data=dat),
+                 "inconvenient length for init.alpha")
+    expect_message(outbreaker.config(init.tree="seqTrack", data=dat.nodna),
+                   "Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
+    expect_warning(outbreaker.config(init.tree=rep(-1,dat$N), data=dat),
+                   "some initial ancestries refer to unknown cases")
 })
 
 

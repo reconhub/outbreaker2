@@ -13,7 +13,7 @@
 #'
 outbreaker.find.imports <- function(moves, data, param, config, densities){
     ## send back unchanged chains if config disabled the detection of imported cases ##
-    if(!config$find.import) return(list(config=config, param=param))
+    if (!config$find.import) return(list(config=config, param=param))
 
 
     ## store initial param values ##
@@ -32,7 +32,7 @@ outbreaker.find.imports <- function(moves, data, param, config, densities){
         ## move parameters / augmented data
         for(j in seq.int(J)){
             ## safemode
-            if(config$paranoid){
+            if (config$paranoid){
                 old.param <- param
             }
 
@@ -40,9 +40,9 @@ outbreaker.find.imports <- function(moves, data, param, config, densities){
             param <- moves[[j]](param)
 
             ## safemode
-            if(config$paranoid){
+            if (config$paranoid){
                 diagnostic <- look.for.trouble(param, data)
-                if(!diagnostic$pass){
+                if (!diagnostic$pass){
                     stop(paste("\n\n PARANOID MODE DETECTED AN ERROR WHILE FINDING IMPORTS:\n",
                                "at iteration ", i, ", ",
                                "movement ", j, " (", names(moves)[j], ")",
@@ -53,7 +53,7 @@ outbreaker.find.imports <- function(moves, data, param, config, densities){
         }
 
         ## store outputs if needed
-        if((i %% config$sample.every.import) == 0 && i>1000){
+        if ((i %% config$sample.every.import) == 0 && i>1000){
             influences[counter,] <- - sapply(seq.int(data$N),
                                              function(i) densities$loglike$all(param=param, i=i))
             counter <- counter + 1L

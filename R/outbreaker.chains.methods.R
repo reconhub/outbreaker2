@@ -22,7 +22,7 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
     cat("\ndimensions", nrow(x), "rows, ", ncol(x), "columns")
 
     ## process names of variables not shown
-    if(ncol(x) > n.col){
+    if (ncol(x) > n.col){
         ori.names <- names(x)
         x <- x[, seq_len(min(n.col, ncol(x)))]
 
@@ -70,32 +70,32 @@ plot.outbreaker.chains <- function(x, y="post",
 
     ## CHECKS ##
     type <- match.arg(type)
-    if(!y %in% names(x)) stop(paste(y,"is not a column of x"))
+    if (!y %in% names(x)) stop(paste(y,"is not a column of x"))
 
 
     ## GET DATA TO PLOT ##
-    if(burnin > max(x$step)) stop("burnin exceeds the number of steps in x")
+    if (burnin > max(x$step)) stop("burnin exceeds the number of steps in x")
     x <- x[x$step>burnin,,drop=FALSE]
 
     ## MAKE PLOT ##
-    if(type=="trace"){
+    if (type=="trace"){
         out <- ggplot(x) + geom_line(aes_string(x="step", y=y)) +
             labs(x="Iteration", y=y, title=paste("trace:",y))
     }
 
-    if(type=="hist"){
+    if (type=="hist"){
         out <- ggplot(x) + geom_histogram(aes_string(x=y)) +
             geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
                 labs(x=y, title=paste("histogram:",y))
     }
 
-    if(type=="density"){
+    if (type=="density"){
         out <- ggplot(x) + geom_density(aes_string(x=y)) +
             geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
                 labs(x=y, title=paste("density:",y))
     }
 
-    if(type=="alpha"){
+    if (type=="alpha"){
         alpha <- as.matrix(x[,grep("alpha", names(x))])
         colnames(alpha) <- seq_len(ncol(alpha))
         from <- as.vector(alpha)
@@ -110,7 +110,7 @@ plot.outbreaker.chains <- function(x, y="post",
                     labs(title="ancestries")
     }
 
-    if(type=="t.inf"){
+    if (type=="t.inf"){
         t.inf <- as.matrix(x[,grep("t.inf", names(x))])
         dates <- as.vector(t.inf)
         cases <- as.vector(col(t.inf))
@@ -121,7 +121,7 @@ plot.outbreaker.chains <- function(x, y="post",
                     labs(title="infection times")
     }
 
-    if(type=="kappa"){
+    if (type=="kappa"){
         kappa <- as.matrix(x[,grep("kappa", names(x))])
         generations <- as.vector(kappa)
         cases <- as.vector(col(kappa))
@@ -135,7 +135,7 @@ plot.outbreaker.chains <- function(x, y="post",
                     labs(title="number of generations between cases", x="number of generations to ancestor")
     }
 
-    if(type=="network"){
+    if (type=="network"){
         ## extract edge info: ancestries
         alpha <- x[, grep("alpha",names(x)), drop=FALSE]
         from <- unlist(alpha)
@@ -181,7 +181,7 @@ plot.outbreaker.chains <- function(x, y="post",
 summary.outbreaker.chains <- function(object, burnin=0, ...){
     ## check burnin ##
     x <- object
-    if(burnin > max(x$step)) stop("burnin exceeds the number of steps in object")
+    if (burnin > max(x$step)) stop("burnin exceeds the number of steps in object")
     x <- x[x$step>burnin,,drop=FALSE]
 
 

@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-#' ## from Unif(0,1)
+#' ## from Unif (0,1)
 #' x <- make.fast.rand()
 #' environment(x)$values
 #' x(6)
@@ -31,15 +31,15 @@
 #' environment(x)$values
 #'
 #' ## check with microbenchmark
-#' if(require(microbenchmark)){
+#' if (require(microbenchmark)){
 #' x1 <- make.fast.rand1()
-#' plot(microbenchmark(x1(), runif(1), times=1e3L), ylim=c(1000,3000))
+#' plot(microbenchmark(x1(), runif (1), times=1e3L), ylim=c(1000,3000))
 #' }
 #'
 make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## initialize array
     values <- f(batch.size, ...)
-    if(log) values <- log(values)
+    if (log) values <- log(values)
 
     ## initialize counter
     counter <- 0
@@ -47,16 +47,16 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## create returned function
     out <- function(n){
         ## read from array if enough values
-        if((counter+n) <= batch.size){
+        if ((counter+n) <= batch.size){
             counter <<- counter+n
             return(values[seq.int(counter-n+1, counter)])
         } else {
             ## else, regenerate vector of values
-            if(n>batch.size) {
+            if (n>batch.size) {
                 batch.size <<- n
             }
             values <<- f(batch.size, ...)
-            if(log) values <<- log(values)
+            if (log) values <<- log(values)
             counter <<- 0
 
             return(out(n))
@@ -76,7 +76,7 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
 make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## initialize array
     values <- f(batch.size, ...)
-    if(log) values <- log(values)
+    if (log) values <- log(values)
 
     ## initialize counter
     counter <- 0
@@ -84,13 +84,13 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
     ## create returned function
     out <- function(){
         ## read from array if enough values
-        if(counter < batch.size){
+        if (counter < batch.size){
             counter <<- counter+1
             return(values[counter])
         } else {
             ## else, regenerate vector of values
             values <<- f(batch.size, ...)
-            if(log) values <<- log(values)
+            if (log) values <<- log(values)
             counter <<- 0
             return(out())
         }

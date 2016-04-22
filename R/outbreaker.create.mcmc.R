@@ -25,7 +25,7 @@ outbreaker.create.mcmc <- function(data, config){
     current.alpha <- alpha[[1]] <- config$init.alpha
     current.kappa <- kappa[[1]] <- config$init.kappa
     current.pi <- pi[1] <- config$init.pi
-    if(is.null(config$init.t.inf)){
+    if (is.null(config$init.t.inf)){
         current.t.inf <- t.inf[[1]] <- data$dates - which.max(data$f.dens) + 1
     } else {
         current.t.inf <- config$init.t.inf

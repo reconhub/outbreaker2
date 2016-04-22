@@ -22,7 +22,7 @@ outbreaker.move <- function(moves, data, param, config, densities){
         ## move parameters / augmented data
         for(j in seq.int(J)){
             ## safemode
-            if(config$paranoid){
+            if (config$paranoid){
                 old.param <- param
             }
 
@@ -30,9 +30,9 @@ outbreaker.move <- function(moves, data, param, config, densities){
             param <- moves[[j]](param=param)
 
             ## safemode
-            if(config$paranoid){
+            if (config$paranoid){
                 diagnostic <- look.for.trouble(param, data)
-                if(!diagnostic$pass){
+                if (!diagnostic$pass){
                     stop(paste("\n\n PARANOID MODE DETECTED AN ERROR:\n",
                                "at iteration ", i, ", ",
                                "movement ", j, " (", names(moves)[j], ")",
@@ -43,7 +43,7 @@ outbreaker.move <- function(moves, data, param, config, densities){
         }
 
         ## store outputs if needed
-        if((i %% config$sample.every) == 0){
+        if ((i %% config$sample.every) == 0){
             param <- outbreaker.mcmc.store(param=param, densities=densities, step=i)
         }
 

@@ -24,7 +24,7 @@ make.ll.timing.infections <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq.int(data$N)
 
-    if(data$N>1){
+    if (data$N>1){
         function(param, i=cases){
 
             ## compute delays between infection dates of cases and of their ancestors
@@ -32,7 +32,7 @@ make.ll.timing.infections <- function(data){
 
             ## avoid over-shooting: delays outside the range of columns in pre-computed log-densities
             ## (data$log.w.dens) will give a likelihood of zero
-            if(any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
+            if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
 
             ## return sum of log-densities
             sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
@@ -52,7 +52,7 @@ make.ll.timing.sampling <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq.int(data$N)
 
-    if(data$N>1){
+    if (data$N>1){
         function(param, i=cases){
 
             ## compute delays
@@ -60,7 +60,7 @@ make.ll.timing.sampling <- function(data){
             T <- T[!is.na(T)]
 
             ## avoid over-shooting
-            if(any(T<1 | T>length(data$log.f.dens))) return(-Inf)
+            if (any(T<1 | T>length(data$log.f.dens))) return(-Inf)
 
             ## return
             sum(data$log.f.dens[T], na.rm=TRUE)
@@ -81,7 +81,7 @@ make.ll.genetic <- function(data){
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq.int(data$N)
 
-    if(nrow(data$D)>1){
+    if (nrow(data$D)>1){
 
         function(param, i=cases){
 
@@ -122,7 +122,7 @@ make.ll.reporting <- function(data){
     ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
     ## 'kappa' is the number of generation between two successive cases
     ## 'kappa-1' is the number of unreported cases
-    if(data$N>1){
+    if (data$N>1){
 
         function(param, i=cases){
             sum(stats::dgeom(param$current.kappa[i]-1,

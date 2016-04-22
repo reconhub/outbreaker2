@@ -31,14 +31,14 @@ make.move.mu <- function(config, densities, rand){
         new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
 
         ## escape if new.mu<0 or >1
-        if(new.param$current.mu<0 || new.param$current.mu>1) return(param)
+        if (new.param$current.mu<0 || new.param$current.mu>1) return(param)
 
         ## compute log ratio  (assumes symmetric proposal)
         logratio <- densities$posteriors$genetic(new.param) -
             densities$posteriors$genetic(param)
 
         ## accept/reject
-        if(logratio >= rand$log.runif1()) return(new.param)
+        if (logratio >= rand$log.runif1()) return(new.param)
         return(param)
     }
 }
@@ -62,7 +62,7 @@ make.move.t.inf <- function(config, densities, rand){
         logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
 
         ## accept/reject
-        if(logratio >= rand$log.runif1()){
+        if (logratio >= rand$log.runif1()){
             return(new.param)
         } else {
             return(param)
@@ -88,7 +88,7 @@ make.move.alpha <- function(config, densities, rand){
 
         ## find out which ancestries to move
         alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
-        if(!any(alpha.can.move)){
+        if (!any(alpha.can.move)){
             warning("trying to move ancestries but none can move")
             return(param$current.alpha)
         }
@@ -111,7 +111,7 @@ make.move.alpha <- function(config, densities, rand){
                 log(sum(are.possible.alpha(param$current.t.inf, i)))
 
             ## accept/reject
-            if(logratio >= rand$log.runif1()){
+            if (logratio >= rand$log.runif1()){
                 param$current.alpha[i] <- new.param$current.alpha[i]
             } else {
                 new.param$current.alpha[i] <- param$current.alpha[i]
@@ -141,7 +141,7 @@ make.move.swap.cases <- function(config, densities, rand){
         to.move <- select.alpha.to.move(param, config)
 
         ## leave if nothing moves
-        if(length(to.move)<1) return(param)
+        if (length(to.move)<1) return(param)
 
         ## move all ancestries that should be moved
         for(i in to.move){
@@ -160,7 +160,7 @@ make.move.swap.cases <- function(config, densities, rand){
             logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
 
             ## accept/reject
-            if(logratio >= rand$log.runif1()){
+            if (logratio >= rand$log.runif1()){
                 param <- new.param
             }
         } # end for loop
@@ -185,14 +185,14 @@ make.move.pi <- function(config, densities, rand){
         new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
 
         ## escape if new.pi<0 or >1
-        if(new.param$current.pi<0 || new.param$current.pi>1) return(param)
+        if (new.param$current.pi<0 || new.param$current.pi>1) return(param)
 
         ## compute log ratio  (assumes symmetric proposal)
         logratio <- densities$posteriors$reporting(new.param) -
             densities$posteriors$reporting(param)
 
         ## accept/reject
-        if(logratio >= rand$log.runif1()) return(new.param)
+        if (logratio >= rand$log.runif1()) return(new.param)
         return(param)
     }
 }
@@ -223,7 +223,7 @@ make.move.kappa <- function(config, densities, rand){
             new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
 
             ## reject move automatically if new kappa < 1 or greater than allowed max
-            if(new.param$current.kappa[i] < 1 ||
+            if (new.param$current.kappa[i] < 1 ||
                new.param$current.kappa[i] > config$max.kappa){
                 new.param$current.kappa[i] <- param$current.kappa[i]
             } else {
@@ -236,7 +236,7 @@ make.move.kappa <- function(config, densities, rand){
                                     densities$loglike$reporting(param, i)
 
                 ## accept/reject
-                if(logratio >= rand$log.runif1()){
+                if (logratio >= rand$log.runif1()){
                     param$current.kappa[i] <- new.param$current.kappa[i]
                 } else {
                     new.param$current.kappa[i] <- param$current.kappa[i]

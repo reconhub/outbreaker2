@@ -5,7 +5,7 @@ context("Test outbreaker data and settings")
 test_that("test: data are processed fine", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## get data
     x <- fakeOutbreak
@@ -15,14 +15,14 @@ test_that("test: data are processed fine", {
     ## check output
     expect_is(out, "list")
     expect_is(out$D, "matrix")
-    expect_equal(out$MAX.RANGE, 11)
+    expect_equal(out$max.range, 11)
     expect_equal(out.nodna$L, 0)
     expect_equal(out$L, 1e4)
     expect_equal(out$w.dens, out$f.dens)
     expect_equal(out$log.w.dens[1,], out$log.f.dens)
     expect_error(outbreaker.data(dates=1, w.dens=c(0,-1)),
                  "outbreaker[.]data.* w.dens has negative entries")
-    
+
     expect_error(outbreaker.data(dates=1, w.dens=c(0,1), f.dens=c(0,-1)),
                  "outbreaker[.]data.* f.dens has negative entries")
 

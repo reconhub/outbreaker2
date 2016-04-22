@@ -5,7 +5,7 @@ context("Test non-exported functions")
 test_that("test: choose.possible.alpha", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## get data
     ans1 <- outbreaker2:::choose.possible.alpha(1:10, 1)
@@ -20,7 +20,8 @@ test_that("test: choose.possible.alpha", {
     expect_is(ans2, "integer")
     expect_true(ans2<10 || ans2>0)
     expect_equal(ans3, 1L)
-    expect_error(choose.possible.alpha(1:10, NA))
+    expect_error(choose.possible.alpha(1:10, NA),
+                 "missing value where TRUE/FALSE needed")
     expect_equal(ans4, 1:4)
     expect_equal(ans5, c(1,5,8))
     expect_equal(ans6, NA)
@@ -31,7 +32,7 @@ test_that("test: choose.possible.alpha", {
 test_that("Auxiliary functions for ancestries are working", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     alpha <- c(2, NA, 1, 3, 3, 1)
@@ -73,7 +74,7 @@ test_that("Auxiliary functions for ancestries are working", {
 ## test_that("Testing check.i", {
 ##     ## skip on CRAN
 ##     skip_on_cran()
-##     
+##
 
 ##     ## generate data
 ##     alpha <- c(2, NA, 1, 3, 3, 1)
@@ -101,7 +102,7 @@ test_that("Auxiliary functions for ancestries are working", {
 test_that("Testing find.descendents", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     data <- with(fakeOutbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
@@ -120,7 +121,7 @@ test_that("Testing find.descendents", {
 test_that("Testing add.convolutions", {
  ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     data(fakeOutbreak)

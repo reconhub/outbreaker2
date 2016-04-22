@@ -1,10 +1,16 @@
 # Sample .travis.yml for R projects
 
+env:
+  - NOT_CRAN=true
+
 language: r
+
 warnings_are_errors: false
+
 sudo: required
 
 r_github_packages:
   - jimhester/covr
+
 after_success:
   - Rscript -e 'library(covr);codecov()'

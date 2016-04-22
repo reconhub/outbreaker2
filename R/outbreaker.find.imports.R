@@ -55,8 +55,9 @@ outbreaker.find.imports <- function(moves, data, param, config, densities) {
 
         ## store outputs if needed
         if ((i %% config$sample.every.import) == 0 && i>1000) {
-            influences[counter,] <- - sapply(seq_len(data$N),
-                                             function(i) densities$loglike$all(param=param, i=i))
+            influences[counter,] <- - vapply(seq_len(data$N),
+                                             function(i) densities$loglike$all(param=param, i=i),
+                                             numeric(1))
             counter <- counter + 1L
         }
 

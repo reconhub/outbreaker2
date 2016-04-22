@@ -43,7 +43,7 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
     cat("\n...")
     cat("\n/// tail //\n")
     print(tail(as.data.frame(x), n.row))
-} 
+}
 
 
 
@@ -159,7 +159,7 @@ plot.outbreaker.chains <- function(x, y="post",
 
         ## node info
         nodes <- list(id=seq_len(ncol(alpha)), label=seq_len(ncol(alpha)))
-        nodes$value <- sapply(nodes$id, function(i) sum(from==i, na.rm=TRUE))/nrow(alpha)
+        nodes$value <- vapply(nodes$id, function(i) sum(from==i, na.rm=TRUE), numeric(1))/nrow(alpha)
 
         ## generate graph
         out <- visNetwork::visNetwork(nodes=nodes, edges=edges, ...)
@@ -173,7 +173,7 @@ plot.outbreaker.chains <- function(x, y="post",
 
 
     return(out)
-} 
+}
 
 
 
@@ -250,4 +250,4 @@ summary.outbreaker.chains <- function(object, burnin=0, ...) {
 
     ## RETURN ##
     return(out)
-} 
+}

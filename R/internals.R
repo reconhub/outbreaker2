@@ -175,7 +175,7 @@ look.for.trouble <- function(param, data){
     }
 
     ## case infecting itself
-    if(any(param$current.alpha==1:length(param$current.alpha),na.rm=TRUE)){
+    if(any(param$current.alpha==seq_along(param$current.alpha),na.rm=TRUE)){
        out$pass <- FALSE
        out$msg <- c(out$msg, "auto-infections detected (param$current.alpha[i]==i)")
     }
@@ -351,7 +351,7 @@ add.convolutions <- function(data, config){
         ## first compute convolutions on natural scale
         for(i in 2:config$max.kappa){
             data$log.w.dens <- rbind(data$log.w.dens,
-                                     stats::convolve(data$log.w.dens[i-1,], rev(data$w.dens), type="open")[1:ncol(data$log.w.dens)]
+                                     stats::convolve(data$log.w.dens[i-1,], rev(data$w.dens), type="open")[seq_len(ncol(data$log.w.dens))]
                                      )
         }
 
@@ -360,8 +360,8 @@ add.convolutions <- function(data, config){
         }
 
     ## name rows/columns (useful if internal debugging needed)
-    rownames(data$log.w.dens) <- paste("kappa", 1:nrow(data$log.w.dens), sep="=")
-    colnames(data$log.w.dens) <- 1:ncol(data$log.w.dens)
+    rownames(data$log.w.dens) <- paste("kappa", seq_len(nrow(data$log.w.dens)), sep="=")
+    colnames(data$log.w.dens) <- seq_len(ncol(data$log.w.dens))
 
     ## RETURN ##
     return(data)

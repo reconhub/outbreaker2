@@ -13,17 +13,17 @@ outbreaker.mcmc.shape <- function(param, data){
     ## UNFOLD ANCESTRIES ##
     if(!all(sapply(param$alpha, length)==data$N)) stop("some ancestries are missing in the param")
     param$alpha <- matrix(unlist(param$alpha), ncol=data$N, byrow=TRUE)
-    colnames(param$alpha) <- paste("alpha",1:data$N, sep=".")
+    colnames(param$alpha) <- paste("alpha", seq_len(data$N), sep=".")
 
     ## UNFOLD INFECTION DATES ##
     if(!all(sapply(param$t.inf, length)==data$N)) stop("some infection dates are missing in the param")
     param$t.inf <- matrix(unlist(param$t.inf), ncol=data$N, byrow=TRUE)
-    colnames(param$t.inf) <- paste("t.inf",1:data$N, sep=".")
+    colnames(param$t.inf) <- paste("t.inf", seq_len(data$N), sep=".")
 
     ## UNFOLD NUMBER OF GENERATIONS ##
     if(!all(sapply(param$kappa, length)==data$N)) stop("some ancestries are missing in the param")
     param$kappa <- matrix(unlist(param$kappa), ncol=data$N, byrow=TRUE)
-    colnames(param$kappa) <- paste("kappa",1:data$N, sep=".")
+    colnames(param$kappa) <- paste("kappa", seq_len(data$N), sep=".")
 
     ## SHAPE DATA.FRAME AND CONVERT ##
     param <- data.frame(step=param$step,

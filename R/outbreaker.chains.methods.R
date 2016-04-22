@@ -24,7 +24,7 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...){
     ## process names of variables not shown
     if(ncol(x) > n.col){
         ori.names <- names(x)
-        x <- x[,1:min(n.col, ncol(x))]
+        x <- x[, seq_len(min(n.col, ncol(x)))]
 
         not.shown <- setdiff(ori.names, names(x))
 
@@ -97,7 +97,7 @@ plot.outbreaker.chains <- function(x, y="post",
 
     if(type=="alpha"){
         alpha <- as.matrix(x[,grep("alpha", names(x))])
-        colnames(alpha) <- 1:ncol(alpha)
+        colnames(alpha) <- seq_len(ncol(alpha))
         from <- as.vector(alpha)
         to <- as.vector(col(alpha))
         out.dat <- data.frame(xyTable(from,to))
@@ -154,7 +154,7 @@ plot.outbreaker.chains <- function(x, y="post",
         ## edges$label <- paste(round(mean.delay), "days")
 
         ## node info
-        nodes <- list(id=1:ncol(alpha), label=1:ncol(alpha))
+        nodes <- list(id=seq_len(ncol(alpha)), label=seq_len(ncol(alpha)))
         nodes$value <- sapply(nodes$id, function(i) sum(from==i, na.rm=TRUE))/nrow(alpha)
 
         ## generate graph
@@ -222,7 +222,7 @@ summary.outbreaker.chains <- function(object, burnin=0, ...){
         as.integer(names(sort(table(x, exclude=NULL), decreasing=TRUE)[1]))
     }
     out$tree$from <- apply(alpha, 2, f1)
-    out$tree$to <- 1:ncol(alpha)
+    out$tree$to <- seq_len(ncol(alpha))
 
     ## summary of t.inf ##
     t.inf <- as.matrix(x[,grep("t.inf", names(x))])

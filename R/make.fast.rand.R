@@ -67,7 +67,6 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     return(out)
 } # end make.fast.rand
 
-make.fast.rand <- compiler::cmpfun(make.fast.rand)
 
 
 
@@ -101,6 +100,5 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
     return(out)
 } # end make.fast.rand1
 
-make.fast.rand1 <- compiler::cmpfun(make.fast.rand1)
 
 

@@ -13,8 +13,7 @@ Installing *outbreaker2*
 To install the development version from github (requires Rtools on windows and GSL headers on all platforms):
 
 ```r
-library(devtools)
-install_github("thibautjombart/outbreaker2")
+devtools::install_github("thibautjombart/outbreaker2")
 ```
 Then, to load the package, use:
 

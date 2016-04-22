@@ -5,6 +5,9 @@ Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
 Author: Thibaut Jombart <thibautjombart@gmail.com>
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
+Description: Bayesian reconstruction of disease outbreaks using epidemiological
+    and genetic information.
+License: GPL (>=2)
 Suggests:
     testthat, 
     microbenchmark, 
@@ -17,10 +20,6 @@ Imports:
     grDevices,
     ape,
     ggplot2,
-    visNetwork,
-    compiler
-Description: Bayesian reconstruction of disease outbreaks using epidemiological
-    and genetic information.
-License: GPL (>=2)
+    visNetwork
 LazyData: true
 RoxygenNote: 5.0.1

@@ -22,4 +22,4 @@ outbreaker.rand.vec <- function(config)
 
     ## RETURN ##
     return(out)
-} # end outbreaker.rand.vec
+} 

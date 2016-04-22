@@ -24,14 +24,14 @@
 ## (implicitely contained in rand$mu.rnorm1, but really provided through 'config', seems fine as the
 ## range of real values will never change much. Probably not much point in using auto-tuning here.
 
-make.move.mu <- function(config, densities, rand){
-    function(param){
+make.move.mu <- function(config, densities, rand) {
+    function(param) {
         ## get new proposed values
         new.param <- param
         new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
 
         ## escape if new.mu<0 or >1
-        if (new.param$current.mu<0 || new.param$current.mu>1){
+        if (new.param$current.mu<0 || new.param$current.mu>1) {
             return(param)
         }
 
@@ -55,8 +55,8 @@ make.move.mu <- function(config, densities, rand){
 ## larger datasets. The non-vectorised option will be slower and speed-up with C/C++ will be more
 ## substantial then.
 
-make.move.t.inf <- function(config, densities, rand){
-    function(param){
+make.move.t.inf <- function(config, densities, rand) {
+    function(param) {
         ## propose new t.inf
         new.param <- param
         new.param$current.t.inf <- new.param$current.t.inf +
@@ -66,7 +66,7 @@ make.move.t.inf <- function(config, densities, rand){
         logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
 
         ## accept/reject
-        if (logratio >= rand$log.runif1()){
+        if (logratio >= rand$log.runif1()) {
             return(new.param)
         } else {
             return(param)
@@ -85,14 +85,14 @@ make.move.t.inf <- function(config, densities, rand){
 ## implementation is simpler and seems to mix at least as well. Proper movement of 'alpha' needs
 ## this procedure as well as a swapping procedure (swaps are not possible through move.alpha only).
 
-make.move.alpha <- function(config, densities, rand){
-    function(param){
+make.move.alpha <- function(config, densities, rand) {
+    function(param) {
         ## create new parameters
         new.param <- param
 
         ## find out which ancestries to move
         alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
-        if (!any(alpha.can.move)){
+        if (!any(alpha.can.move)) {
             warning("trying to move ancestries but none can move")
             return(param$current.alpha)
         }
@@ -103,7 +103,7 @@ make.move.alpha <- function(config, densities, rand){
         new.param$current.alpha <- param$current.alpha
 
         ## move all ancestries that should be moved
-        for (i in to.move){
+        for (i in to.move) {
             ## propose new ancestor
             new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
 
@@ -115,7 +115,7 @@ make.move.alpha <- function(config, densities, rand){
                 log(sum(are.possible.alpha(param$current.t.inf, i)))
 
             ## accept/reject
-            if (logratio >= rand$log.runif1()){
+            if (logratio >= rand$log.runif1()) {
                 param$current.alpha[i] <- new.param$current.alpha[i]
             } else {
                 new.param$current.alpha[i] <- param$current.alpha[i]
@@ -139,8 +139,8 @@ make.move.alpha <- function(config, densities, rand){
 ## to scale well with outbreak size. The complicated bit is that the move impacts all descendents
 ## from 'a' as well as 'x'.
 
-make.move.swap.cases <- function(config, densities, rand){
-    function(param){
+make.move.swap.cases <- function(config, densities, rand) {
+    function(param) {
         ## find ancestries which can move
         to.move <- select.alpha.to.move(param, config)
 
@@ -150,7 +150,7 @@ make.move.swap.cases <- function(config, densities, rand){
         }
 
         ## move all ancestries that should be moved
-        for (i in to.move){
+        for (i in to.move) {
             ## swap ancestries
             new.param <- swap.cases(param, config, i)
 
@@ -166,7 +166,7 @@ make.move.swap.cases <- function(config, densities, rand){
             logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
 
             ## accept/reject
-            if (logratio >= rand$log.runif1()){
+            if (logratio >= rand$log.runif1()) {
                 param <- new.param
             }
         } # end for loop
@@ -184,8 +184,8 @@ make.move.swap.cases <- function(config, densities, rand){
 ## many dumb values proposed here, so it may not be worth it to use a non-symmetric proposal
 ## (e.g. log-normal).
 
-make.move.pi <- function(config, densities, rand){
-    function(param){
+make.move.pi <- function(config, densities, rand) {
+    function(param) {
         ## get new proposed values
         new.param <- param
         new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
@@ -216,8 +216,8 @@ make.move.pi <- function(config, densities, rand){
 ## values are typically in a short range (e.g. [1-3]) we probably propose more dumb values here. We
 ## may eventually want to bounce back or use and correct for assymetric proposals.
 
-make.move.kappa <- function(config, densities, rand){
-    function(param){
+make.move.kappa <- function(config, densities, rand) {
+    function(param) {
 
         ## determine which cases to move
         kappa.can.move <- !is.na(param$current.kappa)
@@ -228,13 +228,13 @@ make.move.kappa <- function(config, densities, rand){
         new.param <- param
 
         ## move all ancestries that should be moved
-        for (i in to.move){
+        for (i in to.move) {
             ## propose new kappa
             new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
 
             ## reject move automatically if new kappa < 1 or greater than allowed max
             if (new.param$current.kappa[i] < 1 ||
-               new.param$current.kappa[i] > config$max.kappa){
+               new.param$current.kappa[i] > config$max.kappa) {
                 new.param$current.kappa[i] <- param$current.kappa[i]
             } else {
                 ## compute log ratio
@@ -246,7 +246,7 @@ make.move.kappa <- function(config, densities, rand){
                                     densities$loglike$reporting(param, i)
 
                 ## accept/reject
-                if (logratio >= rand$log.runif1()){
+                if (logratio >= rand$log.runif1()) {
                     param$current.kappa[i] <- new.param$current.kappa[i]
                 } else {
                     new.param$current.kappa[i] <- param$current.kappa[i]

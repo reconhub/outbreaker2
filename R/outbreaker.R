@@ -49,7 +49,7 @@
 #' }
 outbreaker <- function(data = outbreaker.data(),
                        config = outbreaker.config()
-                       ){
+                       ) {
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker.data(data=data)

@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.shape <- function(param, data){
+outbreaker.mcmc.shape <- function(param, data) {
     ## UNFOLD ANCESTRIES ##
     if (!all(sapply(param$alpha, length)==data$N)) {
         stop("some ancestries are missing in the param")
@@ -40,4 +40,4 @@ outbreaker.mcmc.shape <- function(param, data){
     ## RETURN ##
     class(param) <- c("outbreaker.chains","data.frame")
     return(param)
-} # end store.mcmc
+} 

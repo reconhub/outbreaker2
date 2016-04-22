@@ -31,12 +31,12 @@
 #' environment(x)$values
 #'
 #' ## check with microbenchmark
-#' if (require(microbenchmark)){
+#' if (require(microbenchmark)) {
 #' x1 <- make.fast.rand1()
 #' plot(microbenchmark(x1(), runif (1), times=1e3L), ylim=c(1000,3000))
 #' }
 #'
-make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
+make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE) {
     ## initialize array
     values <- f(batch.size, ...)
     if (log) {
@@ -47,9 +47,9 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
     counter <- 0
 
     ## create returned function
-    out <- function(n){
+    out <- function(n) {
         ## read from array if enough values
-        if ((counter+n) <= batch.size){
+        if ((counter+n) <= batch.size) {
             counter <<- counter+n
             return(values[seq.int(counter-n+1, counter)])
         } else {
@@ -67,7 +67,7 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
 
     ## return output function
     return(out)
-} # end make.fast.rand
+} 
 
 
 
@@ -75,7 +75,7 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE){
 #' @rdname make.fast.rand
 #' @export
 #' @aliases  make.fast.rand1
-make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
+make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE) {
     ## initialize array
     values <- f(batch.size, ...)
     if (log) {
@@ -86,9 +86,9 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
     counter <- 0
 
     ## create returned function
-    out <- function(){
+    out <- function() {
         ## read from array if enough values
-        if (counter < batch.size){
+        if (counter < batch.size) {
             counter <<- counter+1
             return(values[counter])
         } else {
@@ -104,7 +104,7 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE){
 
     ## return output function
     return(out)
-} # end make.fast.rand1
+} 
 
 
 

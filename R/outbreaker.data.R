@@ -39,7 +39,7 @@
 #' x <- fakeOutbreak
 #' outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
 #'
-outbreaker.data <- function(..., data=list(...)){
+outbreaker.data <- function(..., data=list(...)) {
 
     ## SET DEFAULTS ##
     defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL,
@@ -52,7 +52,7 @@ outbreaker.data <- function(..., data=list(...)){
 
     ## CHECK DATA ##
     ## CHECK DATES
-    if (!is.null(data$dates)){
+    if (!is.null(data$dates)) {
         if (inherits(data$dates, "Date")) data$dates <- data$dates-min(data$dates)
         if (inherits(data$dates, "POSIXct")) data$dates <- difftime(data$dates, min(data$dates), units="days")
         data$dates <- as.integer(round(data$dates))
@@ -65,7 +65,7 @@ outbreaker.data <- function(..., data=list(...)){
     }
 
     ## CHECK W.DENS
-    if (!is.null(data$w.dens)){
+    if (!is.null(data$w.dens)) {
         if (any(data$w.dens<0))
         {
             stop("w.dens has negative entries (these should be probabilities!)")
@@ -73,7 +73,7 @@ outbreaker.data <- function(..., data=list(...)){
         ## add an exponential tail summing to 1e-4 to 'w'
         ## to cover the span of the outbreak
         ## (avoids starting with -Inf temporal loglike)
-        if (length(data$w.dens)<data$MAX.RANGE){
+        if (length(data$w.dens)<data$MAX.RANGE) {
             length.to.add <- (data$MAX.RANGE-length(data$w.dens)) + 10 # +10 to be on the safe side
             val.to.add <- dexp(seq_len(length.to.add), 1)
             val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
@@ -84,10 +84,10 @@ outbreaker.data <- function(..., data=list(...)){
     }
 
     ## CHECK F.DENS
-    if (!is.null(data$w.dens) && is.null(data$f.dens)){
+    if (!is.null(data$w.dens) && is.null(data$f.dens)) {
         data$f.dens <- data$w.dens
     }
-    if (!is.null(data$f.dens)){
+    if (!is.null(data$f.dens)) {
         if (any(data$f.dens<0))
         {
             stop("f.dens has negative entries (these should be probabilities!)")
@@ -96,7 +96,7 @@ outbreaker.data <- function(..., data=list(...)){
     }
 
     ## CHECK DNA
-    if (!is.null(data$dna)){
+    if (!is.null(data$dna)) {
         if (!inherits(data$dna, "DNAbin")) stop("dna is not a DNAbin object.")
         if (!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
         data$L <- ncol(data$dna) #  (genome length)
@@ -109,7 +109,7 @@ outbreaker.data <- function(..., data=list(...)){
     ## RETURN DATA ##
     return(data)
 
-} # end outbreaker.data
+} 
 
 
 

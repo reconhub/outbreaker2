@@ -3,7 +3,7 @@
 ## This function creates a named list of posterior functions with enclosed likelihood and prior functions.
 ##
 
-create.posteriors <- function(loglike, priors){
+create.posteriors <- function(loglike, priors) {
 
     ## These are all the functions generating various posterior functions; we list them by
     ## alphabetic order; note that unlike likelihood and prior functions, the '$all' here is not the

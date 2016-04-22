@@ -13,10 +13,10 @@
 
 ## The 'genetic posterior' includes the genetic likelihood and the priors for mutation rate 'mu'.
 
-make.post.genetic <- function(loglike, priors){
+make.post.genetic <- function(loglike, priors) {
     ll.genetic <- loglike$genetic
     prior.mu <- priors$mu
-    function(param){
+    function(param) {
         ll.genetic(param) + prior.mu(param)
     }
 }
@@ -25,10 +25,10 @@ make.post.genetic <- function(loglike, priors){
 
 ## The 'reporting posterior' includes the reporting likelihood and the priors for the reporting probability 'pi'.
 
-make.post.reporting <- function(loglike, priors){
+make.post.reporting <- function(loglike, priors) {
     ll.reporting <- loglike$reporting
     prior.pi <- priors$pi
-    function(param){
+    function(param) {
         ll.reporting(param) + prior.pi(param)
     }
 }
@@ -37,10 +37,10 @@ make.post.reporting <- function(loglike, priors){
 
 ## The global posterior includes the all likelihoods and priors
 
-make.post.all <- function(loglike, priors){
+make.post.all <- function(loglike, priors) {
     ll.all <- loglike$all
     prior.all <- priors$all
-    function(param){
+    function(param) {
         ll.all(param) + prior.all(param)
     }
 }

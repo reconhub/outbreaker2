@@ -20,12 +20,12 @@
 ## This likelihood corresponds to the probability of observing infection dates of cases given the
 ## infection dates of their ancestors.
 
-make.ll.timing.infections <- function(data){
+make.ll.timing.infections <- function(data) {
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq_len(data$N)
 
-    if (data$N>1){
-        function(param, i=cases){
+    if (data$N>1) {
+        function(param, i=cases) {
 
             ## compute delays between infection dates of cases and of their ancestors
             T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
@@ -48,12 +48,12 @@ make.ll.timing.infections <- function(data){
 ## This likelihood corresponds to the probability of reporting dates of cases given their
 ## infection dates.
 
-make.ll.timing.sampling <- function(data){
+make.ll.timing.sampling <- function(data) {
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq_len(data$N)
 
-    if (data$N>1){
-        function(param, i=cases){
+    if (data$N>1) {
+        function(param, i=cases) {
 
             ## compute delays
             T <- data$dates[i] - param$current.t.inf[i]
@@ -77,13 +77,13 @@ make.ll.timing.sampling <- function(data){
 ## This likelihood corresponds to the probability of observing a number of mutations between cases
 ## and their ancestors.
 
-make.ll.genetic <- function(data){
+make.ll.genetic <- function(data) {
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq_len(data$N)
 
-    if (nrow(data$D)>1){
+    if (nrow(data$D)>1) {
 
-        function(param, i=cases){
+        function(param, i=cases) {
 
             ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
             i <- i[!is.na(param$current.alpha[i])]
@@ -115,16 +115,16 @@ make.ll.genetic <- function(data){
 
 ## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
 
-make.ll.reporting <- function(data){
+make.ll.reporting <- function(data) {
     ## i will be the index of cases to be used, but it is useful to define it by default as all cases
     cases <- seq_len(data$N)
 
     ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
     ## 'kappa' is the number of generation between two successive cases
     ## 'kappa-1' is the number of unreported cases
-    if (data$N>1){
+    if (data$N>1) {
 
-        function(param, i=cases){
+        function(param, i=cases) {
             sum(stats::dgeom(param$current.kappa[i]-1,
                              prob=param$current.pi,
                              log=TRUE), na.rm=TRUE)

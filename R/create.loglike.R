@@ -35,7 +35,7 @@
 ##
 ## This function creates a named list of log-likelihood functions with enclosed data
 ##
-create.loglike <- function(data){
+create.loglike <- function(data) {
 
     ## These are all the functions generating various log-likelihood functions;
     ## we list them by alphabetic order
@@ -57,7 +57,7 @@ create.loglike <- function(data){
     ## - p(sampling dates | infections dates)
     ## - p(infection dates | ancestral infection dates)
 
-    out$timing <- function(param, i=cases){
+    out$timing <- function(param, i=cases) {
         out$timing.infections(param, i) + out$timing.sampling(param, i)
     }
 
@@ -65,7 +65,7 @@ create.loglike <- function(data){
     ## We need a function summing all log-likelihoods - useful as a shortcut for several
     ## movements of parameters and augmented data.
 
-    out$all <- function(param, i=cases){
+    out$all <- function(param, i=cases) {
         sum(vapply(out[ll.function.names], function(f) f(param, i), FUN.VALUE=numeric(1)), na.rm=TRUE)
     }
 

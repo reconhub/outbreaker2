@@ -13,16 +13,16 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.move <- function(moves, data, param, config, densities){
+outbreaker.move <- function(moves, data, param, config, densities) {
     ## get number of moves ##
     J <- length(moves)
 
     ## RUN MCMC ##
-    for (i in seq.int(2, config$n.iter, 1)){
+    for (i in seq.int(2, config$n.iter, 1)) {
         ## move parameters / augmented data
-        for (j in seq_len(J)){
+        for (j in seq_len(J)) {
             ## safemode
-            if (config$paranoid){
+            if (config$paranoid) {
                 old.param <- param
             }
 
@@ -30,9 +30,9 @@ outbreaker.move <- function(moves, data, param, config, densities){
             param <- moves[[j]](param=param)
 
             ## safemode
-            if (config$paranoid){
+            if (config$paranoid) {
                 diagnostic <- look.for.trouble(param, data)
-                if (!diagnostic$pass){
+                if (!diagnostic$pass) {
                     stop(paste("\n\n PARANOID MODE DETECTED AN ERROR:\n",
                                "at iteration ", i, ", ",
                                "movement ", j, " (", names(moves)[j], ")",
@@ -43,7 +43,7 @@ outbreaker.move <- function(moves, data, param, config, densities){
         }
 
         ## store outputs if needed
-        if ((i %% config$sample.every) == 0){
+        if ((i %% config$sample.every) == 0) {
             param <- outbreaker.mcmc.store(param=param, densities=densities, step=i)
         }
 
@@ -51,4 +51,4 @@ outbreaker.move <- function(moves, data, param, config, densities){
 
     ## RETURN ##
     return(param)
-} # end outbreaker.move
+} 

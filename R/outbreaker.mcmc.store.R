@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.store <- function(param, densities, step){
+outbreaker.mcmc.store <- function(param, densities, step) {
     ## UPDATE COUNTER
     counter <- param$counter <- param$counter + 1
 
@@ -29,7 +29,6 @@ outbreaker.mcmc.store <- function(param, densities, step){
     param$kappa[[counter]] <- param$current.kappa
     param$pi[counter] <- param$current.pi
 
-    ## RETURN ##
     return(param)
-} # end store.mcmc
+}
 

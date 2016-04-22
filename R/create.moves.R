@@ -4,7 +4,7 @@
 ## the rest (e.g. likelihood, prior, posterior functions, config, etc) is enclosed in the functions.
 ##
 
-create.moves <- function(config, densities, rand){
+create.moves <- function(config, densities, rand) {
 
     ## These are all the functions generating various movement functions; we list them by alphabetic
     ## order.

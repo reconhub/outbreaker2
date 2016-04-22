@@ -94,9 +94,9 @@
 #'
 #' @importFrom utils modifyList
 #'
-outbreaker.config <- function(..., data=NULL, config=NULL){
+outbreaker.config <- function(..., data=NULL, config=NULL) {
     ## PROCESS ... ONLY IF NO CONFIG IS PASSED
-    if (is.null(config)){
+    if (is.null(config)) {
         config <- list(...)
     }
 
@@ -127,15 +127,15 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
     ## CHECK CONFIG ##
     ## check init.tree
-    if (is.character(config$init.tree)){
+    if (is.character(config$init.tree)) {
         config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
     }
-    if (is.numeric(config$init.tree)){
+    if (is.numeric(config$init.tree)) {
         config$init.alpha <- config$init.tree
     }
 
     ## check / process init.t.inf
-    if (!is.null(config$init.t.inf)){
+    if (!is.null(config$init.t.inf)) {
         if (inherits(config$init.t.inf, "Date")) {
             config$init.t.inf <- config$init.t.inf-min(config$init.t.inf)
         }
@@ -164,7 +164,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
     if (any(config$init.kappa < 1)) {
         stop("init.kappa has values smaller than 1")
     }
-    if (any(config$init.kappa > config$max.kappa)){
+    if (any(config$init.kappa > config$max.kappa)) {
         config$init.kappa[config$init.kappa > config$max.kappa] <- config$max.kappa
         warning("values of init.kappa greater than max.kappa have been set to max.kappa")
     }
@@ -316,25 +316,25 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
-    if (!is.null(data)){
+    if (!is.null(data)) {
         ## check initial tree
-        if (is.character(config$init.tree)){
-            if (config$init.tree=="seqTrack" && is.null(data$dna)){
+        if (is.character(config$init.tree)) {
+            if (config$init.tree=="seqTrack" && is.null(data$dna)) {
                 message("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
                 config$init.tree <- "star"
             }
 
             ## seqTrack init
-            if (config$init.tree=="seqTrack"){
+            if (config$init.tree=="seqTrack") {
                 D.temp <- data$D
                 D.temp[!data$CAN.BE.ANCES] <- 1e30
                 config$init.alpha <- apply(D.temp,2,which.min)
                 config$init.alpha[data$dates==min(data$dates)] <- NA
                 config$init.alpha <- as.integer(config$init.alpha)
-            } else if (config$init.tree=="star"){
+            } else if (config$init.tree=="star") {
                 config$init.alpha <- rep(which.min(data$dates), length(data$dates))
                 config$init.alpha[data$dates==min(data$dates)] <- NA
-            } else if (config$init.tree=="random"){
+            } else if (config$init.tree=="random") {
                 config$init.alpha <- ralpha(data$dates)
             }
         } else { ## if ancestries are provided
@@ -342,14 +342,14 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
                 stop("inconvenient length for init.alpha")
             }
             unknownAnces <- config$init.alpha<1 | config$init.alpha>data$N
-            if (any(na.omit(unknownAnces))){
+            if (any(na.omit(unknownAnces))) {
                 warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
                 config$init.alpha[unknownAnces] <- NA
             }
         }
 
         ## check initial t.inf
-        if (!is.null(config$init.t.inf)){
+        if (!is.null(config$init.t.inf)) {
             if (any(config$init.t.inf >= data$dates)) {
                 stop("Initial dates of infection come after sampling dates / dates of onset.")
             }
@@ -375,5 +375,5 @@ outbreaker.config <- function(..., data=NULL, config=NULL){
 
     ## RETURN CONFIG ##
     return(config)
-} # end outbreaker.config
+}
 

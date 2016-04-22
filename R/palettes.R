@@ -17,6 +17,6 @@
 #' @examples
 #' plot(1:8, col=chains.pal(8), cex=10, pch=20)
 #'
-chains.pal <- function(n){
+chains.pal <- function(n) {
     colorRampPalette(c("#660033", "#339966", "#cccc00", "#333399"))(n)
 }

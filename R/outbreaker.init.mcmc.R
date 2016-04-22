@@ -12,7 +12,7 @@
 #'
 #' @export
 #'
-outbreaker.init.mcmc <- function(param, loglike, priors){
+outbreaker.init.mcmc <- function(param, loglike, priors) {
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##
     param$like[1] <- loglike$all(param)

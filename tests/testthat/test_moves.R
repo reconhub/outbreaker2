@@ -20,22 +20,31 @@ test_that("parameters and augmented data move", {
     densities <- list(loglike=ll, priors=priors, posteriors=post)
 
     rand <- outbreaker.rand.vec(config=config)
-    moves <- outbreaker.create.moves(config=config)
-    moves.no.move <- outbreaker.create.moves(config=config.no.move)
+    moves <- create.moves(config=config, densities=densities, rand=rand)
+    moves.no.move <- create.moves(config=config.no.move, densities=densities, rand=rand)
+
 
     ## test moves lists ##
     expect_equal(length(moves.no.move), 0L)
     expect_equal(length(moves), 6L)
     expect_true(all(vapply(moves, is.function, logical(1))))
 
+    ## test moves ##
     for(i in seq.int(length(moves))) {
+        ## test closures
+        identical(environment(moves[[i]])$config, config)
+        identical(environment(moves[[i]])$densities, densities)
+        identical(environment(moves[[i]])$rand, rand)
+
+        ## make moves
         set.seed(1)
-        res <- moves[[i]](param=param, config=config, densities=densities, rand=rand)
+        res <- moves[[i]](param=param)
 
         ## check that content in param after movements has identical shape
         expect_equal(length(param), length(res))
         expect_equal(length(unlist(param)), length(unlist(res)))
         expect_equal(names(param), names(res))
+
     }
 
 })

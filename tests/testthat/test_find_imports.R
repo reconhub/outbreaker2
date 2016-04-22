@@ -17,16 +17,13 @@ test_that("Test detection of imported cases", {
     priors <- create.priors(config)
     post <- create.posteriors(ll, priors)
     densities <- list(loglike=ll, priors=priors, posteriors=post)
-
     rand <- outbreaker.rand.vec(config=config)
-    moves <- outbreaker.create.moves(config=config)
 
-    rand <- outbreaker.rand.vec(config=config)
-    moves <- outbreaker.create.moves(config=config)
+    moves <- create.moves(config=config, densities=densities, rand=rand)
 
     ## detect imported cases
     out <- outbreaker.find.imports(moves=moves, data=data, param=param,
-                                   config=config, densities=densities, rand=rand)
+                                   config=config, densities=densities)
 
     ## tests ##
     expect_identical(which(!out$config$move.alpha), which(!out$config$move.kappa))

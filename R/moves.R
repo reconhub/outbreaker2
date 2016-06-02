@@ -29,6 +29,7 @@ make.move.mu <- function(config, densities, rand) {
         ## get new proposed values
         new.param <- param
         new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
+        ## new.param$current.mu <- new.param$current.mu + rnorm(1, mean=0, sd=config$sd.mu)
 
         ## escape if new.mu<0 or >1
         if (new.param$current.mu<0 || new.param$current.mu>1) {
@@ -190,7 +191,8 @@ make.move.pi <- function(config, densities, rand) {
     function(param) {
         ## get new proposed values
         new.param <- param
-        new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
+        ## new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
+        new.param$current.pi <- new.param$current.pi + rnorm(1, mean=0, sd=config$sd.pi)
 
         ## escape if new.pi<0 or >1
         if (new.param$current.pi<0 || new.param$current.pi>1) {

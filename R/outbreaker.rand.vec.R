@@ -20,6 +20,5 @@ outbreaker.rand.vec <- function(config)
     out$mu.rnorm1 <- make.fast.rand1(mean=0, sd=config$sd.mu, f=rnorm, batch.size=config$batch.size, log=FALSE)
     out$pi.rnorm1 <- make.fast.rand1(mean=0, sd=config$sd.pi, f=rnorm, batch.size=config$batch.size, log=FALSE)
 
-    ## RETURN ##
     return(out)
-} 
+}

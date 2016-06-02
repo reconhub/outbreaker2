@@ -55,7 +55,7 @@ create.moves <- function(config, densities, rand) {
     }
 
 
-    ## return list of movement functions with enclosed stuff ##
+    ## the output is a list of movement functions with enclosed stuff ##
     return(out)
 
 }

@@ -248,6 +248,5 @@ summary.outbreaker.chains <- function(object, burnin=0, ...) {
     out$tree <- as.data.frame(out$tree)
     rownames(out$tree) <- NULL
 
-    ## RETURN ##
     return(out)
 }

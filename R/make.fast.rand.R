@@ -65,9 +65,9 @@ make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE) {
         }
     }
 
-    ## return output function
+    ## output is a function with enclosed values and counter
     return(out)
-} 
+}
 
 
 
@@ -102,9 +102,9 @@ make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE) {
         }
     }
 
-    ## return output function
+    ## output is a function with enclosed values and counter
     return(out)
-} 
+}
 
 
 

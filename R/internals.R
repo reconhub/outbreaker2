@@ -22,7 +22,7 @@ modify.defaults <- function(defaults, x, strict=TRUE) {
         stop("Additional invalid options: ", paste(extra, collapse=", "))
     }
     modifyList(defaults, x)
-} 
+}
 
 
 
@@ -40,9 +40,8 @@ ralpha <- function(t.inf) {
     ## pick possible ancestors at random
     alpha <- apply(canBeAnces, 2, function(e) ifelse(length(which(e))>0, sample(which(e),1), NA) )
 
-    ## return
     return(alpha)
-} 
+}
 
 
 
@@ -217,7 +216,7 @@ look.for.trouble <- function(param, data) {
     ## SHAPE OUTPUT AND RETURN ##
     out$msg <- paste(out$msg, collapse="\n")
     return(out)
-} 
+}
 
 
 
@@ -258,13 +257,13 @@ are.possible.alpha <- function(t.inf, i) {
         return(NA)
     }
     return(which(t.inf < t.inf[i[1]]))
-} 
+}
 
 
 ## choose one possible ancestor for a case 'i'
 choose.possible.alpha <- function(t.inf, i) {
     return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
-} 
+}
 
 
 
@@ -313,9 +312,8 @@ swap.cases <- function(param, config, i) {
     ## swap t.inf
     param$current.t.inf[c(x,i)] <- param$current.t.inf[c(i,x)]
 
-    ## return
     return(param)
-} 
+}
 
 
 
@@ -332,7 +330,7 @@ check.i <- function(data, i) {
     ## if (any(i < 1)) stop("i contains invalid case indices (i<1)")
     ## if (any(i > data$N)) stop("i contains invalid case indices (i>dat$N)")
     ## return(i)
-} 
+}
 
 
 
@@ -342,7 +340,7 @@ check.i <- function(data, i) {
 find.descendents <- function(param, i) {
     ## find descendents
     which(param$current.alpha==i)
-} 
+}
 
 
 
@@ -372,6 +370,5 @@ add.convolutions <- function(data, config) {
     rownames(data$log.w.dens) <- paste("kappa", seq_len(nrow(data$log.w.dens)), sep="=")
     colnames(data$log.w.dens) <- seq_len(ncol(data$log.w.dens))
 
-    ## RETURN ##
     return(data)
 }

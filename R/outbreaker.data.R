@@ -106,7 +106,7 @@ outbreaker.data <- function(..., data=list(...)) {
         data$D <- matrix(numeric(0), ncol=0, nrow=0)
     }
 
-    ## RETURN DATA ##
+    ## output is a list of checked data
     return(data)
 
 }

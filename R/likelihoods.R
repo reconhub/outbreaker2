@@ -34,7 +34,7 @@ make.ll.timing.infections <- function(data) {
             ## (data$log.w.dens) will give a likelihood of zero
             if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
 
-            ## return sum of log-densities
+            ## output is a sum of log-densities
             sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
         }
     } else {
@@ -62,7 +62,7 @@ make.ll.timing.sampling <- function(data) {
             ## avoid over-shooting
             if (any(T<1 | T>length(data$log.f.dens))) return(-Inf)
 
-            ## return
+            ## output is a sum of log densities
             sum(data$log.f.dens[T], na.rm=TRUE)
         }
     } else {

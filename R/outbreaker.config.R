@@ -481,7 +481,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         config$move.kappa[is.na(config$init.alpha)] <- FALSE
     }
 
-    ## RETURN CONFIG ##
+    ## output is a list of checked settings with a dedicated class (for printing)
     class(config) <- c("outbreaker.config", "list")
     return(config)
 }

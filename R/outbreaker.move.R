@@ -43,6 +43,6 @@ outbreaker.move <- function(moves, data, param, config, densities) {
 
     } # end of the chain
 
-    ## RETURN ##
+    ## output is a list of saved chain states
     return(param)
 }

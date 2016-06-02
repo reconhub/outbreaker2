@@ -21,11 +21,6 @@ outbreaker.move <- function(moves, data, param, config, densities) {
     for (i in seq.int(2, config$n.iter, 1)) {
         ## move parameters / augmented data
         for (j in seq_len(J)) {
-            ## safemode
-            if (config$paranoid) {
-                old.param <- param
-            }
-
             ## move parameters
             param <- moves[[j]](param=param)
 

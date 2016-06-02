@@ -16,7 +16,9 @@ test_that("test: settings are processed fine", {
 
     ## check output
     expect_is(outbreaker.config(), "list")
+    expect_is(outbreaker.config(), "outbreaker.config")
     expect_is(outbreaker.config(data=dat), "list")
+    expect_is(outbreaker.config(data=dat), "outbreaker.config")
     expect_equal(outbreaker.config(init.tree="star", data=dat)$init.alpha, c(NA, rep(1,29)))
     expect_equal(outbreaker.config(init.tree=alpha)$init.tree, outbreaker.config(init.tree=alpha)$init.alpha)
     expect_equal(length(outbreaker.config(init.tree="random",data=dat)$init.alpha), dat$N)

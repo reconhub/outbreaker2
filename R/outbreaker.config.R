@@ -98,6 +98,12 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     ## PROCESS ... ONLY IF NO CONFIG IS PASSED
     if (is.null(config)) {
         config <- list(...)
+        if (length(config) == 1L && inherits(config, "outbreaker.config")) {
+            config <- config[[1]]
+        }
+    }
+    if (inherits(config, "outbreaker.config")) {
+        return(config)
     }
 
     ## SET DEFAULTS ##
@@ -374,6 +380,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     }
 
     ## RETURN CONFIG ##
+    class(config) <- c("outbreaker.config", "list")
     return(config)
 }
 

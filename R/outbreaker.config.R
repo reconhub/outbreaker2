@@ -161,6 +161,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (config$init.mu > 1) {
         stop("init.mu is greater than 1")
     }
+    if (!is.finite(config$init.mu)) {
+        stop("init.mu is infinite or NA")
+    }
 
     ## check init.kappa
     if (!is.numeric(config$init.kappa)) {
@@ -174,6 +177,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         config$init.kappa[config$init.kappa > config$max.kappa] <- config$max.kappa
         warning("values of init.kappa greater than max.kappa have been set to max.kappa")
     }
+    if (!all(is.finite(config$init.kappa))) {
+        stop("init.kappa has values which are infinite or NA")
+    }
+
 
     ## check init.pi
     if (!is.numeric(config$init.pi)) {
@@ -185,35 +192,56 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (config$init.pi > 1) {
         stop("init.pi is greater than 1")
     }
+    if (!is.finite(config$init.pi)) {
+        stop("init.pi is infinite or NA")
+    }
 
     ## check move.alpha
     if (!is.logical(config$move.alpha)) {
         stop("move.alpha is not a logical")
+    }
+    if (is.na(config$move.alpha)) {
+        stop("move.alpha is NA")
     }
 
     ## check move.swap.cases
     if (!is.logical(config$move.swap.cases)) {
         stop("move.swap.cases is not a logical")
     }
+    if (is.na(config$move.swap.cases)) {
+        stop("move.swap.cases is NA")
+    }
 
     ## check move.t.inf
     if (!is.logical(config$move.t.inf)) {
         stop("move.t.inf is not a logical")
+    }
+    if (is.na(config$move.t.inf)) {
+        stop("move.t.inf is NA")
     }
 
     ## check move.mu
     if (!is.logical(config$move.mu)) {
         stop("move.mu is not a logical")
     }
+    if (is.na(config$move.mu)) {
+        stop("move.mu is NA")
+    }
 
     ## check move.kappa
     if (!is.logical(config$move.kappa)) {
         stop("move.kappa is not a logical")
     }
+    if (is.na(config$move.kappa)) {
+        stop("move.kappa is NA")
+    }
 
     ## check move.pi
     if (!is.logical(config$move.pi)) {
         stop("move.pi is not a logical")
+    }
+    if (is.na(config$move.pi)) {
+        stop("move.pi is NA")
     }
 
     ## check n.iter
@@ -223,6 +251,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (config$n.iter < 2 ) {
         stop("n.iter is smaller than 2")
     }
+    if (!is.finite(config$n.iter)) {
+        stop("n.iter is infinite or NA")
+    }
+
 
     ## check sample.every
     if (!is.numeric(config$sample.every)) {
@@ -231,21 +263,30 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (config$sample.every < 1 ) {
         stop("sample.every is smaller than 1")
     }
+    if (!is.finite(config$sample.every)) {
+        stop("sample.every is infinite or NA")
+    }
 
     ## check sd.mu
     if (!is.numeric(config$sd.mu)) {
         stop("sd.mu is not a numeric value")
     }
-    if (config$sd.mu < 0) {
-        stop("sd.mu is negative")
+    if (config$sd.mu < 1e-10) {
+        stop("sd.mu is close to zero or negative")
+    }
+    if (!is.finite(config$sd.mu)) {
+        stop("sd.mu is infinite or NA")
     }
 
     ## check sd.pi
     if (!is.numeric(config$sd.pi)) {
         stop("sd.pi is not a numeric value")
     }
-    if (config$sd.pi < 0) {
-        stop("sd.pi is negative")
+    if (config$sd.pi < 1e-10) {
+        stop("sd.pi is close to zero or negative")
+    }
+    if (!is.finite(config$sd.pi)) {
+        stop("sd.pi is infinite or NA")
     }
 
     ## check prop.alpha.move
@@ -258,6 +299,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (config$prop.alpha.move > 1 ) {
         stop("prop.alpha.move is greater than one")
     }
+    if (!is.finite(config$prop.alpha.move)) {
+        stop("prop.alpha.move is infinite or NA")
+    }
 
     ## check batch.size
     if (!is.numeric(config$batch.size)) {
@@ -265,6 +309,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     }
     if (config$batch.size<1) {
         stop("batch.size is less than 1")
+    }
+    if (!is.finite(config$batch.size)) {
+        stop("batch.size is infinite or NA")
     }
 
     ## check paranoid
@@ -274,6 +321,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (length(config$paranoid) != 1L) {
         stop("paranoid should be a single logical value")
     }
+    if (is.na(config$paranoid)) {
+        stop("paranoid is NA")
+    }
 
     ## check min.date
     if (!is.numeric(config$min.date)) {
@@ -281,6 +331,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     }
     if (config$min.date >= 0) {
         stop("min.date is greater or equal to 0")
+    }
+    if (!is.finite(config$min.date)) {
+        stop("min.date is infinite or NA")
     }
 
     ## check find.import
@@ -290,6 +343,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (length(config$find.import) != 1L) {
         stop("find.import should be a single logical value")
     }
+    if (is.na(config$find.import)) {
+        stop("find.import is NA")
+    }
 
     ## check outlier.threshold
     if (!is.numeric(config$outlier.threshold)) {
@@ -297,6 +353,9 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     }
     if (any(config$outlier.threshold < 1)) {
         stop("outlier.threshold has values smaller than 1")
+    }
+    if (!is.finite(config$outlier.threshold)) {
+        stop("outlier.threshold is infinite or NA")
     }
 
     ## check n.iter.import
@@ -306,19 +365,45 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (config$n.iter.import < 1000) {
         stop("n.iter is smaller than 1000")
     }
+    if (!is.finite(config$n.iter.import)) {
+        stop("n.iter.import is infinite or NA")
+    }
 
     ## check sample.every.import
-    if (!is.numeric(config$sample.every.import)) stop("sample.every.import is not a numeric value")
-    if (config$sample.every.import < 1) stop("sample.every.import is smaller than 1")
+    if (!is.numeric(config$sample.every.import)) {
+        stop("sample.every.import is not a numeric value")
+    }
+    if (config$sample.every.import < 1) {
+        stop("sample.every.import is smaller than 1")
+    }
+    if (!is.finite(config$sample.every.import)) {
+        stop("sample.every.import is infinite or NA")
+    }
 
     ## check prior value for mu
-    if (!is.numeric(config$prior.mu)) stop("prior.mu is not a numeric value")
-    if (config$prior.mu < 0) stop("prior.mu is negative (it should be a rate)")
+    if (!is.numeric(config$prior.mu)) {
+        stop("prior.mu is not a numeric value")
+    }
+    if (config$prior.mu < 0) {
+        stop("prior.mu is negative (it should be a rate)")
+    }
+    if (!is.finite(config$prior.mu)) {
+        stop("prior.mu is infinite or NA")
+    }
 
     ## check prior value for pi
-    if (!all(is.numeric(config$prior.pi))) stop("prior.pi has non-numeric values")
-    if (any(config$prior.pi < 0)) stop("prior.pi has negative values")
-    if (length(config$prior.pi)!=2L) stop("prior.pi should be a vector of length 2")
+    if (!all(is.numeric(config$prior.pi))) {
+        stop("prior.pi has non-numeric values")
+    }
+    if (any(config$prior.pi < 0)) {
+        stop("prior.pi has negative values")
+    }
+    if (length(config$prior.pi)!=2L) {
+        stop("prior.pi should be a vector of length 2")
+    }
+   if (!all(is.finite(config$prior.pi))) {
+        stop("prior.pi is has values which are infinite or NA")
+    }
 
 
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##

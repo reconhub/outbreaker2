@@ -34,7 +34,7 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
 
         cat("\nancestries not shown:", alpha.txt)
         cat("\ninfection dates not shown:", t.inf.txt)
-        cat("\nintermediate generatinons not shown:", kappa.txt)
+        cat("\nintermediate generations not shown:", kappa.txt)
     }
 
     ## heads and tails

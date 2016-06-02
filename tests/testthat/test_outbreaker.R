@@ -56,7 +56,7 @@ test_that("test: convergence to decent results for toy example", {
     expect_true(min(out.smry$post) > -950) # approx log post values
     expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .75) # at least 75% ancestries correct
     expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
-    expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.00041) # mu between 2e-4 and 4 e-4
+    expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.00042) # mu between 2e-4 and 4 e-4
 
     ## outbreaker time, no DNA ##
     ## analysis
@@ -99,7 +99,7 @@ test_that("test: convergence to decent results for toy example", {
     out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
     dat$ances[is.na(dat$ances)] <- 0
     expect_true(min(out.with.import.smry$post) > -440) # approx log post values
-    expect_true(mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE) > .90) # at least 90% ancestries correct
+    expect_true(mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE) >= .90) # at least 90% ancestries correct
     expect_true(mean(abs(out.with.import.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 })

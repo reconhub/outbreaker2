@@ -2,6 +2,7 @@
 
 S3method(plot,outbreaker.chains)
 S3method(print,outbreaker.chains)
+S3method(print,outbreaker.config)
 S3method(summary,outbreaker.chains)
 export(chains.pal)
 export(make.fast.rand)

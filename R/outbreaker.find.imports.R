@@ -1,16 +1,13 @@
-#' Detection of imported cases for outbreaker2
-#'
-#' This function moves all parameters for outbreaker2.
-#'
-#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
-#'
-#' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
-#' @param data a list of data items as returned by \code{outbreaker.data}
-#' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
-#' @param config a list of settings as returned by \code{outbreaker.config}
-#'
-#' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
-#'
+
+## This function is not exported and is meant for internal use in outbreaker2. It is near identical
+## to the MCMC implemented by 'outbreaker.move'. The only difference is it has its own number of
+## iterations ('config$n.iter.import') and sampling frequency ('config$sample.every.import'), and
+## stores individual likelihoods for each case and saved iteration. The rationale is to use these
+## chains to compute the 'global influences' of each case, flag outliers based on these values and
+## an arbitrary threshold ('config$outlier.threshold'), and mark these cases as imported, i.e. for
+## which the ancestor will be 'NA'.
+
+
 outbreaker.find.imports <- function(moves, data, param, config, densities) {
     ## send back unchanged chains if config disabled the detection of imported cases ##
     if (!config$find.import) {

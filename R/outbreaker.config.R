@@ -117,6 +117,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
                      move.mu=TRUE, move.kappa=TRUE, move.pi=TRUE,
                      n.iter=1e4, sample.every=200, sd.mu=0.0001, sd.pi=0.01,
                      prop.alpha.move=1/4,
+                     prop.t.inf.move=0.2,
                      batch.size=1e6,
                      paranoid=FALSE,
                      min.date=-10,
@@ -301,6 +302,20 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     }
     if (!is.finite(config$prop.alpha.move)) {
         stop("prop.alpha.move is infinite or NA")
+    }
+
+    ## check prop.t.inf.move
+    if (!is.numeric(config$prop.t.inf.move)) {
+        stop("prop.t.inf.move is not a numeric value")
+    }
+    if (config$prop.t.inf.move < 0 ) {
+        stop("prop.t.inf.move is negative")
+    }
+    if (config$prop.t.inf.move > 1 ) {
+        stop("prop.t.inf.move is greater than one")
+    }
+    if (!is.finite(config$prop.t.inf.move)) {
+        stop("prop.t.inf.move is infinite or NA")
     }
 
     ## check batch.size

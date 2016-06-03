@@ -90,9 +90,9 @@ test_that("test: convergence to decent results for toy example", {
     ## analysis
     set.seed(1)
     out.with.import <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=5000, sample.every=100, init.tree="star",
-                                 move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=TRUE)
-                                 )
+                                  config=list(n.iter=10000, sample.every=100, init.tree="star",
+                                  move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=TRUE)
+                                  )
 
     ## checks
     out.with.import.smry <- summary(out.with.import, burnin=1000)

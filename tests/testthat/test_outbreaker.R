@@ -75,14 +75,14 @@ test_that("test: convergence to decent results for toy example", {
     ## analysis
     set.seed(1)
     out.no.missing <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=5000, sample.every=100, init.tree="star",
+                      config=list(n.iter=10000, sample.every=100, init.tree="star",
                                  move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=FALSE)
                                  )
 
     ## checks
-    out.no.missing.smry <- summary(out.no.missing, burnin=1000)
+    out.no.missing.smry <- summary(out.no.missing, burnin=2000)
     expect_true(min(out.no.missing.smry$post) > -920) # approx log post values
-    expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .85) # at least 85% ancestries correct
+    expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .8) # at least 80% ancestries correct
     expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 
@@ -99,7 +99,7 @@ test_that("test: convergence to decent results for toy example", {
     out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
     dat$ances[is.na(dat$ances)] <- 0
     expect_true(min(out.with.import.smry$post) > -440) # approx log post values
-    expect_true(mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE) >= .90) # at least 90% ancestries correct
+    expect_true(mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE) >= .80) # at least 80% ancestries correct
     expect_true(mean(abs(out.with.import.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 
 })

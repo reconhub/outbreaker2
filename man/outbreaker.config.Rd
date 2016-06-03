@@ -70,6 +70,7 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{prop.alpha.move}{the proportion of ancestries to move at each iteration of the MCMC}
 
+\item{prop.t.inf.move}{the proportion of infection dates to move at each iteration of the MCMC}
 \item{batch.size}{the size of the batch of random number pre-generated}
 
 \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for

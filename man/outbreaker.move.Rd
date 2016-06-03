@@ -9,8 +9,6 @@ outbreaker.move(moves, data, param, config, densities)
 \arguments{
 \item{param}{a list of parameters as returned by \code{outbreaker.create.mcmc}}
 
-\item{rand}{a list of items as returned by \code{outbreaker.rand.vec}}
-
 \item{loglike}{a list of log-likelihood functions with enclosed data as returned by \code{create.loglike}}
 
 \item{priors}{a list of prior functions with enclosed parameters as returned by \code{create.priors}}

@@ -1,7 +1,7 @@
 context("Test outbreaker")
 
 ## test output format ##
-test_that("test: outbreaker's output have expected format", {
+test_that("outbreaker's output have expected format", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -33,8 +33,8 @@ test_that("test: outbreaker's output have expected format", {
 
 
 
-## test convergence ##
-test_that("test: convergence to decent results for toy example", {
+## test convergence in various settings ##
+test_that("convergence to decent results for toy example, DNA + time", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -57,8 +57,20 @@ test_that("test: convergence to decent results for toy example", {
     expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .75) # at least 75% ancestries correct
     expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
     expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.00042) # mu between 2e-4 and 4 e-4
+})
 
-    ## outbreaker time, no DNA ##
+
+ test_that("convergence to decent results for toy example, time, no DNA", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## get data
+    data(fake.outbreak)
+    dat <- fake.outbreak$dat
+    w <- fake.outbreak$w
+
+   ## outbreaker time, no DNA ##
     ## analysis
     set.seed(1)
     out.no.dna <- outbreaker(data=list(dates=dat$onset, w.dens=w),
@@ -69,7 +81,20 @@ test_that("test: convergence to decent results for toy example", {
     expect_true(min(out.no.dna.smry$post) > -100) # approx log post values
     expect_true(mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE) > .05) # at least 5% ancestries correct
     expect_true(mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
+})
 
+
+
+
+ test_that("convergence to decent results for toy example, no missing cases", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## get data
+    data(fake.outbreak)
+    dat <- fake.outbreak$dat
+    w <- fake.outbreak$w
 
     ## outbreaker, no missing cases ##
     ## analysis
@@ -84,7 +109,19 @@ test_that("test: convergence to decent results for toy example", {
     expect_true(min(out.no.missing.smry$post) > -920) # approx log post values
     expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .8) # at least 80% ancestries correct
     expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
+})
 
+
+
+ test_that("convergence to decent results for toy example, no missing cases, detect imported cases", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## get data
+    data(fake.outbreak)
+    dat <- fake.outbreak$dat
+    w <- fake.outbreak$w
 
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis

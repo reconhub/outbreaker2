@@ -24,7 +24,7 @@
 ## (implicitely contained in rand$mu.rnorm1, but really provided through 'config', seems fine as the
 ## range of real values will never change much. Probably not much point in using auto-tuning here.
 
-make.move.mu <- function(config, densities, rand) {
+make.move.mu <- function(config, densities) {
     function(param) {
         ## get new proposed values
         new.param <- param
@@ -56,7 +56,7 @@ make.move.mu <- function(config, densities, rand) {
 ## larger datasets. The non-vectorised option will be slower and speed-up with C/C++ will be more
 ## substantial then.
 
-make.move.t.inf <- function(config, densities, rand) {
+make.move.t.inf <- function(config, densities) {
     prob.move <- config$prop.t.inf.move/2
     prob.proposal <- c(prob.move, 1-config$prop.t.inf.move, prob.move)
     function(param) {
@@ -88,7 +88,7 @@ make.move.t.inf <- function(config, densities, rand) {
 ## implementation is simpler and seems to mix at least as well. Proper movement of 'alpha' needs
 ## this procedure as well as a swapping procedure (swaps are not possible through move.alpha only).
 
-make.move.alpha <- function(config, densities, rand) {
+make.move.alpha <- function(config, densities) {
     function(param) {
         ## create new parameters
         new.param <- param
@@ -142,7 +142,7 @@ make.move.alpha <- function(config, densities, rand) {
 ## to scale well with outbreak size. The complicated bit is that the move impacts all descendents
 ## from 'a' as well as 'x'.
 
-make.move.swap.cases <- function(config, densities, rand) {
+make.move.swap.cases <- function(config, densities) {
     function(param) {
         ## find ancestries which can move
         to.move <- select.alpha.to.move(param, config)
@@ -187,7 +187,7 @@ make.move.swap.cases <- function(config, densities, rand) {
 ## many dumb values proposed here, so it may not be worth it to use a non-symmetric proposal
 ## (e.g. log-normal).
 
-make.move.pi <- function(config, densities, rand) {
+make.move.pi <- function(config, densities) {
     function(param) {
         ## get new proposed values
         new.param <- param
@@ -220,7 +220,7 @@ make.move.pi <- function(config, densities, rand) {
 ## values are typically in a short range (e.g. [1-3]) we probably propose more dumb values here. We
 ## may eventually want to bounce back or use and correct for assymetric proposals.
 
-make.move.kappa <- function(config, densities, rand) {
+make.move.kappa <- function(config, densities) {
     function(param) {
 
         ## determine which cases to move

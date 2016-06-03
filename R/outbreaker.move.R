@@ -5,7 +5,6 @@
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
 #' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
-#' @param rand  a list of items as returned by \code{outbreaker.rand.vec}
 #' @param loglike  a list of log-likelihood functions with enclosed data as returned by \code{create.loglike}
 #' @param priors  a list of prior functions with enclosed parameters as returned by \code{create.priors}
 #' @param posteriors a list of posterior functions with enclosed likelihood and prior functions as

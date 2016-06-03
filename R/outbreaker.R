@@ -67,8 +67,6 @@ outbreaker <- function(data = outbreaker.data(),
     param <- outbreaker.create.mcmc(data=data, config=config)
     param <- outbreaker.init.mcmc(param=param, loglike=loglike, priors=priors)
 
-    ## CREATE FAST RANDOM VARIABLE GENERATORS ##
-    rand <- outbreaker.rand.vec(config)
 
     ## We put all density functions in a single list 'densities'. This includes 3 lists, for:
     ## log-likelihood, priors, and posteriors. All functions have enclosed items so that only the
@@ -77,7 +75,7 @@ outbreaker <- function(data = outbreaker.data(),
     densities <- list(loglike=loglike, priors=priors, posteriors=posteriors)
 
     ## here we create a list of function for moving parameters
-    moves <- create.moves(config=config, densities=densities, rand=rand)
+    moves <- create.moves(config=config, densities=densities)
 
 
 

@@ -4,7 +4,7 @@
 ## the rest (e.g. likelihood, prior, posterior functions, config, etc) is enclosed in the functions.
 ##
 
-create.moves <- function(config, densities, rand) {
+create.moves <- function(config, densities) {
 
     ## These are all the functions generating various movement functions; we list them by alphabetic
     ## order.
@@ -18,7 +18,7 @@ create.moves <- function(config, densities, rand) {
                      kappa = make.move.kappa
                      )
 
-    out <- lapply(default.functions, function(f) f(config, densities, rand))
+    out <- lapply(default.functions, function(f) f(config, densities))
 
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##

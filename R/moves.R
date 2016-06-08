@@ -41,7 +41,7 @@ make.move.mu <- function(config, densities) {
             densities$posteriors$genetic(param)
 
         ## accept/reject
-        if (logratio >= log(runif(1))) {
+        if (logratio >= log(stats::runif(1))) {
             return(new.param)
         }
         return(param)
@@ -69,7 +69,7 @@ make.move.t.inf <- function(config, densities) {
         logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
 
         ## accept/reject
-        if (logratio >= log(runif(1))) {
+        if (logratio >= log(stats::runif(1))) {
             return(new.param)
         } else {
             return(param)
@@ -118,7 +118,7 @@ make.move.alpha <- function(config, densities) {
                 log(sum(are.possible.alpha(param$current.t.inf, i)))
 
             ## accept/reject
-            if (logratio >= log(runif(1))) {
+            if (logratio >= log(stats::runif(1))) {
                 param$current.alpha[i] <- new.param$current.alpha[i]
             } else {
                 new.param$current.alpha[i] <- param$current.alpha[i]
@@ -169,7 +169,7 @@ make.move.swap.cases <- function(config, densities) {
             logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
 
             ## accept/reject
-            if (logratio >= log(runif(1))) {
+            if (logratio >= log(stats::runif(1))) {
                 param <- new.param
             }
         } # end for loop
@@ -204,7 +204,7 @@ make.move.pi <- function(config, densities) {
             densities$posteriors$reporting(param)
 
         ## accept/reject
-        if (logratio >= log(runif(1))) {
+        if (logratio >= log(stats::runif(1))) {
             return(new.param)
         }
         return(param)
@@ -250,7 +250,7 @@ make.move.kappa <- function(config, densities) {
                                     densities$loglike$reporting(param, i)
 
                 ## accept/reject
-                if (logratio >= log(runif(1))) {
+                if (logratio >= log(stats::runif(1))) {
                     param$current.kappa[i] <- new.param$current.kappa[i]
                 } else {
                     new.param$current.kappa[i] <- param$current.kappa[i]

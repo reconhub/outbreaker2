@@ -74,6 +74,12 @@ plot.outbreaker.chains <- function(x, y="post",
         stop(paste(y,"is not a column of x"))
     }
 
+    ## THIS IS JUST TO APPEASE R CMD check
+
+    ## hopefully cran will avoid spurious warnings along the lines of "no visible binding for global
+    ## variable" when using ggplot2::aes(...)
+    ##
+    frequency <- NULL
 
     ## GET DATA TO PLOT ##
     if (burnin > max(x$step)) {
@@ -144,7 +150,7 @@ plot.outbreaker.chains <- function(x, y="post",
         alpha <- x[, grep("alpha",names(x)), drop=FALSE]
         from <- unlist(alpha)
         to <- as.vector(col(alpha))
-        edges <- na.omit(data.frame(xyTable(from, to)))
+        edges <- stats::na.omit(data.frame(xyTable(from, to)))
         edges[3] <- edges$number/nrow(alpha)
         names(edges) <- c("from", "to", "value")
         edges <- edges[edges$value > min.support,,drop=FALSE]

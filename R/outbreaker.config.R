@@ -450,7 +450,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
                 stop("inconvenient length for init.alpha")
             }
             unknownAnces <- config$init.alpha<1 | config$init.alpha>data$N
-            if (any(na.omit(unknownAnces))) {
+            if (any(stats::na.omit(unknownAnces))) {
                 warning("some initial ancestries refer to unknown cases (idx<1 or >N)")
                 config$init.alpha[unknownAnces] <- NA
             }

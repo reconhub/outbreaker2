@@ -75,7 +75,7 @@ outbreaker.data <- function(..., data=list(...)) {
         ## (avoids starting with -Inf temporal loglike)
         if (length(data$w.dens)<data$max.range) {
             length.to.add <- (data$max.range-length(data$w.dens)) + 10 # +10 to be on the safe side
-            val.to.add <- dexp(seq_len(length.to.add), 1)
+            val.to.add <- stats::dexp(seq_len(length.to.add), 1)
             val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
             data$w.dens <- c(data$w.dens, val.to.add)
             data$w.dens <- data$w.dens/sum(data$w.dens)

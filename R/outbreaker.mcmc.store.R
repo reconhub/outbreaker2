@@ -4,8 +4,10 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
-#' @param param a list of output items as returned by \code{outbreaker.create.mcmc}
-#' @param data a list of settings as returned by \code{outbreaker.data}
+#' @inheritParams outbreaker.config
+#'
+#' @param densities a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
+#'
 #' @param step an integer indicating the MCMC iteration being stored
 #'
 #' @export

@@ -7,14 +7,15 @@
 outbreaker.move(moves, data, param, config, densities)
 }
 \arguments{
+\item{moves}{a list of movement functions as returned by \code{create.moves} (internal function)}
+
+\item{data}{a list of data items as returned by \code{outbreaker.data}}
+
 \item{param}{a list of parameters as returned by \code{outbreaker.create.mcmc}}
 
-\item{loglike}{a list of log-likelihood functions with enclosed data as returned by \code{create.loglike}}
+\item{config}{a list of settings as returned by \code{outbreaker.config}}
 
-\item{priors}{a list of prior functions with enclosed parameters as returned by \code{create.priors}}
-
-\item{posteriors}{a list of posterior functions with enclosed likelihood and prior functions as
-returned by \code{create.posteriors}}
+\item{densities}{a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}
 }
 \value{
 a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}

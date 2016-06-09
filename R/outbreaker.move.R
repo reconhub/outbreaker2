@@ -4,11 +4,13 @@
 #'
 #' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
 #'
+#' @inheritParams outbreaker.create.mcmc
+#'
+#' @param moves a list of movement functions as returned by \code{create.moves} (internal function)
+#'
 #' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
-#' @param loglike  a list of log-likelihood functions with enclosed data as returned by \code{create.loglike}
-#' @param priors  a list of prior functions with enclosed parameters as returned by \code{create.priors}
-#' @param posteriors a list of posterior functions with enclosed likelihood and prior functions as
-#' returned by \code{create.posteriors}
+#'
+#' @param densities a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'

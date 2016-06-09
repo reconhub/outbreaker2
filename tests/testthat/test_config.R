@@ -26,7 +26,7 @@ test_that("test: settings are processed fine", {
     expect_error(outbreaker.config(uknownarg=123),
                  "Additional invalid options: uknownarg")
     expect_error(outbreaker.config(init.tree="wrongtreeinit"),
-                 "'arg' should be one of “seqTrack”, “star”, “random”")
+                 "should be one of", all=FALSE)
     expect_error(outbreaker.config(init.mu=-5),
                  "init.mu is negative")
     expect_error(outbreaker.config(n.iter=0),

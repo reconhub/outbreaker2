@@ -4,7 +4,9 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
-#' @inheritParams outbreaker.config
+#' @inheritParams outbreaker
+#'
+#' @param param a list of output items as returned by \code{outbreaker.create.mcmc}
 #'
 #' @param densities a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 #'

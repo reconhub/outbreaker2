@@ -5,6 +5,7 @@
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @param param a list of output items as returned by \code{outbreaker.create.mcmc}
+#'
 #' @param data a list of data items as returned by \code{outbreaker.data}
 #'
 #' @export

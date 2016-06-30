@@ -214,6 +214,34 @@ make.move.pi <- function(config, densities) {
 
 
 
+## The movement of the contact reporting probability 'eps' is similar to the treatment of 'pi', as both
+## correspond to reporting probabilities and their values lie in a similar range
+
+make.move.eps <- function(config, densities, rand) {
+  function(param) {
+    ## get new proposed values
+    new.param <- param
+    new.param$current.eps <- stats::rnorm(1, mean=new.param$current.eps, sd=config$sd.eps)
+    
+    ## escape if new.eps<0 or >1
+    if (new.param$current.eps<0 || new.param$current.eps>1) {
+      return(param)
+    }
+    
+    ## compute log ratio  (assumes symmetric proposal)
+    logratio <- densities$posteriors$contact(new.param) -
+      densities$posteriors$contact(param)
+    
+    ## accept/reject
+    if (logratio >= rand$log.runif1()) {
+      return(new.param)
+    }
+    return(param)
+  }
+}
+
+
+
 
 ## Movement of the number of generations on transmission chains ('kappa') is done for one ancestry
 ## at a time. As for infection times ('t.inf') we use a dumb, symmetric +/- 1 proposal. But because

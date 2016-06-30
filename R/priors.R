@@ -37,3 +37,13 @@ make.prior.pi <- function(config) {
 }
 
 
+## The prior of eps is uniform and must be constrained between 0.5 and 1 in order to positively 
+## weight transmission networks supported by contact tracing data 
+
+make.prior.eps <- function(config) {
+  min <- config$prior.eps[1]
+  max <- config$prior.eps[2]
+  function(param) {
+    stats::dunif(param$current.eps, min, max, log=TRUE)
+  }
+}

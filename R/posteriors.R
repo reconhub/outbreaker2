@@ -35,6 +35,19 @@ make.post.reporting <- function(loglike, priors) {
 
 
 
+## The 'contact posterior' includes the contact reporting likelihood and the priors for the contact reporting
+## probability 'eps'
+
+make.post.contact <- function(loglike, priors) {
+  ll.contact <- loglike$contact
+  prior.eps <- priors$eps
+  function(param) {
+    ll.contact(param) + prior.eps(param)
+  }
+}
+
+
+
 ## The global posterior includes the all likelihoods and priors
 
 make.post.all <- function(loglike, priors) {

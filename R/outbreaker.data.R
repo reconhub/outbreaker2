@@ -13,6 +13,9 @@
 #' \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 #' \link[adegenet]{fasta2DNAbin}.}
+#' 
+#' #' \item{CTD}{the contact tracing data provided as a matrix or dataframe of two columns,
+#' containing the pairs of id's with observed contact}
 #'
 #' \item{w.dens}{a vector of numeric values indicating the generation time
 #' distribution, reflecting the infectious potential of a case t=1, 2, ...
@@ -42,7 +45,7 @@
 outbreaker.data <- function(..., data=list(...)) {
 
     ## SET DEFAULTS ##
-    defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL,
+    defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL, CTD=NULL,
                      N=0L, L=0L, D=NULL, max.range=NA, can.be.ances=NULL,
                      log.w.dens=NULL, log.f.dens=NULL)
 
@@ -104,6 +107,15 @@ outbreaker.data <- function(..., data=list(...)) {
     } else {
         data$L <- 0
         data$D <- matrix(numeric(0), ncol=0, nrow=0)
+    }
+    
+    ## CHECK CONTACT
+    if (!is.null(data$CTD)) {
+      contact <- matrix(FALSE,data$N,data$N)
+      for(cij in seq_len(nrow(data$CTD))) contact[data$CTD[cij,1],data$CTD[cij,2]] <- TRUE
+      data$contact <- contact | t(contact)
+    } else {
+      data$contact <- matrix(numeric(0), ncol=0, nrow=0)
     }
 
     ## output is a list of checked data

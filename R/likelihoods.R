@@ -133,3 +133,32 @@ make.ll.reporting <- function(data) {
         function(...) 0
     }
 }
+
+
+
+
+
+## This likelihood corresponds to the probability of observing contact between two individuals 
+## for a given ancestry
+
+make.ll.contact <- function(data) {
+  
+  ## i will be the index of cases to be used, but it is useful to define it by default as all cases
+  cases <- seq_len(data$N)
+  
+  if (data$N>1){
+    function(param, i=cases) {
+      
+      ## discard cases with no ancestors as these cannot be informed by contact tracing data
+      i <- i[!is.na(param$current.alpha[i])]
+      
+      #Look up if contact is observed from the contact data matrix (data$contact)
+      cij <- data$contact[cbind(i, param$current.alpha[i], deparse.level=0)]
+      
+      sum(log(param$current.eps^cij + param$current.eps*(cij-1)))
+      
+    }
+  } else {
+    function(...) 0
+  }
+}

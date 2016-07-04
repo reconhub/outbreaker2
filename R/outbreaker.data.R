@@ -45,7 +45,7 @@
 outbreaker.data <- function(..., data=list(...)) {
 
     ## SET DEFAULTS ##
-    defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL, CTD=NULL,
+    defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL, CTD=NULL, contact=NULL,
                      N=0L, L=0L, D=NULL, max.range=NA, can.be.ances=NULL,
                      log.w.dens=NULL, log.f.dens=NULL)
 

@@ -233,7 +233,7 @@ make.move.eps <- function(config, densities, rand) {
       densities$posteriors$contact(param)
     
     ## accept/reject
-    if (logratio >= rand$log.runif1()) {
+    if (logratio >= log(stats::runif(1))) {
       return(new.param)
     }
     return(param)

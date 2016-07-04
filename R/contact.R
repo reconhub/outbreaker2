@@ -5,20 +5,20 @@
 ######### tracing data into the inference of posterior transmission trees.              ######### 
 #################################################################################################
 
+#for(i in list.files("R",".R")) source(paste("R\\",i,sep=""))
 
 ##################################################
 ######### LOADING LIBRARIES AND DATASETS ######### 
 ##################################################
 
-library(visNetwork)
-library(reshape2)
-
+#library(visNetwork)
+#library(reshape2)
 
 ######################################
 ######### DEFINING FUNCTIONS #########
 ######################################
 
-#This function analyses the accuracy and precision of outbreaker inference 
+## A function to analyse the accuracy and precision of outbreaker inference 
 result.analysis <- function(result,true.outbreak,plot=TRUE,print=FALSE){
   id <- seq_len(true.outbreak$n)
   adder <- which(names(result)=="alpha.1")-1
@@ -41,20 +41,23 @@ result.analysis <- function(result,true.outbreak,plot=TRUE,print=FALSE){
   
   #Determine confidence in our results
   id <- id[-unlist(lapply(id,function(i) any(is.na(result[[i+adder]]))))]
-  confidence <- round(mean(unlist(lapply(id,function(i) sum(table(result[[i+adder]])^2)/samples^2))),2)
+  
+  square.conf <- round(mean(unlist(lapply(id,function(i) sum(table(result[[i+adder]])^2)/samples^2))),2)
+  
+  mean.conf <- round(mean(unlist(lapply(id,function(i) mean(result[[i+adder]]==true.outbreak$ances[i])))),2)
   
   #Determine the proportion of correctly inferred ancestries
   num.correct <-  sum(true.outbreak$ances==network$from,na.rm=TRUE)
   num.correct <- num.correct + sum(is.na(true.outbreak$ances[is.na(network$from)]))
   prop.correct <- round(num.correct/nrow(network),2)
   
-  if(print) print(paste(100*prop.correct,"% of transmission tree correctly inferred | Average confidence: ",confidence,sep=""))
+  if(print) print(paste(100*prop.correct,"% of transmission tree correctly inferred | Average confidence: ",mean.conf,sep=""))
   
-  out <- list(transmission=network,confidence=confidence,prop.correct=prop.correct)
+  out <- list(transmission=network,square.conf=square.conf,mean.conf=mean.conf,prop.correct=prop.correct)
   return(out)
 }
 
-#A function to simulate contact tracing data (CTD)
+## A function to simulate contact tracing data (CTD)
 simCTD <- function(temp.outbreak,eps=1,chi=1,ksi=0,plot=FALSE,print.ratio=FALSE){
   
   if(temp.outbreak$n==1) return("No transmission observed")
@@ -105,48 +108,49 @@ simCTD <- function(temp.outbreak,eps=1,chi=1,ksi=0,plot=FALSE,print.ratio=FALSE)
   return(CTD)
 }
 
-###############################################
-######### SIMULATING OUTBREAK AND CTD #########
-###############################################
+## A function to compare accuracy and precision of outbreaker and CTD.outbreaker
+compare.outbreakers <- function(runs=10,min.hosts=10,max.hosts=15){
+  library(ggplot2)
+  
+  temp.w.dens <- dgamma(1:20,2,0.05)
 
-temp.w.dens <- dgamma(1:20,2,0.05)
-true.outbreak <- outbreaker::simOutbreak(2,temp.w.dens,n.hosts=40,mu.transi=1e-05,rate.import.case=0)
-sim.contact<- simCTD(true.outbreak,plot=TRUE,ksi=0.01,eps=0.8)
-
-result <- outbreaker(data=list(dates=true.outbreak$onset,dna=true.outbreak$dna,w.dens=temp.w.dens,CTD=sim.contact))
-analysis <- result.analysis(result,true.outbreak,print=TRUE)
-
-runs <- 50
-out2 <- matrix(NA,nrow=runs,ncol=4)
-colnames(out2) <- c("accuracy","confidence","CTD.accuracy","CTD.confidence")
-counter = 1
-
-while(counter<=runs){
-  true.outbreak <- outbreaker::simOutbreak(2,temp.w.dens,n.hosts=40,mu.transi=1e-05,rate.import.case=0)
-  if(true.outbreak$n<15) next
+  out <- matrix(NA,nrow=runs,ncol=8)
+  colnames(out) <- c("accuracy","CTD.accuracy","square.conf","CTD.square.conf","mean.conf","CTD.mean.conf","time","CTD.time")
+  counter <- 1
   
-  print(counter)
+  while(counter<=runs){
+    true.outbreak <- outbreaker::simOutbreak(2,temp.w.dens,n.hosts=15,mu.transi=1e-05,rate.import.case=0)
+    if(true.outbreak$n<min.hosts) next
+    
+    print(counter)
+    
+    sim.contact <- simCTD(true.outbreak,plot=TRUE,ksi=0.01,eps=0.8)
+    
+    temp.time <- system.time(their.result <- outbreaker(data=list(dates=true.outbreak$onset,w.dens=temp.w.dens,
+                                             dna=true.outbreak$dna),config=list(n.iter=2e4, sample.every=200)))
+    analysis <- result.analysis(their.result,true.outbreak,print=TRUE)
+    out[counter,c(1,3,5,7)] <- c(analysis$prop.correct,analysis$square.conf,analysis$mean.conf,temp.time[1])
+    
+    temp.time <- system.time(our.result <- CTD.outbreaker(data=list(dates=true.outbreak$onset,
+                                           dna=true.outbreak$dna,w.dens=temp.w.dens,CTD=sim.contact),
+                                           config=list(n.iter=2e4, sample.every=200)))
+    analysis <- result.analysis(our.result,true.outbreak,print=TRUE)
+    out[counter,c(2,4,6,8)] <- c(analysis$prop.correct,analysis$square.conf,analysis$mean.conf,temp.time[1])
+    
+    counter <- counter + 1
+  }
   
-  sim.contact<- simCTD(true.outbreak,plot=TRUE,ksi=0.01,eps=0.8)
+  plot.out[,7:8] <- out[,7:8]/max(out[,7:8])
   
-  their.result <- outbreaker(data=list(dates=true.outbreak$onset,w.dens=temp.w.dens,dna=true.outbreak$dna))
-  analysis <- result.analysis(their.result,true.outbreak,print=TRUE)
-  out2[counter,1:2] <- c(analysis$prop.correct,analysis$confidence)
+  plot.out <- as.data.frame(melt(plot.out))
+  plot.out$Model <- rep(c(rep("Original",runs),rep("CTD",runs)),4)
   
-  our.result <- CTD.outbreaker(data=list(dates=true.outbreak$onset,dna=true.outbreak$dna,w.dens=temp.w.dens,CTD=sim.contact))
-  analysis <- result.analysis(our.result,true.outbreak,print=TRUE)
-  out2[counter,3:4] <- c(analysis$prop.correct,analysis$confidence)
+  p <- ggplot(plot.out) + geom_violin(aes(x=factor(Var2),y=value,fill=factor(model))) + ylim(0.35,1) +
+    ggtitle("80% coverage | 0.01 false positive rate") + xlab("") + ylab("Value") + guides(fill=FALSE) +
+    theme_set(theme_gray(base_size = 18))
+  p
   
-  counter <- counter + 1
+  ggsave("imperfect.CTD.png",p)
+  
+  return(list("analysis"=out,"plot"=p))
 }
-
-out2 <- out2[,c(1,3,2,4)]
-out2 <- as.data.frame(melt(out2))
-out2$model <- c(rep("original",50),rep("CTD",50),rep("original",50),rep("CTD",50))
-
-p <- ggplot(out2) + geom_violin(aes(x=factor(Var2),y=value,fill=factor(model))) + ylim(0.35,1) +
-  ggtitle("80% coverage | 0.01 false positive rate") + xlab("") + ylab("Value") + guides(fill=FALSE) +
-  theme_set(theme_gray(base_size = 18))
-p
-
-ggsave("imperfect.CTD.png",p)

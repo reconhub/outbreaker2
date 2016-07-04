@@ -140,17 +140,20 @@ compare.outbreakers <- function(runs=10,min.hosts=10,max.hosts=15){
     counter <- counter + 1
   }
   
+  plot.out <- out
+  
   plot.out[,7:8] <- out[,7:8]/max(out[,7:8])
   
   plot.out <- as.data.frame(melt(plot.out))
-  plot.out$Model <- rep(c(rep("Original",runs),rep("CTD",runs)),4)
-  
-  p <- ggplot(plot.out) + geom_violin(aes(x=factor(Var2),y=value,fill=factor(model))) + ylim(0.35,1) +
-    ggtitle("80% coverage | 0.01 false positive rate") + xlab("") + ylab("Value") + guides(fill=FALSE) +
-    theme_set(theme_gray(base_size = 18))
-  p
+  plot.out$variable <- c(rep("Accuracy",2*runs),rep("Square Confidence",2*runs),rep("Mean Confidence",2*runs),rep("Time",2*runs))
+  plot.out$Model <- factor(rep(c(rep("Original",runs),rep("CTD",runs)),4),levels=c("Original","CTD"))
+    
+  p <- ggplot(plot.out) + geom_violin(aes(x=variable,y=value,fill=Model)) + ylim(0.,1) +
+    ggtitle("80% coverage | 0.01 false positive rate") + ylab("Value") +
+    theme_set(theme_gray(base_size = 18)) + theme(axis.title.x=element_blank())
+  print(p)
   
   ggsave("imperfect.CTD.png",p)
   
-  return(list("analysis"=out,"plot"=p))
+  return(list("analysis"=as.data.frame(out),"plot"=p))
 }

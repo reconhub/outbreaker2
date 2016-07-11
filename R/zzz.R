@@ -1,4 +1,5 @@
 #' @importFrom Rcpp evalCpp
+#' @useDynLib outbreaker2
 #'
 .onAttach <- function(libname, pkgname) {
     ## pkg.version <- packageDescription("outbreaker2", fields = "Version")

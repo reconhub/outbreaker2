@@ -6,3 +6,6 @@ apex.Rcheck/
 vignettes/apex.md
 .Rproj.user
 .apex.Rproj
+*.o
+*.so
+*.dll

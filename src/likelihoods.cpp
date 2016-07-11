@@ -2,7 +2,7 @@
 
 // [[Rcpp::export]]
 double ll_genetic(Rcpp::List data, Rcpp::List param, Rcpp::IntegerVector i) {
-  double mu = Rcpp::as<double>(data["mu"]);
+  double mu = Rcpp::as<double>(param["current.mu"]);
 
   long int L = Rcpp::as<int>(data["L"]);
 
@@ -11,7 +11,7 @@ double ll_genetic(Rcpp::List data, Rcpp::List param, Rcpp::IntegerVector i) {
 
   size_t length_nmut = 0, sum_nmut = 0;
 
-  int * cD = INTEGER(D);
+  double * cD = REAL(D);
   size_t n = static_cast<size_t>(D.nrow());
 
   if (i.size() == 0) {
@@ -23,10 +23,10 @@ double ll_genetic(Rcpp::List data, Rcpp::List param, Rcpp::IntegerVector i) {
     }
 
   } else {
-    size_t n = static_cast<size_t>(i.size());
+    size_t ni = static_cast<size_t>(i.size());
     int * ci = INTEGER(i);
-    for (size_t k = 0; k < n; k++) {
-      size_t j = ci[k];
+    for (size_t k = 0; k < ni; k++) {
+      size_t j = ci[k] - 1;
       if (alpha[j] != NA_INTEGER) {
 	sum_nmut += cD[j * n + alpha[j] - 1];
 	length_nmut++;

@@ -71,6 +71,10 @@ test_that("ll$genetic gives expected results", {
     expect_is(out, "numeric")
     expect_equal(out, -997.840630502)
     expect_equal(out.fewcases, -266.251194283819)
+
+    expect_equal(ll_genetic(data, param, integer(0)), -997.840630502)
+    expect_equal(ll_genetic(data, param, as.integer(fewcases)), -266.251194283819)
+
 })
 
 

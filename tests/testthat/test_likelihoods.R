@@ -1,38 +1,5 @@
 context("Test likelihood functions")
 
-#####################################################################################################
-#####################################################################################################
-## Some of the functions used in these tests have been designed in R, then translated into C++ (with
-## Rcpp integration). For testing purposes, we leave the 'old' R versions here, to check the
-## behaviour of new version is as it should be.
-#####################################################################################################
-#####################################################################################################
-
-## reference function (old R version)
-ll.genetic <- function(data, param, i=cases) {
-    cases <- seq_len(data$N)
-
-    ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
-    i <- i[!is.na(param$current.alpha[i])]
-
-    ## likelihood is based on the number of mutations between a case and its ancestor;
-    ## these are extracted from a pairwise genetic distance matrix (data$D)
-    nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
-
-    ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
-    ## with:
-    ## 'mu' is the mutation probability
-    ## 'L' the number of sites in the alignment
-    ## 'nmut' the number of mutations between an ancestor and its descendent
-    ##
-    ## for computer efficiency, we re-factorise it as:
-    ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-    ## which limits to 2 operations rather than 2*n
-    ## (tip from Rich Fitzjohn)
-    log(param$current.mu / (1 - param$current.mu)) * sum(nmut) +
-        length(nmut) * log(1 - param$current.mu) * data$L
-}
-
 
 
 ######################################################
@@ -91,26 +58,34 @@ test_that("ll$timing.sampling gives expected results", {
 
 ## test ll$genetic ##
 test_that("ll$genetic gives expected results", {
-    ## skip on CRAN
+    ## skip on CRAN ##
     skip_on_cran()
 
-    ## generate data
+    ## generate data ##
     data(fake.outbreak)
     data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     ll <- outbreaker2:::create.loglike(data)
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
     param <- outbreaker.create.mcmc(data=data, config=config)
-    fewcases <- as.integer(c(1,3,4))
+    few.cases <- as.integer(c(1,3,4))
+    rnd.cases <- sample(sample(seq_len(data$N), 5, replace=FALSE))
 
-    ## tests
-    ref <- ll.genetic(data, param)
-    ref.fewcases <- ll.genetic(data, param, fewcases)
-    expect_is(ref, "numeric")
-    expect_equal(ref, -997.840630502)
-    expect_equal(ref.fewcases, -266.251194283819)
+    ## tests ##
+    ## expected values
+    out <- ll$genetic(param)
+    out.few.cases <- ll$genetic(param, few.cases)
+    out.rnd.cases <- ll$genetic(param, rnd.cases)
+    ref <- .ll.genetic(data, param)
+    ref.few.cases <- .ll.genetic(data, param, few.cases)
+    ref.rnd.cases <- .ll.genetic(data, param, rnd.cases)
+    expect_is(out, "numeric")
+    expect_equal(out, -997.840630502)
+    expect_equal(out.few.cases, -266.251194283819)
 
-    expect_equal(cpp_ll_genetic(data, param, NULL), -997.840630502)
-    expect_equal(cpp_ll_genetic(data, param, fewcases), -266.251194283819)
+    ## test against reference
+    expect_equal(out, ref)
+    expect_equal(out.few.cases, ref.few.cases)
+    expect_equal(out.rnd.cases, ref.rnd.cases)
 
 })
 

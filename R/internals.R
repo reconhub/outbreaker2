@@ -372,3 +372,43 @@ add.convolutions <- function(data, config) {
 
     return(data)
 }
+
+
+
+
+
+
+#####################################################################################################
+#####################################################################################################
+## Some of the functions used in these tests have been designed in R, then translated into C++ (with
+## Rcpp integration). For testing purposes, we leave the 'old' R versions here, to check the
+## behaviour of new version is as it should be.
+#####################################################################################################
+#####################################################################################################
+
+## reference function (old R version)
+.ll.genetic <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
+    i <- i[!is.na(param$current.alpha[i])]
+
+    ## likelihood is based on the number of mutations between a case and its ancestor;
+    ## these are extracted from a pairwise genetic distance matrix (data$D)
+    nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
+
+    ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
+    ## with:
+    ## 'mu' is the mutation probability
+    ## 'L' the number of sites in the alignment
+    ## 'nmut' the number of mutations between an ancestor and its descendent
+    ##
+    ## for computer efficiency, we re-factorise it as:
+    ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
+    ## which limits to 2 operations rather than 2*n
+    ## (tip from Rich Fitzjohn)
+    log(param$current.mu / (1 - param$current.mu)) * sum(nmut) +
+        length(nmut) * log(1 - param$current.mu) * data$L
+}

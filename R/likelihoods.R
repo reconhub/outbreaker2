@@ -79,7 +79,7 @@ make.ll.timing.sampling <- function(data) {
 
 make.ll.genetic <- function(data) {
     if (nrow(data$D)>1) {
-        function(param, i=NULL) cpp_ll_genetic(param, i)
+        function(param, i=NULL) cpp_ll_genetic(data, param, i)
     } else {
         function(...) 0
     }

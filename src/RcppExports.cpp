@@ -6,14 +6,13 @@
 using namespace Rcpp;
 
 // ll_genetic
-double ll_genetic(Rcpp::List data, Rcpp::List param, Rcpp::IntegerVector i);
+double ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i);
 RcppExport SEXP outbreaker2_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type i(iSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
     __result = Rcpp::wrap(ll_genetic(data, param, i));
     return __result;
 END_RCPP

@@ -62,7 +62,7 @@ test_that("ll$genetic gives expected results", {
     ll <- outbreaker2:::create.loglike(data)
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
     param <- outbreaker.create.mcmc(data=data, config=config)
-    fewcases <- c(1,3,4)
+    fewcases <- as.integer(c(1,3,4))
 
 
     ## tests
@@ -73,7 +73,7 @@ test_that("ll$genetic gives expected results", {
     expect_equal(out.fewcases, -266.251194283819)
 
     expect_equal(ll_genetic(data, param, integer(0)), -997.840630502)
-    expect_equal(ll_genetic(data, param, as.integer(fewcases)), -266.251194283819)
+    expect_equal(ll_genetic(data, param, fewcases), -266.251194283819)
 
 })
 

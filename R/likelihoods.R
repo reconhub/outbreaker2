@@ -75,35 +75,11 @@ make.ll.timing.sampling <- function(data) {
 
 
 ## This likelihood corresponds to the probability of observing a number of mutations between cases
-## and their ancestors.
+## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
 
 make.ll.genetic <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
     if (nrow(data$D)>1) {
-
-        function(param, i=cases) {
-
-            ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
-            i <- i[!is.na(param$current.alpha[i])]
-
-            ## likelihood is based on the number of mutations between a case and its ancestor;
-            ## these are extracted from a pairwise genetic distance matrix (data$D)
-            nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
-
-            ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
-            ## with:
-            ## 'mu' is the mutation probability
-            ## 'L' the number of sites in the alignment
-            ## 'nmut' the number of mutations between an ancestor and its descendent
-            ##
-            ## for computer efficiency, we re-factorise it as:
-            ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-            ## which limits to 2 operations rather than 2*n
-            ## (tip from Rich Fitzjohn)
-            log(param$current.mu / (1 - param$current.mu)) * sum(nmut) + length(nmut) * log(1 - param$current.mu) * data$L
-        }
+        function(param, i=NULL) cpp_ll_genetic(param, i)
     } else {
         function(...) 0
     }

@@ -9,17 +9,20 @@ Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information.
 License: GPL (>=2)
 Suggests:
-    testthat, 
-    microbenchmark, 
-    coda
+    coda,
+    microbenchmark,
+    testthat
 Depends:
     R (>= 3.0.0)
 Imports:
-    utils,
-    stats,
-    grDevices,
+    Rcpp,
     ape,
     ggplot2,
+    grDevices,
+    stats,
+    utils,
     visNetwork
 LazyData: true
+LinkingTo:
+    Rcpp
 RoxygenNote: 5.0.1

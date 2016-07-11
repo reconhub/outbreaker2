@@ -1,3 +1,5 @@
+#' @importFrom Rcpp evalCpp
+#'
 .onAttach <- function(libname, pkgname) {
     ## pkg.version <- packageDescription("outbreaker2", fields = "Version")
     ## startup.txt <- paste("\n   === outbreaker2", pkg.version, "is loaded ===\n")

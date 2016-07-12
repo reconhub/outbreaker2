@@ -443,3 +443,27 @@ add.convolutions <- function(data, config) {
     ## output is a sum of log-densities
     sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
 }
+
+
+
+
+
+## This likelihood corresponds to the probability of reporting dates of cases given their
+## infection dates.
+
+.ll.timing.sampling <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    ## compute delays
+    T <- data$dates[i] - param$current.t.inf[i]
+    T <- T[!is.na(T)]
+
+    ## avoid over-shooting
+    if (any(T<1 | T>length(data$log.f.dens))) return(-Inf)
+
+    ## output is a sum of log densities
+    sum(data$log.f.dens[T], na.rm=TRUE)
+}
+

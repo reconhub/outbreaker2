@@ -110,3 +110,49 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   return out;
 }
+
+
+
+
+
+
+// This likelihood corresponds to the probability of reporting dates of cases given their
+// infection dates.
+// [[Rcpp::export("cpp.ll.timing.sampling", rng = false)]]
+double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
+  size_t N = static_cast<size_t>(data["N"]);
+  size_t j = 0;
+  size_t delay = 0;
+
+  Rcpp::IntegerVector dates = data["dates"];
+  Rcpp::IntegerVector t_inf = param["current.t.inf"];
+  Rcpp::NumericVector f_dens = data["log.f.dens"];
+
+  double out = 0.0;
+
+  // all cases are retained
+  if (i == R_NilValue) {
+    for (j = 0; j < N; j++) {
+      delay = dates[j] - t_inf[j];
+      if (delay < 1 || delay > f_dens.size()) {
+	return  R_NegInf;
+      }
+      out += f_dens[delay - 1];
+    }
+  } else {
+    // only the cases listed in 'i' are retained
+    size_t length_i = static_cast<size_t>(LENGTH(i));
+    Rcpp::IntegerVector vec_i(i);
+    for (size_t k = 0; k < length_i; k++) {
+      j = vec_i[k] - 1;
+      delay = dates[j] - t_inf[j];
+      if (delay < 1 || delay > f_dens.size()) {
+	return  R_NegInf;
+      }
+      out += f_dens[delay - 1];
+     }
+  }
+
+  return out;
+}
+

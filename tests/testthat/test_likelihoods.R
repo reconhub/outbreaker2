@@ -62,10 +62,24 @@ test_that("ll$timing.sampling gives expected results", {
     config <- outbreaker.config(data=data, init.t.inf=times, init.tree=alpha)
     param <- outbreaker.create.mcmc(data=data, config=config)
 
+
     ## tests
-    out <- ll$timing.sampling(param=param)
+    out <- ll$timing.sampling(param)
+    out.few.cases <- ll$timing.sampling(param, few.cases)
+    out.rnd.cases <- ll$timing.sampling(param, rnd.cases)
+    ref <- .ll.timing.sampling(data, param)
+    ref.few.cases <- .ll.timing.sampling(data, param, few.cases)
+    ref.rnd.cases <- .ll.timing.sampling(data, param, rnd.cases)
+
     expect_is(out, "numeric")
     expect_equal(out, -8.51719319142)
+    expect_equal(out.few.cases, -4.60517018598809)
+
+    ## test against reference
+    expect_equal(out, ref)
+    expect_equal(out.few.cases, ref.few.cases)
+    expect_equal(out.rnd.cases, ref.rnd.cases)
+
 })
 
 

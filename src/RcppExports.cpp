@@ -29,3 +29,15 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// cpp_ll_timing_sampling
+double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i);
+RcppExport SEXP outbreaker2_cpp_ll_timing_sampling(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    __result = Rcpp::wrap(cpp_ll_timing_sampling(data, param, i));
+    return __result;
+END_RCPP
+}

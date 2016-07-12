@@ -70,3 +70,41 @@ make.ll.reporting <- function(data) {
         function(...) 0
     }
 }
+
+
+
+
+
+## This likelihood corresponds to the sums of the separate timing likelihoods, which include:
+
+##   - p(infection dates): see function cpp_ll_timing_infections
+##   - p(collection dates): see function cpp_ll_timing_sampling
+
+make.ll.timing <- function(data) {
+    if (nrow(data$D)>1) {
+        function(param, i=NULL) cpp.ll.timing(data, param, i)
+    } else {
+        function(...) 0
+    }
+}
+
+
+
+
+
+##  This likelihood corresponds to the sums of the separate likelihoods, which include:
+
+##   - p(infection dates): see function cpp_ll_timing_infections
+##   - p(collection dates): see function cpp_ll_timing_sampling
+##   - p(genetic diversity): see function cpp_ll_genetic
+##   - p(missing cases): see function cpp_ll_reporting
+
+make.ll.all <- function(data) {
+    if (nrow(data$D)>1) {
+        function(param, i=NULL) cpp.ll.all(data, param, i)
+    } else {
+        function(...) 0
+    }
+}
+
+

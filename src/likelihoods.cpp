@@ -200,6 +200,28 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
 
 
 
+/*
+  This likelihood corresponds to the sums of the separate timing likelihoods, which include:
+
+  - p(infection dates): see function cpp_ll_timing_infections
+  - p(collection dates): see function cpp_ll_timing_sampling
+*/
+
+// [[Rcpp::export("cpp.ll.timing", rng = false)]]
+double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i) {
+  double out = 0.0;
+
+  out += cpp_ll_timing_infections(data, param, i);
+  out += cpp_ll_timing_sampling(data, param, i);
+
+  return out;
+}
+
+
+
+
+
+
 
 /*
   This likelihood corresponds to the sums of the separate likelihoods, which include:

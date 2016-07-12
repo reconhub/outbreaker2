@@ -209,12 +209,9 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
 
 // [[Rcpp::export("cpp.ll.timing", rng = false)]]
 double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i) {
-  double out = 0.0;
 
-  out += cpp_ll_timing_infections(data, param, i);
-  out += cpp_ll_timing_sampling(data, param, i);
-
-  return out;
+  return cpp_ll_timing_infections(data, param, i) + 
+    cpp_ll_timing_sampling(data, param, i);
 }
 
 
@@ -234,13 +231,10 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i) {
 
 // [[Rcpp::export("cpp.ll.all", rng = false)]]
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i) {
-  double out = 0.0;
 
-  out += cpp_ll_timing_infections(data, param, i);
-  out += cpp_ll_timing_sampling(data, param, i);
-  out += cpp_ll_genetic(data, param, i);
-  out += cpp_ll_reporting(data, param, i);
-
-  return out;
+  return cpp_ll_timing_infections(data, param, i) +
+    cpp_ll_timing_sampling(data, param, i) +
+    cpp_ll_genetic(data, param, i) +
+    cpp_ll_reporting(data, param, i);
 }
 

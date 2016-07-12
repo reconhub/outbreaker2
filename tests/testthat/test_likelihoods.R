@@ -165,6 +165,35 @@ test_that("ll$reporting gives expected results", {
 
 
 
+
+## test ll$timing ##
+test_that("ll$timing gives expected results", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## generate data
+    data(fake.outbreak)
+    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    config <- outbreaker.config(data=data)
+    ll <- outbreaker2:::create.loglike(data)
+    param <- outbreaker.create.mcmc(data=data, config=config)
+
+    ## compute likelihoods
+    out <- ll$timing(param)
+
+    ## test expected values
+    expect_is(out, "numeric")
+    expect_equal(out, -162.133443661423)
+
+    ## test that likelihoods add up
+    expect_equal(out, ll$timing.sampling(param) + ll$timing.infections(param))
+
+})
+
+
+
+
 ## test ll$all ##
 test_that("ll$all gives expected results", {
     ## skip on CRAN
@@ -276,3 +305,44 @@ test_that("create.loglike create functions with closure", {
     expect_identical(data, environment(out$timing.sampling)$data)
 
 })
+
+
+
+
+
+
+test_that("likelihood functions return -Inf when needed", {
+    ## skip on CRAN
+    skip_on_cran()
+
+    ## generate data
+    times <- 4:0
+    alpha <- c(NA,rep(1,4))
+    w <- c(.1, .2, .5, .2, .1)
+    data <- outbreaker.data(dates=times, w.dens=w)
+    config <- outbreaker.config(data=data, init.tree=alpha)
+    ll <- outbreaker2:::create.loglike(data)
+    param <- outbreaker.create.mcmc(data=data, config=config)
+    few.cases <- as.integer(c(1,3,4))
+    rnd.cases <- sample(sample(seq_len(data$N), 3, replace=FALSE))
+
+
+    ## tests
+    out <- ll$timing.infections(param)
+    out.few.cases <- ll$timing.infections(param, few.cases)
+    out.rnd.cases <- ll$timing.infections(param, rnd.cases)
+    ref <- .ll.timing.infections(data, param)
+    ref.few.cases <- .ll.timing.infections(data, param, few.cases)
+    ref.rnd.cases <- .ll.timing.infections(data, param, rnd.cases)
+
+    expect_is(out, "numeric")
+    expect_equal(out, -Inf)
+    expect_equal(out.few.cases, -Inf)
+
+    ## test against reference
+    expect_equal(out, ref)
+    expect_equal(out.few.cases, ref.few.cases)
+    expect_equal(out.rnd.cases, ref.rnd.cases)
+})
+
+

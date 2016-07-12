@@ -46,7 +46,7 @@
 #'
 #' }
 
-CTD.outbreaker <- function(data = outbreaker.data(),
+outbreaker <- function(data = outbreaker.data(),
                        config = outbreaker.config()
                        ) {
 

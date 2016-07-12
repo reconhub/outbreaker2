@@ -25,3 +25,7 @@ cpp.ll.all <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i)
 }
 
+cpp.move.t.inf <- function(data, param) {
+    .Call('outbreaker2_cpp_move_t_inf', PACKAGE = 'outbreaker2', data, param)
+}
+

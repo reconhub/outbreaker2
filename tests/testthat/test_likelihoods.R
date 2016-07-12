@@ -22,7 +22,7 @@ test_that("ll.timing.infections gives expected results", {
     ll <- outbreaker2:::create.loglike(data)
     param <- outbreaker.create.mcmc(data=data, config=config)
     few.cases <- as.integer(c(1,3,4))
-    rnd.cases <- sample(sample(seq_len(data$N), 5, replace=FALSE))
+    rnd.cases <- sample(sample(seq_len(data$N), 3, replace=FALSE))
 
 
     ## tests
@@ -61,6 +61,8 @@ test_that("ll$timing.sampling gives expected results", {
     ll <- outbreaker2:::create.loglike(data)
     config <- outbreaker.config(data=data, init.t.inf=times, init.tree=alpha)
     param <- outbreaker.create.mcmc(data=data, config=config)
+    few.cases <- as.integer(c(1,3,4))
+    rnd.cases <- sample(sample(seq_len(data$N), 3, replace=FALSE))
 
 
     ## tests

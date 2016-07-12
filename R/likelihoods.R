@@ -35,26 +35,12 @@ make.ll.timing.infections <- function(data) {
 ## infection dates.
 
 make.ll.timing.sampling <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-    if (data$N>1) {
-        function(param, i=cases) {
-
-            ## compute delays
-            T <- data$dates[i] - param$current.t.inf[i]
-            T <- T[!is.na(T)]
-
-            ## avoid over-shooting
-            if (any(T<1 | T>length(data$log.f.dens))) return(-Inf)
-
-            ## output is a sum of log densities
-            sum(data$log.f.dens[T], na.rm=TRUE)
-        }
+     if (data$N>1) {
+        function(param, i=NULL) cpp.ll.timing.sampling(data, param, i)
     } else {
         function(...) 0
     }
-}
+ }
 
 
 

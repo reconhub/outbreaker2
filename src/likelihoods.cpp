@@ -25,14 +25,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   long int L = Rcpp::as<int>(data["L"]);
 
   Rcpp::NumericMatrix D = data["D"];
-  Rcpp::IntegerVector alpha = param["current.alpha"];
+  Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
 
   size_t length_nmut = 0, sum_nmut = 0;
 
   double * cD = REAL(D);
-  // size_t n = (D.nrow());
   size_t N = static_cast<size_t>(data["N"]);
-  
+
   // all cases are retained
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
@@ -69,6 +68,30 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 */
 // [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
-  
+  size_t N = static_cast<size_t>(data["N"]);
+  size_t j = 0;
+  size_t delay = 0;
 
+  Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
+  Rcpp::IntegerVector t_inf = param["current.t.inf"];
+  Rcpp::IntegerVector kappa = param["current.kappa"];
+  Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+
+  double out = 0.0;
+
+  // all cases are retained
+  if (i == R_NilValue) {
+    for (j = 0; j < N; j++) {
+      if (alpha[j] != NA_INTEGER) {
+	delay = t_inf[j] - t_inf[alpha[j] - 1];
+	if (delay < 1 || delay > w_dens.ncol()) {
+	  return  R_NegInf;
+	}
+
+	out += w_dens(kappa[j] - 1, delay - 1);
+      }
+    }
+  }
+
+  return out;
 }

@@ -21,22 +21,8 @@
 ## infection dates of their ancestors.
 
 make.ll.timing.infections <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
     if (data$N>1) {
-        function(param, i=cases) {
-
-            ## compute delays between infection dates of cases and of their ancestors
-            T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
-
-            ## avoid over-shooting: delays outside the range of columns in pre-computed log-densities
-            ## (data$log.w.dens) will give a likelihood of zero
-            if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
-
-            ## output is a sum of log-densities
-            sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
-        }
+        function(param, i=NULL) cpp.ll.timing.infections(data, param, i)
     } else {
         function(...) 0
     }

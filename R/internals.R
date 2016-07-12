@@ -386,7 +386,10 @@ add.convolutions <- function(data, config) {
 #####################################################################################################
 #####################################################################################################
 
-## reference function (old R version)
+
+## This likelihood corresponds to the probability of observing a number of mutations between cases
+## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
+
 .ll.genetic <- function(data, param, i=NULL) {
     if (is.null(i)) {
         i <- seq_len(data$N)
@@ -411,4 +414,32 @@ add.convolutions <- function(data, config) {
     ## (tip from Rich Fitzjohn)
     log(param$current.mu / (1 - param$current.mu)) * sum(nmut) +
         length(nmut) * log(1 - param$current.mu) * data$L
+}
+
+
+
+
+
+
+## This likelihood corresponds to the probability of observing infection dates of cases given the
+## infection dates of their ancestors.
+
+.ll.timing.infections <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
+    i <- i[!is.na(param$current.alpha[i])]
+
+
+    ## compute delays between infection dates of cases and of their ancestors
+    T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
+
+    ## avoid over-shooting: delays outside the range of columns in pre-computed log-densities
+    ## (data$log.w.dens) will give a likelihood of zero
+    if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
+
+    ## output is a sum of log-densities
+    sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
 }

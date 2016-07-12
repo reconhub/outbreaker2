@@ -21,11 +21,26 @@ test_that("ll.timing.infections gives expected results", {
     config <- outbreaker.config(data=data, init.tree=alpha)
     ll <- outbreaker2:::create.loglike(data)
     param <- outbreaker.create.mcmc(data=data, config=config)
+    few.cases <- as.integer(c(1,3,4))
+    rnd.cases <- sample(sample(seq_len(data$N), 5, replace=FALSE))
+
 
     ## tests
     out <- ll$timing.infections(param)
+    out.few.cases <- ll$timing.infections(param, few.cases)
+    out.rnd.cases <- ll$timing.infections(param, rnd.cases)
+    ref <- .ll.timing.infections(data, param)
+    ref.few.cases <- .ll.timing.infections(data, param, few.cases)
+    ref.rnd.cases <- .ll.timing.infections(data, param, rnd.cases)
+
     expect_is(out, "numeric")
     expect_equal(out, -6.214608098)
+    expect_equal(out.few.cases, -2.30258509299405)
+
+    ## test against reference
+    expect_equal(out, ref)
+    expect_equal(out.few.cases, ref.few.cases)
+    expect_equal(out.rnd.cases, ref.rnd.cases)
 })
 
 
@@ -78,6 +93,7 @@ test_that("ll$genetic gives expected results", {
     ref <- .ll.genetic(data, param)
     ref.few.cases <- .ll.genetic(data, param, few.cases)
     ref.rnd.cases <- .ll.genetic(data, param, rnd.cases)
+
     expect_is(out, "numeric")
     expect_equal(out, -997.840630502)
     expect_equal(out.few.cases, -266.251194283819)

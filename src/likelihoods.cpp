@@ -43,9 +43,9 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   } else {
     // only the cases listed in 'i' are retained
-    size_t ni = static_cast<size_t>(LENGTH(i));
+    size_t length_i = static_cast<size_t>(LENGTH(i));
     int * ci = INTEGER(i);
-    for (size_t k = 0; k < ni; k++) {
+    for (size_t k = 0; k < length_i; k++) {
       size_t j = ci[k] - 1;
       if (alpha[j] != NA_INTEGER) {
 	sum_nmut += cD[j * N + alpha[j] - 1];
@@ -90,6 +90,22 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 
 	out += w_dens(kappa[j] - 1, delay - 1);
       }
+    }
+  } else {
+    // only the cases listed in 'i' are retained
+    size_t length_i = static_cast<size_t>(LENGTH(i));
+    int * ci = INTEGER(i);
+    for (size_t k = 0; k < length_i; k++) {
+      j = ci[k] - 1;
+      if (alpha[j] != NA_INTEGER) {
+	delay = t_inf[j] - t_inf[alpha[j] - 1];
+	if (delay < 1 || delay > w_dens.ncol()) {
+	  return  R_NegInf;
+	}
+
+	out += w_dens(kappa[j] - 1, delay - 1);
+      }
+
     }
   }
 

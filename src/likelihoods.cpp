@@ -15,7 +15,7 @@
     (tip from Rich Fitzjohn)
 
 */
-// [[Rcpp::export(rng = false)]]
+// [[Rcpp::export("cpp.ll.genetic", rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   double mu = Rcpp::as<double>(param["current.mu"]);
 

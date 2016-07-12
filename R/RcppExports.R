@@ -5,3 +5,7 @@ cpp.ll.genetic <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i)
 }
 
+cpp.ll.timing.infections <- function(data, param, i) {
+    .Call('outbreaker2_cpp_ll_timing_infections', PACKAGE = 'outbreaker2', data, param, i)
+}
+

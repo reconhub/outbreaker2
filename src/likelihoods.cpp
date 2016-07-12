@@ -1,18 +1,21 @@
 #include <Rcpp.h>
 
 /*
-    The likelihood is based on the number of mutations between a case and its ancestor;
-    these are extracted from a pairwise genetic distance matrix (data$D)
-    the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
-    with:
-    'mu' is the mutation probability
-    'L' the number of sites in the alignment
-    'nmut' the number of mutations between an ancestor and its descendent
+  This likelihood corresponds to the probability of observing a number of mutations between cases
+  and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
 
-    For computer efficiency, we re-factorise it as:
-    log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-    which limits to 2 operations rather than 2*n
-    (tip from Rich Fitzjohn)
+  The likelihood is based on the number of mutations between a case and its ancestor;
+  these are extracted from a pairwise genetic distance matrix (data$D)
+  the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
+  with:
+  'mu' is the mutation probability
+  'L' the number of sites in the alignment
+  'nmut' the number of mutations between an ancestor and its descendent
+
+  For computer efficiency, we re-factorise it as:
+  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
+  which limits to 2 operations rather than 2*n
+  (tip from Rich Fitzjohn)
 
 */
 // [[Rcpp::export("cpp.ll.genetic", rng = false)]]
@@ -27,13 +30,14 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t length_nmut = 0, sum_nmut = 0;
 
   double * cD = REAL(D);
-  size_t n = static_cast<size_t>(D.nrow());
-
+  // size_t n = (D.nrow());
+  size_t N = static_cast<size_t>(data["N"]);
+  
   // all cases are retained
   if (i == R_NilValue) {
-    for (size_t j = 0; j < n; j++) {
+    for (size_t j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += cD[j * n + alpha[j] - 1];
+	sum_nmut += cD[j * N + alpha[j] - 1];
 	length_nmut++;
       }
     }
@@ -45,11 +49,26 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
     for (size_t k = 0; k < ni; k++) {
       size_t j = ci[k] - 1;
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += cD[j * n + alpha[j] - 1];
+	sum_nmut += cD[j * N + alpha[j] - 1];
 	length_nmut++;
       }
 
     }
   }
   return log(mu / (1 - mu)) * sum_nmut + length_nmut * log(1 - mu) * L;
+}
+
+
+
+
+
+/*
+
+  This likelihood corresponds to the probability of observing infection dates of cases given the
+  infection dates of their ancestors.
+*/
+// [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
+double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
+  
+
 }

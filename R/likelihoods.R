@@ -21,7 +21,7 @@
 ## infection dates of their ancestors.
 
 make.ll.timing.infections <- function(data) {
-    if (data$N>1) {
+    if (data$N > 1) {
         function(param, i=NULL) cpp.ll.timing.infections(data, param, i)
     } else {
         function(...) 0
@@ -50,7 +50,7 @@ make.ll.timing.sampling <- function(data) {
 ## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
 
 make.ll.genetic <- function(data) {
-    if (nrow(data$D)>1) {
+    if (nrow(data$D) > 1) {
         function(param, i=NULL) cpp.ll.genetic(data, param, i)
     } else {
         function(...) 0
@@ -64,7 +64,7 @@ make.ll.genetic <- function(data) {
 ## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
 
 make.ll.reporting <- function(data) {
-    if (nrow(data$D)>1) {
+    if (data$N > 1) {
         function(param, i=NULL) cpp.ll.reporting(data, param, i)
     } else {
         function(...) 0
@@ -81,7 +81,7 @@ make.ll.reporting <- function(data) {
 ##   - p(collection dates): see function cpp_ll_timing_sampling
 
 make.ll.timing <- function(data) {
-    if (nrow(data$D)>1) {
+    if (data$N > 1) {
         function(param, i=NULL) cpp.ll.timing(data, param, i)
     } else {
         function(...) 0
@@ -100,7 +100,7 @@ make.ll.timing <- function(data) {
 ##   - p(missing cases): see function cpp_ll_reporting
 
 make.ll.all <- function(data) {
-    if (nrow(data$D)>1) {
+    if (data$N > 1) {
         function(param, i=NULL) cpp.ll.all(data, param, i)
     } else {
         function(...) 0

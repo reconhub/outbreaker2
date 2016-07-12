@@ -327,22 +327,82 @@ test_that("likelihood functions return -Inf when needed", {
     rnd.cases <- sample(sample(seq_len(data$N), 3, replace=FALSE))
 
 
-    ## tests
-    out <- ll$timing.infections(param)
-    out.few.cases <- ll$timing.infections(param, few.cases)
-    out.rnd.cases <- ll$timing.infections(param, rnd.cases)
+    ## test ll$timing.infection ##
+    out.infections <- ll$timing.infections(param)
+    out.infections.few.cases <- ll$timing.infections(param, few.cases)
+    out.infections.rnd.cases <- ll$timing.infections(param, rnd.cases)
     ref <- .ll.timing.infections(data, param)
     ref.few.cases <- .ll.timing.infections(data, param, few.cases)
     ref.rnd.cases <- .ll.timing.infections(data, param, rnd.cases)
 
-    expect_is(out, "numeric")
-    expect_equal(out, -Inf)
-    expect_equal(out.few.cases, -Inf)
+    ## test values
+    expect_is(out.infections, "numeric")
+    expect_equal(out.infections, -Inf)
+    expect_equal(out.infections.few.cases, -Inf)
 
     ## test against reference
-    expect_equal(out, ref)
-    expect_equal(out.few.cases, ref.few.cases)
-    expect_equal(out.rnd.cases, ref.rnd.cases)
+    expect_equal(out.infections, ref)
+    expect_equal(out.infections.few.cases, ref.few.cases)
+    expect_equal(out.infections.rnd.cases, ref.rnd.cases)
+
+
+
+
+    ## test ll$timing.sampling ##
+    old.t.inf <- param$current.t.inf
+    param$current.t.inf <- times
+    out.sampling <- ll$timing.sampling(param)
+    out.sampling.few.cases <- ll$timing.sampling(param, few.cases)
+    out.sampling.rnd.cases <- ll$timing.sampling(param, rnd.cases)
+    ref <- .ll.timing.sampling(data, param)
+    ref.few.cases <- .ll.timing.sampling(data, param, few.cases)
+    ref.rnd.cases <- .ll.timing.sampling(data, param, rnd.cases)
+    param$current.t.inf <- old.t.inf
+
+    ## test values
+    expect_is(out.sampling, "numeric")
+    expect_equal(out.sampling, -Inf)
+    expect_equal(out.sampling.few.cases, -Inf)
+
+    ## test against reference
+    expect_equal(out.sampling, ref)
+    expect_equal(out.sampling.few.cases, ref.few.cases)
+    expect_equal(out.sampling.rnd.cases, ref.rnd.cases)
+
+
+
+
+    ## test ll$timing ##
+    out.timing <- ll$timing(param)
+    out.timing.few.cases <- ll$timing(param, few.cases)
+    out.timing.rnd.cases <- ll$timing(param, rnd.cases)
+
+    ## test values
+    expect_is(out.timing, "numeric")
+    expect_equal(out.timing, -Inf)
+    expect_equal(out.timing.few.cases, -Inf)
+
+
+
+    ## test ll$all ##
+    out.all <- ll$all(param)
+    out.all.few.cases <- ll$all(param, few.cases)
+    out.all.rnd.cases <- ll$all(param, rnd.cases)
+  
+    ## test values
+    expect_is(out.all, "numeric")
+    expect_equal(out.all, -Inf)
+    expect_equal(out.all.few.cases, -Inf)
+
+    ## test against reference
+    expect_equal(out.all, ref)
+    expect_equal(out.all.few.cases, ref.few.cases)
+    expect_equal(out.all.rnd.cases, ref.rnd.cases)
+
+
+
 })
+
+
 
 

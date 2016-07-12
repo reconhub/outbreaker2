@@ -17,3 +17,7 @@ cpp.ll.reporting <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_reporting', PACKAGE = 'outbreaker2', data, param, i)
 }
 
+cpp.ll.all <- function(data, param, i) {
+    .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i)
+}
+

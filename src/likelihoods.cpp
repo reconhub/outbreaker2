@@ -196,3 +196,29 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   return out;
 }
 
+
+
+
+
+
+/*
+  This likelihood corresponds to the sums of the separate likelihoods, which include:
+
+  - p(infection dates): see function cpp_ll_timing_infections
+  - p(collection dates): see function cpp_ll_timing_sampling
+  - p(genetic diversity): see function cpp_ll_genetic
+  - p(missing cases): see function cpp_ll_reporting
+*/
+
+// [[Rcpp::export("cpp.ll.all", rng = false)]]
+double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i) {
+  double out = 0.0;
+
+  out += cpp_ll_timing_infections(data, param, i);
+  out += cpp_ll_timing_sampling(data, param, i);
+  out += cpp_ll_genetic(data, param, i);
+  out += cpp_ll_reporting(data, param, i);
+
+  return out;
+}
+

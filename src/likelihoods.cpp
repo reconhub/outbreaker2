@@ -29,14 +29,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   size_t length_nmut = 0, sum_nmut = 0;
 
-  double * cD = REAL(D);
   size_t N = static_cast<size_t>(data["N"]);
 
   // all cases are retained
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += cD[j * N + alpha[j] - 1];
+	sum_nmut += D(j, alpha[j] - 1);
 	length_nmut++;
       }
     }
@@ -44,11 +43,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   } else {
     // only the cases listed in 'i' are retained
     size_t length_i = static_cast<size_t>(LENGTH(i));
-    int * ci = INTEGER(i);
+    Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
-      size_t j = ci[k] - 1;
+      size_t j = vec_i[k] - 1;
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += cD[j * N + alpha[j] - 1];
+	sum_nmut += D(j, alpha[j] - 1);
 	length_nmut++;
       }
 
@@ -94,9 +93,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   } else {
     // only the cases listed in 'i' are retained
     size_t length_i = static_cast<size_t>(LENGTH(i));
-    int * ci = INTEGER(i);
+    Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
-      j = ci[k] - 1;
+      j = vec_i[k] - 1;
       if (alpha[j] != NA_INTEGER) {
 	delay = t_inf[j] - t_inf[alpha[j] - 1];
 	if (delay < 1 || delay > w_dens.ncol()) {

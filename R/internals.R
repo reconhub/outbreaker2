@@ -467,3 +467,19 @@ add.convolutions <- function(data, config) {
     sum(data$log.f.dens[T], na.rm=TRUE)
 }
 
+
+
+
+
+
+## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
+
+.ll.reporting <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    sum(stats::dgeom(param$current.kappa[i]-1,
+                     prob=param$current.pi,
+                     log=TRUE), na.rm=TRUE)
+}

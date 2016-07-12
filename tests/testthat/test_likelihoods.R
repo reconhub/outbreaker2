@@ -138,12 +138,26 @@ test_that("ll$reporting gives expected results", {
     config <- outbreaker.config(data=data, init.mu=0.543e-4)
     ll <- outbreaker2:::create.loglike(data)
     param <- outbreaker.create.mcmc(data=data, config=config)
+    few.cases <- as.integer(c(1,3,4))
+    rnd.cases <- sample(sample(seq_len(data$N), 3, replace=FALSE))
 
 
     ## tests
-    out <- ll$reporting(param=param)
+    out <- ll$reporting(param)
+    out.few.cases <- ll$reporting(param, few.cases)
+    out.rnd.cases <- ll$reporting(param, rnd.cases)
+    ref <- .ll.reporting(data, param)
+    ref.few.cases <- .ll.reporting(data, param, few.cases)
+    ref.rnd.cases <- .ll.reporting(data, param, rnd.cases)
+
     expect_is(out, "numeric")
-    expect_equal(out, -3.05545495408)
+    expect_equal(out, -3.05545495407696)
+    expect_equal(out.few.cases, -0.210721031315653)
+
+    ## test against reference
+    expect_equal(out, ref)
+    expect_equal(out.few.cases, ref.few.cases)
+    expect_equal(out.rnd.cases, ref.rnd.cases)
 
 })
 

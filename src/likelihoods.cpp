@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <Rmath.h>
 
 /*
   This likelihood corresponds to the probability of observing a number of mutations between cases
@@ -20,16 +21,13 @@
 */
 // [[Rcpp::export("cpp.ll.genetic", rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
+  size_t N = static_cast<size_t>(data["N"]);
   double mu = Rcpp::as<double>(param["current.mu"]);
-
   long int L = Rcpp::as<int>(data["L"]);
-
   Rcpp::NumericMatrix D = data["D"];
   Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
 
   size_t length_nmut = 0, sum_nmut = 0;
-
-  size_t N = static_cast<size_t>(data["N"]);
 
   // all cases are retained
   if (i == R_NilValue) {
@@ -68,14 +66,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 // [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
-  size_t j = 0;
-  size_t delay = 0;
-
   Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
   Rcpp::IntegerVector t_inf = param["current.t.inf"];
   Rcpp::IntegerVector kappa = param["current.kappa"];
   Rcpp::NumericMatrix w_dens = data["log.w.dens"];
 
+  size_t j = 0;
+  size_t delay = 0;
   double out = 0.0;
 
   // all cases are retained
@@ -121,13 +118,12 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 // [[Rcpp::export("cpp.ll.timing.sampling", rng = false)]]
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
-  size_t j = 0;
-  size_t delay = 0;
-
   Rcpp::IntegerVector dates = data["dates"];
   Rcpp::IntegerVector t_inf = param["current.t.inf"];
   Rcpp::NumericVector f_dens = data["log.f.dens"];
 
+  size_t j = 0;
+  size_t delay = 0;
   double out = 0.0;
 
   // all cases are retained
@@ -151,6 +147,50 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
       }
       out += f_dens[delay - 1];
      }
+  }
+
+  return out;
+}
+
+
+
+
+
+
+/*
+  This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
+
+  The likelihood is given by a geometric distribution with probability 'pi' to report a case
+  - 'kappa' is the number of generation between two successive cases
+  - 'kappa-1' is the number of unreported cases
+*/
+
+// [[Rcpp::export("cpp.ll.reporting", rng = false)]]
+double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
+  size_t N = static_cast<size_t>(data["N"]);
+  double pi = static_cast<double>(param["current.pi"]);
+  Rcpp::IntegerVector kappa = param["current.kappa"];
+
+  size_t j = 0;
+  double out = 0.0;
+
+  // all cases are retained
+  if (i == R_NilValue) {
+    for (j = 0; j < N; j++) {
+      if (kappa[j] != NA_INTEGER) { 
+	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
+      }
+    }
+  } else {
+    // only the cases listed in 'i' are retained
+    size_t length_i = static_cast<size_t>(LENGTH(i));
+    Rcpp::IntegerVector vec_i(i);
+    for (size_t k = 0; k < length_i; k++) {
+      j = vec_i[k] - 1;
+      if (kappa[j] != NA_INTEGER) { 
+	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
+      }
+    }
   }
 
   return out;

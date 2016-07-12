@@ -35,12 +35,12 @@ make.ll.timing.infections <- function(data) {
 ## infection dates.
 
 make.ll.timing.sampling <- function(data) {
-     if (data$N>1) {
+    if (data$N>1) {
         function(param, i=NULL) cpp.ll.timing.sampling(data, param, i)
     } else {
         function(...) 0
     }
- }
+}
 
 
 
@@ -64,19 +64,8 @@ make.ll.genetic <- function(data) {
 ## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
 
 make.ll.reporting <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-    ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
-    ## 'kappa' is the number of generation between two successive cases
-    ## 'kappa-1' is the number of unreported cases
-    if (data$N>1) {
-
-        function(param, i=cases) {
-            sum(stats::dgeom(param$current.kappa[i]-1,
-                             prob=param$current.pi,
-                             log=TRUE), na.rm=TRUE)
-        }
+    if (nrow(data$D)>1) {
+        function(param, i=NULL) cpp.ll.reporting(data, param, i)
     } else {
         function(...) 0
     }

@@ -21,10 +21,12 @@
 */
 // [[Rcpp::export("cpp.ll.genetic", rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
+  Rcpp::NumericMatrix D = data["D"];
+  if (D.nrow() < 1) return 0.0;
+
   size_t N = static_cast<size_t>(data["N"]);
   double mu = Rcpp::as<double>(param["current.mu"]);
   long int L = Rcpp::as<int>(data["L"]);
-  Rcpp::NumericMatrix D = data["D"];
   Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
 
   size_t length_nmut = 0, sum_nmut = 0;
@@ -66,6 +68,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 // [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
+  if(N < 1) return 0.0;
+
   Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
   Rcpp::IntegerVector t_inf = param["current.t.inf"];
   Rcpp::IntegerVector kappa = param["current.kappa"];
@@ -118,6 +122,8 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 // [[Rcpp::export("cpp.ll.timing.sampling", rng = false)]]
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
+  if(N < 1) return 0.0;
+
   Rcpp::IntegerVector dates = data["dates"];
   Rcpp::IntegerVector t_inf = param["current.t.inf"];
   Rcpp::NumericVector f_dens = data["log.f.dens"];
@@ -168,6 +174,8 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
 // [[Rcpp::export("cpp.ll.reporting", rng = false)]]
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
+  if(N < 1) return 0.0;
+
   double pi = static_cast<double>(param["current.pi"]);
   Rcpp::IntegerVector kappa = param["current.kappa"];
 
@@ -177,7 +185,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   // all cases are retained
   if (i == R_NilValue) {
     for (j = 0; j < N; j++) {
-      if (kappa[j] != NA_INTEGER) { 
+      if (kappa[j] != NA_INTEGER) {
 	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
       }
     }

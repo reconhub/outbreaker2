@@ -388,7 +388,7 @@ test_that("likelihood functions return -Inf when needed", {
     out.all <- ll$all(param)
     out.all.few.cases <- ll$all(param, few.cases)
     out.all.rnd.cases <- ll$all(param, rnd.cases)
-  
+
     ## test values
     expect_is(out.all, "numeric")
     expect_equal(out.all, -Inf)

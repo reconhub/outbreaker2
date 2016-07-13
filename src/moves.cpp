@@ -26,8 +26,6 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
   // loglike with current value
   old_loglike = cpp_ll_genetic(data, param, R_NilValue);
-  // Rcpp::Rcout << "old_mu:" << mu[0] << std::endl;
-  // Rcpp::Rcout << "old_loglike:" << old_loglike << std::endl;
 
   // proposal (normal distribution with SD: config$sd.mu)
   new_mu[0] += R::rnorm(0, sd_mu); // new proposed value
@@ -35,13 +33,9 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // loglike with current value
   param["current.mu"] = new_mu;
   new_loglike = cpp_ll_genetic(data, param, R_NilValue);
-  // Rcpp::Rcout << "new_mu:" << new_mu[0] << std::endl;
-  // Rcpp::Rcout << "new_loglike:" << new_loglike << std::endl;
 
   // acceptance term
   p_accept = exp(new_loglike - old_loglike);
-
-  // Rcpp::Rcout << "p_accept:" << p_accept << std::endl;
 
   // acceptance: the new value is already in mu, so we only act if the move is rejected, in
   // which case we restore the previous ('old') value

@@ -25,25 +25,10 @@
 ## range of real values will never change much. Probably not much point in using auto-tuning here.
 
 make.move.mu <- function(config, densities) {
+    data <- environment(densities$loglike$genetic)$data
+    ## .move.mu(config, densities) # uncomment for pure R version
     function(param) {
-        ## get new proposed values
-        new.param <- param
-        ##new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
-        new.param$current.mu <-  stats::rnorm(1, mean=new.param$current.mu, sd=config$sd.mu)
-
-        ## escape if new.mu<0 or >1
-        if (new.param$current.mu<0 || new.param$current.mu>1) {
-            return(param)
-        }
-
-        ## compute log ratio  (assumes symmetric proposal)
-        logratio <- densities$posteriors$genetic(new.param) -
-            densities$posteriors$genetic(param)
-
-        ## accept/reject
-        if (logratio >= log(stats::runif(1))) {
-            return(new.param)
-        }
+        cpp.move.mu(data, param, config)
         return(param)
     }
 }
@@ -57,23 +42,10 @@ make.move.mu <- function(config, densities) {
 ## substantial then.
 
 make.move.t.inf <- function(config, densities) {
-    prob.move <- config$prop.t.inf.move/2
-    prob.proposal <- c(prob.move, 1-config$prop.t.inf.move, prob.move)
+    data <- environment(densities$loglike$timing)$data
     function(param) {
-        ## propose new t.inf
-        new.param <- param
-        new.param$current.t.inf <- new.param$current.t.inf +
-            sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=prob.proposal)
-
-        ## compute log ratio
-        logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
-
-        ## accept/reject
-        if (logratio >= log(stats::runif(1))) {
-            return(new.param)
-        } else {
-            return(param)
-        }
+        cpp.move.t.inf(data, param)
+        return(param)
     }
 }
 

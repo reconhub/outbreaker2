@@ -19,7 +19,7 @@ test_that("outbreaker's output have expected format", {
     out.df <- as.data.frame(out)
 
     out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-                      config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
 
     ## check output
     expect_is(out, "outbreaker.chains")

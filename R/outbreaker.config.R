@@ -485,7 +485,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         config$move.kappa[is.na(config$init.alpha)] <- FALSE
 
         ## disable moves for mu if no DNA sequences
-        if(is.null(data$D) | nrow(data$D)<1) {
+        if(is.null(data$D) || nrow(data$D)<1) {
             config$move.mu <- FALSE
         }
     }

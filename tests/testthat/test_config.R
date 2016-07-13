@@ -11,7 +11,7 @@ test_that("test: settings are processed fine", {
     x <- fake.outbreak
     dat <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
     dat.nodna <- dat
-    dat.nodna$dna <- NULL
+    dat.nodna$D <- dat.nodna$dna <- NULL
     alpha <- rep(1, x$dat$n)
 
     ## check output
@@ -39,6 +39,8 @@ test_that("test: settings are processed fine", {
                    "Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
     expect_warning(outbreaker.config(init.tree=rep(-1,dat$N), data=dat),
                    "some initial ancestries refer to unknown cases")
+    expect_false(outbreaker.config(data=dat.nodna, move.mu=TRUE)$move.mu)
+
 })
 
 

@@ -45,32 +45,11 @@ create.loglike <- function(data) {
                               reporting = make.ll.reporting,
                               contact = make.ll.contact,
                               timing.infections = make.ll.timing.infections,
-                              timing.sampling = make.ll.timing.sampling
+                              timing.sampling = make.ll.timing.sampling,
+                              timing = make.ll.timing,
+                              all = make.ll.all
                               )
-    ll.function.names <- names(default.functions)
-    out <- lapply(default.functions, function(f) f(data))
 
+    lapply(default.functions, function(f) f(data))
 
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-
-    ## We need a function computing likelihood relating to timing, which includes:
-    ## - p(sampling dates | infections dates)
-    ## - p(infection dates | ancestral infection dates)
-
-    out$timing <- function(param, i=cases) {
-        out$timing.infections(param, i) + out$timing.sampling(param, i)
-    }
-
-
-    ## We need a function summing all log-likelihoods - useful as a shortcut for several
-    ## movements of parameters and augmented data.
-
-    out$all <- function(param, i=cases) {
-        sum(vapply(out[ll.function.names], function(f) f(param, i), FUN.VALUE=numeric(1)), na.rm=TRUE)
-    }
-
-
-    return(out)
 }

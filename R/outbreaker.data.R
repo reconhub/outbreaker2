@@ -104,9 +104,10 @@ outbreaker.data <- function(..., data=list(...)) {
         if (!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
         data$L <- ncol(data$dna) #  (genome length)
         data$D <- as.matrix(ape::dist.dna(data$dna, model="N")) # distance matrix
+        storage.mode(data$D) <- "integer" # essential for C/C++ interface
     } else {
-        data$L <- 0
-        data$D <- matrix(numeric(0), ncol=0, nrow=0)
+        data$L <- 0L
+        data$D <- matrix(integer(0), ncol=0, nrow=0)
     }
     
     ## CHECK CONTACT

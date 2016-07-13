@@ -372,3 +372,114 @@ add.convolutions <- function(data, config) {
 
     return(data)
 }
+
+
+
+
+
+
+#####################################################################################################
+#####################################################################################################
+## Some of the functions used in these tests have been designed in R, then translated into C++ (with
+## Rcpp integration). For testing purposes, we leave the 'old' R versions here, to check the
+## behaviour of new version is as it should be.
+#####################################################################################################
+#####################################################################################################
+
+
+## This likelihood corresponds to the probability of observing a number of mutations between cases
+## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
+
+.ll.genetic <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
+    i <- i[!is.na(param$current.alpha[i])]
+
+    ## likelihood is based on the number of mutations between a case and its ancestor;
+    ## these are extracted from a pairwise genetic distance matrix (data$D)
+    nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
+
+    ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
+    ## with:
+    ## 'mu' is the mutation probability
+    ## 'L' the number of sites in the alignment
+    ## 'nmut' the number of mutations between an ancestor and its descendent
+    ##
+    ## for computer efficiency, we re-factorise it as:
+    ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
+    ## which limits to 2 operations rather than 2*n
+    ## (tip from Rich Fitzjohn)
+    log(param$current.mu / (1 - param$current.mu)) * sum(nmut) +
+        length(nmut) * log(1 - param$current.mu) * data$L
+}
+
+
+
+
+
+
+## This likelihood corresponds to the probability of observing infection dates of cases given the
+## infection dates of their ancestors.
+
+.ll.timing.infections <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
+    i <- i[!is.na(param$current.alpha[i])]
+
+
+    ## compute delays between infection dates of cases and of their ancestors
+    T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
+
+    ## avoid over-shooting: delays outside the range of columns in pre-computed log-densities
+    ## (data$log.w.dens) will give a likelihood of zero
+    if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
+
+    ## output is a sum of log-densities
+    sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
+}
+
+
+
+
+
+## This likelihood corresponds to the probability of reporting dates of cases given their
+## infection dates.
+
+.ll.timing.sampling <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    ## compute delays
+    T <- data$dates[i] - param$current.t.inf[i]
+    T <- T[!is.na(T)]
+
+    ## avoid over-shooting
+    if (any(T<1 | T>length(data$log.f.dens))) return(-Inf)
+
+    ## output is a sum of log densities
+    sum(data$log.f.dens[T], na.rm=TRUE)
+}
+
+
+
+
+
+
+## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
+
+.ll.reporting <- function(data, param, i=NULL) {
+    if (is.null(i)) {
+        i <- seq_len(data$N)
+    }
+
+    sum(stats::dgeom(param$current.kappa[i]-1,
+                     prob=param$current.pi,
+                     log=TRUE), na.rm=TRUE)
+}

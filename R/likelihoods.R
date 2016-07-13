@@ -21,22 +21,8 @@
 ## infection dates of their ancestors.
 
 make.ll.timing.infections <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-    if (data$N>1) {
-        function(param, i=cases) {
-
-            ## compute delays between infection dates of cases and of their ancestors
-            T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
-
-            ## avoid over-shooting: delays outside the range of columns in pre-computed log-densities
-            ## (data$log.w.dens) will give a likelihood of zero
-            if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
-
-            ## output is a sum of log-densities
-            sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
-        }
+    if (data$N > 1) {
+        function(param, i=NULL) cpp.ll.timing.infections(data, param, i)
     } else {
         function(...) 0
     }
@@ -49,22 +35,8 @@ make.ll.timing.infections <- function(data) {
 ## infection dates.
 
 make.ll.timing.sampling <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
     if (data$N>1) {
-        function(param, i=cases) {
-
-            ## compute delays
-            T <- data$dates[i] - param$current.t.inf[i]
-            T <- T[!is.na(T)]
-
-            ## avoid over-shooting
-            if (any(T<1 | T>length(data$log.f.dens))) return(-Inf)
-
-            ## output is a sum of log densities
-            sum(data$log.f.dens[T], na.rm=TRUE)
-        }
+        function(param, i=NULL) cpp.ll.timing.sampling(data, param, i)
     } else {
         function(...) 0
     }
@@ -75,35 +47,11 @@ make.ll.timing.sampling <- function(data) {
 
 
 ## This likelihood corresponds to the probability of observing a number of mutations between cases
-## and their ancestors.
+## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
 
 make.ll.genetic <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-    if (nrow(data$D)>1) {
-
-        function(param, i=cases) {
-
-            ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
-            i <- i[!is.na(param$current.alpha[i])]
-
-            ## likelihood is based on the number of mutations between a case and its ancestor;
-            ## these are extracted from a pairwise genetic distance matrix (data$D)
-            nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
-
-            ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
-            ## with:
-            ## 'mu' is the mutation probability
-            ## 'L' the number of sites in the alignment
-            ## 'nmut' the number of mutations between an ancestor and its descendent
-            ##
-            ## for computer efficiency, we re-factorise it as:
-            ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-            ## which limits to 2 operations rather than 2*n
-            ## (tip from Rich Fitzjohn)
-            log(param$current.mu / (1 - param$current.mu)) * sum(nmut) + length(nmut) * log(1 - param$current.mu) * data$L
-        }
+    if (nrow(data$D) > 1) {
+        function(param, i=NULL) cpp.ll.genetic(data, param, i)
     } else {
         function(...) 0
     }
@@ -116,19 +64,8 @@ make.ll.genetic <- function(data) {
 ## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
 
 make.ll.reporting <- function(data) {
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-    ## the likelihood is given by a geometric distribution with probability 'pi' to report a case
-    ## 'kappa' is the number of generation between two successive cases
-    ## 'kappa-1' is the number of unreported cases
-    if (data$N>1) {
-
-        function(param, i=cases) {
-            sum(stats::dgeom(param$current.kappa[i]-1,
-                             prob=param$current.pi,
-                             log=TRUE), na.rm=TRUE)
-        }
+    if (data$N > 1) {
+        function(param, i=NULL) cpp.ll.reporting(data, param, i)
     } else {
         function(...) 0
     }
@@ -138,27 +75,64 @@ make.ll.reporting <- function(data) {
 
 
 
-## This likelihood corresponds to the probability of observing contact between two individuals 
+## This likelihood corresponds to the sums of the separate timing likelihoods, which include:
+
+##   - p(infection dates): see function cpp_ll_timing_infections
+##   - p(collection dates): see function cpp_ll_timing_sampling
+
+make.ll.timing <- function(data) {
+    if (data$N > 1) {
+        function(param, i=NULL) cpp.ll.timing(data, param, i)
+    } else {
+        function(...) 0
+    }
+}
+
+
+
+
+
+##  This likelihood corresponds to the sums of the separate likelihoods, which include:
+
+##   - p(infection dates): see function cpp_ll_timing_infections
+##   - p(collection dates): see function cpp_ll_timing_sampling
+##   - p(genetic diversity): see function cpp_ll_genetic
+##   - p(missing cases): see function cpp_ll_reporting
+
+make.ll.all <- function(data) {
+    if (data$N > 1) {
+        function(param, i=NULL) cpp.ll.all(data, param, i)
+    } else {
+        function(...) 0
+    }
+}
+
+
+
+
+
+## This likelihood corresponds to the probability of observing contact between two individuals
 ## for a given ancestry
 
 make.ll.contact <- function(data) {
-  
-  ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-  cases <- seq_len(data$N)
-  
-  if (nrow(data$contact)>0){
-    function(param, i=cases) {
-      
-      ## discard cases with no ancestors as these cannot be informed by contact tracing data
-      i <- i[!is.na(param$current.alpha[i])]
-      
-      #Look up if contact is observed from the contact data matrix (data$contact)
-      cij <- data$contact[cbind(i, param$current.alpha[i], deparse.level=0)]
-      
-      sum(log(param$current.eps^cij + param$current.eps*(cij-1)))
-      
+
+    ## i will be the index of cases to be used, but it is useful to define it by default as all
+    ## cases
+    cases <- seq_len(data$N)
+
+    if (nrow(data$contact)>0){
+        function(param, i=cases) {
+
+            ## discard cases with no ancestors as these cannot be informed by contact tracing data
+            i <- i[!is.na(param$current.alpha[i])]
+
+            ## Look up if contact is observed from the contact data matrix (data$contact)
+            cij <- data$contact[cbind(i, param$current.alpha[i], deparse.level=0)]
+
+            sum(log(param$current.eps^cij + param$current.eps*(cij-1)))
+
+        }
+    } else {
+        function(...) 0
     }
-  } else {
-    function(...) 0
-  }
 }

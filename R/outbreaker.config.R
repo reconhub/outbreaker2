@@ -152,7 +152,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
     }
     if (is.numeric(config$init.tree)) {
-        config$init.alpha <- config$init.tree
+        config$init.alpha <- as.integer(config$init.tree)
     }
 
     ## check / process init.t.inf
@@ -303,6 +303,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$sample.every)) {
         stop("sample.every is infinite or NA")
     }
+    config$sample.every <- as.integer(config$sample.every)
 
     ## check sd.mu
     if (!is.numeric(config$sd.mu)) {
@@ -375,6 +376,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$batch.size)) {
         stop("batch.size is infinite or NA")
     }
+    config$batch.size <- as.integer(config$batch.size)
 
     ## check paranoid
     if (!is.logical(config$paranoid)) {
@@ -430,6 +432,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$n.iter.import)) {
         stop("n.iter.import is infinite or NA")
     }
+    config$n.iter.import <- as.integer(config$n.iter.import)
 
     ## check sample.every.import
     if (!is.numeric(config$sample.every.import)) {
@@ -441,6 +444,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$sample.every.import)) {
         stop("sample.every.import is infinite or NA")
     }
+    config$sample.every.import <- as.integer(config$sample.every.import)
 
     ## check prior value for mu
     if (!is.numeric(config$prior.mu)) {

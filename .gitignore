@@ -7,3 +7,6 @@ vignettes/apex.md
 .Rproj.user
 .apex.Rproj
 CTD.outbreaker2.Rproj
+*.o
+*.so
+*.dll

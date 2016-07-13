@@ -5,6 +5,17 @@
 
 using namespace Rcpp;
 
+// copy_values
+void copy_values(Rcpp::IntegerVector a, Rcpp::IntegerVector b);
+RcppExport SEXP outbreaker2_copy_values(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type a(aSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type b(bSEXP);
+    copy_values(a, b);
+    return R_NilValue;
+END_RCPP
+}
 // cpp_ll_genetic
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i);
 RcppExport SEXP outbreaker2_cpp_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {
@@ -78,14 +89,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_move_t_inf
-Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param);
+void cpp_move_t_inf(Rcpp::List data, Rcpp::List param);
 RcppExport SEXP outbreaker2_cpp_move_t_inf(SEXP dataSEXP, SEXP paramSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
-    __result = Rcpp::wrap(cpp_move_t_inf(data, param));
-    return __result;
+    cpp_move_t_inf(data, param);
+    return R_NilValue;
 END_RCPP
 }

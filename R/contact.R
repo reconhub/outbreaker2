@@ -14,7 +14,6 @@
 #'
 #' @author Finlay Campbell (\email{f.campbell15@@imperial.ac.uk})
 #' 
-#'
 #' @export
 
 simCTD <- function(outbreak,eps=1,xi=0,plot=FALSE){

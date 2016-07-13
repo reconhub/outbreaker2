@@ -483,3 +483,30 @@ add.convolutions <- function(data, config) {
                      prob=param$current.pi,
                      log=TRUE), na.rm=TRUE)
 }
+
+
+
+
+## This function implements movements for t.inf
+
+.move.t.inf <- function(config, param, loglike) {
+    prob.move <- config$prop.t.inf.move/2
+    prob.proposal <- c(prob.move, 1-config$prop.t.inf.move, prob.move)
+
+    function(param) {
+        ## propose new t.inf
+        new.param <- param
+        new.param$current.t.inf <- new.param$current.t.inf +
+            sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=prob.proposal)
+
+        ## compute log ratio
+        logratio <- loglike$timing(new.param) - loglike$timing(param)
+
+        ## accept/reject
+        if (logratio >= log(stats::runif(1))) {
+            return(new.param)
+        } else {
+            return(param)
+        }
+    }
+}

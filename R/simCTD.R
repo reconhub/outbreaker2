@@ -2,8 +2,6 @@
 #'
 #' This function takes a simOutbreak object and returns a dataframe of contact pairs. The probabilites of reporting infectious and non-infectious contacts are provided as parameters.
 #' 
-#' @importFrom magrittr "%>%"
-#' 
 #' @param outbreak a simOutbreak object
 #'
 #' @param eps the reporting probability of infectious contacts

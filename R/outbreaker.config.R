@@ -483,6 +483,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         ## disable moves for imported cases
         config$move.alpha[is.na(config$init.alpha)] <- FALSE
         config$move.kappa[is.na(config$init.alpha)] <- FALSE
+
+        ## disable moves for mu if no DNA sequences
+        if(is.null(data$D) | nrow(data$D)<1) {
+            config$move.mu <- FALSE
+        }
     }
 
     ## output is a list of checked settings with a dedicated class (for printing)

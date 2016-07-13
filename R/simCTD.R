@@ -2,6 +2,8 @@
 #'
 #' This function takes a simOutbreak object and returns a dataframe of contact pairs. The probabilites of reporting infectious and non-infectious contacts are provided as parameters.
 #' 
+#' @importFrom magrittr %>%
+#' 
 #' @param outbreak a simOutbreak object
 #'
 #' @param eps the reporting probability of infectious contacts
@@ -61,8 +63,8 @@ simCTD <- function(outbreak,eps=1,xi=0,plot=FALSE){
     edges <- data.frame(from=plot.CTD$i,to=plot.CTD$j,dashes=edges.dashes,arrows=edges.arrows,
                         color=edges.color,width=edges.width)
     
-    network <- magrittr::`%>%`(visNetwork::visNetwork(nodes,edges,main="Simulated Contact Network"),
-                               visNetwork::visNodes(shape="ellipse",font=list("size"=25),borderWidth=2))
+    network <- (visNetwork::visNetwork(nodes,edges,main="Simulated Contact Network") %>%
+                            visNetwork::visNodes(shape="ellipse",font=list("size"=25),borderWidth=2))
     
     print(network)
   }

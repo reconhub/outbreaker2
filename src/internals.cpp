@@ -21,6 +21,25 @@ void copy_values(Rcpp::IntegerVector a, Rcpp::IntegerVector b) {
 
 
 
+// // [[Rcpp::export]]
+// void add_one_to_x(Rcpp::List a) {
+// // Rcpp::List add_one_to_x(Rcpp::List a) {
+  
+//   //  Rcpp::NumericVector new_x = clone(a["x"]);
+//   Rcpp::IntegerVector x = a["x"];
+//   Rcpp::IntegerVector new_x = x;
+//   //  Rcpp::List out = clone(a);
+  
+//   size_t i, N = new_x.size();
+//   for(i = 0; i < N; i++) {
+//     new_x[i] += 1;
+//   }
+  
+//   //x = new_x; // this does not work
+//   a["x"] = new_x;
+//   // return out;
+// }
+
 /* 
    This function returns the descendents of a given case 'i' in the current ancestries.
 */

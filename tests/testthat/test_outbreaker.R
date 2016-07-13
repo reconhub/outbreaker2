@@ -72,7 +72,7 @@ test_that("convergence to decent results for toy example, DNA + time", {
 
    ## outbreaker time, no DNA ##
     ## analysis
-    set.seed(1)
+    set.seed(2)
     out.no.dna <- outbreaker(data=list(dates=dat$onset, w.dens=w),
                       config=list(n.iter=5000, sample.every=100, init.tree="star", find.import=FALSE))
 
@@ -125,7 +125,7 @@ test_that("convergence to decent results for toy example, DNA + time", {
 
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis
-    set.seed(1)
+    set.seed(2)
     out.with.import <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
                                   config=list(n.iter=10000, sample.every=100, init.tree="star",
                                   move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=TRUE)

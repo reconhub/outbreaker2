@@ -191,9 +191,10 @@ test_that("create.loglike create functions with closure", {
 
     ## tests
     expect_is(out, "list")
-    expect_equal(length(out), 6)
+    expect_equal(length(out), 7)
     expect_equal(names(out), c("genetic",
                                "reporting",
+                               "contact",
                                "timing.infections",
                                "timing.sampling",
                                "timing",
@@ -207,6 +208,7 @@ test_that("create.loglike create functions with closure", {
     ## check that closure worked
     expect_identical(data, environment(out$genetic)$data)
     expect_identical(data, environment(out$reporting)$data)
+    expect_identical(data, environment(out$contact)$data)
     expect_identical(data, environment(out$timing.infections)$data)
     expect_identical(data, environment(out$timing.sampling)$data)
 

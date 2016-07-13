@@ -2,15 +2,18 @@
 #'
 #' This function takes a simOutbreak object and returns a dataframe of contact pairs. The probabilites of reporting infectious and non-infectious contacts are provided as parameters.
 #' 
+#' @importFrom magrittr "%>%"
+#' 
 #' @param outbreak a simOutbreak object
 #'
 #' @param eps the reporting probability of infectious contacts
 #' 
 #' @param xi the scaling factor relative to eps, describing the probability of reporting contact between non-infectiously related pairs
 #'
-#' @param a logical indicating if the contact tracing data should be plotted
+#' @param plot a logical indicating if the contact tracing data should be plotted
 #'
 #' @author Finlay Campbell (\email{f.campbell15@@imperial.ac.uk})
+#' 
 #'
 #' @export
 
@@ -22,7 +25,7 @@ simCTD <- function(outbreak,eps=1,xi=0,plot=FALSE){
   
   accept.reject <- function(pair){
     if(pair[3]) return(stats::runif(1,0,1) < eps)
-    else return(runif(1,0,1) < xi*eps)
+    else return(stats::runif(1,0,1) < xi*eps)
   }
   
   import <- which(is.na(outbreak$ances))
@@ -61,8 +64,8 @@ simCTD <- function(outbreak,eps=1,xi=0,plot=FALSE){
     edges <- data.frame(from=plot.CTD$i,to=plot.CTD$j,dashes=edges.dashes,arrows=edges.arrows,
                         color=edges.color,width=edges.width)
     
-    network <- visNetwork::visNetwork(nodes,edges,main="Simulated Contact Network") %>%
-      visNetwork::visNodes(shape="ellipse",font=list("size"=25),borderWidth=2)
+    network <- magrittr::`%>%`(visNetwork::visNetwork(nodes,edges,main="Simulated Contact Network"),
+                               visNetwork::visNodes(shape="ellipse",font=list("size"=25),borderWidth=2))
     
     print(network)
   }

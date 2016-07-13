@@ -13,7 +13,7 @@ simCTD(outbreak, eps = 1, xi = 0, plot = FALSE)
 
 \item{xi}{the scaling factor relative to eps, describing the probability of reporting contact between non-infectiously related pairs}
 
-\item{a}{logical indicating if the contact tracing data should be plotted}
+\item{plot}{a logical indicating if the contact tracing data should be plotted}
 }
 \description{
 This function takes a simOutbreak object and returns a dataframe of contact pairs. The probabilites of reporting infectious and non-infectious contacts are provided as parameters.

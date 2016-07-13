@@ -20,6 +20,7 @@ Imports:
     grDevices,
     ape,
     ggplot2,
-    visNetwork
+    visNetwork,
+    magrittr
 LazyData: true
 RoxygenNote: 5.0.1

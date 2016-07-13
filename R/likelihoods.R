@@ -146,7 +146,7 @@ make.ll.contact <- function(data) {
   ## i will be the index of cases to be used, but it is useful to define it by default as all cases
   cases <- seq_len(data$N)
   
-  if (data$N>1){
+  if (nrow(data$contact)>0){
     function(param, i=cases) {
       
       ## discard cases with no ancestors as these cannot be informed by contact tracing data

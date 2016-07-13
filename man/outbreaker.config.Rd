@@ -41,6 +41,8 @@ including the burnin period}
 
 \item{init.pi}{initial value for the reporting probability}
 
+\item{init.eps}{initial value for the contact reporting probability}
+
 \item{move.alpha}{a vector of logicals indicating, for each case, if the ancestry should be
 estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 
@@ -52,6 +54,9 @@ needed.}
 should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{move.pi}{a logical indicating whether the reporting probability
+should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+
+\item{move.eps}{a logical indicating whether the contact reporting probability
 should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{move.kappa}{a logical indicating whether the number of generations between two successive
@@ -68,8 +73,11 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
 
+\item{sd.eps}{the standard deviation for the Normal proposal for the contact reporting probability}
+
 \item{prop.alpha.move}{the proportion of ancestries to move at each iteration of the MCMC}
 
+\item{prop.t.inf.move}{the proportion of infection dates to move at each iteration of the MCMC}
 \item{batch.size}{the size of the batch of random number pre-generated}
 
 \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for
@@ -84,6 +92,9 @@ mostly used for debugging purposes.}
 
 \item{prior.pi}{a numeric vector of length 2 indicating the first and second parameter of the
 beta prior for the reporting probability 'pi'}
+
+\item{prior.eps}{a numeric vector of length 2 indicating the upper and lower bounds of the
+uniform prior for the contact reporting probability 'eps'}
 
 }
 }

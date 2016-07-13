@@ -4,8 +4,12 @@
 #'
 #' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
 #'
+#' @inheritParams outbreaker
+#'
 #' @param param a list of output items as returned by \code{outbreaker.create.mcmc}
-#' @param data a list of settings as returned by \code{outbreaker.data}
+#'
+#' @param densities a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
+#'
 #' @param step an integer indicating the MCMC iteration being stored
 #'
 #' @export
@@ -28,6 +32,7 @@ outbreaker.mcmc.store <- function(param, densities, step) {
     param$t.inf[[counter]] <- param$current.t.inf
     param$kappa[[counter]] <- param$current.kappa
     param$pi[counter] <- param$current.pi
+    param$eps[counter] <- param$current.eps
 
     return(param)
 }

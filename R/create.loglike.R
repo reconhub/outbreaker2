@@ -23,6 +23,7 @@
 ## #' \item{timing.sampling}{corresponds to the probability of delays between infection and reporting}
 ## #' \item{timing}{corresponds to the probability of all delays}
 ## #' \item{genetic}{corresponds to the probability of the genetic sequences given the transmission tree}
+## #' \item{contact}{corresponds to the probability of the contact tracing data given the transmission tree}
 ## #' \item{all}{corresponds to the overal probability of the data}
 ## #' }
 ## #'
@@ -42,6 +43,7 @@ create.loglike <- function(data) {
 
     default.functions <- list(genetic = make.ll.genetic,
                               reporting = make.ll.reporting,
+                              contact = make.ll.contact,
                               timing.infections = make.ll.timing.infections,
                               timing.sampling = make.ll.timing.sampling
                               )

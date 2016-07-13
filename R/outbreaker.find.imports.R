@@ -57,7 +57,7 @@ outbreaker.find.imports <- function(moves, data, param, config, densities) {
 
 
     ## FIND OUTLIERS BASED ON INFLUENCE ##
-    mean.influences <- apply(influences, 2, mean)
+    mean.influences <- colMeans(influences)
     mean.influence <- mean(mean.influences, na.rm=TRUE)
     threshold <- mean.influence * config$outlier.threshold
     outliers <- mean.influences > threshold

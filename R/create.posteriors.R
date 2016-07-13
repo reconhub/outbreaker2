@@ -13,6 +13,7 @@ create.posteriors <- function(loglike, priors) {
 
     default.functions <- list(genetic = make.post.genetic,
                               reporting = make.post.reporting,
+                              contact = make.post.contact,
                               all = make.post.all)
 
     out <- lapply(default.functions, function(f) f(loglike=loglike, priors=priors))

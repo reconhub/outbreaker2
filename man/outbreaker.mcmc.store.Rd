@@ -9,9 +9,9 @@ outbreaker.mcmc.store(param, densities, step)
 \arguments{
 \item{param}{a list of output items as returned by \code{outbreaker.create.mcmc}}
 
-\item{step}{an integer indicating the MCMC iteration being stored}
+\item{densities}{a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}
 
-\item{data}{a list of settings as returned by \code{outbreaker.data}}
+\item{step}{an integer indicating the MCMC iteration being stored}
 }
 \description{
 This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.

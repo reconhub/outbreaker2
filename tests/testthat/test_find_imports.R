@@ -17,9 +17,8 @@ test_that("Test detection of imported cases", {
     priors <- create.priors(config)
     post <- create.posteriors(ll, priors)
     densities <- list(loglike=ll, priors=priors, posteriors=post)
-    rand <- outbreaker.rand.vec(config=config)
 
-    moves <- create.moves(config=config, densities=densities, rand=rand)
+    moves <- create.moves(config=config, densities=densities)
 
     ## detect imported cases
     out <- outbreaker.find.imports(moves=moves, data=data, param=param,

@@ -487,9 +487,42 @@ add.convolutions <- function(data, config) {
 
 
 
+
+
+
+## This function implements movements for mu
+
+.move.mu <- function(config, densities){
+    function(param) {
+        ## get new proposed values
+        new.param <- param
+        ##new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
+        new.param$current.mu <-  stats::rnorm(1, mean=new.param$current.mu, sd=config$sd.mu)
+
+        ## escape if new.mu<0 or >1
+        if (new.param$current.mu<0 || new.param$current.mu>1) {
+            return(param)
+        }
+
+        ## compute log ratio  (assumes symmetric proposal)
+        logratio <- densities$posteriors$genetic(new.param) -
+            densities$posteriors$genetic(param)
+
+        ## accept/reject
+        if (logratio >= log(stats::runif(1))) {
+            return(new.param)
+        }
+        return(param)
+    }
+}
+
+
+
+
+
 ## This function implements movements for t.inf
 
-.move.t.inf <- function(config, param, loglike) {
+.move.t.inf <- function(config, densities) {
     prob.move <- config$prop.t.inf.move/2
     prob.proposal <- c(prob.move, 1-config$prop.t.inf.move, prob.move)
 
@@ -500,7 +533,7 @@ add.convolutions <- function(data, config) {
             sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=prob.proposal)
 
         ## compute log ratio
-        logratio <- loglike$timing(new.param) - loglike$timing(param)
+        logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
 
         ## accept/reject
         if (logratio >= log(stats::runif(1))) {

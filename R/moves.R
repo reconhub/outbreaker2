@@ -25,27 +25,12 @@
 ## range of real values will never change much. Probably not much point in using auto-tuning here.
 
 make.move.mu <- function(config, densities) {
-    function(param) {
-        ## get new proposed values
-        new.param <- param
-        ##new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
-        new.param$current.mu <-  stats::rnorm(1, mean=new.param$current.mu, sd=config$sd.mu)
-
-        ## escape if new.mu<0 or >1
-        if (new.param$current.mu<0 || new.param$current.mu>1) {
-            return(param)
-        }
-
-        ## compute log ratio  (assumes symmetric proposal)
-        logratio <- densities$posteriors$genetic(new.param) -
-            densities$posteriors$genetic(param)
-
-        ## accept/reject
-        if (logratio >= log(stats::runif(1))) {
-            return(new.param)
-        }
-        return(param)
-    }
+    data <- environment(densities$loglike$genetic)$data
+    .move.mu(config, densities) # uncomment for pure R version
+    ## function(param) {
+    ##     cpp.move.mu(data, param, config)
+    ##     return(param)
+    ## }
 }
 
 

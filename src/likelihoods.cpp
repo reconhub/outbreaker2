@@ -31,6 +31,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   size_t length_nmut = 0, sum_nmut = 0;
 
+  // mu < 0 cannot happen
+  if (mu < 0.0) {
+    return R_NegInf;
+  }
+
   // all cases are retained
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {

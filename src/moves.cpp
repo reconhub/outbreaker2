@@ -4,7 +4,48 @@
 #include "likelihoods.h"
 
 
+
+
 /*
+
+  Movement of the mutation rate 'mu' is done using a dumb normal proposal. This is satisfying for
+  now - we only reject a few non-sensical values outside the range [0;1]. The SD of the proposal
+  (implicitely contained in rand$mu.rnorm1, but really provided through 'config', seems fine as the
+  range of real values will never change much. Probably not much point in using auto-tuning here.
+
+*/
+
+// [[Rcpp::export("cpp.move.mu", rng = true)]]
+void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+  Rcpp::NumericVector mu = param["current.mu"]; // pointer to param$current.mu
+  double old_mu = 0.0, old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+  double sd_mu = static_cast<double>(config["sd.mu"]);
+
+  // loglike with current value
+  old_loglike = cpp_ll_genetic(data, param, R_NilValue);
+
+  // proposal (normal distribution with SD: config$sd.mu)
+  old_mu = mu[0]; // save old value
+  mu[0] += R::rnorm(0, sd_mu); // new proposed value
+
+  // loglike with current value
+  new_loglike = cpp_ll_genetic(data, param, R_NilValue);
+
+  // acceptance term
+  p_accept = exp(new_loglike - old_loglike);
+
+  // acceptance: the new value is already in mu, so we only act if the move is rejected, in
+  // which case we restore the previous ('old') value
+  if (p_accept < R::runif(0,1)) { // reject new values
+    mu[0] = old_mu;
+  }
+}
+
+
+
+
+/*
+
   Movement of infection dates are +/- 1 from current states. These movements are currently
   vectorised, i.e. a bunch of dates are proposed all together; this may not be sustainable for
   larger datasets. The non-vectorised option will be slower and speed-up with C/C++ will be more
@@ -19,14 +60,13 @@
 
 */
 
-
 // [[Rcpp::export("cpp.move.t.inf", rng = true)]]
 void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
   // Rcpp::List new_param(param);
   size_t N = static_cast<size_t>(data["N"]);
-  size_t i = 0, j = 0, old_t_inf = 0, new_t_inf = 0;
+  size_t i = 0, j = 0, old_t_inf = 0;
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
-
+  
   Rcpp::IntegerVector t_inf = param["current.t.inf"]; // pointer to t_inf in param
 
   for (i = 0; i < N; i++) {
@@ -43,7 +83,7 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // new_loglike = cpp_ll_timing(data, param, i); // term for case 'i'
     // new_loglike = cpp_ll_timing(data, param, find_descendents(i)); // term descendents of 'i'
     new_loglike = cpp_ll_timing(data, param, R_NilValue);
-
+    
     // acceptance term
     p_accept = exp(new_loglike - old_loglike);
 

@@ -44,6 +44,39 @@ are.possible.alpha <- function(t.inf, i) {
 */
 
 
+// [[Rcpp::export]]
+std::vector<int> whatever(Rcpp::IntegerVector x) {
+  size_t n = x.size();
+  std::vector<int> foo;
+  foo.reserve(n);
+  for (size_t i; i < n; ++i) {
+    if (condition(x[i])) {
+      foo.push_back(x[i]);
+    }
+  }
+  return foo;
+}
+
+Rcpp::IntegerVector whatever(Rcpp::IntegerVector x) {
+  size_t n = x.size();
+  std::vector<bool> idx(n);
+  size_t m = 0;
+  for (size_t i = 0; i < n; ++i) {
+    if (condition(x[i])) {
+      ++m;
+      idx[i] = true;
+    }
+  }
+  Rcpp::IntegerVector foo(m);
+  for (size_t i = 0, j = 0; i < n; ++i) {
+    if (idx[i]) {
+      foo[j++] = x[i];
+    }
+  }
+  return foo;
+}
+
+
 
 
 

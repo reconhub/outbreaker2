@@ -146,9 +146,10 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 
     // only non-NA ancestries are moved, if there is at least 1 choice
     if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
+
       // loglike with current value
       old_loglike = cpp_ll_all(data, param, R_NilValue);
-      // old_loglike2 = cpp_ll_all(data, param, Rcpp::wrap(i));
+      // old_loglike2 = cpp_ll_all(data, param, wrap(i));
 
       // proposal (+/- 1)
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value (on scale 1 ... N)
@@ -156,7 +157,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       // loglike with current value
       new_param["alpha"] = new_alpha;
       new_loglike = cpp_ll_all(data, new_param, R_NilValue);
-      // new_loglike2 = cpp_ll_all(data, new_param, Rcpp::wrap(i));
+      // new_loglike2 = cpp_ll_all(data, new_param, wrap(i));
 
       // acceptance term
       p_accept = exp(new_loglike - old_loglike);

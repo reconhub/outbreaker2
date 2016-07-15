@@ -9,8 +9,12 @@ cpp.are.possible.ancestors <- function(t_inf, i) {
     .Call('outbreaker2_cpp_are_possible_ancestors', PACKAGE = 'outbreaker2', t_inf, i)
 }
 
-cpp.sampl1 <- function(x) {
+cpp.sample1 <- function(x) {
     .Call('outbreaker2_cpp_sample1', PACKAGE = 'outbreaker2', x)
+}
+
+cpp.pick.possible.ancestor <- function(t_inf, i) {
+    .Call('outbreaker2_cpp_pick_possible_ancestor', PACKAGE = 'outbreaker2', t_inf, i)
 }
 
 cpp.ll.genetic <- function(data, param, i) {

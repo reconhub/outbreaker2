@@ -1,7 +1,6 @@
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
-
 #include <RcppArmadilloExtensions/sample.h>
 
 
@@ -62,7 +61,11 @@ Rcpp::IntegerVector cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t
 }
 
 
-// [[Rcpp::export("cpp.sampl1")]]
+
+/*
+  This function samples a single value from a vector of integers.
+*/
+// [[Rcpp::export("cpp.sample1")]]
 size_t cpp_sample1(Rcpp::IntegerVector x) {
   if (x.size() < 1) {
     Rcpp::Rcerr << "Trying to sample from empty vector" << std::endl;
@@ -74,6 +77,32 @@ size_t cpp_sample1(Rcpp::IntegerVector x) {
 						      false,
 						      Rcpp::NumericVector::create()));
 }
+
+
+
+
+
+/*
+   This function choose a possible infector for case 'i'.
+
+   Original R version:
+
+choose.possible.alpha <- function(t.inf, i) {
+    return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
+}
+
+*/
+
+// [[Rcpp::export("cpp.pick.possible.ancestor")]]
+size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i ) {
+  Rcpp::IntegerVector choices = cpp_are_possible_ancestors(t_inf, i);
+  // if (choices.size() < 1) {
+  //   return  NA_INTEGER;
+  // }
+  return cpp_sample1(choices);
+}
+
+
 
 
 
@@ -111,20 +140,6 @@ size_t cpp_sample1(Rcpp::IntegerVector x) {
 
 
 
-
-
-
-
-/*
-   This function choose a possible infector for case 'i'.
-
-   Original R version:
-
-choose.possible.alpha <- function(t.inf, i) {
-    return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
-}
-
-*/
 
 
 /*

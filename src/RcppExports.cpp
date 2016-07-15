@@ -40,6 +40,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// cpp_pick_possible_ancestor
+size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i);
+RcppExport SEXP outbreaker2_cpp_pick_possible_ancestor(SEXP t_infSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type t_inf(t_infSEXP);
+    Rcpp::traits::input_parameter< size_t >::type i(iSEXP);
+    __result = Rcpp::wrap(cpp_pick_possible_ancestor(t_inf, i));
+    return __result;
+END_RCPP
+}
 // cpp_ll_genetic
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i);
 RcppExport SEXP outbreaker2_cpp_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {

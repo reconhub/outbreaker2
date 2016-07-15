@@ -5,6 +5,10 @@ copy_values <- function(a, b) {
     invisible(.Call('outbreaker2_copy_values', PACKAGE = 'outbreaker2', a, b))
 }
 
+cpp.are.possible.ancestors <- function(t_inf, i) {
+    .Call('outbreaker2_cpp_are_possible_ancestors', PACKAGE = 'outbreaker2', t_inf, i)
+}
+
 cpp.ll.genetic <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i)
 }

@@ -1,4 +1,9 @@
-#include <Rcpp.h>
+// #include <Rcpp.h>
+
+// // [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadilloExtensions/sample.h>
+
+
 
 /*
   This function copies the content if the vector 'a' into the vector 'b'; it throws an error if
@@ -43,38 +48,58 @@ are.possible.alpha <- function(t.inf, i) {
 
 */
 
-
-// [[Rcpp::export]]
-std::vector<int> whatever(Rcpp::IntegerVector x) {
-  size_t n = x.size();
-  std::vector<int> foo;
-  foo.reserve(n);
-  for (size_t i; i < n; ++i) {
-    if (condition(x[i])) {
-      foo.push_back(x[i]);
+// [[Rcpp::export("cpp.are.possible.ancestors")]]
+Rcpp::IntegerVector cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i) {
+  size_t j = 0, n = t_inf.size();
+  std::vector<int> out;
+  out.reserve(n);
+  for (j; j < n; j++) {
+    if (t_inf[j] < t_inf[i]) {
+      out.push_back(j);
     }
   }
-  return foo;
+  return Rcpp::wrap(out);
 }
 
-Rcpp::IntegerVector whatever(Rcpp::IntegerVector x) {
-  size_t n = x.size();
-  std::vector<bool> idx(n);
-  size_t m = 0;
-  for (size_t i = 0; i < n; ++i) {
-    if (condition(x[i])) {
-      ++m;
-      idx[i] = true;
-    }
-  }
-  Rcpp::IntegerVector foo(m);
-  for (size_t i = 0, j = 0; i < n; ++i) {
-    if (idx[i]) {
-      foo[j++] = x[i];
-    }
-  }
-  return foo;
+
+// [[Rcpp::export("cpp.propose.alpha")
+size_t propose_alpha(Rcpp::IntegerVector possible_alpha) {
+  return as<size_t>(RcppArmadillo::sample(possible_alpha, 1, false));
 }
+
+
+
+// // [[Rcpp::export]]
+// std::vector<int> whatever(Rcpp::IntegerVector x) {
+//   size_t n = x.size();
+//   std::vector<int> foo;
+//   foo.reserve(n);
+//   for (size_t i; i < n; ++i) {
+//     if (condition(x[i])) {
+//       foo.push_back(x[i]);
+//     }
+//   }
+//   return foo;
+// }
+
+// Rcpp::IntegerVector whatever(Rcpp::IntegerVector x) {
+//   size_t n = x.size();
+//   std::vector<bool> idx(n);
+//   size_t m = 0;
+//   for (size_t i = 0; i < n; ++i) {
+//     if (condition(x[i])) {
+//       ++m;
+//       idx[i] = true;
+//     }
+//   }
+//   Rcpp::IntegerVector foo(m);
+//   for (size_t i = 0, j = 0; i < n; ++i) {
+//     if (idx[i]) {
+//       foo[j++] = x[i];
+//     }
+//   }
+//   return foo;
+// }
 
 
 

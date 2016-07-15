@@ -17,6 +17,10 @@ cpp.pick.possible.ancestor <- function(t_inf, i) {
     .Call('outbreaker2_cpp_pick_possible_ancestor', PACKAGE = 'outbreaker2', t_inf, i)
 }
 
+cpp.find.descendents <- function(alpha, i) {
+    .Call('outbreaker2_cpp_find_descendents', PACKAGE = 'outbreaker2', alpha, i)
+}
+
 cpp.ll.genetic <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i)
 }

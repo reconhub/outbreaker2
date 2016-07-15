@@ -52,6 +52,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// cpp_find_descendents
+Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i);
+RcppExport SEXP outbreaker2_cpp_find_descendents(SEXP alphaSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< size_t >::type i(iSEXP);
+    __result = Rcpp::wrap(cpp_find_descendents(alpha, i));
+    return __result;
+END_RCPP
+}
 // cpp_ll_genetic
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i);
 RcppExport SEXP outbreaker2_cpp_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {

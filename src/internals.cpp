@@ -106,6 +106,38 @@ size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i ) {
 
 
 
+
+/*
+   This function returns the descendents of a given case 'i' in the current ancestries.
+
+   Original R version:
+
+find.descendents <- function(param, i) {
+    ## find descendents
+    which(param$current.alpha==i)
+}
+
+
+*/
+// [[Rcpp::export(cpp.find.descendents)]]
+Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
+  Rcpp::LogicalVector descend_from_i = alpha==i;
+  size_t n = sum(descend_from_i), counter=0;
+  Rcpp::IntegerVector out(n);
+
+  for (size_t j = 0; j < alpha.size(); j++) {
+    if (descend_from_i[j]) {
+      out[counter++] = j;
+    }
+  }
+  return out;
+}
+
+
+
+
+
+
 // // [[Rcpp::export]]
 // std::vector<int> whatever(Rcpp::IntegerVector x) {
 //   size_t n = x.size();
@@ -138,25 +170,6 @@ size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i ) {
 //   return foo;
 // }
 
-
-
-
-
-/*
-   This function returns the descendents of a given case 'i' in the current ancestries.
-
-   Original R version:
-
-find.descendents <- function(param, i) {
-    ## find descendents
-    which(param$current.alpha==i)
-}
-
-
-*/
-// Rcpp::IntegerVector find_descendents(Rcpp::IntegerVector alpha, size_t i) {
-//   return match(alpha, i);
-// }
 
 
 

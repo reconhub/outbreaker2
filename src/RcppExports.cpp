@@ -29,6 +29,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// cpp_sample1
+size_t cpp_sample1(Rcpp::IntegerVector x);
+RcppExport SEXP outbreaker2_cpp_sample1(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type x(xSEXP);
+    __result = Rcpp::wrap(cpp_sample1(x));
+    return __result;
+END_RCPP
+}
 // cpp_ll_genetic
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i);
 RcppExport SEXP outbreaker2_cpp_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {

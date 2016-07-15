@@ -1,8 +1,8 @@
-// #include <Rcpp.h>
 
-// // [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
 #include <RcppArmadilloExtensions/sample.h>
-
 
 
 /*
@@ -62,9 +62,17 @@ Rcpp::IntegerVector cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t
 }
 
 
-// [[Rcpp::export("cpp.propose.alpha")
-size_t propose_alpha(Rcpp::IntegerVector possible_alpha) {
-  return as<size_t>(RcppArmadillo::sample(possible_alpha, 1, false));
+// [[Rcpp::export("cpp.sampl1")]]
+size_t cpp_sample1(Rcpp::IntegerVector x) {
+  if (x.size() < 1) {
+    Rcpp::Rcerr << "Trying to sample from empty vector" << std::endl;
+    Rcpp::stop("Trying to sample from empty vector");
+  }
+
+ return Rcpp::as<size_t>(Rcpp::RcppArmadillo::sample(x,
+						      1,
+						      false,
+						      Rcpp::NumericVector::create()));
 }
 
 

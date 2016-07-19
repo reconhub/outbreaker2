@@ -125,15 +125,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_move_mu
-void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config);
+Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config);
 RcppExport SEXP outbreaker2_cpp_move_mu(SEXP dataSEXP, SEXP paramSEXP, SEXP configSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
-    cpp_move_mu(data, param, config);
-    return R_NilValue;
+    __result = Rcpp::wrap(cpp_move_mu(data, param, config));
+    return __result;
 END_RCPP
 }
 // cpp_move_t_inf

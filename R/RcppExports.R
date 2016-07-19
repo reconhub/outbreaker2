@@ -42,7 +42,7 @@ cpp.ll.all <- function(data, param, i) {
 }
 
 cpp.move.mu <- function(data, param, config) {
-    invisible(.Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config))
+    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config)
 }
 
 cpp.move.t.inf <- function(data, param) {

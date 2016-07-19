@@ -16,9 +16,10 @@
 */
 
 // [[Rcpp::export("cpp.move.mu", rng = true)]]
-void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
-  Rcpp::NumericVector mu = param["mu"]; // pointer to param.current$mu
-  Rcpp::NumericVector new_mu = clone(mu); // new vector
+Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+  Rcpp::List new_param = clone(param); // deep copy here for now, ultimately should be an arg.
+  Rcpp::NumericVector mu = param["mu"];
+  Rcpp::NumericVector new_mu = new_param["mu"];
 
   double sd_mu = static_cast<double>(config["sd.mu"]);
 
@@ -30,9 +31,10 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // proposal (normal distribution with SD: config$sd.mu)
   new_mu[0] += R::rnorm(0, sd_mu); // new proposed value
 
+
   // loglike with current value
-  param["mu"] = new_mu;
-  new_loglike = cpp_ll_genetic(data, param, R_NilValue);
+  new_param["mu"] = new_mu;
+  new_loglike = cpp_ll_genetic(data, new_param, R_NilValue);
 
   // acceptance term
   p_accept = exp(new_loglike - old_loglike);
@@ -40,8 +42,11 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // acceptance: the new value is already in mu, so we only act if the move is rejected, in
   // which case we restore the previous ('old') value
   if (p_accept < unif_rand()) { // reject new values
-    param["mu"] = mu;
+    new_mu[0] = mu[0];
+    new_param["mu"] = new_mu;
   }
+
+  return new_param;
 }
 
 

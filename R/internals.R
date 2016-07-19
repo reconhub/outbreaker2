@@ -248,24 +248,6 @@ select.alpha.to.move <- function(param, config) {
 }
 
 
-## which cases are possible ancestors for a case 'i'
-are.possible.alpha <- function(t.inf, i) {
-    if (length(i)>1) {
-        stop("i has a length > 1")
-    }
-    if (any(t.inf[i]==min(t.inf))) {
-        return(NA)
-    }
-    return(which(t.inf < t.inf[i[1]]))
-}
-
-
-## choose one possible ancestor for a case 'i'
-choose.possible.alpha <- function(t.inf, i) {
-    return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
-}
-
-
 
 ## swaps ancestries in the tree
 ## x-> i becomes i->x
@@ -543,3 +525,25 @@ add.convolutions <- function(data, config) {
         }
     }
 }
+
+
+
+
+
+## which cases are possible ancestors for a case 'i'
+.are.possible.alpha <- function(t.inf, i) {
+    if (length(i)>1) {
+        stop("i has a length > 1")
+    }
+    if (any(t.inf[i]==min(t.inf))) {
+        return(NA)
+    }
+    return(which(t.inf < t.inf[i[1]]))
+}
+
+
+## choose one possible ancestor for a case 'i'
+.choose.possible.alpha <- function(t.inf, i) {
+    return(sample(.are.possible.alpha(t.inf=t.inf, i=i), 1))
+}
+

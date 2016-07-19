@@ -16,7 +16,6 @@ Depends:
     R (>= 3.0.0)
 Imports:
     Rcpp,
-    RcppArmadillo,
     ape,
     ggplot2,
     grDevices,
@@ -25,6 +24,5 @@ Imports:
     visNetwork
 LazyData: true
 LinkingTo:
-    Rcpp, 
-    RcppArmadillo
+    Rcpp
 RoxygenNote: 5.0.1

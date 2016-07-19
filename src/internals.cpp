@@ -1,27 +1,5 @@
 
-// [[Rcpp::depends(RcppArmadillo)]]
-#include <RcppArmadillo.h>
-#include <RcppArmadilloExtensions/sample.h>
-
-
-/*
-  This function copies the content if the vector 'a' into the vector 'b'; it throws an error if
- the sizes of the vectors don't match.
-*/
-
-// [[Rcpp::export]]
-void copy_values(Rcpp::IntegerVector a, Rcpp::IntegerVector b) {
-  size_t N = a.size(), i = 0;
-
-  if (N != b.size()) {
-    Rcpp::Rcerr << "Trying to copy vectors of different sizes: " << N << " vs " << b.size() << std::endl;
-    Rcpp::stop("Error copying vectors (sizes differ)");
-  }
-
-  for (i = 0; i <  N; i++) {
-    b[i] = a[i];
-  }
-}
+#include <Rcpp.h>
 
 
 
@@ -48,7 +26,7 @@ are.possible.alpha <- function(t.inf, i) {
 */
 
 // [[Rcpp::export("cpp.are.possible.ancestors")]]
-Rcpp::IntegerVector cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i) {
+std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i) {
   size_t j = 0, n = t_inf.size();
   std::vector<int> out;
   out.reserve(n);
@@ -57,7 +35,7 @@ Rcpp::IntegerVector cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t
       out.push_back(j);
     }
   }
-  return Rcpp::wrap(out);
+  return out;
 }
 
 
@@ -66,18 +44,14 @@ Rcpp::IntegerVector cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t
   This function samples a single value from a vector of integers.
 */
 // [[Rcpp::export("cpp.sample1")]]
-size_t cpp_sample1(Rcpp::IntegerVector x) {
+size_t cpp_sample1(std::vector<int> x) {
   if (x.size() < 1) {
     Rcpp::Rcerr << "Trying to sample from empty vector" << std::endl;
     Rcpp::stop("Trying to sample from empty vector");
   }
 
- return Rcpp::as<size_t>(Rcpp::RcppArmadillo::sample(x,
-						      1,
-						      false,
-						      Rcpp::NumericVector::create()));
+  return x[unif_rand() * x.size()];
 }
-
 
 
 
@@ -87,19 +61,15 @@ size_t cpp_sample1(Rcpp::IntegerVector x) {
 
    Original R version:
 
-choose.possible.alpha <- function(t.inf, i) {
+.choose.possible.alpha <- function(t.inf, i) {
     return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
 }
 
 */
 
 // [[Rcpp::export("cpp.pick.possible.ancestor")]]
-size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i ) {
-  Rcpp::IntegerVector choices = cpp_are_possible_ancestors(t_inf, i);
-  // if (choices.size() < 1) {
-  //   return  NA_INTEGER;
-  // }
-  return cpp_sample1(choices);
+size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
+  return cpp_sample1(cpp_are_possible_ancestors(t_inf, i));
 }
 
 
@@ -132,6 +102,12 @@ Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
   }
   return out;
 }
+
+
+
+
+
+
 
 
 
@@ -232,3 +208,28 @@ swap.cases <- function(param, config, i) {
 }
 
 */
+
+
+
+
+
+
+
+// /*
+//   This function copies the content if the vector 'a' into the vector 'b'; it throws an error if
+//  the sizes of the vectors don't match.
+// */
+
+// // [[Rcpp::export]]
+// void copy_values(Rcpp::IntegerVector a, Rcpp::IntegerVector b) {
+//   size_t N = a.size(), i = 0;
+
+//   if (N != b.size()) {
+//     Rcpp::Rcerr << "Trying to copy vectors of different sizes: " << N << " vs " << b.size() << std::endl;
+//     Rcpp::stop("Error copying vectors (sizes differ)");
+//   }
+
+//   for (i = 0; i <  N; i++) {
+//     b[i] = a[i];
+//   }
+// }

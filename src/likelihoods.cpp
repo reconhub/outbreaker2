@@ -62,6 +62,12 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 }
 
 
+double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i) {
+  return cpp_ll_genetic(data, param, Rcpp::wrap(i));
+}
+
+
+
 
 
 
@@ -118,6 +124,11 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 }
 
 
+double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i) {
+  return cpp_ll_timing_infections(data, param, Rcpp::wrap(i));
+}
+
+
 
 
 
@@ -162,6 +173,12 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   return out;
 }
+
+
+double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i) {
+  return cpp_ll_timing_sampling(data, param, Rcpp::wrap(i));
+}
+
 
 
 
@@ -210,6 +227,13 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
 }
 
 
+double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i) {
+  return cpp_ll_reporting(data, param, Rcpp::wrap(i));
+}
+
+
+
+
 
 
 
@@ -227,6 +251,9 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i) {
     cpp_ll_timing_sampling(data, param, i);
 }
 
+double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i) {
+  return cpp_ll_timing(data, param, Rcpp::wrap(i));
+}
 
 
 
@@ -251,3 +278,7 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i) {
     cpp_ll_reporting(data, param, i);
 }
 
+
+double cpp_ll_all(Rcpp::List data, Rcpp::List param, size_t i) {
+  return cpp_ll_all(data, param, Rcpp::wrap(i));
+}

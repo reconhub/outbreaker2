@@ -80,14 +80,14 @@ make.move.alpha <- function(config, densities) {
         ## move all ancestries that should be moved
         for (i in to.move) {
             ## propose new ancestor
-            new.param$current.alpha[i] <- choose.possible.alpha(param$current.t.inf, i)
+            new.param$current.alpha[i] <- .choose.possible.alpha(param$current.t.inf, i)
 
             ## compute log ratio
             logratio <-  densities$loglike$all(new.param) - densities$loglike$all(param)
 
             ## compute correction factor
-            logratio <- logratio + log(sum(are.possible.alpha(new.param$current.t.inf, i))) -
-                log(sum(are.possible.alpha(param$current.t.inf, i)))
+            logratio <- logratio + log(sum(.are.possible.alpha(new.param$current.t.inf, i))) -
+                log(sum(.are.possible.alpha(param$current.t.inf, i)))
 
             ## accept/reject
             if (logratio >= log(stats::runif(1))) {

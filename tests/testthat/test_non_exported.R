@@ -1,26 +1,26 @@
 context("Test non-exported functions")
 
 
-## test choose.possible.alpha ##
-test_that("test: choose.possible.alpha", {
+## test .choose.possible.alpha ##
+test_that("test: .choose.possible.alpha", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## get data
-    ans1 <- outbreaker2:::choose.possible.alpha(1:10, 1)
-    ans2 <- outbreaker2:::choose.possible.alpha(1:10, 10)
-    ans3 <- outbreaker2:::choose.possible.alpha(1:10, 2)
-    ans4 <- outbreaker2:::are.possible.alpha(1:10, 5)
-    ans5 <- outbreaker2:::are.possible.alpha(c(1:4, 1:3, 1), 2)
-    ans6 <- outbreaker2:::are.possible.alpha(1:10, 1)
+    ans1 <- outbreaker2:::.choose.possible.alpha(1:10, 1)
+    ans2 <- outbreaker2:::.choose.possible.alpha(1:10, 10)
+    ans3 <- outbreaker2:::.choose.possible.alpha(1:10, 2)
+    ans4 <- outbreaker2:::.are.possible.alpha(1:10, 5)
+    ans5 <- outbreaker2:::.are.possible.alpha(c(1:4, 1:3, 1), 2)
+    ans6 <- outbreaker2:::.are.possible.alpha(1:10, 1)
 
     ## check output
     expect_true(is.na(ans1))
     expect_is(ans2, "integer")
     expect_true(ans2<10 || ans2>0)
     expect_equal(ans3, 1L)
-    expect_error(choose.possible.alpha(1:10, NA),
+    expect_error(.choose.possible.alpha(1:10, NA),
                  "missing value where TRUE/FALSE needed")
     expect_equal(ans4, 1:4)
     expect_equal(ans5, c(1,5,8))

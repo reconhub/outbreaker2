@@ -147,14 +147,14 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
     if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
 
       // loglike with current value
-      old_loglike = cpp_ll_all(data, param, i);
+      old_loglike = cpp_ll_all(data, param, R_NilValue);
 
       // proposal (+/- 1)
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value (on scale 1 ... N)
 
       // loglike with current value
       new_param["alpha"] = new_alpha;
-      new_loglike = cpp_ll_all(data, new_param, i);
+      new_loglike = cpp_ll_all(data, new_param, R_NilValue);
 
       // acceptance term
       p_accept = exp(new_loglike - old_loglike);

@@ -61,10 +61,10 @@ make.move.t.inf <- function(config, densities) {
 
 make.move.alpha <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
-    .move.alpha(config, densities)
-    ## function(param) {
-    ##     cpp.move.alpha(data, param)
-    ## }
+    ## .move.alpha(config, densities)
+    function(param) {
+        cpp.move.alpha(data, param)
+    }
 }
 
 

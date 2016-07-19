@@ -135,7 +135,7 @@ test_that("convergence to decent results for toy example, DNA + time", {
     out.with.import.smry <- summary(out.with.import, burnin=1000)
     out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
     dat$ances[is.na(dat$ances)] <- 0
-    expect_true(min(out.with.import.smry$post) > -440) # approx log post values
+    expect_true(min(out.with.import.smry$post) > -460) # approx log post values
     expect_true(mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE) >= .80) # at least 80% ancestries correct
     expect_true(mean(abs(out.with.import.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 

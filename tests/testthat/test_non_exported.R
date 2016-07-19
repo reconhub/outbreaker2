@@ -41,7 +41,7 @@ test_that("Auxiliary functions for ancestries are working", {
     config <- outbreaker.config(init.tree=alpha, init.t.inf=t.inf, data=data)
     config2 <- config
     config2$move.alpha <- c(rep(TRUE,4),FALSE, TRUE)
-    param <- outbreaker.create.mcmc(config=config, data=data)
+    param <- outbreaker.create.mcmc(config=config, data=data)$current
 
     ## test can be alpha
     expect_equal(can.move.alpha(param, config), c(TRUE, FALSE,rep(TRUE,4)))
@@ -107,7 +107,7 @@ test_that("Testing find.descendents", {
     ## generate data
     data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    param <- outbreaker.create.mcmc(data=data, config=config)
+    param <- outbreaker.create.mcmc(data=data, config=config)$current
 
     ## tests
     expect_equal(find.descendents(param, 1), c(2,4,28))
@@ -127,7 +127,6 @@ test_that("Testing add.convolutions", {
     data(fake.outbreak)
     data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
-    param <- outbreaker.create.mcmc(data=data, config=config)
 
     out <- add.convolutions(data=data, config=config)
 

@@ -6,7 +6,7 @@ context("Test prior functions")
 test_that("create.priors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate data
     config <- outbreaker.config()
@@ -37,12 +37,12 @@ test_that("create.priors gives expected results", {
 test_that("priors have expected values", {
     ## skip on CRAN
     skip_on_cran()
-    
+
 
     ## generate inputs
     config <- outbreaker.config()
     param <- outbreaker.create.mcmc(config,
-                                    data=outbreaker.data())
+                                    data=outbreaker.data())$current
 
     priors <- create.priors(config)
 

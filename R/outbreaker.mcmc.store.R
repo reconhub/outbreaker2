@@ -24,10 +24,10 @@ outbreaker.mcmc.store <- function(param.current, param.store, densities, step) {
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
     param.store$like[counter] <- densities$loglike$all(param)
     param.store$prior[counter] <- densities$priors$all(param)
-    param.store$post[counter] <- param$like[counter] + param$prior[counter]
+    param.store$post[counter] <- param.store$like[counter] + param.store$prior[counter]
 
     ## PARAMETERS AND AUGMENTED DATA
-    param.store$mu[counter] <- param$mu
+    param.store$mu[counter] <- param.current$mu
     param.store$alpha[[counter]] <- param.current$alpha
     param.store$t.inf[[counter]] <- param.current$t.inf
     param.store$kappa[[counter]] <- param.current$kappa

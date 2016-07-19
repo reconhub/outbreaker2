@@ -13,7 +13,7 @@ test_that("parameters and augmented data move", {
     config.no.move <- outbreaker.config(data=data, move.alpha=FALSE, move.t.inf=FALSE,
                                         move.mu=FALSE, move.pi=FALSE, move.kappa=FALSE)
     data <- add.convolutions(data=data, config=config)
-    param <- outbreaker.create.mcmc(data=data, config=config)
+    param <- outbreaker.create.mcmc(data=data, config=config)$current
     ll <- create.loglike(data)
     priors <- create.priors(config)
     post <- create.posteriors(ll, priors)

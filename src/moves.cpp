@@ -17,7 +17,7 @@
 
 // [[Rcpp::export("cpp.move.mu", rng = true)]]
 void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
-  Rcpp::NumericVector mu = param["current.mu"]; // pointer to param.current$mu
+  Rcpp::NumericVector mu = param["mu"]; // pointer to param.current$mu
   Rcpp::NumericVector new_mu = clone(mu); // new vector
 
   double sd_mu = static_cast<double>(config["sd.mu"]);
@@ -31,7 +31,7 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   new_mu[0] += R::rnorm(0, sd_mu); // new proposed value
 
   // loglike with current value
-  param["current.mu"] = new_mu;
+  param["mu"] = new_mu;
   new_loglike = cpp_ll_genetic(data, param, R_NilValue);
 
   // acceptance term
@@ -40,7 +40,7 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // acceptance: the new value is already in mu, so we only act if the move is rejected, in
   // which case we restore the previous ('old') value
   if (p_accept < unif_rand()) { // reject new values
-    param["current.mu"] = mu;
+    param["mu"] = mu;
   }
 }
 
@@ -62,13 +62,13 @@ void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   Notes
   - when computing the timing log-likelihood, the descendents of each case are also affected.
   - we generate a new vector 'new_t_inf', which will replace the previous pointer defining 
-  param["current.t.inf"].
+  param["t.inf"].
 
 */
 
 // [[Rcpp::export("cpp.move.t.inf", rng = true)]]
 void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
-  Rcpp::IntegerVector t_inf = param["current.t.inf"]; // pointer to param$t_inf
+  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_t_inf = clone(t_inf); // new vector
 
   size_t N = static_cast<size_t>(data["N"]);
@@ -90,7 +90,7 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // loglike with current value
     // new_loglike = cpp_ll_timing(data, param, i); // term for case 'i'
     // new_loglike = cpp_ll_timing(data, param, find_descendents(i)); // term descendents of 'i'
-    param["current.t.inf"] = new_t_inf;
+    param["t.inf"] = new_t_inf;
     new_loglike = cpp_ll_timing(data, param, R_NilValue);
 
     // acceptance term
@@ -100,13 +100,13 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // which case we restore the previous ('old') value
     if (p_accept < unif_rand()) { // reject new values
       new_t_inf[i] = t_inf[i];
-      param["current.t.inf"] = t_inf;
+      param["t.inf"] = t_inf;
     }
   }
 
   // as we haven't touched the content of t_inf, and all new values are in new_t_inf, we need to
   // make sure this new vector replaces the previous one
-  param["current.t.inf"] = new_t_inf;
+  param["t.inf"] = new_t_inf;
 }
 
 
@@ -126,9 +126,9 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 // [[Rcpp::export("cpp.move.alpha", rng = true)]]
 Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
   Rcpp::List new_param = clone(param);
-  Rcpp::IntegerVector alpha = param["current.alpha"]; // pointer to param$t_inf
-  Rcpp::IntegerVector t_inf = param["current.t.inf"]; // pointer to param$t_inf
-  Rcpp::IntegerVector new_alpha = new_param["current.alpha"];
+  Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$t_inf
+  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
+  Rcpp::IntegerVector new_alpha = new_param["alpha"];
 
   size_t N = static_cast<size_t>(data["N"]);
 
@@ -148,7 +148,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value (on scale 1 ... N)
 
       // loglike with current value
-      new_param["current.alpha"] = new_alpha;
+      new_param["alpha"] = new_alpha;
       new_loglike = cpp_ll_all(data, new_param, i);
 
       // acceptance term
@@ -158,7 +158,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       // which case we restore the previous ('old') value
       if (p_accept < unif_rand()) { // reject new values
 	new_alpha[i] = alpha[i];
-	new_param["current.alpha"] = new_alpha;
+	new_param["alpha"] = new_alpha;
       }
     }
   }

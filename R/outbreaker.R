@@ -87,8 +87,12 @@ outbreaker <- function(data = outbreaker.data(),
     ## then computing the average 'global influence' (-loglike) of each data point, identifying
     ## outliers (based on fixed threshold) and marking outliers down as 'imported cases'.
 
-    temp <- outbreaker.find.imports(moves=moves, data=data, param=param, config=config,
-                                    densities=densities)
+    temp <- outbreaker.find.imports(moves = moves,
+                                    data = data,
+                                    param.current = param.current,
+                                    param.store = param.store,
+                                    config = config,
+                                    densities = densities)
     param.current <- temp$param.current
     param.store <- temp$param.store
     config <- temp$config
@@ -99,7 +103,8 @@ outbreaker <- function(data = outbreaker.data(),
                                    data = data,
                                    param.current = param.current,
                                    param.store = param.store,
-                                   config = config, densities = densities)
+                                   config = config,
+                                   densities = densities)
 
 
     ## SHAPE RESULTS ##

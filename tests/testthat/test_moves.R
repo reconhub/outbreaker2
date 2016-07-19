@@ -31,8 +31,8 @@ test_that("parameters and augmented data move", {
     ## test moves ##
     for (i in seq_along(moves)) {
         ## test closures
-        identical(environment(moves[[i]])$config, config)
-        identical(environment(moves[[i]])$densities, densities)
+        expect_identical(environment(moves[[i]])$config, config)
+        expect_identical(environment(moves[[i]])$densities, densities)
 
         ## make moves
         set.seed(1)

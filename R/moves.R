@@ -26,11 +26,11 @@
 
 make.move.mu <- function(config, densities) {
     data <- environment(densities$loglike$genetic)$data
-    ## .move.mu(config, densities) # uncomment for pure R version
-    function(param) {
-        cpp.move.mu(data, param, config)
-        return(param)
-    }
+    .move.mu(config, densities) # uncomment for pure R version
+    ## function(param) {
+    ##     cpp.move.mu(data, param, config)
+    ##     return(param)
+    ## }
 }
 
 
@@ -43,10 +43,11 @@ make.move.mu <- function(config, densities) {
 
 make.move.t.inf <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
-    function(param) {
-        cpp.move.t.inf(data, param)
-        return(param)
-    }
+    .move.t.inf(config, densities)
+    ## function(param) {
+    ##     cpp.move.t.inf(data, param)
+    ##     return(param)
+    ## }
 }
 
 

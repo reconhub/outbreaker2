@@ -23,7 +23,7 @@ outbreaker.move <- function(moves, data, param.current, param.store, config, den
         ## move parameters / augmented data
         for (j in seq_len(J)) {
             ## move parameters
-            param.current <- moves[[j]](param=param.current)
+            param.current <- moves[[j]](param.current)
 
             ## safemode
             if (config$paranoid) {
@@ -39,7 +39,6 @@ outbreaker.move <- function(moves, data, param.current, param.store, config, den
 
         ## store outputs if needed
         if ((i %% config$sample.every) == 0) {
-            param.current$counter <- param.current$counter + 1
             param.store <- outbreaker.mcmc.store(param.current, param.store, densities, i)
         }
 

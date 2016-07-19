@@ -37,12 +37,12 @@ outbreaker.create.mcmc <- function(data, config) {
     out <- list(store = list(
                 size = size, step = step,
                 post = post, like = like, prior = prior,
-                alpha = alpha, t.inf = t.inf, mu = mu, kappa = kappa, pi = pi
+                alpha = alpha, t.inf = t.inf, mu = mu, kappa = kappa, pi = pi,
+                counter = counter
                 ),
                 current = list(
                 alpha = current.alpha, t.inf = current.t.inf, mu = current.mu,
-                kappa = current.kappa, pi = current.pi,
-                counter = counter
+                kappa = current.kappa, pi = current.pi
                 )
                 )
     return(out)

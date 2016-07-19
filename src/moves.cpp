@@ -72,9 +72,10 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 */
 
 // [[Rcpp::export("cpp.move.t.inf", rng = true)]]
-void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
-  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
-  Rcpp::IntegerVector new_t_inf = clone(t_inf); // new vector
+Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
+  Rcpp::List new_param = clone(param); // deep copy here for now, ultimately should be an arg.
+  Rcpp::NumericVector t_inf = param["t.inf"];
+  Rcpp::NumericVector new_t_inf = new_param["t.inf"];
 
   size_t N = static_cast<size_t>(data["N"]);
 
@@ -95,8 +96,8 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // loglike with current value
     // new_loglike = cpp_ll_timing(data, param, i); // term for case 'i'
     // new_loglike = cpp_ll_timing(data, param, find_descendents(i)); // term descendents of 'i'
-    param["t.inf"] = new_t_inf;
-    new_loglike = cpp_ll_timing(data, param, R_NilValue);
+    new_param["t.inf"] = new_t_inf;
+    new_loglike = cpp_ll_timing(data, new_param, R_NilValue);
 
     // acceptance term
     p_accept = exp(new_loglike - old_loglike);
@@ -105,13 +106,12 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // which case we restore the previous ('old') value
     if (p_accept < unif_rand()) { // reject new values
       new_t_inf[i] = t_inf[i];
-      param["t.inf"] = t_inf;
+      new_param["t.inf"] = t_inf;
     }
   }
 
-  // as we haven't touched the content of t_inf, and all new values are in new_t_inf, we need to
-  // make sure this new vector replaces the previous one
-  param["t.inf"] = new_t_inf;
+  return new_param;
+
 }
 
 

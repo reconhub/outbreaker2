@@ -138,14 +138,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_move_t_inf
-void cpp_move_t_inf(Rcpp::List data, Rcpp::List param);
+Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param);
 RcppExport SEXP outbreaker2_cpp_move_t_inf(SEXP dataSEXP, SEXP paramSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
-    cpp_move_t_inf(data, param);
-    return R_NilValue;
+    __result = Rcpp::wrap(cpp_move_t_inf(data, param));
+    return __result;
 END_RCPP
 }
 // cpp_move_alpha

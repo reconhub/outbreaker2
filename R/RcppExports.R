@@ -46,7 +46,7 @@ cpp.move.mu <- function(data, param, config) {
 }
 
 cpp.move.t.inf <- function(data, param) {
-    invisible(.Call('outbreaker2_cpp_move_t_inf', PACKAGE = 'outbreaker2', data, param))
+    .Call('outbreaker2_cpp_move_t_inf', PACKAGE = 'outbreaker2', data, param)
 }
 
 cpp.move.alpha <- function(data, param) {

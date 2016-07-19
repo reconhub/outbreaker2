@@ -42,10 +42,10 @@ make.move.mu <- function(config, densities) {
 
 make.move.t.inf <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
-    .move.t.inf(config, densities)
-    ## function(param) {
-    ##     cpp.move.t.inf(data, param)
-    ## }
+    ## .move.t.inf(config, densities)
+    function(param) {
+        cpp.move.t.inf(data, param)
+    }
 }
 
 

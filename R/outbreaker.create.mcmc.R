@@ -40,8 +40,8 @@ outbreaker.create.mcmc <- function(data, config) {
                 alpha = alpha, t.inf = t.inf, mu = mu, kappa = kappa, pi = pi
                 ),
                 current = list(
-                current.alpha = current.alpha, current.t.inf = current.t.inf, current.mu = current.mu,
-                current.kappa = current.kappa, current.pi = current.pi,
+                alpha = current.alpha, t.inf = current.t.inf, mu = current.mu,
+                kappa = current.kappa, pi = current.pi,
                 counter = counter
                 )
                 )

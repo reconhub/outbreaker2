@@ -11,7 +11,9 @@ test_that("Test detection of imported cases", {
     data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     data <- add.convolutions(data=data, config=config)
-    param <- outbreaker.create.mcmc(data=data, config=config)
+    temp <- outbreaker.create.mcmc(data=data, config=config)
+    param.current <- temp$current
+    param.store <- temp$store
 
     ll <- create.loglike(data)
     priors <- create.priors(config)
@@ -21,8 +23,10 @@ test_that("Test detection of imported cases", {
     moves <- create.moves(config=config, densities=densities)
 
     ## detect imported cases
-    out <- outbreaker.find.imports(moves=moves, data=data, param=param,
-                                   config=config, densities=densities)
+    out <- outbreaker.find.imports(moves = moves, data = data,
+                                   param.current = param.current,
+                                   param.store = param.store,
+                                   config = config, densities = densities)
 
     ## tests ##
     expect_identical(which(!out$config$move.alpha), which(!out$config$move.kappa))

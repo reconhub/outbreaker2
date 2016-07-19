@@ -11,12 +11,14 @@
 outbreaker.find.imports <- function(moves, data, param.current, param.store, config, densities) {
     ## send back unchanged chains if config disabled the detection of imported cases ##
     if (!config$find.import) {
-        return(list(config=config, param=param.current))
+        return(list(config = config,
+                    param.current = param.current,
+                    param.store = param.store))
     }
 
 
     ## store initial param values ##
-    ini.param <- c(current=param.current, store=param.store)
+    ini.param <- list(current=param.current, store=param.store)
 
     ## get number of moves ##
     J <- length(moves)

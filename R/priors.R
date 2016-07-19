@@ -18,7 +18,7 @@
 make.prior.mu <- function(config) {
     rate <- config$prior.mu
     function(param) {
-        stats::dexp(param$current.mu, rate, log=TRUE)
+        stats::dexp(param$mu, rate, log=TRUE)
     }
 } 
 
@@ -32,7 +32,7 @@ make.prior.pi <- function(config) {
     shape1 <- config$prior.pi[1]
     shape2 <- config$prior.pi[2]
     function(param) {
-        stats::dbeta(param$current.pi, shape1, shape2, log=TRUE)
+        stats::dbeta(param$pi, shape1, shape2, log=TRUE)
     }
 }
 

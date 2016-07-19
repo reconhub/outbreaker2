@@ -57,122 +57,122 @@ ralpha <- function(t.inf) {
 
 ## checks are only sure for the 'current' state
 ##
-look.for.trouble <- function(param, data) {
+look.for.trouble <- function(param.current, param.store, data) {
     ## PREPARE OUTPUT ##
     out <- list(pass=TRUE, msg=NULL)
 
 
     ## LIEKLIHOOD / POSTERIOR / PRIOR
     ## look for NAs in loglike / post / prior
-    if (any(is.na(param$post))) {
+    if (any(is.na(param.store$post))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "NA detected in posterior values (param$post)")
+        out$msg <- c(out$msg, "NA detected in posterior values (param.store$post)")
     }
-    if (any(is.na(param$like))) {
+    if (any(is.na(param.store$like))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "NA detected in likelihood values (param$like)")
+        out$msg <- c(out$msg, "NA detected in likelihood values (param.store$like)")
     }
-    if (any(is.na(param$prior))) {
+    if (any(is.na(param.store$prior))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "NA detected in prior values (param$prior)")
+        out$msg <- c(out$msg, "NA detected in prior values (param.store$prior)")
     }
 
     ## look for NAs in loglike / post / prior
-    if (!all(is.finite(param$post))) {
+    if (!all(is.finite(param.store$post))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "non-finite posterior values detected (param$post)")
+        out$msg <- c(out$msg, "non-finite posterior values detected (param.store$post)")
     }
-    if (!all(is.finite(param$like))) {
+    if (!all(is.finite(param.store$like))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "non-finite likelihood values detected (param$like)")
+        out$msg <- c(out$msg, "non-finite likelihood values detected (param.store$like)")
     }
-    if (!all(is.finite(param$prior))) {
+    if (!all(is.finite(param.store$prior))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "non-finite prior values detected (param$prior)")
+        out$msg <- c(out$msg, "non-finite prior values detected (param.store$prior)")
     }
 
 
     ## CHECKS ON MU ##
     ## check that mu > 0
-    if (param$current.mu<0) {
+    if (param.current$mu<0) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "mu has a negative value:", param$current.mu)
+        out$msg <- c(out$msg, "mu has a negative value:", param.current$mu)
     }
 
     ## check if mu is NA
-    if (is.na(param$current.mu)) {
+    if (is.na(param.current$mu)) {
         out$pass <- FALSE
         out$msg <- c(out$msg, "mu is NA")
     }
 
     ## check if mu is finite
-    if (!is.finite(param$current.mu)) {
+    if (!is.finite(param.current$mu)) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "mu is not finite and equals:", param$current.mu)
+        out$msg <- c(out$msg, "mu is not finite and equals:", param.current$mu)
     }
 
     ## check if mu is numeric
-    if (!is.numeric(param$current.mu)) {
+    if (!is.numeric(param.current$mu)) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "mu is not numeric and equals:", param$current.mu)
+        out$msg <- c(out$msg, "mu is not numeric and equals:", param.current$mu)
     }
 
 
     ## ANCESTRIES ##
     ## look for new imported cases (should not happen)
-    if (!identical(is.na(param$alpha[[1]]), is.na(param$current.alpha))) {
+    if (!identical(is.na(param.store$alpha[[1]]), is.na(param.current$alpha))) {
         out$pass <- FALSE
         out$msg <- c(out$msg, "imported cases have changed")
     }
 
     ## look for negative ancestries
-    if (any(param$current.alpha<1,na.rm=TRUE)) {
+    if (any(param.current$alpha<1,na.rm=TRUE)) {
        out$pass <- FALSE
-       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.alpha<1)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param.current$alpha<1)")
     }
 
     ## look for ancestries greater than 'N'
-    if (any(param$current.alpha>length(param$alpha[[1]]),na.rm=TRUE)) {
+    if (any(param.current$alpha>length(param.store$alpha[[1]]),na.rm=TRUE)) {
        out$pass <- FALSE
-       out$msg <- c(out$msg, "some ancestries point to unknown cases (param$current.alpha>N)")
+       out$msg <- c(out$msg, "some ancestries point to unknown cases (param.current$alpha>N)")
     }
 
     ## case infecting itself
-    if (any(param$current.alpha==seq_along(param$current.alpha),na.rm=TRUE)) {
+    if (any(param.current$alpha==seq_along(param.current$alpha),na.rm=TRUE)) {
        out$pass <- FALSE
-       out$msg <- c(out$msg, "auto-infections detected (param$current.alpha[i]==i)")
+       out$msg <- c(out$msg, "auto-infections detected (param.current$alpha[i]==i)")
     }
 
 
     ## INFECTION DATES ##
     ## check NA
-    if (any(is.na(param$current.t.inf))) {
+    if (any(is.na(param.current$t.inf))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "NA detected in infection dates (param$current.t.inf)")
+        out$msg <- c(out$msg, "NA detected in infection dates (param.current$t.inf)")
     }
 
     ## check finite values
-    if (any(!is.finite(param$current.t.inf))) {
+    if (any(!is.finite(param.current$t.inf))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "some infection dates are not finite (param$current.t.inf)")
+        out$msg <- c(out$msg, "some infection dates are not finite (param.current$t.inf)")
     }
 
     ## check that values are numeric
-    if (any(!is.numeric(param$current.t.inf))) {
+    if (any(!is.numeric(param.current$t.inf))) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "some infection dates are not numeric (param$current.t.inf)")
+        out$msg <- c(out$msg, "some infection dates are not numeric (param.current$t.inf)")
     }
 
     ## check that delays between infections are > 0
-    if (any((param$current.t.inf - param$current.t.inf[param$current.alpha]) < 1, na.rm=TRUE)) {
+    if (any((param.current$t.inf - param.current$t.inf[param.current$alpha]) < 1, na.rm=TRUE)) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "some delays between succesive infections are less than 1 (param$current.t.inf)")
+        out$msg <- c(out$msg, "some delays between succesive infections are less than 1 (param.current$t.inf)")
     }
 
     ## check that delays to collection are > 0
-    if (any((data$dates-param$current.t.inf) < 1, na.rm=TRUE)) {
+    if (any((data$dates-param.current$t.inf) < 1, na.rm=TRUE)) {
         out$pass <- FALSE
-        out$msg <- c(out$msg, "some delays to collection are less than 1 (param$current.t.inf)")
+        out$msg <- c(out$msg, "some delays to collection are less than 1 (param.current$t.inf)")
     }
 
     ## SHAPE OUTPUT AND RETURN ##
@@ -186,8 +186,8 @@ look.for.trouble <- function(param, data) {
 
 ## check which ancestries can move (returns a TRUE/FALSE vector)
 can.move.alpha <- function(param, config) {
-    out <- !is.na(param$current.alpha) & # non-imported case
-        (param$current.t.inf > min(param$current.t.inf)) & # not the first date
+    out <- !is.na(param$alpha) & # non-imported case
+        (param$t.inf > min(param$t.inf)) & # not the first date
             config$move.alpha # add user-specification through move.alpha
     return(out)
 }
@@ -195,7 +195,7 @@ can.move.alpha <- function(param, config) {
 
 ## check which ancestries can move (returns a TRUE/FALSE vector)
 can.be.swapped <- function(param, config) {
-    out <- !is.na(param$current.alpha) & # non-imported case
+    out <- !is.na(param$alpha) & # non-imported case
             config$move.alpha # add user-specification through move.alpha
     return(out)
 }
@@ -216,17 +216,17 @@ select.alpha.to.move <- function(param, config) {
 ## plus all subsequent changes
 swap.cases <- function(param, config, i) {
     ## stop if 'i' out of range
-    if (i>length(param$current.alpha)) {
+    if (i>length(param$alpha)) {
         stop("trying to swap ancestry of case ",
              i, " while there are only ",
-             length(param$current.alpha), " cases")
+             length(param$alpha), " cases")
     }
 
     ## find cases for which ancestries can move
     id.ok.to.swap <- which(can.be.swapped(param, config))
 
     ## find ancestor of 'i'
-    x <- param$current.alpha[i]
+    x <- param$alpha[i]
 
     ## stop if case 'i' is imported - this should not happen
     if (is.na(x)) {
@@ -240,21 +240,21 @@ swap.cases <- function(param, config, i) {
     }
 
     ## find indices to swap
-    to.be.x <- intersect(which(param$current.alpha==i), id.ok.to.swap)
-    to.be.i <- intersect(which(param$current.alpha==x), id.ok.to.swap)
+    to.be.x <- intersect(which(param$alpha==i), id.ok.to.swap)
+    to.be.i <- intersect(which(param$alpha==x), id.ok.to.swap)
 
     ## swap 'i' and 'x' in ancestries
-    param$current.alpha[to.be.x] <- x
-    param$current.alpha[to.be.i] <- i
+    param$alpha[to.be.x] <- x
+    param$alpha[to.be.i] <- i
 
     ## the ancestor of 'i' is now has the ancestor of 'x'
-    param$current.alpha[i] <- param$current.alpha[x]
+    param$alpha[i] <- param$alpha[x]
 
     ## 'i' is now the ancestor of 'x'
-    param$current.alpha[x] <- i
+    param$alpha[x] <- i
 
     ## swap t.inf
-    param$current.t.inf[c(x,i)] <- param$current.t.inf[c(i,x)]
+    param$t.inf[c(x,i)] <- param$t.inf[c(i,x)]
 
     return(param)
 }
@@ -283,7 +283,7 @@ check.i <- function(data, i) {
 ## find descendents of a case 'i'
 find.descendents <- function(param, i) {
     ## find descendents
-    which(param$current.alpha==i)
+    which(param$alpha==i)
 }
 
 
@@ -340,11 +340,11 @@ add.convolutions <- function(data, config) {
     }
 
     ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
-    i <- i[!is.na(param$current.alpha[i])]
+    i <- i[!is.na(param$alpha[i])]
 
     ## likelihood is based on the number of mutations between a case and its ancestor;
     ## these are extracted from a pairwise genetic distance matrix (data$D)
-    nmut <- data$D[cbind(i, param$current.alpha[i], deparse.level=0)]
+    nmut <- data$D[cbind(i, param$alpha[i], deparse.level=0)]
 
     ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
     ## with:
@@ -356,8 +356,8 @@ add.convolutions <- function(data, config) {
     ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
     ## which limits to 2 operations rather than 2*n
     ## (tip from Rich Fitzjohn)
-    log(param$current.mu / (1 - param$current.mu)) * sum(nmut) +
-        length(nmut) * log(1 - param$current.mu) * data$L
+    log(param$mu / (1 - param$mu)) * sum(nmut) +
+        length(nmut) * log(1 - param$mu) * data$L
 }
 
 
@@ -374,18 +374,18 @@ add.convolutions <- function(data, config) {
     }
 
     ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
-    i <- i[!is.na(param$current.alpha[i])]
+    i <- i[!is.na(param$alpha[i])]
 
 
     ## compute delays between infection dates of cases and of their ancestors
-    T <- param$current.t.inf[i] - param$current.t.inf[param$current.alpha[i]]
+    T <- param$t.inf[i] - param$t.inf[param$alpha[i]]
 
     ## avoid over-shooting: delays outside the range of columns in pre-computed log-densities
     ## (data$log.w.dens) will give a likelihood of zero
     if (any(T<1 | T>ncol(data$log.w.dens), na.rm=TRUE)) return(-Inf)
 
     ## output is a sum of log-densities
-    sum(data$log.w.dens[cbind(param$current.kappa[i], T)], na.rm=TRUE)
+    sum(data$log.w.dens[cbind(param$kappa[i], T)], na.rm=TRUE)
 }
 
 
@@ -401,7 +401,7 @@ add.convolutions <- function(data, config) {
     }
 
     ## compute delays
-    T <- data$dates[i] - param$current.t.inf[i]
+    T <- data$dates[i] - param$t.inf[i]
     T <- T[!is.na(T)]
 
     ## avoid over-shooting
@@ -423,8 +423,8 @@ add.convolutions <- function(data, config) {
         i <- seq_len(data$N)
     }
 
-    sum(stats::dgeom(param$current.kappa[i]-1,
-                     prob=param$current.pi,
+    sum(stats::dgeom(param$kappa[i]-1,
+                     prob=param$pi,
                      log=TRUE), na.rm=TRUE)
 }
 
@@ -440,11 +440,11 @@ add.convolutions <- function(data, config) {
     function(param) {
         ## get new proposed values
         new.param <- param
-        ##new.param$current.mu <- new.param$current.mu + rand$mu.rnorm1()
-        new.param$current.mu <-  stats::rnorm(1, mean=new.param$current.mu, sd=config$sd.mu)
+        ##new.param$mu <- new.param$mu + rand$mu.rnorm1()
+        new.param$mu <-  stats::rnorm(1, mean=new.param$mu, sd=config$sd.mu)
 
         ## escape if new.mu<0 or >1
-        if (new.param$current.mu<0 || new.param$current.mu>1) {
+        if (new.param$mu<0 || new.param$mu>1) {
             return(param)
         }
 
@@ -473,8 +473,8 @@ add.convolutions <- function(data, config) {
     function(param) {
         ## propose new t.inf
         new.param <- param
-        new.param$current.t.inf <- new.param$current.t.inf +
-            sample(-1:1, size=length(new.param$current.t.inf), replace=TRUE, prob=prob.proposal)
+        new.param$t.inf <- new.param$t.inf +
+            sample(-1:1, size=length(new.param$t.inf), replace=TRUE, prob=prob.proposal)
 
         ## compute log ratio
         logratio <- densities$loglike$timing(new.param) - densities$loglike$timing(param)
@@ -505,34 +505,34 @@ add.convolutions <- function(data, config) {
         new.param <- param
 
         ## find out which ancestries to move
-        alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
+        alpha.can.move <- !is.na(param$alpha) & param$t.inf>min(param$t.inf)
         if (!any(alpha.can.move)) {
             warning("trying to move ancestries but none can move")
-            return(param$current.alpha)
+            return(param$alpha)
         }
         n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)),1)
         to.move <- sample(which(alpha.can.move), n.to.move, replace=FALSE)
 
         ## initialize new alpha
-        new.param$current.alpha <- param$current.alpha
+        new.param$alpha <- param$alpha
 
         ## move all ancestries that should be moved
         for (i in to.move) {
             ## propose new ancestor
-            new.param$current.alpha[i] <- .choose.possible.alpha(param$current.t.inf, i)
+            new.param$alpha[i] <- .choose.possible.alpha(param$t.inf, i)
 
             ## compute log ratio
             logratio <-  densities$loglike$all(new.param) - densities$loglike$all(param)
 
             ## compute correction factor
-            logratio <- logratio + log(sum(.are.possible.alpha(new.param$current.t.inf, i))) -
-                log(sum(.are.possible.alpha(param$current.t.inf, i)))
+            logratio <- logratio + log(sum(.are.possible.alpha(new.param$t.inf, i))) -
+                log(sum(.are.possible.alpha(param$t.inf, i)))
 
             ## accept/reject
             if (logratio >= log(stats::runif(1))) {
-                param$current.alpha[i] <- new.param$current.alpha[i]
+                param$alpha[i] <- new.param$alpha[i]
             } else {
-                new.param$current.alpha[i] <- param$current.alpha[i]
+                new.param$alpha[i] <- param$alpha[i]
             }
         } # end for loop
 

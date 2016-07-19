@@ -17,7 +17,7 @@
 
 // [[Rcpp::export("cpp.move.mu", rng = true)]]
 void cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
-  Rcpp::NumericVector mu = param["current.mu"]; // pointer to param$current.mu
+  Rcpp::NumericVector mu = param["current.mu"]; // pointer to param.current$mu
   Rcpp::NumericVector new_mu = clone(mu); // new vector
 
   double sd_mu = static_cast<double>(config["sd.mu"]);

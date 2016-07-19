@@ -85,7 +85,7 @@ size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
 
 find.descendents <- function(param, i) {
     ## find descendents
-    which(param$current.alpha==i)
+    which(param.current$alpha==i)
 }
 
 
@@ -165,17 +165,17 @@ Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
 
 swap.cases <- function(param, config, i) {
     ## stop if 'i' out of range
-    if (i>length(param$current.alpha)) {
+    if (i>length(param.current$alpha)) {
         stop("trying to swap ancestry of case ",
              i, " while there are only ",
-             length(param$current.alpha), " cases")
+             length(param.current$alpha), " cases")
     }
 
     ## find cases for which ancestries can move
     id.ok.to.swap <- which(can.be.swapped(param, config))
 
     ## find ancestor of 'i'
-    x <- param$current.alpha[i]
+    x <- param.current$alpha[i]
 
     ## stop if case 'i' is imported - this should not happen
     if (is.na(x)) {
@@ -189,21 +189,21 @@ swap.cases <- function(param, config, i) {
     }
 
     ## find indices to swap
-    to.be.x <- intersect(which(param$current.alpha==i), id.ok.to.swap)
-    to.be.i <- intersect(which(param$current.alpha==x), id.ok.to.swap)
+    to.be.x <- intersect(which(param.current$alpha==i), id.ok.to.swap)
+    to.be.i <- intersect(which(param.current$alpha==x), id.ok.to.swap)
 
     ## swap 'i' and 'x' in ancestries
-    param$current.alpha[to.be.x] <- x
-    param$current.alpha[to.be.i] <- i
+    param.current$alpha[to.be.x] <- x
+    param.current$alpha[to.be.i] <- i
 
     ## the ancestor of 'i' is now has the ancestor of 'x'
-    param$current.alpha[i] <- param$current.alpha[x]
+    param.current$alpha[i] <- param.current$alpha[x]
 
     ## 'i' is now the ancestor of 'x'
-    param$current.alpha[x] <- i
+    param.current$alpha[x] <- i
 
     ## swap t.inf
-    param$current.t.inf[c(x,i)] <- param$current.t.inf[c(i,x)]
+    param.current$t.inf[c(x,i)] <- param.current$t.inf[c(i,x)]
 
     return(param)
 }

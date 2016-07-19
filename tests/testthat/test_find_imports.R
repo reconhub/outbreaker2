@@ -26,10 +26,10 @@ test_that("Test detection of imported cases", {
 
     ## tests ##
     expect_identical(which(!out$config$move.alpha), which(!out$config$move.kappa))
-    expect_identical(out$param$alpha[[1]], out$param$current.alpha)
-    expect_identical(out$param$kappa[[1]], out$param$current.kappa)
-    expect_equal(which(is.na(out$param$current.alpha)), c(1,4,28))
-    expect_true(all(config$move.alpha==!is.na(param$current.alpha)))
+    expect_identical(out$param$alpha[[1]], out$param.current$alpha)
+    expect_identical(out$param$kappa[[1]], out$param.current$kappa)
+    expect_equal(which(is.na(out$param.current$alpha)), c(1,4,28))
+    expect_true(all(config$move.alpha==!is.na(param.current$alpha)))
 
 })
 

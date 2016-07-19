@@ -14,7 +14,7 @@
 #'
 #' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
 #'
-outbreaker.move <- function(moves, data, param, config, densities) {
+outbreaker.move <- function(moves, data, param.current, param.store, config, densities) {
     ## get number of moves ##
     J <- length(moves)
 
@@ -23,11 +23,11 @@ outbreaker.move <- function(moves, data, param, config, densities) {
         ## move parameters / augmented data
         for (j in seq_len(J)) {
             ## move parameters
-            param <- moves[[j]](param=param)
+            param.current <- moves[[j]](param=param.current)
 
             ## safemode
             if (config$paranoid) {
-                diagnostic <- look.for.trouble(param, data)
+                diagnostic <- look.for.trouble(param.current, param.store, data)
                 if (!diagnostic$pass) {
                     stop(paste0(
                         "\n\n PARANOID MODE DETECTED AN ERROR WHILE FINDING IMPORTS:\n",
@@ -39,11 +39,12 @@ outbreaker.move <- function(moves, data, param, config, densities) {
 
         ## store outputs if needed
         if ((i %% config$sample.every) == 0) {
-            param <- outbreaker.mcmc.store(param=param, densities=densities, step=i)
+            param.current$counter <- param.current$counter + 1
+            param.store <- outbreaker.mcmc.store(param.current, param.store, densities, i)
         }
 
     } # end of the chain
 
     ## output is a list of saved chain states
-    return(param)
+    return(param.store)
 }

@@ -349,15 +349,15 @@ test_that("likelihood functions return -Inf when needed", {
 
 
     ## test ll$timing.sampling ##
-    old.t.inf <- param$current.t.inf
-    param$current.t.inf <- times
+    old.t.inf <- param.current$t.inf
+    param.current$t.inf <- times
     out.sampling <- ll$timing.sampling(param)
     out.sampling.few.cases <- ll$timing.sampling(param, few.cases)
     out.sampling.rnd.cases <- ll$timing.sampling(param, rnd.cases)
     ref <- .ll.timing.sampling(data, param)
     ref.few.cases <- .ll.timing.sampling(data, param, few.cases)
     ref.rnd.cases <- .ll.timing.sampling(data, param, rnd.cases)
-    param$current.t.inf <- old.t.inf
+    param.current$t.inf <- old.t.inf
 
     ## test values
     expect_is(out.sampling, "numeric")

@@ -14,25 +14,25 @@
 #'
 #' @export
 #'
-outbreaker.mcmc.store <- function(param, densities, step) {
+outbreaker.mcmc.store <- function(param.current, param.store, densities, step) {
     ## UPDATE COUNTER
-    counter <- param$counter <- param$counter + 1
+    counter <- param.current$counter
 
     ## STORE STEP
-    param$step[counter] <- step
+    param.store$step[counter] <- step
 
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
-    param$like[counter] <- densities$loglike$all(param)
-    param$prior[counter] <- densities$priors$all(param)
-    param$post[counter] <- param$like[counter] + param$prior[counter]
+    param.store$like[counter] <- densities$loglike$all(param)
+    param.store$prior[counter] <- densities$priors$all(param)
+    param.store$post[counter] <- param$like[counter] + param$prior[counter]
 
     ## PARAMETERS AND AUGMENTED DATA
-    param$mu[counter] <- param$current.mu
-    param$alpha[[counter]] <- param$current.alpha
-    param$t.inf[[counter]] <- param$current.t.inf
-    param$kappa[[counter]] <- param$current.kappa
-    param$pi[counter] <- param$current.pi
+    param.store$mu[counter] <- param$mu
+    param.store$alpha[[counter]] <- param.current$alpha
+    param.store$t.inf[[counter]] <- param.current$t.inf
+    param.store$kappa[[counter]] <- param.current$kappa
+    param.store$pi[counter] <- param.current$pi
 
-    return(param)
+    return(param.store)
 }
 

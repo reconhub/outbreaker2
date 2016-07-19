@@ -34,12 +34,17 @@ outbreaker.create.mcmc <- function(data, config) {
 
 
     ## SHAPE CHAIN ##
-    out <- list(size=size, step=step,
-                post=post, like=like, prior=prior,
-                alpha=alpha, t.inf=t.inf, mu=mu, kappa=kappa, pi=pi,
-                current.alpha=current.alpha, current.t.inf=current.t.inf, current.mu=current.mu,
-                current.kappa=current.kappa, current.pi=current.pi,
-                counter=counter)
+    out <- list(store = list(
+                size = size, step = step,
+                post = post, like = like, prior = prior,
+                alpha = alpha, t.inf = t.inf, mu = mu, kappa = kappa, pi = pi
+                ),
+                current = list(
+                current.alpha = current.alpha, current.t.inf = current.t.inf, current.mu = current.mu,
+                current.kappa = current.kappa, current.pi = current.pi,
+                counter = counter
+                )
+                )
     return(out)
 }
 

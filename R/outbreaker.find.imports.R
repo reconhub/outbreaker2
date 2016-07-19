@@ -8,15 +8,15 @@
 ## which the ancestor will be 'NA'.
 
 
-outbreaker.find.imports <- function(moves, data, param, config, densities) {
+outbreaker.find.imports <- function(moves, data, param.current, param.store, config, densities) {
     ## send back unchanged chains if config disabled the detection of imported cases ##
     if (!config$find.import) {
-        return(list(config=config, param=param))
+        return(list(config=config, param=param.current))
     }
 
 
     ## store initial param values ##
-    ini.param <- param
+    ini.param <- c(current=param.current, store=param.store)
 
     ## get number of moves ##
     J <- length(moves)
@@ -31,11 +31,11 @@ outbreaker.find.imports <- function(moves, data, param, config, densities) {
         ## move parameters / augmented data
         for (j in seq_len(J)) {
             ## move parameters
-            param <- moves[[j]](param)
+            param.current <- moves[[j]](param.current)
 
             ## safemode
             if (config$paranoid) {
-                diagnostic <- look.for.trouble(param, data)
+                diagnostic <- look.for.trouble(param.current, param.store, data)
                 if (!diagnostic$pass) {
                     stop(paste0(
                         "\n\n PARANOID MODE DETECTED AN ERROR WHILE FINDING IMPORTS:\n",
@@ -48,7 +48,7 @@ outbreaker.find.imports <- function(moves, data, param, config, densities) {
         ## store outputs if needed
         if ((i %% config$sample.every.import) == 0 && i>1000) {
             influences[counter,] <- - vapply(seq_len(data$N),
-                                             function(i) densities$loglike$all(param=param, i=i),
+                                             function(i) densities$loglike$all(param.current, i),
                                              numeric(1))
             counter <- counter + 1L
         }
@@ -69,12 +69,14 @@ outbreaker.find.imports <- function(moves, data, param, config, densities) {
     ## altered in these cases, we systematically return the config as well as the initial
     ## parameters.
 
-    ini.param$alpha[[1]][outliers] <- ini.param$current.alpha[outliers] <- NA
-    ini.param$kappa[[1]][outliers] <- ini.param$current.kappa[outliers] <- NA
-    ini.param$influences <- mean.influence
-    ini.param$threshold <- threshold
+    ini.param$store$alpha[[1]][outliers] <- ini.param$current$alpha[outliers] <- NA
+    ini.param$store$kappa[[1]][outliers] <- ini.param$current$kappa[outliers] <- NA
+    ini.param$store$influences <- mean.influence
+    ini.param$store$threshold <- threshold
     config$move.alpha[outliers] <- FALSE
     config$move.kappa[outliers] <- FALSE
 
-    return(list(config=config, param=ini.param))
+    return(list(config = config,
+                param.current = ini.param$current,
+                param.store = ini.param$store))
 }

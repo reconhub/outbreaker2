@@ -104,8 +104,8 @@ make.move.swap.cases <- function(config, densities) {
             ## alpha[to.move]
 
             affected.cases <- c(find.descendents(param, i=i),
-                                find.descendents(param, i=param$current.alpha[i]),
-                                param$current.alpha[i])
+                                find.descendents(param, i=param$alpha[i]),
+                                param$alpha[i])
             logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
 
             ## accept/reject
@@ -131,11 +131,11 @@ make.move.pi <- function(config, densities) {
     function(param) {
         ## get new proposed values
         new.param <- param
-        ## new.param$current.pi <- new.param$current.pi + rand$pi.rnorm1()
-        new.param$current.pi <- stats::rnorm(1, mean=new.param$current.pi, sd=config$sd.pi)
+        ## new.param$pi <- new.param$pi + rand$pi.rnorm1()
+        new.param$pi <- stats::rnorm(1, mean=new.param$pi, sd=config$sd.pi)
 
         ## escape if new.pi<0 or >1
-        if (new.param$current.pi<0 || new.param$current.pi>1) {
+        if (new.param$pi<0 || new.param$pi>1) {
             return(param)
         }
 
@@ -164,7 +164,7 @@ make.move.kappa <- function(config, densities) {
     function(param) {
 
         ## determine which cases to move
-        kappa.can.move <- !is.na(param$current.kappa)
+        kappa.can.move <- !is.na(param$kappa)
         n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
         to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
 
@@ -174,12 +174,12 @@ make.move.kappa <- function(config, densities) {
         ## move all ancestries that should be moved
         for (i in to.move) {
             ## propose new kappa
-            new.param$current.kappa[i] <- new.param$current.kappa[i] + sample(c(-1,1), size=1)
+            new.param$kappa[i] <- new.param$kappa[i] + sample(c(-1,1), size=1)
 
             ## reject move automatically if new kappa < 1 or greater than allowed max
-            if (new.param$current.kappa[i] < 1 ||
-               new.param$current.kappa[i] > config$max.kappa) {
-                new.param$current.kappa[i] <- param$current.kappa[i]
+            if (new.param$kappa[i] < 1 ||
+               new.param$kappa[i] > config$max.kappa) {
+                new.param$kappa[i] <- param$kappa[i]
             } else {
                 ## compute log ratio
                 logratio <- densities$loglike$timing.infections(new.param, i) +
@@ -191,9 +191,9 @@ make.move.kappa <- function(config, densities) {
 
                 ## accept/reject
                 if (logratio >= log(stats::runif(1))) {
-                    param$current.kappa[i] <- new.param$current.kappa[i]
+                    param$kappa[i] <- new.param$kappa[i]
                 } else {
-                    new.param$current.kappa[i] <- param$current.kappa[i]
+                    new.param$kappa[i] <- param$kappa[i]
                 }
             }
         } # end for loop

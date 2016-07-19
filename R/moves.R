@@ -61,45 +61,13 @@ make.move.t.inf <- function(config, densities) {
 ## this procedure as well as a swapping procedure (swaps are not possible through move.alpha only).
 
 make.move.alpha <- function(config, densities) {
-    function(param) {
-        ## create new parameters
-        new.param <- param
-
-        ## find out which ancestries to move
-        alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
-        if (!any(alpha.can.move)) {
-            warning("trying to move ancestries but none can move")
-            return(param$current.alpha)
-        }
-        n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)),1)
-        to.move <- sample(which(alpha.can.move), n.to.move, replace=FALSE)
-
-        ## initialize new alpha
-        new.param$current.alpha <- param$current.alpha
-
-        ## move all ancestries that should be moved
-        for (i in to.move) {
-            ## propose new ancestor
-            new.param$current.alpha[i] <- .choose.possible.alpha(param$current.t.inf, i)
-
-            ## compute log ratio
-            logratio <-  densities$loglike$all(new.param) - densities$loglike$all(param)
-
-            ## compute correction factor
-            logratio <- logratio + log(sum(.are.possible.alpha(new.param$current.t.inf, i))) -
-                log(sum(.are.possible.alpha(param$current.t.inf, i)))
-
-            ## accept/reject
-            if (logratio >= log(stats::runif(1))) {
-                param$current.alpha[i] <- new.param$current.alpha[i]
-            } else {
-                new.param$current.alpha[i] <- param$current.alpha[i]
-            }
-        } # end for loop
-
-        return(param)
-    }
+    data <- environment(densities$loglike$timing)$data
+    .move.alpha(config, densities)
+    ## function(param) {
+    ##     cpp.move.alpha(data, param)
+    ## }
 }
+
 
 
 

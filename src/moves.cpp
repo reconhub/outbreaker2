@@ -114,12 +114,21 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
 
 
+/*
+  Movement of ancestries ('alpha') is not vectorised, movements are made one case at a time. This
+  procedure is simply about picking an infector at random amongst cases preceeding the case
+  considered. The original version in 'outbreaker' used to move simultaneously 'alpha', 'kappa' and
+  't.inf', but current implementation is simpler and seems to mix at least as well. Proper movement
+  of 'alpha' needs this procedure as well as a swapping procedure (swaps are not possible through
+  move.alpha only).
+*/
 
 // [[Rcpp::export("cpp.move.alpha", rng = true)]]
-void cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
+Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
+  Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["current.alpha"]; // pointer to param$t_inf
   Rcpp::IntegerVector t_inf = param["current.t.inf"]; // pointer to param$t_inf
-  Rcpp::IntegerVector new_alpha = clone(alpha); // new vector
+  Rcpp::IntegerVector new_alpha = new_param["current.alpha"];
 
   size_t N = static_cast<size_t>(data["N"]);
 
@@ -133,14 +142,14 @@ void cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
     if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
 
       // loglike with current value
-      old_loglike = cpp_ll_all(data, param, Rcpp::wrap(i));
+      old_loglike = cpp_ll_all(data, param, i);
 
       // proposal (+/- 1)
-      new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value
+      new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value (on scale 1 ... N)
 
       // loglike with current value
-      param["current.alpha"] = new_alpha;
-      new_loglike = cpp_ll_all(data, param, i);
+      new_param["current.alpha"] = new_alpha;
+      new_loglike = cpp_ll_all(data, new_param, i);
 
       // acceptance term
       p_accept = exp(new_loglike - old_loglike);
@@ -149,14 +158,12 @@ void cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       // which case we restore the previous ('old') value
       if (p_accept < unif_rand()) { // reject new values
 	new_alpha[i] = alpha[i];
-	param["current.alpha"] = alpha;
+	new_param["current.alpha"] = new_alpha;
       }
     }
-
-    // as we haven't touched the content of alpha, and all new values are in new_alpha, we need to
-    // make sure this new vector replaces the previous one
-    param["current.alpha"] = new_alpha;
   }
+
+  return new_param;
 }
 
 

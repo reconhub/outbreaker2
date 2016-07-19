@@ -9,7 +9,8 @@
 
 /*
   This function returns a vector of indices of cases which could be infector of 'i' (i.e., their
-  infection dates preceed that of 'i').
+  infection dates preceed that of 'i'). Only tricky bit here is keep in mind that 't_inf' is indexed
+  from 0 to N-1, while alpha (ancestors) are values from 1 to N.
 
   Original R code:
 
@@ -32,7 +33,7 @@ std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i)
   out.reserve(n);
   for (j; j < n; j++) {
     if (t_inf[j] < t_inf[i]) {
-      out.push_back(j);
+      out.push_back(j+1); // +1 needed for range 1 ... N
     }
   }
   return out;

@@ -53,44 +53,6 @@ ralpha <- function(t.inf) {
 ## NON-DOCUMENTED FUNCTIONS ##
 ##############################
 
-## add objects to an environment
-## objects: list of objects to be added to the environment (of) 'x'
-##
-add.to.context <- function(x, objects) {
-    ## get environment
-    if (is.environment(x)) {
-        env <- x
-    } else{
-        env <- environment(x)
-    }
-
-    ## escape if object is empty
-    if (length(objects) < 1L) {
-        return(invisible(NULL))
-    }
-
-    ## check that all objects are named
-    if (any(names(objects) == "")) {
-        warning("all objects to be added to the environment of 'x' must be named; only adding named objects")
-        to.keep <- names(objects) != ""
-        objects <- objects[to.keep]
-    }
-
-    ## add objects to environment
-    for (i in seq_along(objects)) {
-        ## recursive behaviour if object is a list
-        if (is.list(objects[[i]])) {
-            add.to.context(env, objects[[i]])
-        }
-        assign(x = names(objects)[i],
-               value = objects[[i]],
-               envir = env)
-    }
-
-    return(invisible(NULL))
-} # add.to.context
-
-
 
 
 ## checks are only sure for the 'current' state
@@ -528,6 +490,59 @@ add.convolutions <- function(data, config) {
 
 
 
+## Movement of ancestries ('alpha') is not vectorised, movements are made one case at a time. This
+## procedure is simply about picking an infector at random amongst cases preceeding the case
+## considered. This movement is not symmetric, as the number of choices may change. The original
+## version in 'outbreaker' used to move simultaneously 'alpha', 'kappa' and 't.inf', but current
+## implementation is simpler and seems to mix at least as well. Proper movement of 'alpha' needs
+## this procedure as well as a swapping procedure (swaps are not possible through move.alpha only).
+##
+## This is the old R function, replaced by Rcpp.move.alpha.
+##
+.move.alpha <- function(config, densities) {
+    function(param) {
+        ## create new parameters
+        new.param <- param
+
+        ## find out which ancestries to move
+        alpha.can.move <- !is.na(param$current.alpha) & param$current.t.inf>min(param$current.t.inf)
+        if (!any(alpha.can.move)) {
+            warning("trying to move ancestries but none can move")
+            return(param$current.alpha)
+        }
+        n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)),1)
+        to.move <- sample(which(alpha.can.move), n.to.move, replace=FALSE)
+
+        ## initialize new alpha
+        new.param$current.alpha <- param$current.alpha
+
+        ## move all ancestries that should be moved
+        for (i in to.move) {
+            ## propose new ancestor
+            new.param$current.alpha[i] <- .choose.possible.alpha(param$current.t.inf, i)
+
+            ## compute log ratio
+            logratio <-  densities$loglike$all(new.param) - densities$loglike$all(param)
+
+            ## compute correction factor
+            logratio <- logratio + log(sum(.are.possible.alpha(new.param$current.t.inf, i))) -
+                log(sum(.are.possible.alpha(param$current.t.inf, i)))
+
+            ## accept/reject
+            if (logratio >= log(stats::runif(1))) {
+                param$current.alpha[i] <- new.param$current.alpha[i]
+            } else {
+                new.param$current.alpha[i] <- param$current.alpha[i]
+            }
+        } # end for loop
+
+        return(param)
+    }
+}
+
+
+
+
 
 
 ## which cases are possible ancestors for a case 'i'
@@ -542,8 +557,11 @@ add.convolutions <- function(data, config) {
 }
 
 
+
+
 ## choose one possible ancestor for a case 'i'
 .choose.possible.alpha <- function(t.inf, i) {
     return(sample(.are.possible.alpha(t.inf=t.inf, i=i), 1))
 }
+
 

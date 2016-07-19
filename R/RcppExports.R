@@ -50,6 +50,6 @@ cpp.move.t.inf <- function(data, param) {
 }
 
 cpp.move.alpha <- function(data, param) {
-    invisible(.Call('outbreaker2_cpp_move_alpha', PACKAGE = 'outbreaker2', data, param))
+    .Call('outbreaker2_cpp_move_alpha', PACKAGE = 'outbreaker2', data, param)
 }
 

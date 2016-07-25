@@ -72,7 +72,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 */
 // [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
-  size_t N = static_cast<size_t>(data["N"]);
+  size_t N = static_cast<size_t>(Rcpp::as<int>(data["N"]));
   if(N < 1) return 0.0;
 
   Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!
@@ -126,7 +126,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 // infection dates.
 // [[Rcpp::export("cpp.ll.timing.sampling", rng = false)]]
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
-  size_t N = static_cast<size_t>(data["N"]);
+  size_t N = static_cast<size_t>(Rcpp::as<int>(data["N"]));
   if(N < 1) return 0.0;
 
   Rcpp::IntegerVector dates = data["dates"];
@@ -178,7 +178,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
 
 // [[Rcpp::export("cpp.ll.reporting", rng = false)]]
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
-  size_t N = static_cast<size_t>(data["N"]);
+  size_t N = static_cast<size_t>(Rcpp::as<int>(data["N"]));
   if(N < 1) return 0.0;
 
   double pi = static_cast<double>(param["current.pi"]);

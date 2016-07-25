@@ -24,7 +24,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::NumericMatrix D = data["D"];
   if (D.nrow() < 1) return 0.0;
 
-  size_t N = static_cast<size_t>(data["N"]);
+  size_t N = static_cast<size_t>(Rcpp::as<int>(data["N"]));
   double mu = Rcpp::as<double>(param["current.mu"]);
   long int L = Rcpp::as<int>(data["L"]);
   Rcpp::IntegerVector alpha = param["current.alpha"]; // remember the '-1' offset!

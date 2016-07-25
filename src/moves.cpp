@@ -71,7 +71,7 @@ void cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
   Rcpp::IntegerVector t_inf = param["current.t.inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_t_inf = clone(t_inf); // new vector
 
-  size_t N = static_cast<size_t>(data["N"]);
+  size_t N = static_cast<size_t>(Rcpp::as<int>(data["N"]));
 
   size_t i = 0, j = 0, old_t_inf_i = 0;
 

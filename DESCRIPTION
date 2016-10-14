@@ -18,10 +18,11 @@ Imports:
     Rcpp,
     ape,
     ggplot2,
+    visNetwork,
+    magrittr,
     grDevices,
     stats,
-    utils,
-    visNetwork
+    utils
 LazyData: true
 LinkingTo:
     Rcpp

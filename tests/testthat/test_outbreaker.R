@@ -19,7 +19,7 @@ test_that("outbreaker's output have expected format", {
     out.df <- as.data.frame(out)
 
     out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-                      config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
 
     ## check output
     expect_is(out, "outbreaker.chains")
@@ -72,7 +72,7 @@ test_that("convergence to decent results for toy example, DNA + time", {
 
    ## outbreaker time, no DNA ##
     ## analysis
-    set.seed(1)
+    set.seed(2)
     out.no.dna <- outbreaker(data=list(dates=dat$onset, w.dens=w),
                       config=list(n.iter=5000, sample.every=100, init.tree="star", find.import=FALSE))
 
@@ -125,7 +125,7 @@ test_that("convergence to decent results for toy example, DNA + time", {
 
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis
-    set.seed(1)
+    set.seed(2)
     out.with.import <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
                                   config=list(n.iter=10000, sample.every=100, init.tree="star",
                                   move.kappa=FALSE, move.pi=FALSE, init.pi=1, find.import=TRUE)

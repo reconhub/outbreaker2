@@ -17,9 +17,10 @@ test_that("create.posteriors gives expected results", {
 
     ## tests
     expect_is(out, "list")
-    expect_equal(length(out), 3)
+    expect_equal(length(out), 4)
     expect_equal(names(out), c("genetic",
                                "reporting",
+                               "contact",
                                "all")
                  )
 

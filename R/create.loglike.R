@@ -23,6 +23,7 @@
 ## #' \item{timing.sampling}{corresponds to the probability of delays between infection and reporting}
 ## #' \item{timing}{corresponds to the probability of all delays}
 ## #' \item{genetic}{corresponds to the probability of the genetic sequences given the transmission tree}
+## #' \item{contact}{corresponds to the probability of the contact tracing data given the transmission tree}
 ## #' \item{all}{corresponds to the overal probability of the data}
 ## #' }
 ## #'
@@ -42,33 +43,13 @@ create.loglike <- function(data) {
 
     default.functions <- list(genetic = make.ll.genetic,
                               reporting = make.ll.reporting,
+                              contact = make.ll.contact,
                               timing.infections = make.ll.timing.infections,
-                              timing.sampling = make.ll.timing.sampling
+                              timing.sampling = make.ll.timing.sampling,
+                              timing = make.ll.timing,
+                              all = make.ll.all
                               )
-    ll.function.names <- names(default.functions)
-    out <- lapply(default.functions, function(f) f(data))
 
+    lapply(default.functions, function(f) f(data))
 
-    ## i will be the index of cases to be used, but it is useful to define it by default as all cases
-    cases <- seq_len(data$N)
-
-
-    ## We need a function computing likelihood relating to timing, which includes:
-    ## - p(sampling dates | infections dates)
-    ## - p(infection dates | ancestral infection dates)
-
-    out$timing <- function(param, i=cases) {
-        out$timing.infections(param, i) + out$timing.sampling(param, i)
-    }
-
-
-    ## We need a function summing all log-likelihoods - useful as a shortcut for several
-    ## movements of parameters and augmented data.
-
-    out$all <- function(param, i=cases) {
-        sum(vapply(out[ll.function.names], function(f) f(param, i), FUN.VALUE=numeric(1)), na.rm=TRUE)
-    }
-
-
-    return(out)
 }

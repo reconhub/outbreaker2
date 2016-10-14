@@ -15,6 +15,7 @@ create.moves <- function(config, densities) {
                      alpha = make.move.alpha,
                      swap.cases = make.move.swap.cases,
                      pi = make.move.pi,
+                     eps = make.move.eps,
                      kappa = make.move.kappa
                      )
 
@@ -49,6 +50,11 @@ create.moves <- function(config, densities) {
         out$pi <- NULL
     }
 
+    ## remove move$eps if disabled
+    if (!any(config$move.eps)) {
+      out$eps <- NULL
+    }
+    
     ## remove move$kappa if disabled
     if (!any(config$move.kappa)) {
         out$kappa <- NULL

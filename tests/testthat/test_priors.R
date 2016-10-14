@@ -14,9 +14,10 @@ test_that("create.priors gives expected results", {
 
     ## tests
     expect_is(out, "list")
-    expect_equal(length(out), 3)
+    expect_equal(length(out), 4)
     expect_equal(names(out), c("mu",
                                "pi",
+                               "eps",
                                "all")
                  )
     ## check that all items are functions
@@ -49,13 +50,15 @@ test_that("priors have expected values", {
     ## generate outputs
     out.mu <- priors$mu(param)
     out.pi <- priors$pi(param)
+    out.eps <- priors$eps(param)
     out.all <- priors$all(param)
 
     ## tests
-    expect_equal(out.mu + out.pi, out.all)
+    expect_equal(out.mu + out.pi + out.eps, out.all)
     expect_true(!any(is.na(out.mu)))
     expect_true(!any(is.na(out.pi)))
+    expect_true(!any(is.na(out.eps)))
     expect_true(!any(is.na(out.all)))
-    expect_equal(out.all, 8.16209573106)
+    expect_equal(out.all, 8.85524291162)
 
 })

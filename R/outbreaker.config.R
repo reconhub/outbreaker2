@@ -25,6 +25,8 @@
 #'
 #' \item{init.pi}{initial value for the reporting probability}
 #'
+#' \item{init.eps}{initial value for the contact reporting probability}
+#'
 #' \item{move.alpha}{a vector of logicals indicating, for each case, if the ancestry should be
 #' estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
 #'
@@ -36,6 +38,9 @@
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
 #' \item{move.pi}{a logical indicating whether the reporting probability
+#' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+#' 
+#' \item{move.eps}{a logical indicating whether the contact reporting probability
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
 #' \item{move.kappa}{a logical indicating whether the number of generations between two successive
@@ -51,6 +56,8 @@
 #' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
 #'
 #' \item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
+#' 
+#'  \item{sd.eps}{the standard deviation for the Normal proposal for the contact reporting probability}
 #'
 #' \item{prop.alpha.move}{the proportion of ancestries to move at each iteration of the MCMC}
 #'
@@ -70,6 +77,9 @@
 #'
 #' \item{prior.pi}{a numeric vector of length 2 indicating the first and second parameter of the
 #' beta prior for the reporting probability 'pi'}
+#' 
+#' \item{prior.eps}{a numeric vector of length 2 indicating the upper and lower bounds of the
+#' uniform prior for the contact reporting probability 'eps'}
 #'
 #' }
 #'
@@ -115,9 +125,10 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
                      init.alpha=NULL,
                      init.kappa=1,
                      init.pi=0.9,
+                     init.eps=0.9,
                      move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE,
-                     move.mu=TRUE, move.kappa=TRUE, move.pi=TRUE,
-                     n.iter=1e4, sample.every=200, sd.mu=0.0001, sd.pi=0.01,
+                     move.mu=TRUE, move.kappa=TRUE, move.pi=TRUE, move.eps=TRUE,
+                     n.iter=1e4, sample.every=200, sd.mu=0.0001, sd.pi=0.01, sd.eps=0.01,
                      prop.alpha.move=1/4,
                      prop.t.inf.move=0.2,
                      batch.size=1e6,
@@ -129,7 +140,8 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
                      n.iter.import=5000,
                      sample.every.import=100,
                      prior.mu=1000,
-                     prior.pi=c(10,1))
+                     prior.pi=c(10,1),
+                     prior.eps=c(0.5,1))
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)
@@ -140,7 +152,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         config$init.tree <- match.arg(config$init.tree, c("seqTrack","star","random"))
     }
     if (is.numeric(config$init.tree)) {
-        config$init.alpha <- config$init.tree
+        config$init.alpha <- as.integer(config$init.tree)
     }
 
     ## check / process init.t.inf
@@ -199,6 +211,20 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         stop("init.pi is infinite or NA")
     }
 
+    ## check init.pi
+    if (!is.numeric(config$init.eps)) {
+      stop("init.eps is not a numeric value")
+    }
+    if (config$init.eps < 0) {
+      stop("init.eps is negative")
+    }
+    if (config$init.eps > 1) {
+      stop("init.eps is greater than 1")
+    }
+    if (!is.finite(config$init.eps)) {
+      stop("init.eps is infinite or NA")
+    }
+    
     ## check move.alpha
     if (!is.logical(config$move.alpha)) {
         stop("move.alpha is not a logical")
@@ -247,6 +273,14 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         stop("move.pi is NA")
     }
 
+    ## check move.pi
+    if (!is.logical(config$move.eps)) {
+      stop("move.eps is not a logical")
+    }
+    if (is.na(config$move.eps)) {
+      stop("move.eps is NA")
+    }
+    
     ## check n.iter
     if (!is.numeric(config$n.iter)) {
         stop("n.iter is not a numeric value")
@@ -269,6 +303,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$sample.every)) {
         stop("sample.every is infinite or NA")
     }
+    config$sample.every <- as.integer(config$sample.every)
 
     ## check sd.mu
     if (!is.numeric(config$sd.mu)) {
@@ -292,6 +327,17 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         stop("sd.pi is infinite or NA")
     }
 
+    ## check sd.pi
+    if (!is.numeric(config$sd.eps)) {
+      stop("sd.eps is not a numeric value")
+    }
+    if (config$sd.eps < 1e-10) {
+      stop("sd.eps is close to zero or negative")
+    }
+    if (!is.finite(config$sd.eps)) {
+      stop("sd.eps is infinite or NA")
+    }
+    
     ## check prop.alpha.move
     if (!is.numeric(config$prop.alpha.move)) {
         stop("prop.alpha.move is not a numeric value")
@@ -330,6 +376,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$batch.size)) {
         stop("batch.size is infinite or NA")
     }
+    config$batch.size <- as.integer(config$batch.size)
 
     ## check paranoid
     if (!is.logical(config$paranoid)) {
@@ -385,6 +432,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$n.iter.import)) {
         stop("n.iter.import is infinite or NA")
     }
+    config$n.iter.import <- as.integer(config$n.iter.import)
 
     ## check sample.every.import
     if (!is.numeric(config$sample.every.import)) {
@@ -396,6 +444,7 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     if (!is.finite(config$sample.every.import)) {
         stop("sample.every.import is infinite or NA")
     }
+    config$sample.every.import <- as.integer(config$sample.every.import)
 
     ## check prior value for mu
     if (!is.numeric(config$prior.mu)) {
@@ -421,19 +470,33 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
    if (!all(is.finite(config$prior.pi))) {
         stop("prior.pi is has values which are infinite or NA")
     }
-
-
+    
+    ## check prior value for eps
+    if (!all(is.numeric(config$prior.eps))) {
+      stop("prior.eps has non-numeric values")
+    }
+    if (any(config$prior.eps < 0)) {
+      stop("prior.eps has negative values")
+    }
+    if (length(config$prior.eps)!=2L) {
+      stop("prior.eps should be a vector of length 2")
+    }
+    if (!all(is.finite(config$prior.eps))) {
+      stop("prior.eps is has values which are infinite or NA")
+    }
+    
+    
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
     if (!is.null(data)) {
-        ## check initial tree
-        if (is.character(config$init.tree)) {
-            if (config$init.tree=="seqTrack" && is.null(data$dna)) {
-                message("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
-                config$init.tree <- "star"
-            }
-
-            ## seqTrack init
-            if (config$init.tree=="seqTrack") {
+      ## check initial tree
+      if (is.character(config$init.tree)) {
+        if (config$init.tree=="seqTrack" && is.null(data$dna)) {
+          message("Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
+          config$init.tree <- "star"
+        }
+        
+        ## seqTrack init
+        if (config$init.tree=="seqTrack") {
                 D.temp <- data$D
                 D.temp[!data$can.be.ances] <- 1e30
                 config$init.alpha <- apply(D.temp,2,which.min)
@@ -479,6 +542,11 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
         ## disable moves for imported cases
         config$move.alpha[is.na(config$init.alpha)] <- FALSE
         config$move.kappa[is.na(config$init.alpha)] <- FALSE
+
+        ## disable moves for mu if no DNA sequences
+        if(is.null(data$D) || nrow(data$D)<1) {
+            config$move.mu <- FALSE
+        }
     }
 
     ## output is a list of checked settings with a dedicated class (for printing)

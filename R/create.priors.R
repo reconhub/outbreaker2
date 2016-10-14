@@ -9,7 +9,8 @@ create.priors <- function(config) {
     ## we list them by alphabetic order
 
     default.functions <- list(mu = make.prior.mu,
-                              pi = make.prior.pi
+                              pi = make.prior.pi,
+                              eps = make.prior.eps
                               )
     priors.function.names <- names(default.functions)
     out <- lapply(default.functions, function(f) f(config))

@@ -11,7 +11,7 @@ test_that("parameters and augmented data move", {
     data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
     config <- outbreaker.config(data=data)
     config.no.move <- outbreaker.config(data=data, move.alpha=FALSE, move.t.inf=FALSE,
-                                        move.mu=FALSE, move.pi=FALSE, move.kappa=FALSE)
+                                        move.mu=FALSE, move.pi=FALSE, move.eps=FALSE, move.kappa=FALSE)
     data <- add.convolutions(data=data, config=config)
     param <- outbreaker.create.mcmc(data=data, config=config)
     ll <- create.loglike(data)
@@ -25,7 +25,7 @@ test_that("parameters and augmented data move", {
 
     ## test moves lists ##
     expect_equal(length(moves.no.move), 0L)
-    expect_equal(length(moves), 6L)
+    expect_equal(length(moves), 7L)
     expect_true(all(vapply(moves, is.function, logical(1))))
 
     ## test moves ##

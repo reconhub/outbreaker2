@@ -45,6 +45,7 @@
 #' as.data.frame(out2)
 #'
 #' }
+
 outbreaker <- function(data = outbreaker.data(),
                        config = outbreaker.config()
                        ) {

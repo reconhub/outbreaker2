@@ -27,6 +27,9 @@ integer numbers or in a usual date format such as \code{Date} or
 fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 \link[adegenet]{fasta2DNAbin}.}
 
+\item{CTD}{the contact tracing data provided as a matrix or dataframe of two columns,
+containing the pairs of id's with observed contact}
+
 \item{w.dens}{a vector of numeric values indicating the generation time
 distribution, reflecting the infectious potential of a case t=1, 2, ...
 time steps after infection. By convention, it is assumed that

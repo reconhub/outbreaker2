@@ -217,7 +217,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
     Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
       j = vec_i[k] - 1;
-      if (kappa[j] != NA_INTEGER) { 
+      if (kappa[j] != NA_INTEGER) {
 	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
       }
     }

@@ -149,7 +149,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 
       // loglike with current value
       old_loglike = cpp_ll_all(data, param, R_NilValue);
-      // old_loglike2 = cpp_ll_all(data, param, wrap(i));
+      // old_loglike2 = cpp_ll_all(data, param, i);
 
       // proposal (+/- 1)
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value (on scale 1 ... N)
@@ -157,14 +157,14 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       // loglike with current value
       new_param["alpha"] = new_alpha;
       new_loglike = cpp_ll_all(data, new_param, R_NilValue);
-      // new_loglike2 = cpp_ll_all(data, new_param, wrap(i));
+      // new_loglike2 = cpp_ll_all(data, new_param, i);
 
       // acceptance term
       p_accept = exp(new_loglike - old_loglike);
       // p_accept2 = exp(new_loglike2 - old_loglike2);
 
-      // Rcpp::Rcout << "\ni: " << i << " old: " << old_loglike2 << "  new: " << new_loglike2 << std::endl;
-      // Rcpp::Rcout << "\np_acc: " << p_accept << "  p_acc2: " << p_accept2 << std::endl;
+      // Rcpp::Rcout << "\ni: " << i << " old1: " << old_loglike << "  new1: " << new_loglike << "  ratio1: " << accept_ratio << std::endl;
+      // Rcpp::Rcout << "\ni: " << i << " old2: " << old_loglike2 << "  new2: " << new_loglike2 << "  ratio2: " << accept_ratio2 << std::endl;
 
       // acceptance: the new value is already in alpha, so we only act if the move is rejected, in
       // which case we restore the previous ('old') value

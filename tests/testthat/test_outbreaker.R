@@ -106,7 +106,7 @@ test_that("convergence to decent results for toy example, DNA + time", {
 
     ## checks
     out.no.missing.smry <- summary(out.no.missing, burnin=2000)
-    expect_true(min(out.no.missing.smry$post) > -920) # approx log post values
+    expect_true(min(out.no.missing.smry$post) > -935) # approx log post values
     expect_true(mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE) > .8) # at least 80% ancestries correct
     expect_true(mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) # infection datewithin 3 days on average
 })

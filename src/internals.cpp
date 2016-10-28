@@ -109,7 +109,7 @@ size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
 // [[Rcpp::export(cpp.find.descendents)]]
 Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
   Rcpp::LogicalVector descend_from_i = alpha==i;
-  size_t n = sum(descend_from_i), counter=0;
+  size_t n = sum(descend_from_i), counter = 0;
   Rcpp::IntegerVector out(n);
 
   for (size_t j = 0; j < alpha.size(); j++) {

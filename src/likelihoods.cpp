@@ -114,7 +114,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
-	delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
+	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
 	  return  R_NegInf;
 	}
@@ -171,7 +171,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   // all cases are retained
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
-      delay = dates[j] - t_inf[j];
+      size_t delay = dates[j] - t_inf[j];
       if (delay < 1 || delay > f_dens.size()) {
 	return  R_NegInf;
       }

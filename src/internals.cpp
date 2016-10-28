@@ -7,24 +7,24 @@
 
 
 
-/*
-  This function returns a vector of indices of cases which could be infector of 'i' (i.e., their
-  infection dates preceed that of 'i'). Only tricky bit here is keep in mind that 't_inf' is indexed
-  from 0 to N-1, while alpha (ancestors) are values from 1 to N.
+//   This function returns a vector of indices of cases which could be infector
+//   of 'i' (i.e., their infection dates preceed that of 'i'). Only tricky bit
+//   here is keep in mind that 't_inf' is indexed from 0 to N-1, while alpha
+//   (ancestors) are values from 1 to N.
 
-  Original R code:
+//   Original R code:
 
-are.possible.alpha <- function(t.inf, i) {
-    if (length(i)>1) {
-        stop("i has a length > 1")
-    }
-    if (any(t.inf[i]==min(t.inf))) {
-        return(NA)
-    }
-    return(which(t.inf < t.inf[i[1]]))
-}
+// are.possible.alpha <- function(t.inf, i) {
+//     if (length(i)>1) {
+//         stop("i has a length > 1")
+//     }
+//     if (any(t.inf[i]==min(t.inf))) {
+//         return(NA)
+//     }
+//     return(which(t.inf < t.inf[i[1]]))
+// }
 
-*/
+
 
 // [[Rcpp::export("cpp.are.possible.ancestors")]]
 std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i) {

@@ -1,24 +1,41 @@
 #include <Rcpp.h>
 #include <Rmath.h>
 
-/*
-  This likelihood corresponds to the probability of observing a number of mutations between cases
-  and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
 
-  The likelihood is based on the number of mutations between a case and its ancestor;
-  these are extracted from a pairwise genetic distance matrix (data$D)
-  the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
-  with:
-  'mu' is the mutation probability
-  'L' the number of sites in the alignment
-  'nmut' the number of mutations between an ancestor and its descendent
+// IMPORTANT: ON INDEXING VECTORS AND ANCESTRIES
 
-  For computer efficiency, we re-factorise it as:
-  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-  which limits to 2 operations rather than 2*n
-  (tip from Rich Fitzjohn)
+// Most of the functions implemented here are susceptible to be called from R
+// via Rcpp, and are therefore treated as interfaces. This causes a number of
+// headaches when using indices of cases defined in R (1:N) to refer to elements
+// in Rcpp / Cpp vectors (0:N-1). By convention, we store all data on the
+// original scale (1:N), and modify indices whenever accessing elements of
+// vectors.
 
-*/
+
+
+
+
+
+// ---------------------------
+
+// This likelihood corresponds to the probability of observing a number of
+// mutations between cases and their ancestors. See src/likelihoods.cpp for
+// details of the Rcpp implmentation.
+
+// The likelihood is based on the number of mutations between a case and its
+// ancestor; these are extracted from a pairwise genetic distance matrix
+// (data$D) the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
+// // with:
+
+// 'mu' is the mutation probability
+// 'L' the number of sites in the alignment
+// 'nmut' the number of mutations between an ancestor and its descendent
+
+// For computer efficiency, we re-factorise it as:
+// log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
+// which limits to 2 operations rather than 2*n
+// (tip from Rich Fitzjohn)
+
 // [[Rcpp::export("cpp.ll.genetic", rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::NumericMatrix D = data["D"];
@@ -71,11 +88,12 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i) {
 
 
 
-/*
 
-  This likelihood corresponds to the probability of observing infection dates of cases given the
-  infection dates of their ancestors.
-*/
+// ---------------------------
+
+// This likelihood corresponds to the probability of observing infection dates
+// of cases given the infection dates of their ancestors.
+
 // [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
@@ -132,9 +150,11 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i) {
 
 
 
+// ---------------------------
 
-// This likelihood corresponds to the probability of reporting dates of cases given their
-// infection dates.
+// This likelihood corresponds to the probability of reporting dates of cases
+// given their infection dates.
+
 // [[Rcpp::export("cpp.ll.timing.sampling", rng = false)]]
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
@@ -184,14 +204,16 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i) {
 
 
 
+// ---------------------------
 
-/*
-  This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
+// This likelihood corresponds to the probability of a given number of
+// unreported cases on an ancestry.
 
-  The likelihood is given by a geometric distribution with probability 'pi' to report a case
-  - 'kappa' is the number of generation between two successive cases
-  - 'kappa-1' is the number of unreported cases
-*/
+// The likelihood is given by a geometric distribution with probability 'pi'
+// to report a case
+
+// - 'kappa' is the number of generation between two successive cases
+// - 'kappa-1' is the number of unreported cases
 
 // [[Rcpp::export("cpp.ll.reporting", rng = false)]]
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
@@ -237,12 +259,13 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i) {
 
 
 
-/*
-  This likelihood corresponds to the sums of the separate timing likelihoods, which include:
+// ---------------------------
 
-  - p(infection dates): see function cpp_ll_timing_infections
-  - p(collection dates): see function cpp_ll_timing_sampling
-*/
+// This likelihood corresponds to the sums of the separate timing likelihoods,
+// which include:
+
+// - p(infection dates): see function cpp_ll_timing_infections
+// - p(collection dates): see function cpp_ll_timing_sampling
 
 // [[Rcpp::export("cpp.ll.timing", rng = false)]]
 double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i) {
@@ -259,15 +282,15 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i) {
 
 
 
+// ---------------------------
 
-/*
-  This likelihood corresponds to the sums of the separate likelihoods, which include:
+// This likelihood corresponds to the sums of the separate likelihoods, which
+// include:
 
-  - p(infection dates): see function cpp_ll_timing_infections
-  - p(collection dates): see function cpp_ll_timing_sampling
-  - p(genetic diversity): see function cpp_ll_genetic
-  - p(missing cases): see function cpp_ll_reporting
-*/
+// - p(infection dates): see function cpp_ll_timing_infections
+// - p(collection dates): see function cpp_ll_timing_sampling
+// - p(genetic diversity): see function cpp_ll_genetic
+// - p(missing cases): see function cpp_ll_reporting
 
 // [[Rcpp::export("cpp.ll.all", rng = false)]]
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i) {

@@ -9,7 +9,11 @@
 // headaches when using indices of cases defined in R (1:N) to refer to elements
 // in Rcpp / Cpp vectors (0:N-1). By convention, we store all data on the
 // original scale (1:N), and modify indices whenever accessing elements of
-// vectors.
+// vectors. In other words, in an expression like 'alpha[j]', 'j' should always
+// be on the internal scale (0:N-1).
+
+// In all these functions, 'SEXP i' is an optional vector of case indices, on
+// the 1:N scale.
 
 
 
@@ -25,7 +29,7 @@
 // The likelihood is based on the number of mutations between a case and its
 // ancestor; these are extracted from a pairwise genetic distance matrix
 // (data$D) the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
-// // with:
+// with:
 
 // 'mu' is the mutation probability
 // 'L' the number of sites in the alignment
@@ -44,7 +48,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
   double mu = Rcpp::as<double>(param["mu"]);
   long int L = Rcpp::as<int>(data["L"]);
-  Rcpp::IntegerVector alpha = param["alpha"]; // remember the '-1' offset!
+  Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
 
   size_t length_nmut = 0, sum_nmut = 0;
 
@@ -57,7 +61,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += D(j, alpha[j] - 1);
+	sum_nmut += D(j, alpha[j] - 1); // offset
 	length_nmut++;
       }
     }
@@ -67,9 +71,9 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
     size_t length_i = static_cast<size_t>(LENGTH(i));
     Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
-      size_t j = vec_i[k] - 1;
+      size_t j = vec_i[k] - 1; // offset
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += D(j, alpha[j] - 1);
+	sum_nmut += D(j, alpha[j]);
 	length_nmut++;
       }
 
@@ -99,20 +103,18 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 1) return 0.0;
 
-  Rcpp::IntegerVector alpha = param["alpha"]; // remember the '-1' offset!
+  Rcpp::IntegerVector alpha = param["alpha"];
   Rcpp::IntegerVector t_inf = param["t.inf"];
   Rcpp::IntegerVector kappa = param["kappa"];
   Rcpp::NumericMatrix w_dens = data["log.w.dens"];
 
-  size_t j = 0;
-  size_t delay = 0;
   double out = 0.0;
 
   // all cases are retained
   if (i == R_NilValue) {
     for (j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
-	delay = t_inf[j] - t_inf[alpha[j] - 1];
+	delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
 	  return  R_NegInf;
 	}
@@ -125,9 +127,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
     size_t length_i = static_cast<size_t>(LENGTH(i));
     Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
-      j = vec_i[k] - 1;
+      size_t j = vec_i[k] - 1; // offset
       if (alpha[j] != NA_INTEGER) {
-	delay = t_inf[j] - t_inf[alpha[j] - 1];
+	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
 	  return  R_NegInf;
 	}
@@ -164,8 +166,6 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::IntegerVector t_inf = param["t.inf"];
   Rcpp::NumericVector f_dens = data["log.f.dens"];
 
-  size_t j = 0;
-  size_t delay = 0;
   double out = 0.0;
 
   // all cases are retained
@@ -182,8 +182,8 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
     size_t length_i = static_cast<size_t>(LENGTH(i));
     Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
-      j = vec_i[k] - 1;
-      delay = dates[j] - t_inf[j];
+      size_t j = vec_i[k] - 1; // offset
+      size_t delay = dates[j] - t_inf[j];
       if (delay < 1 || delay > f_dens.size()) {
 	return  R_NegInf;
       }
@@ -223,7 +223,6 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   double pi = static_cast<double>(param["pi"]);
   Rcpp::IntegerVector kappa = param["kappa"];
 
-  size_t j = 0;
   double out = 0.0;
 
   // all cases are retained
@@ -238,7 +237,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
     size_t length_i = static_cast<size_t>(LENGTH(i));
     Rcpp::IntegerVector vec_i(i);
     for (size_t k = 0; k < length_i; k++) {
-      j = vec_i[k] - 1;
+      size_t j = vec_i[k] - 1; // offset
       if (kappa[j] != NA_INTEGER) {
 	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
       }

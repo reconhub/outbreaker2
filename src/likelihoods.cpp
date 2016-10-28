@@ -73,7 +73,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
     for (size_t k = 0; k < length_i; k++) {
       size_t j = vec_i[k] - 1; // offset
       if (alpha[j] != NA_INTEGER) {
-	sum_nmut += D(j, alpha[j]);
+	sum_nmut += D(j, alpha[j] - 1); // offset
 	length_nmut++;
       }
 

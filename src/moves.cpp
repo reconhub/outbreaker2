@@ -93,6 +93,7 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
   Rcpp::List new_param = clone(param); // deep copy here for now, ultimately should be an arg.
   Rcpp::IntegerVector t_inf = param["t.inf"];
   Rcpp::IntegerVector new_t_inf = new_param["t.inf"];
+  Rcpp::IntegerVector alpha = param["alpha"];
 
   size_t N = static_cast<size_t>(data["N"]);
 
@@ -102,17 +103,18 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
   for (size_t i = 0; i < N; i++) {
     // loglike with current value
     // old_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
-    // old_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i)); // term descendents of 'i'
-    old_loglike = cpp_ll_timing(data, param, R_NilValue);
+    // old_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i+1)); // term descendents of 'i'
+     old_loglike = cpp_ll_timing(data, param, R_NilValue);
 
     // proposal (+/- 1)
     new_t_inf[i] += unif_rand() > 0.5 ? 1 : -1; // new proposed value
     new_param["t.inf"] = new_t_inf;
 
-    // loglike with current value
+    // loglike with new value
     // new_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
-    // new_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i)); // term descendents of 'i'
+    // new_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i+1)); // term descendents of 'i'
     new_loglike = cpp_ll_timing(data, new_param, R_NilValue);
+
 
     // acceptance term
     p_accept = exp(new_loglike - old_loglike);

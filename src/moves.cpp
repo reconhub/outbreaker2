@@ -96,12 +96,10 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
   size_t N = static_cast<size_t>(data["N"]);
 
-  size_t i = 0;
-
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
 
 
-  for (i = 0; i < N; i++) {
+  for (size_t i = 0; i < N; i++) {
     // loglike with current value
     // old_loglike = cpp_ll_timing(data, param, i); // term for case 'i'
     // old_loglike = cpp_ll_timing(data, param, find_descendents(i)); // term descendents of 'i'
@@ -155,19 +153,17 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 
   size_t N = static_cast<size_t>(data["N"]);
 
-  size_t i = 0;
-
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
   double old_loglike2 = 0.0, new_loglike2 = 0.0, p_accept2 = 0.0;
 
-  for (i = 0; i < N; i++) {
+  for (size_t i = 0; i < N; i++) {
 
     // only non-NA ancestries are moved, if there is at least 1 choice
     if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
 
       // loglike with current value
       old_loglike = cpp_ll_all(data, param, R_NilValue);
-      old_loglike2 = cpp_ll_all(data, param, i+1);
+      old_loglike2 = cpp_ll_all(data, param, i+1); // offset
 
       // proposal (+/- 1)
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i); // new proposed value (on scale 1 ... N)

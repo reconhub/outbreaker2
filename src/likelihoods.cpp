@@ -112,7 +112,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   // all cases are retained
   if (i == R_NilValue) {
-    for (j = 0; j < N; j++) {
+    for (size_t j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
 	delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
@@ -170,7 +170,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   // all cases are retained
   if (i == R_NilValue) {
-    for (j = 0; j < N; j++) {
+    for (size_t j = 0; j < N; j++) {
       delay = dates[j] - t_inf[j];
       if (delay < 1 || delay > f_dens.size()) {
 	return  R_NegInf;
@@ -227,7 +227,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   // all cases are retained
   if (i == R_NilValue) {
-    for (j = 0; j < N; j++) {
+    for (size_t j = 0; j < N; j++) {
       if (kappa[j] != NA_INTEGER) {
 	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
       }

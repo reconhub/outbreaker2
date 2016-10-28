@@ -3,14 +3,29 @@
 
 
 
+// IMPORTANT: ON INDEXING VECTORS AND ANCESTRIES
+
+// Most of the functions implemented here are susceptible to be called from R
+// via Rcpp, and are therefore treated as interfaces. This causes a number of
+// headaches when using indices of cases defined in R (1:N) to refer to elements
+// in Rcpp / Cpp vectors (0:N-1). By convention, we store all data on the
+// original scale (1:N), and modify indices whenever accessing elements of
+// vectors. In other words, in an expression like 'alpha[j]', 'j' should always
+// be on the internal scale (0:N-1).
+
+// In all these functions, 'SEXP i' is an optional vector of case indices, on
+// the 1:N scale.
 
 
 
+
+
+// ---------------------------
 
 //   This function returns a vector of indices of cases which could be infector
 //   of 'i' (i.e., their infection dates preceed that of 'i'). Only tricky bit
-//   here is keep in mind that 't_inf' is indexed from 0 to N-1, while alpha
-//   (ancestors) are values from 1 to N.
+//   here is keep in mind that 't_inf' is indexed from 0 to N-1, while 'i' and
+//   'alpha' (ancestors) are values from 1 to N.
 
 //   Original R code:
 
@@ -24,15 +39,13 @@
 //     return(which(t.inf < t.inf[i[1]]))
 // }
 
-
-
 // [[Rcpp::export("cpp.are.possible.ancestors")]]
 std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i) {
-  size_t j = 0, n = t_inf.size();
+  size_t n = t_inf.size();
   std::vector<int> out;
   out.reserve(n);
-  for (j; j < n; j++) {
-    if (t_inf[j] < t_inf[i]) {
+  for (size_t j = 0; j < n; j++) {
+    if (t_inf[j] < t_inf[i-1]) { // offset
       out.push_back(j+1); // +1 needed for range 1 ... N
     }
   }
@@ -41,9 +54,12 @@ std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i)
 
 
 
-/*
-  This function samples a single value from a vector of integers.
-*/
+
+
+// ---------------------------
+
+//  This function samples a single value from a vector of integers.
+
 // [[Rcpp::export("cpp.sample1")]]
 size_t cpp_sample1(std::vector<int> x) {
   if (x.size() < 1) {
@@ -57,16 +73,16 @@ size_t cpp_sample1(std::vector<int> x) {
 
 
 
-/*
-   This function choose a possible infector for case 'i'.
+// ---------------------------
 
-   Original R version:
+//    This function choose a possible infector for case 'i'; 'i' is on the scale
+//    1:N
 
-.choose.possible.alpha <- function(t.inf, i) {
-    return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
-}
+//    Original R version:
 
-*/
+// .choose.possible.alpha <- function(t.inf, i) {
+//     return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
+// }
 
 // [[Rcpp::export("cpp.pick.possible.ancestor")]]
 size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
@@ -78,18 +94,18 @@ size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
 
 
 
-/*
-   This function returns the descendents of a given case 'i' in the current ancestries.
+// ---------------------------
 
-   Original R version:
+// This function returns the descendents of a given case 'i' in the current
+// ancestries; 'i' is on the scale 1:N. The output is also on the scale 1:N.
 
-find.descendents <- function(param, i) {
-    ## find descendents
-    which(param.current$alpha==i)
-}
+// Original R version:
 
+// find.descendents <- function(param, i) {
+//   ## find descendents
+//     which(param.current$alpha==i)
+//  }
 
-*/
 // [[Rcpp::export(cpp.find.descendents)]]
 Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
   Rcpp::LogicalVector descend_from_i = alpha==i;
@@ -98,7 +114,7 @@ Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
 
   for (size_t j = 0; j < alpha.size(); j++) {
     if (descend_from_i[j]) {
-      out[counter++] = j;
+      out[counter++] = j + 1; // offset
     }
   }
   return out;

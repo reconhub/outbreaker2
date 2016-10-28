@@ -5,15 +5,30 @@
 
 
 
+// IMPORTANT: ON INDEXING VECTORS AND ANCESTRIES
 
-/*
+// Most of the functions implemented here are susceptible to be called from R
+// via Rcpp, and are therefore treated as interfaces. This causes a number of
+// headaches when using indices of cases defined in R (1:N) to refer to elements
+// in Rcpp / Cpp vectors (0:N-1). By convention, we store all data on the
+// original scale (1:N), and modify indices whenever accessing elements of
+// vectors. In other words, in an expression like 'alpha[j]', 'j' should always
+// be on the internal scale (0:N-1).
 
-  Movement of the mutation rate 'mu' is done using a dumb normal proposal. This is satisfying for
-  now - we only reject a few non-sensical values outside the range [0;1]. The SD of the proposal
-  (implicitely contained in rand$mu.rnorm1, but really provided through 'config', seems fine as the
-  range of real values will never change much. Probably not much point in using auto-tuning here.
+// In all these functions, 'SEXP i' is an optional vector of case indices, on
+// the 1:N scale.
 
-*/
+
+
+
+
+// ---------------------------
+
+// Movement of the mutation rate 'mu' is done using a dumb normal proposal. This
+// is satisfying for now - we only reject a few non-sensical values outside the
+// range [0;1]. The SD of the proposal (implicitely contained in rand$mu.rnorm1,
+// but really provided through 'config', seems fine as the range of real values
+// will never change much. Probably not much point in using auto-tuning here.
 
 // [[Rcpp::export("cpp.move.mu", rng = true)]]
 Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
@@ -52,24 +67,26 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
 
 
-/*
 
-  Movement of infection dates are +/- 1 from current states. These movements are currently
-  vectorised, i.e. a bunch of dates are proposed all together; this may not be sustainable for
-  larger datasets. The non-vectorised option will be slower and speed-up with C/C++ will be more
-  substantial then.
+// ---------------------------
 
-  This version differs from the initial R implementation in several points:
-  1. all cases are moved
-  2. cases are moved one by one
-  3. movement for each case is +/- 1 time unit
+// Movement of infection dates are +/- 1 from current states. These movements
+// are currently vectorised, i.e. a bunch of dates are proposed all together;
+// this may not be sustainable for larger datasets. The non-vectorised option
+// will be slower and speed-up with C/C++ will be more substantial then.
 
-  Notes
-  - when computing the timing log-likelihood, the descendents of each case are also affected.
-  - we generate a new vector 'new_t_inf', which will replace the previous pointer defining 
-  param["t.inf"].
+// This version differs from the initial R implementation in several points:
+// 1. all cases are moved
+// 2. cases are moved one by one
+// 3. movement for each case is +/- 1 time unit
 
-*/
+// Notes
+
+// - when computing the timing log-likelihood, the descendents of each case are
+// also affected.
+
+// - we generate a new vector 'new_t_inf', which will replace the previous
+// pointer defining param["t.inf"].
 
 // [[Rcpp::export("cpp.move.t.inf", rng = true)]]
 Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
@@ -119,14 +136,15 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
 
 
-/*
-  Movement of ancestries ('alpha') is not vectorised, movements are made one case at a time. This
-  procedure is simply about picking an infector at random amongst cases preceeding the case
-  considered. The original version in 'outbreaker' used to move simultaneously 'alpha', 'kappa' and
-  't.inf', but current implementation is simpler and seems to mix at least as well. Proper movement
-  of 'alpha' needs this procedure as well as a swapping procedure (swaps are not possible through
-  move.alpha only).
-*/
+// ---------------------------
+
+// Movement of ancestries ('alpha') is not vectorised, movements are made one
+// case at a time. This procedure is simply about picking an infector at
+// random amongst cases preceeding the case considered. The original version
+// in 'outbreaker' used to move simultaneously 'alpha', 'kappa' and 't.inf',
+// but current implementation is simpler and seems to mix at least as
+// well. Proper movement of 'alpha' needs this procedure as well as a swapping
+// procedure (swaps are not possible through move.alpha only).
 
 // [[Rcpp::export("cpp.move.alpha", rng = true)]]
 Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {

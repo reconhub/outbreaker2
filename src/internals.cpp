@@ -132,6 +132,58 @@ Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
 
 
 
+// ---------------------------
+
+// This function returns a vector of indices of cases which are 'local' to a
+// case 'i'. Locality is defined as the following set of cases:
+
+// - 'i'
+// - the descendents of 'i'
+// - 'alpha[i-1]'
+// - the descendents of 'alpha[i]' (excluding 'i')
+
+// where 'alpha' is a IntegerVector storing ancestries. Note that 'i' and
+// 'alpha' are on the scale 1:N. 
+
+// [[Rcpp::export("cpp.find.local.cases")]]
+Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
+  // determine descendents of 'i':
+  Rcpp::IntegerVector desc_i = cpp_find_descendents(alpha, i);
+  size_t n = desc_i.size() + 1; // +1 is to count 'i' itself
+  
+  // determine descendents of 'alpha[i]':
+  Rcpp::IntegerVector desc_alpha_i = cpp_find_descendents(alpha,
+							  (size_t) alpha[i-1]);
+  if (alpha[i-1] != NA_INTEGER) {
+    n += desc_alpha_i.size();
+  }
+
+  // create output
+  Rcpp::IntegerVector out(n);
+  size_t counter = 0;
+
+  // 'i'
+  out[counter++] = i;
+
+  // 'descendents of 'i'
+  for (size_t j = 0; j < desc_i.size(); j++) {
+    out[counter++] = desc_i[j];
+  }
+  
+  if (alpha[i-1] != NA_INTEGER) {
+    // alpha[i-1] ...
+    out[counter++] = alpha[i-1];
+    
+    // ... and its descendents
+    for (size_t j = 0; j < desc_alpha_i.size(); j++) {
+      if ( desc_alpha_i[j] != i) {
+	out[counter++] = desc_alpha_i[j];
+      }
+    }
+  }
+
+  return out;
+}
 
 
 

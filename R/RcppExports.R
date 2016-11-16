@@ -17,6 +17,10 @@ cpp.find.descendents <- function(alpha, i) {
     .Call('outbreaker2_cpp_find_descendents', PACKAGE = 'outbreaker2', alpha, i)
 }
 
+cpp.find.local.cases <- function(alpha, i) {
+    .Call('outbreaker2_cpp_find_local_cases', PACKAGE = 'outbreaker2', alpha, i)
+}
+
 cpp.ll.genetic <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i)
 }

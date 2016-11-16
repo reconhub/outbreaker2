@@ -120,14 +120,14 @@ test_that("Testing find.descendents", {
     expect_equal(cpp.find.descendents(c(1,NA,2,1), 1), c(1L, 4L))
     expect_equal(cpp.find.descendents(c(NA, 1,1,1,2,2,NA,1,1), 1),
                                       c(2L, 3L, 4L, 8L, 9L))
-
+    expect_equal(cpp.find.descendents(c(NA,1,NA,2), NA_integer_), integer(0))
 })
 
 
 
 
 test_that("Testing add.convolutions", {
- ## skip on CRAN
+    ## skip on CRAN
     skip_on_cran()
 
 
@@ -144,3 +144,33 @@ test_that("Testing add.convolutions", {
     expect_true(!any(is.na(out$log.w.dens)))
 
 })
+
+
+
+
+test_that("Testing cpp.find.local.cases", {
+    ## skip on CRAN
+    skip_on_cran()
+
+    expect_equal(cpp.find.local.cases(NA, 1), 1L)
+    expect_equal(cpp.find.local.cases(c(NA, 1, 2), 1), c(1L, 2L))
+    expect_equal(cpp.find.local.cases(c(NA, 1, 1, 1), 1),
+                 as.integer(1:4))
+    expect_equal(sort(cpp.find.local.cases(c(NA, 1, 1, 1), 2)), 
+                 as.integer(1:4))
+
+    tre <- c(NA, 1, 1, 3, 3, 5, 2)
+    expect_equal(cpp.find.local.cases(tre, 1), 1:3)
+    expect_equal(sort(cpp.find.local.cases(tre, 2)),
+                 c(1, 2, 3, 7))
+    expect_equal(sort(cpp.find.local.cases(tre, 7)),
+                 c(2, 7))
+    expect_equal(sort(cpp.find.local.cases(tre, 4)),
+                 c(3, 4, 5))
+    expect_equal(sort(cpp.find.local.cases(tre, 5)),
+                 c(3, 4, 5, 6))
+    expect_equal(sort(cpp.find.local.cases(tre, 6)),
+                 c(5, 6))
+    
+    
+}

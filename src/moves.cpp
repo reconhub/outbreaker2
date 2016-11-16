@@ -272,4 +272,3 @@ Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param) {
 
   return new_param;
 }
-

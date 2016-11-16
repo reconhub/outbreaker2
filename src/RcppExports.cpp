@@ -161,3 +161,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_move_swap_alpha
+Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param);
+RcppExport SEXP outbreaker2_cpp_move_swap_alpha(SEXP dataSEXP, SEXP paramSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_move_swap_alpha(data, param));
+    return rcpp_result_gen;
+END_RCPP
+}

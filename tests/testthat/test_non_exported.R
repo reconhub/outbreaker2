@@ -105,13 +105,21 @@ test_that("Testing find.descendents", {
 
 
     ## generate data
-    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    data <- with(fake.outbreak,
+                 outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
+    
     config <- outbreaker.config(data=data)
     param <- outbreaker.create.mcmc(data=data, config=config)$current
 
     ## tests
     expect_equal(find.descendents(param, 1), c(2,4,28))
     expect_equal(find.descendents(param, 30), integer(0))
+
+    ## test cpp version
+    expect_equal(cpp.find.descendents(c(NA), 10), integer(0))
+    expect_equal(cpp.find.descendents(c(1,NA,2,1), 1), c(1L, 4L))
+    expect_equal(cpp.find.descendents(c(NA, 1,1,1,2,2,NA,1,1), 1),
+                                      c(2L, 3L, 4L, 8L, 9L))
 
 })
 

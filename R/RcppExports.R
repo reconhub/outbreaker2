@@ -53,3 +53,7 @@ cpp.move.alpha <- function(data, param) {
     .Call('outbreaker2_cpp_move_alpha', PACKAGE = 'outbreaker2', data, param)
 }
 
+cpp.move.swap.alpha <- function(data, param) {
+    .Call('outbreaker2_cpp_move_swap_alpha', PACKAGE = 'outbreaker2', data, param)
+}
+

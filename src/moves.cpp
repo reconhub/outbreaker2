@@ -32,7 +32,8 @@
 
 // [[Rcpp::export("cpp.move.mu", rng = true)]]
 Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
-  Rcpp::List new_param = clone(param); // deep copy here for now, ultimately should be an arg.
+  // deep copy here for now, ultimately should be an arg.
+  Rcpp::List new_param = clone(param); 
   Rcpp::NumericVector mu = param["mu"];
   Rcpp::NumericVector new_mu = new_param["mu"];
 
@@ -54,8 +55,8 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // acceptance term
   p_accept = exp(new_loglike - old_loglike);
 
-  // acceptance: the new value is already in mu, so we only act if the move is rejected, in
-  // which case we restore the previous ('old') value
+  // acceptance: the new value is already in mu, so we only act if the move is
+  // rejected, in which case we restore the previous ('old') value
   if (p_accept < unif_rand()) { // reject new values
     new_mu[0] = mu[0];
     new_param["mu"] = new_mu;
@@ -76,21 +77,24 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 // will be slower and speed-up with C/C++ will be more substantial then.
 
 // This version differs from the initial R implementation in several points:
+
 // 1. all cases are moved
 // 2. cases are moved one by one
 // 3. movement for each case is +/- 1 time unit
 
 // Notes
 
-// - when computing the timing log-likelihood, the descendents of each case are
-// also affected.
+// - when computing the timing log-likelihood, the descendents of each
+// case are also affected.
 
-// - we generate a new vector 'new_t_inf', which will replace the previous
-// pointer defining param["t.inf"].
+// - we generate a new vector 'new_t_inf', which will replace the
+// previous pointer defining param["t.inf"].
 
 // [[Rcpp::export("cpp.move.t.inf", rng = true)]]
 Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
-  Rcpp::List new_param = clone(param); // deep copy here for now, ultimately should be an arg.
+  // deep copy here for now, ultimately should be an arg.
+  
+  Rcpp::List new_param = clone(param); 
   Rcpp::IntegerVector t_inf = param["t.inf"];
   Rcpp::IntegerVector new_t_inf = new_param["t.inf"];
   Rcpp::IntegerVector alpha = param["alpha"];
@@ -157,7 +161,6 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
   size_t N = static_cast<size_t>(data["N"]);
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
-  double old_loglike2 = 0.0, new_loglike2 = 0.0, p_accept2 = 0.0;
 
   for (size_t i = 0; i < N; i++) {
 
@@ -195,4 +198,78 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
   return new_param;
 }
 
+
+
+
+
+// ---------------------------
+
+// The basic movement of ancestries (picking an ancestor at random amongst in
+// previous cases) makes swaps of ancestries (A->B) to (B->A) very
+// difficult. This function addresses the issue. It is computer-intensive, but
+// likely a determining factor for faster mixing. Unlike previous versions in
+// the original 'outbreaker' package, all cases are 'moved' here. A swap is
+// defined as:
+
+// x -> a -> b  becomes a -> x -> b
+
+// Obviously cases are moved one at a time. We need to use local likelihood
+// changes for this move to scale well with outbreak size. The complicated bit
+// is that the move impacts all descendents from 'a' as well as 'x'.
+
+// [[Rcpp::export("cpp.move.swap.alpha", rng = true)]]
+Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param) {
+
+  Rcpp::List new_param = clone(param);
+  Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
+  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
+  Rcpp::IntegerVector new_alpha = new_param["alpha"];
+
+  size_t N = static_cast<size_t>(data["N"]);
+
+  double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+
+  for (size_t i = 0; i < N; i++) {
+
+    // only non-NA ancestries are moved, if there is at least 1 choice
+    if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
+
+      // The local likelihood is defined as the likelihood computed for the
+      // cases affected by the swap; these include:
+      
+      // - the descendents of 'i'
+      // - the descendents of 'alpha[i]'
+      // - 'alpha[i]'
+      
+      // loglike with current value
+      old_loglike = cpp_ll_all(data, param, i+1); // offset
+
+      // proposal: swap case 'i' and its ancestor
+      //new_alpha[i] = cpp_swap_cases(t_inf, i+1);
+
+      // loglike with current value
+      new_param["alpha"] = new_alpha;
+      // new_loglike = cpp_ll_all(data, new_param, R_NilValue);
+      new_loglike = cpp_ll_all(data, new_param, i+1);
+      
+      
+      
+      // acceptance term
+      p_accept = exp(new_loglike - old_loglike);
+
+      // std::vector<int> calpha = Rcpp::as<std::vector<int> >(alpha);
+      // Rcpp::Rcout << "\ni: " << i << " old1: " << old_loglike << "  new1: " << new_loglike << "  ratio1: " << p_accept << std::endl;
+      // Rcpp::Rcout << "\ni: " << i << " old2: " << old_loglike2 << "  new2: " << new_loglike2 << "  ratio2: " << p_accept2 << std::endl;
+
+      // acceptance: the new value is already in alpha, so we only act if the move is rejected, in
+      // which case we restore the previous ('old') value
+      if (p_accept < unif_rand()) { // reject new values
+	new_alpha[i] = alpha[i];
+	new_param["alpha"] = new_alpha;
+      }
+    }
+  }
+
+  return new_param;
+}
 

@@ -224,7 +224,8 @@ Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param) {
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_alpha = new_param["alpha"];
-
+  Rcpp::IntegerVector local_cases;
+  
   size_t N = static_cast<size_t>(data["N"]);
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
@@ -236,21 +237,25 @@ Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param) {
 
       // The local likelihood is defined as the likelihood computed for the
       // cases affected by the swap; these include:
-      
+
+      // - 'i'
       // - the descendents of 'i'
-      // - the descendents of 'alpha[i]'
       // - 'alpha[i]'
+      // - the descendents of 'alpha[i]' (other than 'i')
       
+      local_cases = cpp_find_local_cases(param["alpha"], i+1);
+	
       // loglike with current value
-      old_loglike = cpp_ll_all(data, param, i+1); // offset
+      old_loglike = cpp_ll_all(data, param, local_cases); // offset
 
       // proposal: swap case 'i' and its ancestor
       //new_alpha[i] = cpp_swap_cases(t_inf, i+1);
 
       // loglike with current value
       new_param["alpha"] = new_alpha;
+      
       // new_loglike = cpp_ll_all(data, new_param, R_NilValue);
-      new_loglike = cpp_ll_all(data, new_param, i+1);
+      new_loglike = cpp_ll_all(data, new_param, local_cases);
       
       
       

@@ -217,13 +217,13 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 // changes for this move to scale well with outbreak size. The complicated bit
 // is that the move impacts all descendents from 'a' as well as 'x'.
 
-// [[Rcpp::export("cpp.move.swap.alpha", rng = true)]]
-Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param) {
+// [[Rcpp::export("cpp.move.swap.cases", rng = true)]]
+Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
-  Rcpp::IntegerVector new_alpha = new_param["alpha"];
+  Rcpp::List swapinfo; // contains alpha and t.inf
   Rcpp::IntegerVector local_cases;
   
   size_t N = static_cast<size_t>(data["N"]);
@@ -245,35 +245,36 @@ Rcpp::List cpp_move_swap_alpha(Rcpp::List data, Rcpp::List param) {
       
       local_cases = cpp_find_local_cases(param["alpha"], i+1);
 	
-      // loglike with current value
+
+      // loglike with current parameters
+
       old_loglike = cpp_ll_all(data, param, local_cases); // offset
 
-      // proposal: swap case 'i' and its ancestor
-      //new_alpha[i] = cpp_swap_cases(t_inf, i+1);
 
-      // loglike with current value
-      new_param["alpha"] = new_alpha;
+      // proposal: swap case 'i' and its ancestor
+
+      swapinfo = cpp_swap_cases(param, i+1);
+      new_param["alpha"] = swapinfo["alpha"];
+      new_param["t.inf"] = swapinfo["t.inf"];
+
       
-      // new_loglike = cpp_ll_all(data, new_param, R_NilValue);
+      // loglike with new parameters
+
       new_loglike = cpp_ll_all(data, new_param, local_cases);
       
       
-      
       // acceptance term
+      
       p_accept = exp(new_loglike - old_loglike);
 
-      // std::vector<int> calpha = Rcpp::as<std::vector<int> >(alpha);
-      // Rcpp::Rcout << "\ni: " << i << " old1: " << old_loglike << "  new1: " << new_loglike << "  ratio1: " << p_accept << std::endl;
-      // Rcpp::Rcout << "\ni: " << i << " old2: " << old_loglike2 << "  new2: " << new_loglike2 << "  ratio2: " << p_accept2 << std::endl;
-
-      // acceptance: the new value is already in alpha, so we only act if the move is rejected, in
-      // which case we restore the previous ('old') value
-      if (p_accept < unif_rand()) { // reject new values
-	new_alpha[i] = alpha[i];
-	new_param["alpha"] = new_alpha;
+      // acceptance: change param only if new values is accepted
+      
+      if (p_accept >= unif_rand()) { // accept new parameters
+	param["alpha"] = new_param["alpha"];
+	param["t.inf"] = new_param["t.inf"];
       }
     }
   }
 
-  return new_param;
+  return param;
 }

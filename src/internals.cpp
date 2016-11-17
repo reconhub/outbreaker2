@@ -206,22 +206,25 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 // - infection time of 'i' becomes that of 'x'
 // - infection time of 'x' becomes that of 'i'
 
-// Note that 'i' and values of alpha are on the scale 1:N. To avoid having to
-// re-allocate a whole set of parameters, the function's output is effectively
-// provided as argument, and the function itself is void.
+// Note that 'i' and values of alpha are on the scale 1:N. The function's output
+// is a list with new alpha and t.inf.
 
 // [[Rcpp::export("cpp.swap.cases")]]
-void cpp_swap_cases(Rcpp::List param_in, Rcpp::List param_out, size_t i) {
-  Rcpp::IntegerVector alpha_in = param_in["alpha"];
-  Rcpp::IntegerVector alpha_out = param_out["alpha"];
-  Rcpp::IntegerVector t_inf_in = param_in["t.inf"];
-  Rcpp::IntegerVector t_inf_out = param_out["t.inf"];
+Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
+  Rcpp::IntegerVector alpha_in = param["alpha"];
+  Rcpp::IntegerVector t_inf_in = param["t.inf"];
+  Rcpp::IntegerVector alpha_out = clone(alpha_in);
+  Rcpp::IntegerVector t_inf_out = clone(t_inf_in);
+  Rcpp::List out;
+  out["alpha"] = alpha_out;
+  out["t.inf"] = t_inf_out;
+      
   size_t N = alpha_in.size();
   
   // escape if the case is imported, i.e. alpha[i-1] is NA
   
   if (alpha_in[i-1] == NA_INTEGER) {
-    return;
+    return out;
   }
   size_t x = (size_t) alpha_in[i-1];
   
@@ -250,7 +253,9 @@ void cpp_swap_cases(Rcpp::List param_in, Rcpp::List param_out, size_t i) {
   // swap infections times of 'i' and 'x'
   t_inf_out[i-1] =   t_inf_in[x-1];
   t_inf_out[x-1] =   t_inf_in[i-1];
-  
+
+
+  return out;
 }
 
 

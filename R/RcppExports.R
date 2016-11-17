@@ -21,8 +21,8 @@ cpp.find.local.cases <- function(alpha, i) {
     .Call('outbreaker2_cpp_find_local_cases', PACKAGE = 'outbreaker2', alpha, i)
 }
 
-cpp.swap.cases <- function(param_in, param_out, i) {
-    invisible(.Call('outbreaker2_cpp_swap_cases', PACKAGE = 'outbreaker2', param_in, param_out, i))
+cpp.swap.cases <- function(param, i) {
+    .Call('outbreaker2_cpp_swap_cases', PACKAGE = 'outbreaker2', param, i)
 }
 
 cpp.ll.genetic <- function(data, param, i) {
@@ -61,7 +61,7 @@ cpp.move.alpha <- function(data, param) {
     .Call('outbreaker2_cpp_move_alpha', PACKAGE = 'outbreaker2', data, param)
 }
 
-cpp.move.swap.alpha <- function(data, param) {
-    .Call('outbreaker2_cpp_move_swap_alpha', PACKAGE = 'outbreaker2', data, param)
+cpp.move.swap.cases <- function(data, param) {
+    .Call('outbreaker2_cpp_move_swap_cases', PACKAGE = 'outbreaker2', data, param)
 }
 

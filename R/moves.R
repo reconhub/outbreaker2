@@ -86,39 +86,11 @@ make.move.alpha <- function(config, densities) {
 ## is that the move impacts all descendents from 'a' as well as 'x'.
 
 make.move.swap.cases <- function(config, densities) {
-    function(param) {
-        ## find ancestries which can move
-        to.move <- select.alpha.to.move(param, config)
-
-        ## leave if nothing moves
-        if (length(to.move)<1) {
-            return(param)
-        }
-
-        ## move all ancestries that should be moved
-        for (i in to.move) {
-            ## swap ancestries
-            new.param <- swap.cases(param, config, i)
-
-            ## compute log ratio using local changes only; these include:
-
-            ## descendents of to.move
-            ## descendents of alpha[to.move]
-            ## alpha[to.move]
-
-            affected.cases <- c(find.descendents(param, i=i),
-                                find.descendents(param, i=param$alpha[i]),
-                                param$alpha[i])
-            logratio <- densities$loglike$all(new.param, i=affected.cases) - densities$loglike$all(param, i=affected.cases)
-
-            ## accept/reject
-            if (logratio >= log(stats::runif(1))) {
-                param <- new.param
-            }
-        } # end for loop
-
-        return(param)
-    }
+    data <- environment(densities$loglike$timing)$data
+    .move.swap.cases(config, densities)
+    ## function(param) {
+    ##     cpp.move.swap.cases(data, param)
+    ## }
 }
 
 
@@ -159,10 +131,11 @@ make.move.pi <- function(config, densities) {
 
 
 
-## Movement of the number of generations on transmission chains ('kappa') is done for one ancestry
-## at a time. As for infection times ('t.inf') we use a dumb, symmetric +/- 1 proposal. But because
-## values are typically in a short range (e.g. [1-3]) we probably propose more dumb values here. We
-## may eventually want to bounce back or use and correct for assymetric proposals.
+## Movement of the number of generations on transmission chains ('kappa') is
+## done for one ancestry at a time. As for infection times ('t.inf') we use a
+## dumb, symmetric +/- 1 proposal. But because values are typically in a short
+## range (e.g. [1-3]) we probably propose more dumb values here. We may
+## eventually want to bounce back or use and correct for assymetric proposals.
 
 make.move.kappa <- function(config, densities) {
     function(param) {

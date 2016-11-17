@@ -322,13 +322,12 @@ add.convolutions <- function(data, config) {
 
 
 
-#####################################################################################################
-#####################################################################################################
-## Some of the functions used in these tests have been designed in R, then translated into C++ (with
-## Rcpp integration). For testing purposes, we leave the 'old' R versions here, to check the
-## behaviour of new version is as it should be.
-#####################################################################################################
-#####################################################################################################
+################################################################################
+## Some of the functions used in these tests have been designed in R, then
+## translated into C++ (with Rcpp integration). For testing purposes, we leave
+## the 'old' R versions here, to check the behaviour of new version is as it
+## should be.
+################################################################################
 
 
 ## This likelihood corresponds to the probability of observing a number of mutations between cases
@@ -490,12 +489,14 @@ add.convolutions <- function(data, config) {
 
 
 
-## Movement of ancestries ('alpha') is not vectorised, movements are made one case at a time. This
-## procedure is simply about picking an infector at random amongst cases preceeding the case
-## considered. This movement is not symmetric, as the number of choices may change. The original
-## version in 'outbreaker' used to move simultaneously 'alpha', 'kappa' and 't.inf', but current
-## implementation is simpler and seems to mix at least as well. Proper movement of 'alpha' needs
-## this procedure as well as a swapping procedure (swaps are not possible through move.alpha only).
+## Movement of ancestries ('alpha') is not vectorised, movements are made one
+## case at a time. This procedure is simply about picking an infector at random
+## amongst cases preceeding the case considered. This movement is not symmetric,
+## as the number of choices may change. The original version in 'outbreaker'
+## used to move simultaneously 'alpha', 'kappa' and 't.inf', but current
+## implementation is simpler and seems to mix at least as well. Proper movement
+## of 'alpha' needs this procedure as well as a swapping procedure (swaps are
+## not possible through move.alpha only).
 ##
 ## This is the old R function, replaced by Rcpp.move.alpha.
 ##
@@ -559,9 +560,58 @@ add.convolutions <- function(data, config) {
 
 
 
+## This is the complementary procedure to the above one (move.alpha). This type
+## of move swaps a case 'a' with its ancestor, e.g.
+
+## x -> a -> b  becomes a -> x -> b
+
+## Obviously cases are moved one at a time. We need to used local likelihood
+## changes for this move to scale well with outbreak size. The complicated bit
+## is that the move impacts all descendents from 'a' as well as 'x'.
+
+.move.swap.cases <- function(config, densities) {
+    function(param) {
+    ## find ancestries which can move
+    to.move <- select.alpha.to.move(param, config)
+
+    ## leave if nothing moves
+    if (length(to.move)<1) {
+        return(param)
+    }
+
+    ## move all ancestries that should be moved
+    for (i in to.move) {
+        ## swap ancestries
+        new.param <- swap.cases(param, config, i)
+
+        ## compute log ratio using local changes only; these include:
+
+        ## descendents of to.move
+        ## descendents of alpha[to.move]
+        ## alpha[to.move]
+
+        affected.cases <- c(find.descendents(param, i=i),
+                            find.descendents(param, i=param$alpha[i]),
+                            param$alpha[i])
+        logratio <- densities$loglike$all(new.param, i=affected.cases) -
+            densities$loglike$all(param, i=affected.cases)
+
+        ## accept/reject
+        if (logratio >= log(stats::runif(1))) {
+            param <- new.param
+        }
+    } # end for loop
+
+    return(param)
+    }
+}
+
+
+
+
+
+
 ## choose one possible ancestor for a case 'i'
 .choose.possible.alpha <- function(t.inf, i) {
     return(sample(.are.possible.alpha(t.inf=t.inf, i=i), 1))
 }
-
-

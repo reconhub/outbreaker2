@@ -28,7 +28,7 @@ test_that("test: .choose.possible.alpha", {
 })
 
 
-## test swap.cases ##
+## ancestry-related functions (R functions)
 test_that("Auxiliary functions for ancestries are working", {
     ## skip on CRAN
     skip_on_cran()
@@ -69,6 +69,29 @@ test_that("Auxiliary functions for ancestries are working", {
 
 })
 
+
+
+
+## Test swapping of ancestries in Cpp
+test_that("Ancestries swapping in Rcpp works", {
+    skip_on_cran()
+
+    ## make dummy tree
+    param.old <- list(alpha = c(NA, 1L, 1L, 3L, 4L),
+                      t.inf = c(1L, 2L, 2L, 3L, 4L))
+    param.new <- list(alpha = c(NA, 1L, 1L, 3L, 4L),
+                      t.inf = c(1L, 2L, 2L, 3L, 4L))
+    
+    ## no swapping
+    cpp.swap.cases(param.old, param.new, 1L)
+    expect_identical(param.old, param.new)
+
+    ## swap 3 and 1 
+    cpp.swap.cases(param.old, param.new, 3L)
+    expect_equal(param.new$alpha, c(3L, 3L, NA, 1L, 4L))
+    expect_equal(param.new$t.inf, c(2L, 2L, 1L, 3L, 4L))
+    
+})
 
 ## ## test check.i ##
 ## test_that("Testing check.i", {

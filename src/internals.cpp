@@ -189,6 +189,77 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 
 
 
+
+
+
+// ---------------------------
+
+// This function swaps cases in a transmission tree. The focus case is 'i', and
+// is swapped with its ancestor 'x=alpha[i-1]'. In other words the change is
+// from: x -> i to i -> x
+// Involved changes are:
+
+// - descendents of 'i' become descendents of 'x'
+// - descendents of 'x' become descendents of 'i'
+// - the infector if 'i' becomes the infector of 'x' (i.e. alpha[x-1])
+// - the infector if 'x' becomes 'i'
+// - infection time of 'i' becomes that of 'x'
+// - infection time of 'x' becomes that of 'i'
+
+// Note that 'i' and values of alpha are on the scale 1:N. To avoid having to
+// re-allocate a whole set of parameters, the function's output is effectively
+// provided as argument, and the function itself is void.
+
+// [[Rcpp::export("cpp.swap.cases")]]
+void cpp_swap_cases(Rcpp::List param_in, Rcpp::List param_out, size_t i) {
+  Rcpp::IntegerVector alpha_in = param_in["alpha"];
+  Rcpp::IntegerVector alpha_out = param_out["alpha"];
+  Rcpp::IntegerVector t_inf_in = param_in["t.inf"];
+  Rcpp::IntegerVector t_inf_out = param_out["t.inf"];
+  size_t N = alpha_in.size();
+  
+  // escape if the case is imported, i.e. alpha[i-1] is NA
+  
+  if (alpha_in[i-1] == NA_INTEGER) {
+    return;
+  }
+  size_t x = (size_t) alpha_in[i-1];
+  
+  // replace ancestries:
+  // - descendents of 'i' become descendents of 'x'
+  // - descendents of 'x' become descendents of 'i'
+
+  for (size_t j = 0; j < N; j++) {
+    if (alpha_in[j] == i) {
+      alpha_out[j] = x;
+    } else if (alpha_in[j] == x) {
+      alpha_out[j] = i;
+    }
+  }
+
+
+  // the ancestor of 'i' becomes an ancestor of 'x'
+
+  alpha_out[i-1] = alpha_in[x-1];
+
+  
+  // 'i' is now the ancestor of 'x'
+  alpha_out[x-1] = i;
+  
+
+  // swap infections times of 'i' and 'x'
+  t_inf_out[i-1] =   t_inf_in[x-1];
+  t_inf_out[x-1] =   t_inf_in[i-1];
+  
+}
+
+
+
+
+
+
+
+
 // // [[Rcpp::export]]
 // std::vector<int> whatever(Rcpp::IntegerVector x) {
 //   size_t n = x.size();

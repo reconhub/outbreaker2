@@ -64,6 +64,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_swap_cases
+void cpp_swap_cases(Rcpp::List param_in, Rcpp::List param_out, size_t i);
+RcppExport SEXP outbreaker2_cpp_swap_cases(SEXP param_inSEXP, SEXP param_outSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param_in(param_inSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type param_out(param_outSEXP);
+    Rcpp::traits::input_parameter< size_t >::type i(iSEXP);
+    cpp_swap_cases(param_in, param_out, i);
+    return R_NilValue;
+END_RCPP
+}
 // cpp_ll_genetic
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i);
 RcppExport SEXP outbreaker2_cpp_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP) {

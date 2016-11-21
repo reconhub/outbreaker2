@@ -331,20 +331,12 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
       old_loglike = cpp_ll_all(data, param, local_cases); // offset
 
 
-      // // debug
-      // Rcpp::Rcout << "Ancestries before swap: " << std::endl;;
-      // Rcpp::print(param["alpha"]);
-
       // proposal: swap case 'i' and its ancestor
 
       swapinfo = cpp_swap_cases(param, i+1);
       new_param["alpha"] = swapinfo["alpha"];
       new_param["t.inf"] = swapinfo["t.inf"];
-      
-      // // debug
-      // Rcpp::Rcout << "Ancestries after swap: " << std::endl;
-      // Rcpp::print(new_param["alpha"]);
-      
+        
       
       // loglike with new parameters
 
@@ -354,6 +346,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
       // acceptance term
       
       p_accept = exp(new_loglike - old_loglike);
+
 
       // acceptance: change param only if new values is accepted
       
@@ -365,4 +358,76 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
   }
 
   return param;
+}
+
+
+
+
+
+
+
+// ---------------------------
+
+
+// Movement of the number of generations on transmission chains ('kappa') is
+// done for one ancestry at a time. As for infection times ('t.inf') we use a
+// dumb, symmetric +/- 1 proposal. But because values are typically in a short
+// range (e.g. [1-3]) we probably propose more dumb values here. We may
+// eventually want to bounce back or use and correct for assymetric proposals.
+
+// [[Rcpp::export("cpp.move.kappa", rng = true)]]
+Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) {
+  Rcpp::List new_param = clone(param);
+  Rcpp::IntegerVector kappa = param["kappa"]; // pointer to param$kappa
+  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
+  Rcpp::IntegerVector new_kappa = new_param["kappa"];
+
+  size_t N = static_cast<size_t>(data["N"]);
+  size_t K = static_cast<size_t>(config["max.kappa"]);
+  size_t jump;
+
+  double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+
+  for (size_t i = 0; i < N; i++) {
+
+    
+    // only non-NA ancestries are moved
+    
+    if (alpha[i] != NA_INTEGER) {
+
+      // propose new kappa
+      
+      jump = (unif_rand() > 0.5) ? 1 : -1;
+      new_kappa[i] = kappa[i] + new_val;
+
+
+      // only look into this move if new kappa is positive
+
+      if (new_kappa[i] > 0 && new_kappa[i] <= K) {
+
+	
+	// loglike with current parameters
+	
+	old_loglike = cpp_ll_all(data, param, i+1);
+
+
+	// loglike with new parameters
+	
+	new_loglike = cpp_ll_all(data, new_param, i+1);
+
+				 
+	// acceptance term
+      
+	p_accept = exp(new_loglike - old_loglike);
+
+
+	// acceptance: change param only if new values is accepted
+      
+	if (p_accept >= unif_rand()) { // accept new parameters
+	  param["kappa"] = new_param["kappa"];
+	}
+      }
+    }
+
+  }
 }

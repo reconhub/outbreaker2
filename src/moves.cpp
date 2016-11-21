@@ -378,6 +378,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 // [[Rcpp::export("cpp.move.kappa", rng = true)]]
 Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) {
   Rcpp::List new_param = clone(param);
+  Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector kappa = param["kappa"]; // pointer to param$kappa
   Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_kappa = new_param["kappa"];
@@ -391,38 +392,31 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) 
   for (size_t i = 0; i < N; i++) {
 
     
-    // only non-NA ancestries are moved
-    
+    // only non-NA ancestries are moved    
     if (alpha[i] != NA_INTEGER) {
 
       // propose new kappa
-      
       jump = (unif_rand() > 0.5) ? 1 : -1;
-      new_kappa[i] = kappa[i] + new_val;
+      new_kappa[i] = kappa[i] + jump;
 
 
       // only look into this move if new kappa is positive
-
       if (new_kappa[i] > 0 && new_kappa[i] <= K) {
 
 	
-	// loglike with current parameters
-	
+	// loglike with current parameters	
 	old_loglike = cpp_ll_all(data, param, i+1);
 
 
-	// loglike with new parameters
-	
+	// loglike with new parameters	
 	new_loglike = cpp_ll_all(data, new_param, i+1);
 
 				 
 	// acceptance term
-      
 	p_accept = exp(new_loglike - old_loglike);
 
 
-	// acceptance: change param only if new values is accepted
-      
+	// acceptance: change param only if new values is accepted      
 	if (p_accept >= unif_rand()) { // accept new parameters
 	  param["kappa"] = new_param["kappa"];
 	}

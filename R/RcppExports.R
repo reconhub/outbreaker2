@@ -69,3 +69,7 @@ cpp.move.swap.cases <- function(data, param) {
     .Call('outbreaker2_cpp_move_swap_cases', PACKAGE = 'outbreaker2', data, param)
 }
 
+cpp.move.kappa <- function(data, config, param) {
+    .Call('outbreaker2_cpp_move_kappa', PACKAGE = 'outbreaker2', data, config, param)
+}
+

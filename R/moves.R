@@ -124,45 +124,10 @@ make.move.pi <- function(config, densities) {
 ## eventually want to bounce back or use and correct for assymetric proposals.
 
 make.move.kappa <- function(config, densities) {
-    function(param) {
+    data <- environment(densities$loglike$genetic)$data
+    .move.pi(config, densities) # uncomment for pure R version
+    ## function(param) {
+    ##     cpp.move.pi(data, param, config)
+    ## }
 
-        ## determine which cases to move
-        kappa.can.move <- !is.na(param$kappa)
-        n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
-        to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
-
-        ## initialize new kappa
-        new.param <- param
-
-        ## move all ancestries that should be moved
-        for (i in to.move) {
-            ## propose new kappa
-            new.param$kappa[i] <- new.param$kappa[i] + sample(c(-1,1), size=1)
-
-            ## reject move automatically if new kappa < 1 or greater than allowed max
-            if (new.param$kappa[i] < 1 ||
-               new.param$kappa[i] > config$max.kappa) {
-                new.param$kappa[i] <- param$kappa[i]
-            } else {
-                ## compute log ratio
-                logratio <- densities$loglike$timing.infections(new.param, i) +
-                    densities$loglike$genetic(new.param, i) +
-                        densities$loglike$reporting(new.param, i) -
-                            densities$loglike$timing.infections(param, i) -
-                                densities$loglike$genetic(param, i) -
-                                    densities$loglike$reporting(param, i)
-
-                ## accept/reject
-                if (logratio >= log(stats::runif(1))) {
-                    param$kappa[i] <- new.param$kappa[i]
-                } else {
-                    new.param$kappa[i] <- param$kappa[i]
-                }
-            }
-        } # end for loop
-
-
-        ## output is a list of potentially modified parameters
-        return(param)
-    }
 }

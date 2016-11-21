@@ -125,9 +125,9 @@ make.move.pi <- function(config, densities) {
 
 make.move.kappa <- function(config, densities) {
     data <- environment(densities$loglike$genetic)$data
-    .move.pi(config, densities) # uncomment for pure R version
+    .move.kappa(config, densities) # uncomment for pure R version
     ## function(param) {
-    ##     cpp.move.pi(data, param, config)
+    ##     cpp.move.kappa(data, param, config)
     ## }
 
 }

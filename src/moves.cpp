@@ -376,7 +376,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 // eventually want to bounce back or use and correct for assymetric proposals.
 
 // [[Rcpp::export("cpp.move.kappa", rng = true)]]
-Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) {
+Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector kappa = param["kappa"]; // pointer to param$kappa
@@ -391,7 +391,6 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) 
 
   for (size_t i = 0; i < N; i++) {
 
-    
     // only non-NA ancestries are moved    
     if (alpha[i] != NA_INTEGER) {
 
@@ -400,8 +399,9 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) 
       new_kappa[i] = kappa[i] + jump;
 
 
-      // only look into this move if new kappa is positive
-      if (new_kappa[i] > 0 && new_kappa[i] <= K) {
+      // only look into this move if new kappa is positive and smaller than the
+      // maximum value
+      if (new_kappa[i] > 0 && new_kappa[i] < K) {
 
 	
 	// loglike with current parameters	
@@ -424,4 +424,6 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List config, Rcpp::List param) 
     }
 
   }
+
+  return param;
 }

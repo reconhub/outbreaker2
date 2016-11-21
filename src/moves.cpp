@@ -251,12 +251,20 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
       old_loglike = cpp_ll_all(data, param, local_cases); // offset
 
 
+      // // debug
+      // Rcpp::Rcout << "Ancestries before swap: " << std::endl;;
+      // Rcpp::print(param["alpha"]);
+
       // proposal: swap case 'i' and its ancestor
 
       swapinfo = cpp_swap_cases(param, i+1);
       new_param["alpha"] = swapinfo["alpha"];
       new_param["t.inf"] = swapinfo["t.inf"];
-
+      
+      // // debug
+      // Rcpp::Rcout << "Ancestries after swap: " << std::endl;
+      // Rcpp::print(new_param["alpha"]);
+      
       
       // loglike with new parameters
 

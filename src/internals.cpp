@@ -206,8 +206,12 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 // - infection time of 'i' becomes that of 'x'
 // - infection time of 'x' becomes that of 'i'
 
-// Note that 'i' and values of alpha are on the scale 1:N. The function's output
-// is a list with new alpha and t.inf.
+// Note on indexing: 'i', 'x', and values of alpha are on the scale 1:N. The
+// function's output is a list with new alpha and t.inf.
+
+// Note on forbidden swaps: two types of swaps are excluded:
+// - 'i' is imported, so that 'alpha[i-1]' is NA_INTEGER
+// - 'x' is imported, so that 'alpha[x-1]' is NA_INTEGER
 
 // [[Rcpp::export("cpp.swap.cases")]]
 Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
@@ -226,8 +230,16 @@ Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
   if (alpha_in[i-1] == NA_INTEGER) {
     return out;
   }
-  size_t x = (size_t) alpha_in[i-1];
+
+
+  // escape if ancestor of the case is imported, i.e. alpha[x-1] is NA
   
+  size_t x = (size_t) alpha_in[i-1];
+  if (alpha_in[x-1] == NA_INTEGER) {
+    return out;
+  }
+  
+ 
   // replace ancestries:
   // - descendents of 'i' become descendents of 'x'
   // - descendents of 'x' become descendents of 'i'

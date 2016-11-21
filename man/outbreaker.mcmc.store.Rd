@@ -4,14 +4,14 @@
 \alias{outbreaker.mcmc.store}
 \title{Stores MCMC samples for outbreaker}
 \usage{
-outbreaker.mcmc.store(param, densities, step)
+outbreaker.mcmc.store(param.current, param.store, densities, step)
 }
 \arguments{
-\item{param}{a list of output items as returned by \code{outbreaker.create.mcmc}}
-
 \item{densities}{a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}
 
 \item{step}{an integer indicating the MCMC iteration being stored}
+
+\item{param}{a list of output items as returned by \code{outbreaker.create.mcmc}}
 }
 \description{
 This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.

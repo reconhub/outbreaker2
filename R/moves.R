@@ -87,10 +87,10 @@ make.move.alpha <- function(config, densities) {
 
 make.move.swap.cases <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
-    .move.swap.cases(config, densities)
-    ## function(param) {
-    ##     cpp.move.swap.cases(data, param)
-    ## }
+    ##.move.swap.cases(config, densities)
+    function(param) {
+        cpp.move.swap.cases(data, param)
+    }
 }
 
 

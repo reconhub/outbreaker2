@@ -41,27 +41,107 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
 
-  // loglike with current value
-  old_loglike = cpp_ll_genetic(data, param, R_NilValue);
-
+  
   // proposal (normal distribution with SD: config$sd.mu)
+
   new_mu[0] += R::rnorm(0, sd_mu); // new proposed value
 
 
+  // automatic rejection of negative mu
+  
+  if (new_mu[0] < 0.0) {
+    return param;
+  }
+
+    
   // loglike with current value
+
+  old_loglike = cpp_ll_genetic(data, param, R_NilValue);
+
+
+  // loglike with current value
+
   new_param["mu"] = new_mu;
   new_loglike = cpp_ll_genetic(data, new_param, R_NilValue);
 
+
   // acceptance term
+
   p_accept = exp(new_loglike - old_loglike);
+
 
   // acceptance: the new value is already in mu, so we only act if the move is
   // rejected, in which case we restore the previous ('old') value
+
   if (p_accept < unif_rand()) { // reject new values
     new_mu[0] = mu[0];
     new_param["mu"] = new_mu;
   }
+  
+  return new_param;
+}
 
+
+
+
+
+
+// ---------------------------
+
+// Movement of the Reporting probability 'pi' is done using a dumb normal
+// proposal. This is satisfying for now - we only reject a few non-sensical
+// values outside the range [0;1]. The SD of the proposal (implicitely contained
+// in rand$pi.rnorm1, but really provided through 'config', seems fine as the
+// range of real values will never change much. Probably not much point in using
+// auto-tuning here.
+
+// [[Rcpp::export("cpp.move.pi", rng = true)]]
+Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+  // deep copy here for now, ultimately should be an arg.
+  Rcpp::List new_param = clone(param); 
+  Rcpp::NumericVector pi = param["pi"];
+  Rcpp::NumericVector new_pi = new_param["pi"];
+
+  double sd_pi = static_cast<double>(config["sd.pi"]);
+
+  double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+
+  
+  // proposal (normal distribution with SD: config$sd.pi)
+  
+  new_pi[0] += R::rnorm(0, sd_pi); // new proposed value
+
+
+  // automatic rejection of pi outside [0;1]
+
+  if (new_pi[0] < 0.0 || new_pi[0] > 1.0) {
+    return param;
+  }
+
+  // loglike with current value
+  
+  old_loglike = cpp_ll_reporting(data, param, R_NilValue);
+
+
+  // loglike with current value
+  
+  new_param["pi"] = new_pi;
+  new_loglike = cpp_ll_reporting(data, new_param, R_NilValue);
+
+  
+  // acceptance term
+  
+  p_accept = exp(new_loglike - old_loglike);
+
+
+  // acceptance: the new value is already in pi, so we only act if the move is
+  // rejected, in which case we restore the previous ('old') value
+  
+  if (p_accept < unif_rand()) { // reject new values
+    new_pi[0] = pi[0];
+    new_param["pi"] = new_pi;
+  }
+  
   return new_param;
 }
 

@@ -463,6 +463,36 @@ add.convolutions <- function(data, config) {
 
 
 
+## This function implements movements for pi.
+
+.move.pi <- function(config, densities){
+    function(param) {
+        ## get new proposed values
+        new.param <- param
+        ## new.param$pi <- new.param$pi + rand$pi.rnorm1()
+        new.param$pi <- stats::rnorm(1, mean=new.param$pi, sd=config$sd.pi)
+
+        ## escape if new.pi<0 or >1
+        if (new.param$pi<0 || new.param$pi>1) {
+            return(param)
+        }
+
+        ## compute log ratio  (assumes symmetric proposal)
+        logratio <- densities$posteriors$reporting(new.param) -
+            densities$posteriors$reporting(param)
+
+        ## accept/reject
+        if (logratio >= log(stats::runif(1))) {
+            return(new.param)
+        }
+        return(param)
+    }
+}
+
+
+
+
+
 ## This function implements movements for t.inf
 
 .move.t.inf <- function(config, densities) {

@@ -87,11 +87,12 @@ make.move.alpha <- function(config, densities) {
 
 make.move.swap.cases <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
-    ##.move.swap.cases(config, densities)
+    ##.move.swap.cases(config, densities) # uncomment for pure R version
     function(param) {
         cpp.move.swap.cases(data, param)
     }
 }
+
 
 
 
@@ -104,27 +105,12 @@ make.move.swap.cases <- function(config, densities) {
 ## (e.g. log-normal).
 
 make.move.pi <- function(config, densities) {
+    data <- environment(densities$loglike$genetic)$data
+    ## .move.pi(config, densities) # uncomment for pure R version
     function(param) {
-        ## get new proposed values
-        new.param <- param
-        ## new.param$pi <- new.param$pi + rand$pi.rnorm1()
-        new.param$pi <- stats::rnorm(1, mean=new.param$pi, sd=config$sd.pi)
-
-        ## escape if new.pi<0 or >1
-        if (new.param$pi<0 || new.param$pi>1) {
-            return(param)
-        }
-
-        ## compute log ratio  (assumes symmetric proposal)
-        logratio <- densities$posteriors$reporting(new.param) -
-            densities$posteriors$reporting(param)
-
-        ## accept/reject
-        if (logratio >= log(stats::runif(1))) {
-            return(new.param)
-        }
-        return(param)
+        cpp.move.pi(data, param, config)
     }
+
 }
 
 

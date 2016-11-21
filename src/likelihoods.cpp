@@ -225,6 +225,11 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   double out = 0.0;
 
+  // p(pi < 0) = p(pi > 1) = 0
+  if (pi < 0.0 || pi > 1.0) {
+    return R_NegInf;
+  }
+
   // all cases are retained
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {

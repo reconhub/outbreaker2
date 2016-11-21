@@ -53,6 +53,10 @@ cpp.move.mu <- function(data, param, config) {
     .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config)
 }
 
+cpp.move.pi <- function(data, param, config) {
+    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', data, param, config)
+}
+
 cpp.move.t.inf <- function(data, param) {
     .Call('outbreaker2_cpp_move_t_inf', PACKAGE = 'outbreaker2', data, param)
 }

@@ -418,7 +418,7 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) 
 
 	// acceptance: change param only if new values is accepted      
 	if (p_accept >= unif_rand()) { // accept new parameters
-	  param["kappa"] = new_param["kappa"];
+	  param["kappa"] = new_kappa;
 	}
       }
     }

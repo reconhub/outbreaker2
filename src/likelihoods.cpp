@@ -118,7 +118,10 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 	if (delay < 1 || delay > w_dens.ncol()) {
 	  return  R_NegInf;
 	}
-
+	if (kappa[j] < 1 || kappa[j] > w_dens.nrow()) {
+	  return  R_NegInf;
+	}
+	
 	out += w_dens(kappa[j] - 1, delay - 1);
       }
     }
@@ -131,6 +134,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
       if (alpha[j] != NA_INTEGER) {
 	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
+	  return  R_NegInf;
+	}
+	if (kappa[j] < 1 || kappa[j] > w_dens.nrow()) {
 	  return  R_NegInf;
 	}
 

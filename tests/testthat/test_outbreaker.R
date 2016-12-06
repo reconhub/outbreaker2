@@ -47,24 +47,29 @@ test_that("decent results for toy example, DNA + time", {
     ## outbreaker DNA + time ##
     ## analysis
     set.seed(1)
-    out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=5000, sample.every=100,
-                      init.tree="star", find.import=FALSE))
+    data <- list(dna=dat$dna, dates=dat$onset, w.dens=w)
+    config <- list(n.iter=5000, sample.every=200,
+                   init.tree="star", find.import=FALSE)
+    
+    out <- outbreaker(data = data, config = config)
 
     ## checks
-    out.smry <- summary(out, burnin=1000)
+    out.smry <- summary(out, burnin = 1000)
 
     ## approx log post values
     expect_true(min(out.smry$post) > -950)
 
     ## at least 75% ancestries correct
-    expect_true(mean(out.smry$tree$from==dat$ances, na.rm=TRUE) > .75)
+    temp <- mean(out.smry$tree$from==dat$ances, na.rm=TRUE)
+    expect_true(temp > .75)
 
     ## infection datewithin 3 days on average
-    expect_true(mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)<3.5)
+    temp <- mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)
+    expect_true(temp < 3.5)
 
     ## mu between 2e-4 and 4 e-4
-    expect_true(min(out.smry$mu) > 0.0002 && max(out.smry$mu) < 0.00042)
+    expect_true(min(out.smry$mu) > 0.0002 &&
+                max(out.smry$mu) < 0.00042)
 })
 
 
@@ -81,12 +86,15 @@ test_that("decent results for toy example, time, no DNA", {
     dat <- fake.outbreak$dat
     w <- fake.outbreak$w
 
-   ## outbreaker time, no DNA ##
+    ## outbreaker time, no DNA ##
     ## analysis
     set.seed(1)
-    out.no.dna <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-                             config=list(n.iter=5000, sample.every=100,
-                                         init.tree="star", find.import=FALSE))
+
+    data <- list(dates = dat$onset, w.dens = w)
+    config <- list(n.iter=1e4, sample.every=200,
+                   init.tree="star", find.import=FALSE)
+
+    out.no.dna <- outbreaker(data = data, config = config)
 
     ## checks
     out.no.dna.smry <- summary(out.no.dna, burnin=1000)
@@ -119,12 +127,13 @@ test_that("decent results for toy example, no missing cases", {
     ## outbreaker, no missing cases ##
     ## analysis
     set.seed(1)
-    out.no.missing <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                                 config=list(n.iter=10000, sample.every=100,
-                                             init.tree="star", move.kappa=FALSE,
-                                             move.pi=FALSE, init.pi=1,
-                                             find.import=FALSE)
-                                 )
+    config <-  list(n.iter = 5e3, sample.every = 100,
+                    init.tree = "star", move.kappa = FALSE,
+                    move.pi = FALSE, init.pi = 1,
+                    find.import = FALSE)
+    data <- list(dna = dat$dna, dates = dat$onset, w.dens = w)
+
+    out.no.missing <- outbreaker(data = data, config = config)
 
     ## checks
     out.no.missing.smry <- summary(out.no.missing, burnin=2000)

@@ -201,31 +201,19 @@ test_that("decent results for kappa and pi", {
     ## analysis
     set.seed(1)
 
-    config <- list(n.iter = 20000, sample.every=50, init.tree = "star",
-                   move.kappa = FALSE, move.pi = TRUE, init.pi = 1,
+    config <- list(n.iter = 5000, sample.every = 50, init.tree = "star",
+                   move.kappa = TRUE, move.pi = TRUE, init.pi = 1,
                    find.import = FALSE)
     
     out <- outbreaker(data = list(dates = onset, w.dens= w),
                                   config = config)
     plot(out)
+    smry <- summary(out, burnin=1000)
 
     ## checks
-    out <- summary(out, burnin=1000)
-
-
-
-    
-    out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
-    dat$ances[is.na(dat$ances)] <- 0
-
-    ## approx log post values
-    expect_true(min(out.with.import.smry$post) > -460)
-
-    ## at least 80% ancestries correct
-    temp <- mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE)
-    expect_true(temp >= .80)
-
-    ## infection datewithin 3 days on average
-    expect_true(mean(abs(out.with.import.smry$tree$time - dat$onset), na.rm=TRUE)<3.5) 
+    expect_equal(smry$tree$from, c(NA, 1, 2, 3))
+    expect_equal(smry$tree$generations, c(NA, 1, 4, 5))
+    expect_true(min(smry$post) > -28)
+    expect_true(all(smry$pi[3:4] > 0.55 & smry$pi[3:4] < 0.65))
 
 })

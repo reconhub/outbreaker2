@@ -204,25 +204,27 @@ test_that("results ok: kappa and pi", {
 
 
     ## get data
-    onset <- c(0,2,8,20)
+    onset <- c(0,2,6, 14)
     w <- c(.25, .5, .25)
     
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis
     set.seed(1)
 
+    data <- list(dates = onset, w.dens = w)
     config <- list(n.iter = 5000, sample.every = 50, init.tree = "star",
                    move.kappa = TRUE, move.pi = TRUE, init.pi = 1,
-                   find.import = FALSE)
+                   find.import = FALSE, max.kappa = 10)
     
-    out <- outbreaker(data = list(dates = onset, w.dens= w),
-                                  config = config)
-    ## plot(out)
+    out <- outbreaker(data, config)
+    
+    plot(out)
+
     smry <- summary(out, burnin=1000)
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
-    expect_equal(smry$tree$generations, c(NA, 1, 4, 5))
+    expect_equal(smry$tree$generations, c(NA, 1, 2, 5))
     expect_true(min(smry$post) > -28)
     expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.7))
 

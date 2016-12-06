@@ -207,13 +207,13 @@ test_that("decent results for kappa and pi", {
     
     out <- outbreaker(data = list(dates = onset, w.dens= w),
                                   config = config)
-    plot(out)
+    ## plot(out)
     smry <- summary(out, burnin=1000)
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
     expect_equal(smry$tree$generations, c(NA, 1, 4, 5))
     expect_true(min(smry$post) > -28)
-    expect_true(all(smry$pi[3:4] > 0.55 & smry$pi[3:4] < 0.65))
+    expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.7))
 
 })

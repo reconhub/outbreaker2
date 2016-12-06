@@ -12,14 +12,15 @@ test_that("outbreaker's output have expected format", {
     w <- fake.outbreak$w
 
     ## run outbreaker
-    out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+    data <- list(dna = dat$dna, dates = dat$onset, w.dens = w)
+    config <- list(n.iter=100, sample.every=10, paranoid=TRUE)
+    out <- outbreaker(data, config)
 
 
     out.df <- as.data.frame(out)
 
-    out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-                       config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+    data <- list(dates=dat$onset, w.dens=w)
+    out2 <- outbreaker(data, config)
 
     ## check output
     expect_is(out, "outbreaker.chains")
@@ -34,7 +35,7 @@ test_that("outbreaker's output have expected format", {
 
 
 ## test convergence in various settings ##
-test_that("decent results for toy example, DNA + time", {
+test_that("results ok: DNA + time", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -48,7 +49,7 @@ test_that("decent results for toy example, DNA + time", {
     ## analysis
     set.seed(1)
     data <- list(dna=dat$dna, dates=dat$onset, w.dens=w)
-    config <- list(n.iter=5000, sample.every=200,
+    config <- list(n.iter = 5000, sample.every = 200,
                    init.tree="star", find.import=FALSE)
     
     out <- outbreaker(data = data, config = config)
@@ -76,7 +77,7 @@ test_that("decent results for toy example, DNA + time", {
 
 
 
-test_that("decent results for toy example, time, no DNA", {
+test_that("results ok: time, no DNA", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -97,7 +98,7 @@ test_that("decent results for toy example, time, no DNA", {
     out.no.dna <- outbreaker(data = data, config = config)
 
     ## checks
-    out.no.dna.smry <- summary(out.no.dna, burnin=1000)
+    out.no.dna.smry <- summary(out.no.dna, burnin = 1000)
     
     ## approx log post values
     expect_true(min(out.no.dna.smry$post) > -100) 
@@ -114,7 +115,7 @@ test_that("decent results for toy example, time, no DNA", {
 
 
 
-test_that("decent results for toy example, no missing cases", {
+test_that("results ok: no missing cases, no import", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -152,7 +153,7 @@ test_that("decent results for toy example, no missing cases", {
 
 
 
-test_that("decent results for toy example, no missing cases, detect imported cases",
+test_that("results ok: no missing cases, detect imported cases",
 {
     ## skip on CRAN
     skip_on_cran()
@@ -197,7 +198,7 @@ test_that("decent results for toy example, no missing cases, detect imported cas
 
 
 
-test_that("decent results for kappa and pi", {
+test_that("results ok: kappa and pi", {
     ## skip on CRAN
     skip_on_cran()
 

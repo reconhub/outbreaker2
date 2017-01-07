@@ -102,7 +102,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 
     }
   }
-  return log(mu) * sum_n_mut + log(1 - mu) * sum_n_non_mut;
+  return log(mu) * (double) sum_n_mut + log(1.0 - mu) * (double) sum_n_non_mut;
 }
 
 

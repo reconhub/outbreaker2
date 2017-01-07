@@ -106,10 +106,10 @@ make.move.swap.cases <- function(config, densities) {
 
 make.move.pi <- function(config, densities) {
     data <- environment(densities$loglike$genetic)$data
-    ## .move.pi(config, densities) # uncomment for pure R version
-    function(param) {
-        cpp_move_pi(data, param, config)
-    }
+    .move.pi(config, densities) # uncomment for pure R version
+    ## function(param) {
+    ##     cpp.move.pi(data, param, config)
+    ## }
 
 }
 

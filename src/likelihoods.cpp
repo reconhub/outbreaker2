@@ -128,7 +128,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
 	if (kappa[j] < 1 || kappa[j] > K) {
 	  return  R_NegInf;
 	}
-
+	
 	out += w_dens(kappa[j] - 1, delay - 1);
       }
     }

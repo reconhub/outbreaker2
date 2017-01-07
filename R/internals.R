@@ -541,7 +541,7 @@ add.convolutions <- function(data, config) {
             warning("trying to move ancestries but none can move")
             return(param$alpha)
         }
-        n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)),1)
+        n.to.move <- max(round(config$prop.alpha.move * sum(alpha.can.move)), 1)
         to.move <- sample(which(alpha.can.move), n.to.move, replace=FALSE)
 
         ## initialize new alpha
@@ -579,10 +579,10 @@ add.convolutions <- function(data, config) {
 
 .move.kappa <- function(config, densities) {
     function(param) {
-
+        ## browser()
         ## determine which cases to move
         kappa.can.move <- !is.na(param$kappa)
-        n.to.move <- max(round(.2 * sum(kappa.can.move), 1))
+        n.to.move <- max(round(.2 * sum(kappa.can.move)), 1)
         to.move <- sample(which(kappa.can.move), n.to.move, replace=FALSE)
 
         ## initialize new kappa

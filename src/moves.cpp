@@ -44,7 +44,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   
   // proposal (normal distribution with SD: config$sd.mu)
 
-  new_mu[0] += R::rnorm(0, sd_mu); // new proposed value
+  new_mu[0] += R::rnorm(0.0, sd_mu); // new proposed value
 
 
   // automatic rejection of negative mu
@@ -61,7 +61,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
   // loglike with current value
 
-  new_param["mu"] = new_mu;
+  // new_param["mu"] = new_mu; // not sure this is useful
   new_loglike = cpp_ll_genetic(data, new_param, R_NilValue);
 
 
@@ -74,8 +74,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // rejected, in which case we restore the previous ('old') value
 
   if (p_accept < unif_rand()) { // reject new values
-    new_mu[0] = mu[0];
-    new_param["mu"] = new_mu;
+    return param;
   }
   
   return new_param;
@@ -101,8 +100,8 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // deep copy here for now, ultimately should be an arg.
 
   Rcpp::List new_param = clone(param); 
-  Rcpp::NumericVector pi = param["pi"];
-  Rcpp::NumericVector new_pi = new_param["pi"];
+  Rcpp::NumericVector pi = param["pi"]; // these are just pointers
+  Rcpp::NumericVector new_pi = new_param["pi"]; // these are just pointers
 
   double sd_pi = static_cast<double>(config["sd.pi"]);
 
@@ -111,7 +110,7 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   
   // proposal (normal distribution with SD: config$sd.pi)
   
-  new_pi[0] += R::rnorm(0, sd_pi); // new proposed value
+  new_pi[0] += R::rnorm(0.0, sd_pi); // new proposed value
 
 
   // automatic rejection of pi outside [0;1]
@@ -126,8 +125,8 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
 
   // loglike with current value
-  
-  new_param["pi"] = new_pi;
+
+  // new_param["pi"] = new_pi; // I don't think this is useful
   new_loglike = cpp_ll_reporting(data, new_param, R_NilValue);
 
   
@@ -140,8 +139,7 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // rejected, in which case we restore the previous ('old') value
   
   if (p_accept < unif_rand()) { // reject new values
-    new_pi[0] = pi[0];
-    new_param["pi"] = new_pi;
+    return param;
   }
   
   return new_param;
@@ -404,7 +402,7 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) 
 
       // only look into this move if new kappa is positive and smaller than the
       // maximum value
-      if (new_kappa[i] > 0 && new_kappa[i] < K) {
+      if (new_kappa[i] > 0 && new_kappa[i] <= K) {
 
 	
 	// loglike with current parameters	

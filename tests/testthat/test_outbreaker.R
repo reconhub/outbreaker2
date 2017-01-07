@@ -212,7 +212,7 @@ test_that("results ok: kappa and pi", {
     set.seed(1)
 
     data <- list(dates = onset, w.dens = w)
-    config <- list(n.iter = 5000, sample.every = 50, init.tree = "star",
+    config <- list(n.iter = 1000, sample.every = 100, init.tree = "star",
                    move.kappa = TRUE, move.pi = TRUE, init.pi = 1,
                    find.import = FALSE, max.kappa = 10)
     

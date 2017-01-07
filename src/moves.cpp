@@ -401,15 +401,18 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) 
 
 
       // only look into this move if new kappa is positive and smaller than the
-      // maximum value
-      if (new_kappa[i] > 0 && new_kappa[i] <= K) {
-
+      // maximum value; if not, remember to reset the value of new_kappa to that
+      // of kappa, otherwise we implicitely accept stupid moves automatically
+      
+      if (new_kappa[i] < 1 || new_kappa[i] > K) {
+	new_kappa[i] = kappa[i];
+      } else {
 	
 	// loglike with current parameters	
 	old_loglike = cpp_ll_all(data, param, i+1);
 
 
-	// loglike with new parameters	
+	// loglike with new parameters
 	new_loglike = cpp_ll_all(data, new_param, i+1);
 
 				 
@@ -419,9 +422,13 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) 
 
 	// acceptance: change param only if new values is accepted      
 	if (p_accept >= unif_rand()) { // accept new parameters
+	  // Rprintf("\naccepting kappa:%d  (p: %f  old ll:  %f  new ll: %f",
+	  // 		new_kappa[i], p_accept, old_loglike, new_loglike);
 	  param["kappa"] = new_kappa;
+	} else {
+	  new_kappa[i] = kappa[i];
 	}
-      }
+      } 
     }
 
   }

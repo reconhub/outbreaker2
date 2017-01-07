@@ -67,6 +67,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
       if (alpha[j] != NA_INTEGER) {
+	// kappa restriction
+	if (kappa[j] < 1 || kappa[j] > K) {
+	  return R_NegInf;
+	}
+
 	sum_nmut += D(j, alpha[j] - 1); // offset
 	length_nmut++;
       }
@@ -79,6 +84,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
     for (size_t k = 0; k < length_i; k++) {
       size_t j = vec_i[k] - 1; // offset
       if (alpha[j] != NA_INTEGER) {
+	// kappa restriction
+	if (kappa[j] < 1 || kappa[j] > K) {
+	  return R_NegInf;
+	}
+
 	sum_nmut += D(j, alpha[j] - 1); // offset
 	length_nmut++;
       }
@@ -232,6 +242,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i) {
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::NumericMatrix w_dens = data["log.w.dens"];
   size_t K = w_dens.nrow();
+
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
 

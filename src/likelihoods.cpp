@@ -33,12 +33,18 @@
 
 // 'mu' is the mutation probability
 // 'L' the number of sites in the alignment
-// 'nmut' the number of mutations between an ancestor and its descendent
+// 'n_mut' the number of mutations between an ancestor and its descendent
+// 'n_non_mut' the number of sites that have not mutated
 
-// For computer efficiency, we re-factorise it as:
-// log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-// which limits to 2 operations rather than 2*n
-// (tip from Rich Fitzjohn)
+// For any given case at 'nmut' mutations from its ancestor, with kappa
+// generations in between, the log-likelihood is defined as:
+
+// log(mu) * n_mut + log(1 - mu) * {(L - n_mut) + (L * (kappa-1))}
+
+
+// when summing over several individuals, it becomes:
+
+// log(mu) * sum_i(n_mut_i) + log(1-mu) * sum_i((L - n_mut_i) + (L * (kappa_i - 1)))
 
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
@@ -56,7 +62,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
   Rcpp::IntegerVector kappa = param["kappa"];
 
-  size_t length_nmut = 0, sum_nmut = 0;
+  size_t sum_n_mut = 0;
+  size_t sum_n_non_mut = 0;
 
   // p(mu < 0) = 0
   if (mu < 0.0) {
@@ -72,8 +79,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 	  return R_NegInf;
 	}
 
-	sum_nmut += D(j, alpha[j] - 1); // offset
-	length_nmut++;
+	sum_n_mut += D(j, alpha[j] - 1); // offset
+	sum_n_non_mut += L - sum_n_mut + (kappa[j]-1)*L;
       }
     }
 
@@ -89,13 +96,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 	  return R_NegInf;
 	}
 
-	sum_nmut += D(j, alpha[j] - 1); // offset
-	length_nmut++;
+	sum_n_mut += D(j, alpha[j] - 1); // offset
+	sum_n_non_mut += L - sum_n_mut + (kappa[j]-1)*L;
       }
 
     }
   }
-  return log(mu / (1 - mu)) * sum_nmut + length_nmut * log(1 - mu) * L;
+  return log(mu) * sum_n_mut + log(1 - mu) * sum_n_non_mut;
 }
 
 

@@ -13,7 +13,8 @@ test_that("outbreaker's output have expected format", {
 
     ## run outbreaker
     data <- list(dna = dat$dna, dates = dat$onset, w.dens = w)
-    config <- list(n.iter=100, sample.every=10, paranoid=TRUE)
+    config <- list(n.iter=100, sample.every=10, paranoid=TRUE,
+                   find.import=FALSE)
     out <- outbreaker(data, config)
 
 
@@ -71,6 +72,7 @@ test_that("results ok: DNA + time", {
     ## mu between 2e-4 and 4 e-4
     expect_true(min(out.smry$mu) > 0.0002 &&
                 max(out.smry$mu) < 0.00042)
+
 })
 
 

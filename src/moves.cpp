@@ -30,7 +30,7 @@
 // but really provided through 'config', seems fine as the range of real values
 // will never change much. Probably not much point in using auto-tuning here.
 
-// [[Rcpp::export("cpp.move.mu", rng = true)]]
+// [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   // deep copy here for now, ultimately should be an arg.
   Rcpp::List new_param = clone(param); 
@@ -95,9 +95,11 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 // range of real values will never change much. Probably not much point in using
 // auto-tuning here.
 
-// [[Rcpp::export("cpp.move.pi", rng = true)]]
+// [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+
   // deep copy here for now, ultimately should be an arg.
+
   Rcpp::List new_param = clone(param); 
   Rcpp::NumericVector pi = param["pi"];
   Rcpp::NumericVector new_pi = new_param["pi"];
@@ -170,8 +172,9 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 // - we generate a new vector 'new_t_inf', which will replace the
 // previous pointer defining param["t.inf"].
 
-// [[Rcpp::export("cpp.move.t.inf", rng = true)]]
+// [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
+
   // deep copy here for now, ultimately should be an arg.
   
   Rcpp::List new_param = clone(param); 
@@ -231,7 +234,7 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 // (swaps are not possible through move.alpha only); in all instances, 'alpha'
 // is on the scale 1:N.
 
-// [[Rcpp::export("cpp.move.alpha", rng = true)]]
+// [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
@@ -297,7 +300,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 // changes for this move to scale well with outbreak size. The complicated bit
 // is that the move impacts all descendents from 'a' as well as 'x'.
 
-// [[Rcpp::export("cpp.move.swap.cases", rng = true)]]
+// [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 
   Rcpp::List new_param = clone(param);
@@ -375,7 +378,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 // range (e.g. [1-3]) we probably propose more dumb values here. We may
 // eventually want to bounce back or use and correct for assymetric proposals.
 
-// [[Rcpp::export("cpp.move.kappa", rng = true)]]
+// [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha

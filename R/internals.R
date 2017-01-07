@@ -528,7 +528,7 @@ add.convolutions <- function(data, config) {
 ## of 'alpha' needs this procedure as well as a swapping procedure (swaps are
 ## not possible through move.alpha only).
 ##
-## This is the old R function, replaced by Rcpp.move.alpha.
+## This is the old R function, replaced by Rcpp_move_alpha.
 ##
 .move.alpha <- function(config, densities) {
     function(param) {

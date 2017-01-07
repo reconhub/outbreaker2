@@ -39,7 +39,7 @@
 //     return(which(t.inf < t.inf[i[1]]))
 // }
 
-// [[Rcpp::export("cpp.are.possible.ancestors")]]
+// [[Rcpp::export()]]
 std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i) {
   size_t n = t_inf.size();
   std::vector<int> out;
@@ -60,7 +60,7 @@ std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i)
 
 //  This function samples a single value from a vector of integers.
 
-// [[Rcpp::export("cpp.sample1")]]
+// [[Rcpp::export()]]
 size_t cpp_sample1(std::vector<int> x) {
   if (x.size() < 1) {
     Rcpp::Rcerr << "Trying to sample from empty vector" << std::endl;
@@ -84,7 +84,7 @@ size_t cpp_sample1(std::vector<int> x) {
 //     return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
 // }
 
-// [[Rcpp::export("cpp.pick.possible.ancestor")]]
+// [[Rcpp::export()]]
 size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
   return cpp_sample1(cpp_are_possible_ancestors(t_inf, i));
 }
@@ -106,7 +106,7 @@ size_t cpp_pick_possible_ancestor(Rcpp::IntegerVector t_inf, size_t i) {
 //     which(param.current$alpha==i)
 //  }
 
-// [[Rcpp::export(cpp.find.descendents)]]
+// [[Rcpp::export()]]
 Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
   size_t counter = 0, n = 0;
 
@@ -145,7 +145,7 @@ Rcpp::IntegerVector cpp_find_descendents(Rcpp::IntegerVector alpha, size_t i) {
 // where 'alpha' is a IntegerVector storing ancestries. Note that 'i' and
 // 'alpha' are on the scale 1:N. 
 
-// [[Rcpp::export("cpp.find.local.cases")]]
+// [[Rcpp::export()]]
 Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
   // determine descendents of 'i':
   Rcpp::IntegerVector desc_i = cpp_find_descendents(alpha, i);
@@ -213,7 +213,7 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 // - 'i' is imported, so that 'alpha[i-1]' is NA_INTEGER
 // - 'x' is imported, so that 'alpha[x-1]' is NA_INTEGER
 
-// [[Rcpp::export("cpp.swap.cases")]]
+// [[Rcpp::export()]]
 Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
   Rcpp::IntegerVector alpha_in = param["alpha"];
   Rcpp::IntegerVector t_inf_in = param["t.inf"];

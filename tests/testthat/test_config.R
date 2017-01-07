@@ -10,8 +10,8 @@ test_that("test: settings are processed fine", {
     ## get data
     x <- fake.outbreak
     dat <- outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
-    dat.nodna <- dat
-    dat.nodna$D <- dat.nodna$dna <- NULL
+    dat_nodna <- dat
+    dat_nodna$D <- dat_nodna$dna <- NULL
     alpha <- rep(1, x$dat$n)
 
     ## check output
@@ -19,8 +19,10 @@ test_that("test: settings are processed fine", {
     expect_is(outbreaker.config(), "outbreaker.config")
     expect_is(outbreaker.config(data=dat), "list")
     expect_is(outbreaker.config(data=dat), "outbreaker.config")
-    expect_equal(outbreaker.config(init.tree="star", data=dat)$init.alpha, c(NA, rep(1,29)))
-    expect_equal(outbreaker.config(init.tree=alpha)$init.tree, outbreaker.config(init.tree=alpha)$init.alpha)
+    expect_equal(outbreaker.config(init.tree="star", data=dat)$init.alpha,
+                 c(NA, rep(1,29)))
+    expect_equal(outbreaker.config(init.tree=alpha)$init.tree,
+                 outbreaker.config(init.tree=alpha)$init.alpha)
     expect_equal(length(outbreaker.config(init.tree="random",data=dat)$init.alpha), dat$N)
     expect_equal(sort(unique(outbreaker.config(data=dat, init.kappa=1:2)$init.kappa)), 1:2)
     expect_error(outbreaker.config(uknownarg=123),
@@ -35,11 +37,11 @@ test_that("test: settings are processed fine", {
                  "sample.every is smaller than 1")
     expect_error(outbreaker.config(init.tree=1:5, data=dat),
                  "inconvenient length for init.alpha")
-    expect_message(outbreaker.config(init.tree="seqTrack", data=dat.nodna),
+    expect_message(outbreaker.config(init.tree="seqTrack", data=dat_nodna),
                    "Can't use seqTrack initialization with missing DNA sequences; using a star-like tree")
     expect_warning(outbreaker.config(init.tree=rep(-1,dat$N), data=dat),
                    "some initial ancestries refer to unknown cases")
-    expect_false(outbreaker.config(data=dat.nodna, move.mu=TRUE)$move.mu)
+    expect_false(outbreaker.config(data=dat_nodna, move.mu=TRUE)$move.mu)
 
 })
 

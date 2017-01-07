@@ -40,7 +40,7 @@
 // which limits to 2 operations rather than 2*n
 // (tip from Rich Fitzjohn)
 
-// [[Rcpp::export("cpp.ll.genetic", rng = false)]]
+// [[Rcpp::export(rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::NumericMatrix D = data["D"];
   if (D.nrow() < 1) return 0.0;
@@ -98,7 +98,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i) {
 // This likelihood corresponds to the probability of observing infection dates
 // of cases given the infection dates of their ancestors.
 
-// [[Rcpp::export("cpp.ll.timing.infections", rng = false)]]
+// [[Rcpp::export(rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 1) return 0.0;
@@ -157,7 +157,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i) {
 // This likelihood corresponds to the probability of reporting dates of cases
 // given their infection dates.
 
-// [[Rcpp::export("cpp.ll.timing.sampling", rng = false)]]
+// [[Rcpp::export(rng = false)]]
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 1) return 0.0;
@@ -215,7 +215,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i) {
 // - 'kappa' is the number of generation between two successive cases
 // - 'kappa-1' is the number of unreported cases
 
-// [[Rcpp::export("cpp.ll.reporting", rng = false)]]
+// [[Rcpp::export(rng = false)]]
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 1) return 0.0;
@@ -271,7 +271,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i) {
 // - p(infection dates): see function cpp_ll_timing_infections
 // - p(collection dates): see function cpp_ll_timing_sampling
 
-// [[Rcpp::export("cpp.ll.timing", rng = false)]]
+// [[Rcpp::export(rng = false)]]
 double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   return cpp_ll_timing_infections(data, param, i) + 
@@ -296,7 +296,7 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i) {
 // - p(genetic diversity): see function cpp_ll_genetic
 // - p(missing cases): see function cpp_ll_reporting
 
-// [[Rcpp::export("cpp.ll.all", rng = false)]]
+// [[Rcpp::export(rng = false)]]
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i) {
 
   return cpp_ll_timing_infections(data, param, i) +

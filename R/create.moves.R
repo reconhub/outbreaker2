@@ -1,13 +1,13 @@
 
-##
-## This function creates a named list of movement functions taking a single argument 'param'; all
-## the rest (e.g. likelihood, prior, posterior functions, config, etc) is enclosed in the functions.
-##
+
+## This function creates a named list of movement functions taking a single
+## argument 'param'; all the rest (e.g. likelihood, prior, posterior functions,
+## config, etc) is enclosed in the functions.
 
 create.moves <- function(config, densities) {
 
-    ## These are all the functions generating various movement functions; we list them by alphabetic
-    ## order.
+    ## These are all the functions generating various movement functions; we
+    ## list them by alphabetic order.
 
     ## SET DEFAULTS ##
     default.functions <- list(mu = make.move.mu,

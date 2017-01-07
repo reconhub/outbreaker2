@@ -77,21 +77,21 @@ test_that("Ancestries swapping in Rcpp works", {
     skip_on_cran()
 
     ## make dummy tree
-    param.old <- list(alpha = c(NA, 1L, 2L, 3L, 2L),
+    param_old <- list(alpha = c(NA, 1L, 2L, 3L, 2L),
                       t.inf = c(1L, 2L, 3L, 4L, 3L))
     
     ## no swapping exception: i is imported
-    param.new <- cpp.swap.cases(param.old, 1L)
-    expect_identical(param.old, param.new)
+    param_new <- cpp_swap_cases(param_old, 1L)
+    expect_identical(param_old, param_new)
 
     ## no swapping exception: i's ancestor is imported
-    param.new <- cpp.swap.cases(param.old, 2L)
-    expect_identical(param.old, param.new)
+    param_new <- cpp_swap_cases(param_old, 2L)
+    expect_identical(param_old, param_new)
 
     ## swap 3 and 2
-    param.new <- cpp.swap.cases(param.old, 3L)
-    expect_equal(param.new$alpha, c(NA, 3L, 1L, 2L, 3L))
-    expect_equal(param.new$t.inf, c(1L, 3L, 2L, 4L, 3L))
+    param_new <- cpp_swap_cases(param_old, 3L)
+    expect_equal(param_new$alpha, c(NA, 3L, 1L, 2L, 3L))
+    expect_equal(param_new$t.inf, c(1L, 3L, 2L, 4L, 3L))
     
 })
 
@@ -141,11 +141,11 @@ test_that("Testing find.descendents", {
     expect_equal(find.descendents(param, 30), integer(0))
 
     ## test cpp version
-    expect_equal(cpp.find.descendents(c(NA), 10), integer(0))
-    expect_equal(cpp.find.descendents(c(1,NA,2,1), 1), c(1L, 4L))
-    expect_equal(cpp.find.descendents(c(NA, 1,1,1,2,2,NA,1,1), 1),
+    expect_equal(cpp_find_descendents(c(NA), 10), integer(0))
+    expect_equal(cpp_find_descendents(c(1,NA,2,1), 1), c(1L, 4L))
+    expect_equal(cpp_find_descendents(c(NA, 1,1,1,2,2,NA,1,1), 1),
                                       c(2L, 3L, 4L, 8L, 9L))
-    expect_equal(cpp.find.descendents(c(NA,1,NA,2), NA_integer_), integer(0))
+    expect_equal(cpp_find_descendents(c(NA,1,NA,2), NA_integer_), integer(0))
 })
 
 
@@ -173,28 +173,28 @@ test_that("Testing add.convolutions", {
 
 
 
-test_that("Testing cpp.find.local.cases", {
+test_that("Testing cpp_find_local_cases", {
     ## skip on CRAN
     skip_on_cran()
 
-    expect_equal(cpp.find.local.cases(NA, 1), 1L)
-    expect_equal(cpp.find.local.cases(c(NA, 1, 2), 1), c(1L, 2L))
-    expect_equal(cpp.find.local.cases(c(NA, 1, 1, 1), 1),
+    expect_equal(cpp_find_local_cases(NA, 1), 1L)
+    expect_equal(cpp_find_local_cases(c(NA, 1, 2), 1), c(1L, 2L))
+    expect_equal(cpp_find_local_cases(c(NA, 1, 1, 1), 1),
                  as.integer(1:4))
-    expect_equal(sort(cpp.find.local.cases(c(NA, 1, 1, 1), 2)), 
+    expect_equal(sort(cpp_find_local_cases(c(NA, 1, 1, 1), 2)), 
                  as.integer(1:4))
 
     tre <- c(NA, 1, 1, 3, 3, 5, 2)
-    expect_equal(cpp.find.local.cases(tre, 1), 1:3)
-    expect_equal(sort(cpp.find.local.cases(tre, 2)),
+    expect_equal(cpp_find_local_cases(tre, 1), 1:3)
+    expect_equal(sort(cpp_find_local_cases(tre, 2)),
                  c(1, 2, 3, 7))
-    expect_equal(sort(cpp.find.local.cases(tre, 7)),
+    expect_equal(sort(cpp_find_local_cases(tre, 7)),
                  c(2, 7))
-    expect_equal(sort(cpp.find.local.cases(tre, 4)),
+    expect_equal(sort(cpp_find_local_cases(tre, 4)),
                  c(3, 4, 5))
-    expect_equal(sort(cpp.find.local.cases(tre, 5)),
+    expect_equal(sort(cpp_find_local_cases(tre, 5)),
                  c(3, 4, 5, 6))
-    expect_equal(sort(cpp.find.local.cases(tre, 6)),
+    expect_equal(sort(cpp_find_local_cases(tre, 6)),
                  c(5, 6))
       
 })

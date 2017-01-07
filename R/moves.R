@@ -30,7 +30,7 @@ make.move.mu <- function(config, densities) {
     data <- environment(densities$loglike$genetic)$data
     ## .move.mu(config, densities) # uncomment for pure R version
     function(param) {
-        cpp.move.mu(data, param, config)
+        cpp_move_mu(data, param, config)
     }
 }
 
@@ -46,7 +46,7 @@ make.move.t.inf <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
     ## .move.t.inf(config, densities)
     function(param) {
-        cpp.move.t.inf(data, param)
+        cpp_move_t_inf(data, param)
     }
 }
 
@@ -67,7 +67,7 @@ make.move.alpha <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
     ## .move.alpha(config, densities)
     function(param) {
-        cpp.move.alpha(data, param)
+        cpp_move_alpha(data, param)
     }
 }
 
@@ -89,7 +89,7 @@ make.move.swap.cases <- function(config, densities) {
     data <- environment(densities$loglike$timing)$data
     ##.move.swap.cases(config, densities) # uncomment for pure R version
     function(param) {
-        cpp.move.swap.cases(data, param)
+        cpp_move_swap_cases(data, param)
     }
 }
 
@@ -108,7 +108,7 @@ make.move.pi <- function(config, densities) {
     data <- environment(densities$loglike$genetic)$data
     ## .move.pi(config, densities) # uncomment for pure R version
     function(param) {
-        cpp.move.pi(data, param, config)
+        cpp_move_pi(data, param, config)
     }
 
 }
@@ -127,7 +127,7 @@ make.move.kappa <- function(config, densities) {
     data <- environment(densities$loglike$genetic)$data
     .move.kappa(config, densities) # uncomment for pure R version
     ## function(param) {
-    ##     cpp.move.kappa(data, param, config)
+    ##     cpp_move_kappa(data, param, config)
     ## }
 
 }

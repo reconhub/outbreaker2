@@ -6,18 +6,25 @@
 #'
 #' @inheritParams outbreaker.create.mcmc
 #'
-#' @param moves a list of movement functions as returned by \code{create.moves} (internal function)
+#' @param moves a list of movement functions as returned by \code{create.moves}
+#'     (internal function)
 #'
-#' @param param a list of parameters as returned by \code{outbreaker.create.mcmc}
+#' @param param a list of parameters as returned by
+#'     \code{outbreaker.create.mcmc}
 #'
-#' @param densities a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
+#' @param densities a list containing lists of functions computing densities,
+#'     named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 #'
-#' @return a potentially modified list of parameters as returned by \code{outbreaker.create.mcmc}
+#' @return a potentially modified list of parameters as returned by
+#'     \code{outbreaker.create.mcmc}
 #'
-outbreaker.move <- function(moves, data, param.current, param.store, config, densities) {
+outbreaker.move <- function(moves, data, param.current,
+                            param.store, config, densities) {
     ## get number of moves ##
     J <- length(moves)
 
+    ##browser()
+    
     ## RUN MCMC ##
     for (i in seq.int(2, config$n.iter, 1)) {
         ## move parameters / augmented data

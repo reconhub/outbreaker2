@@ -43,12 +43,18 @@
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::NumericMatrix D = data["D"];
-  if (D.nrow() < 1) return 0.0;
+  if (D.ncol() < 1) return 0.0;
 
   size_t N = static_cast<size_t>(data["N"]);
+  if (N < 2) return 0.0;
+  
+  Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+  size_t K = w_dens.nrow();
+
   double mu = Rcpp::as<double>(param["mu"]);
   long int L = Rcpp::as<int>(data["L"]);
   Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
+  Rcpp::IntegerVector kappa = param["kappa"];
 
   size_t length_nmut = 0, sum_nmut = 0;
 
@@ -56,7 +62,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   if (mu < 0.0) {
     return R_NegInf;
   }
-
+  
   // all cases are retained
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
@@ -101,12 +107,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i) {
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
-  if(N < 1) return 0.0;
+  if(N < 2) return 0.0;
 
   Rcpp::IntegerVector alpha = param["alpha"];
   Rcpp::IntegerVector t_inf = param["t.inf"];
   Rcpp::IntegerVector kappa = param["kappa"];
   Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+  size_t K = w_dens.nrow();
 
   double out = 0.0;
 
@@ -116,6 +123,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
       if (alpha[j] != NA_INTEGER) {
 	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
+	  return  R_NegInf;
+	}
+	if (kappa[j] < 1 || kappa[j] > K) {
 	  return  R_NegInf;
 	}
 
@@ -131,6 +141,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
       if (alpha[j] != NA_INTEGER) {
 	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
 	if (delay < 1 || delay > w_dens.ncol()) {
+	  return  R_NegInf;
+	}
+	if (kappa[j] < 1 || kappa[j] > K) {
 	  return  R_NegInf;
 	}
 
@@ -160,7 +173,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i) {
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
-  if(N < 1) return 0.0;
+  if(N < 2) return 0.0;
 
   Rcpp::IntegerVector dates = data["dates"];
   Rcpp::IntegerVector t_inf = param["t.inf"];
@@ -217,8 +230,10 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i) {
 
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
+  Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+  size_t K = w_dens.nrow();
   size_t N = static_cast<size_t>(data["N"]);
-  if(N < 1) return 0.0;
+  if(N < 2) return 0.0;
 
   double pi = static_cast<double>(param["pi"]);
   Rcpp::IntegerVector kappa = param["kappa"];
@@ -234,6 +249,9 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
   if (i == R_NilValue) {
     for (size_t j = 0; j < N; j++) {
       if (kappa[j] != NA_INTEGER) {
+	if (kappa[j] < 1 || kappa[j] > K) {
+	  return  R_NegInf;
+	}
 	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
       }
     }
@@ -244,6 +262,9 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
     for (size_t k = 0; k < length_i; k++) {
       size_t j = vec_i[k] - 1; // offset
       if (kappa[j] != NA_INTEGER) {
+	if (kappa[j] < 1 || kappa[j] > K) {
+	  return  R_NegInf;
+	}
 	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
       }
     }

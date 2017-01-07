@@ -12,8 +12,10 @@ test_that("outbreaker's output have expected format", {
     w <- fake.outbreak$w
 
     ## run outbreaker
+    set.seed(1)
     out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-                      config=list(n.iter=100, sample.every=10, paranoid=TRUE))
+                      config=list(n.iter=10, sample.every=1, find.import=FALSE,
+                                  paranoid=TRUE))
 
 
     out.df <- as.data.frame(out)

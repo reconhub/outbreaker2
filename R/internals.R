@@ -330,8 +330,9 @@ add.convolutions <- function(data, config) {
 ################################################################################
 
 
-## This likelihood corresponds to the probability of observing a number of mutations between cases
-## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
+## This likelihood corresponds to the probability of observing a number of
+## mutations between cases and their ancestors. See src/likelihoods.cpp for
+## details of the Rcpp implmentation.
 
 .ll.genetic <- function(data, param, i=NULL) {
     if (is.null(i)) {
@@ -341,22 +342,27 @@ add.convolutions <- function(data, config) {
     ## discard cases with no ancestors to avoid subsetting data$D with 'NA'
     i <- i[!is.na(param$alpha[i])]
 
-    ## likelihood is based on the number of mutations between a case and its ancestor;
-    ## these are extracted from a pairwise genetic distance matrix (data$D)
-    nmut <- data$D[cbind(i, param$alpha[i], deparse.level=0)]
-
-    ## the log-likelihood is computed as: sum(mu^nmut + (1-mu)^(L-nmut))
+    ## likelihood is based on the number of mutations between a case and its
+    ## ancestor; these are extracted from a pairwise genetic distance matrix
+    ## (data$D)
+    
+    ## the log-likelihood is computed as: sum(mu^n_mut + (1-mu)^(L-n_mut))
     ## with:
     ## 'mu' is the mutation probability
     ## 'L' the number of sites in the alignment
-    ## 'nmut' the number of mutations between an ancestor and its descendent
+    ## 'n_mut' the number of mutations between an ancestor and its descendent
     ##
     ## for computer efficiency, we re-factorise it as:
-    ##  log(mu / (1 - mu)) * sum(nmut) + length(nmut) * log(1 - mu) * L
-    ## which limits to 2 operations rather than 2*n
-    ## (tip from Rich Fitzjohn)
-    log(param$mu / (1 - param$mu)) * sum(nmut) +
-        length(nmut) * log(1 - param$mu) * data$L
+    ##  log(mu) * sum(n_mut) + log(1 - mu) * (L-n_mut + (kappa-1)*L)
+    ##
+
+    n_mut <- data$D[cbind(i, param$alpha[i], deparse.level=0)]
+    
+    n_non_mut <- (data$L - n_mut) + (param$kappa[i]-1) * data$L
+
+    out <- log(param$mu) * sum(n_mut, na.rm = TRUE) + # mutated sites
+        log(1 - param$mu) * sum(n_non_mut, na.rm = TRUE) # non mutated sites
+    return(out)
 }
 
 

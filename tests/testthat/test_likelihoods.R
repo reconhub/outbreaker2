@@ -111,10 +111,11 @@ test_that("ll$genetic gives expected results", {
     ref.rnd.cases <- .ll.genetic(data, param, rnd.cases)
 
     expect_is(out, "numeric")
-    expect_equal(out, -997.840630502)
+    expect_equal(out, -997.840630501522)
     expect_equal(out.few.cases, -266.251194283819)
+    
 
-    ## test against reference
+    ## test against R reference
     expect_equal(out, ref)
     expect_equal(out.few.cases, ref.few.cases)
     expect_equal(out.rnd.cases, ref.rnd.cases)

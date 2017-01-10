@@ -62,7 +62,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
   Rcpp::IntegerVector kappa = param["kappa"];
 
-  size_t sum_n_mut = 0;
+  size_t n_mut = 0, sum_n_mut = 0;
   size_t sum_n_non_mut = 0;
 
   // p(mu < 0) = 0
@@ -79,8 +79,9 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 	  return R_NegInf;
 	}
 
-	sum_n_mut += D(j, alpha[j] - 1); // offset
-	sum_n_non_mut += L - sum_n_mut + (kappa[j]-1)*L;
+	n_mut = D(j, alpha[j] - 1); // offset
+	sum_n_mut += n_mut;
+	sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
       }
     }
 
@@ -96,12 +97,14 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
 	  return R_NegInf;
 	}
 
-	sum_n_mut += D(j, alpha[j] - 1); // offset
-	sum_n_non_mut += L - sum_n_mut + (kappa[j]-1)*L;
+	n_mut = D(j, alpha[j] - 1); // offset
+	sum_n_mut += n_mut;
+	sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
       }
 
     }
   }
+
   return log(mu) * (double) sum_n_mut + log(1.0 - mu) * (double) sum_n_non_mut;
 }
 

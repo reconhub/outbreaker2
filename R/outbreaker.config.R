@@ -1,36 +1,41 @@
 #' Set and check parameter settings of outbreaker
 #'
-#' This function defines settings for outbreaker.
-#' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of settings. If no input is given, it returns the default settings.
+#' This function defines settings for outbreaker.  It takes a list of named
+#' items as input, performs various checks, set defaults where arguments are
+#' missing, and return a correct list of settings. If no input is given, it
+#' returns the default settings.
 #'
 #' Acceptables arguments for ... are:
 #'
 #' \describe{
 #'
-#' \item{init.tree}{the tree used to initialize the MCMC. Can be either a character string
-#' indicating how this tree should be computed, or a vector of integers corresponding to the tree
-#' itself, where the i-th value corresponds to the index of the ancestor of 'i' (i.e.,
-#' \code{init.tree[i]} is the ancestor of case \code{i}). Accepted character strings are "seqTrack"
-#' (uses seqTrack algorithm to generate the initial tree - see function \code{seqTrack} in the
-#' package \code{adegenet}), "random" (ancestor randomly selected from preceding cases), and "star"
-#' (all cases coalesce to the first case).  Note that for SeqTrack, all cases should have been
-#' sequenced.}
+#' \item{init.tree}{the tree used to initialize the MCMC. Can be either a
+#' character string indicating how this tree should be computed, or a vector of
+#' integers corresponding to the tree itself, where the i-th value corresponds
+#' to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
+#' ancestor of case \code{i}). Accepted character strings are "seqTrack" (uses
+#' seqTrack algorithm to generate the initial tree - see function
+#' \code{seqTrack} in the package \code{adegenet}), "random" (ancestor randomly
+#' selected from preceding cases), and "star" (all cases coalesce to the first
+#' case).  Note that for SeqTrack, all cases should have been sequenced.}
 #'
 #' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
 #' \item{init.mu}{initial value for the mutation rates}
 #'
-#' \item{init.kappa}{a (recycled) vector of integers indicating the initial values of kappa; defaults to 1.}
+#' \item{init.kappa}{a (recycled) vector of integers indicating the initial
+#' values of kappa; defaults to 1.}
 #'
 #' \item{init.pi}{initial value for the reporting probability}
 #'
-#' \item{move.alpha}{a vector of logicals indicating, for each case, if the ancestry should be
-#' estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if needed.}
+#' \item{move.alpha}{a vector of logicals indicating, for each case, if the
+#' ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
+#' TRUE; the vector is recycled if needed.}
 #'
-#' \item{move.t.inf}{a vector of logicals indicating, for each case, if the dates of infection
-#' should be estimated ('moved' in the MCMC), or not, defaulting to TRUE; the vector is recycled if
-#' needed.}
+#' \item{move.t.inf}{a vector of logicals indicating, for each case, if the
+#' dates of infection should be estimated ('moved' in the MCMC), or not,
+#' defaulting to TRUE; the vector is recycled if needed.}
 #'
 #' \item{move.mu}{a logical indicating whether the mutation rates
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
@@ -38,38 +43,47 @@
 #' \item{move.pi}{a logical indicating whether the reporting probability
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
-#' \item{move.kappa}{a logical indicating whether the number of generations between two successive
-#' cases should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+#' \item{move.kappa}{a logical indicating whether the number of generations
+#' between two successive cases should be estimated ('moved' in the MCMC), or
+#' not, all defaulting to TRUE.}
 #'
 #' \item{move.pi}{a logical indicating whether the reporting probability
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
 #' \item{n.iter}{the number of iterations of the MCMC}
 #'
-#' \item{sample.every}{the frequency at which MCMC samples are retained for the output}
+#' \item{sample.every}{the frequency at which MCMC samples are retained for the
+#' output}
 #'
-#' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation rates}
+#' \item{sd.mu}{the standard deviation for the Normal proposal for the mutation
+#' rates}
 #'
-#' \item{sd.pi}{the standard deviation for the Normal proposal for the reporting probability}
+#' \item{sd.pi}{the standard deviation for the Normal proposal for the reporting
+#' probability}
 #'
-#' \item{prop.alpha.move}{the proportion of ancestries to move at each iteration of the MCMC}
+#' \item{prop.alpha.move}{the proportion of ancestries to move at each iteration
+#' of the MCMC}
 #'
-#' \item{prop.t.inf.move}{the proportion of infection dates to move at each iteration of the MCMC}
+#' \item{prop.t.inf.move}{the proportion of infection dates to move at each
+#' iteration of the MCMC}
 
 #' \item{batch.size}{the size of the batch of random number pre-generated}
 #'
-#' \item{paranoid}{a logical indicating if the paranoid mode should be used; this mode is used for
-#' performing additional tests during outbreaker; it makes computations substantially slower and is
-#' mostly used for debugging purposes.}
+#' \item{paranoid}{a logical indicating if the paranoid mode should be used;
+#' this mode is used for performing additional tests during outbreaker; it makes
+#' computations substantially slower and is mostly used for debugging purposes.}
 #'
-#' \item{min.date}{earliest infection date possible, expressed as days since the first sampling}
+#' \item{min.date}{earliest infection date possible, expressed as days since the
+#' first sampling}
 #'
-#' \item{max.kappa}{an integer indicating the largest number of generations between any two linked cases; defaults to 5}
+#' \item{max.kappa}{an integer indicating the largest number of generations
+#' between any two linked cases; defaults to 5}
 #'
-#' \item{prior.mu}{a numeric value indicating the rate of the exponential prior for the mutation rate 'mu'}
+#' \item{prior.mu}{a numeric value indicating the rate of the exponential prior
+#' for the mutation rate 'mu'}
 #'
-#' \item{prior.pi}{a numeric vector of length 2 indicating the first and second parameter of the
-#' beta prior for the reporting probability 'pi'}
+#' \item{prior.pi}{a numeric vector of length 2 indicating the first and second
+#' parameter of the beta prior for the reporting probability 'pi'}
 #'
 #' }
 #'
@@ -109,27 +123,27 @@ outbreaker.config <- function(..., data=NULL, config=NULL) {
     }
 
     ## SET DEFAULTS ##
-    defaults <- list(init.tree=c("seqTrack","star","random"),
-                     init.mu=1e-4,
-                     init.t.inf=NULL,
-                     init.alpha=NULL,
-                     init.kappa=1,
-                     init.pi=0.9,
-                     move.alpha=TRUE, move.swap.cases=TRUE, move.t.inf=TRUE,
-                     move.mu=TRUE, move.kappa=TRUE, move.pi=TRUE,
-                     n.iter=1e4, sample.every=200, sd.mu=0.0001, sd.pi=0.01,
-                     prop.alpha.move=1/4,
-                     prop.t.inf.move=0.2,
-                     batch.size=1e6,
-                     paranoid=FALSE,
-                     min.date=-10,
-                     max.kappa=5,
-                     find.import=TRUE,
-                     outlier.threshold=5,
-                     n.iter.import=5000,
-                     sample.every.import=100,
-                     prior.mu=1000,
-                     prior.pi=c(10,1))
+    defaults <- list(init.tree = c("seqTrack","star","random"),
+                     init.mu = 1e-4,
+                     init.t.inf = NULL,
+                     init.alpha = NULL,
+                     init.kappa = 1,
+                     init.pi = 0.9,
+                     move.alpha = TRUE, move.swap.cases = TRUE, move.t.inf = TRUE,
+                     move.mu = TRUE, move.kappa = TRUE, move.pi = TRUE,
+                     n.iter = 1e4, sample.every = 200, sd.mu = 0.0001, sd.pi = 0.1,
+                     prop.alpha.move = 1/4,
+                     prop.t.inf.move = 0.2,
+                     batch.size = 1e6,
+                     paranoid = FALSE,
+                     min.date = -10,
+                     max.kappa = 5,
+                     find.import = TRUE,
+                     outlier.threshold = 5,
+                     n.iter.import = 5000,
+                     sample.every.import = 100,
+                     prior.mu = 1000,
+                     prior.pi = c(10,1))
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify.defaults(defaults, config)

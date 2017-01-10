@@ -50,8 +50,9 @@ test_that("results ok: DNA + time", {
     ## analysis
     set.seed(1)
     data <- list(dna=dat$dna, dates=dat$onset, w.dens=w)
-    config <- list(n.iter = 20000, sample.every = 200,
-                   init.tree="star", find.import=FALSE)
+    config <- list(n.iter = 10000, sample.every = 50,
+                   init.tree = "star", find.import = FALSE,
+                   move.pi = FALSE)
     
     out <- outbreaker(data = data, config = config)
 
@@ -63,9 +64,9 @@ test_that("results ok: DNA + time", {
 
     ## at least 75% ancestries correct
     temp <- mean(out.smry$tree$from==dat$ances, na.rm=TRUE)
-    expect_true(temp > .75)
+    expect_true(temp > .8)
 
-    ## infection datewithin 3 days on average
+    ## infection date within 3 days on average
     temp <- mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)
     expect_true(temp < 3.5)
 
@@ -217,7 +218,7 @@ test_that("results ok: kappa and pi", {
     set.seed(1)
 
     data <- list(dates = onset, w.dens = w)
-    config <- list(n.iter = 5000, sample.every = 50, init.tree = "star",
+    config <- list(n.iter = 10000, sample.every = 50, init.tree = "star",
                    move.kappa = TRUE, move.pi = TRUE, init.pi = 1,
                    find.import = FALSE, max.kappa = 10)
     
@@ -229,7 +230,7 @@ test_that("results ok: kappa and pi", {
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
-    expect_equal(smry$tree$generations, c(NA, 1, 2, 5))
+    expect_equal(smry$tree$generations, c(NA, 1, 2, 4))
     expect_true(min(smry$post) > -35)
     expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.8))
 

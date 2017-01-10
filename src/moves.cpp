@@ -31,7 +31,7 @@
 // will never change much. Probably not much point in using auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::Function prior) {
   // deep copy here for now, ultimately should be an arg.
   Rcpp::List new_param = clone(param); 
   Rcpp::NumericVector mu = param["mu"];
@@ -39,7 +39,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
   double sd_mu = static_cast<double>(config["sd.mu"]);
 
-  double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+  double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
 
   
   // proposal (normal distribution with SD: config$sd.mu)
@@ -54,20 +54,19 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
   }
 
     
-  // loglike with current value
+  // logpost with current value
 
-  old_loglike = cpp_ll_genetic(data, param, R_NilValue);
+  old_logpost = cpp_ll_genetic(data, param, R_NilValue) + Rcpp::as<double>(prior(param));
 
 
-  // loglike with current value
+  // logpost with current value
 
-  // new_param["mu"] = new_mu; // not sure this is useful
-  new_loglike = cpp_ll_genetic(data, new_param, R_NilValue);
+  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue) + Rcpp::as<double>(prior(new_param));
 
 
   // acceptance term
 
-  p_accept = exp(new_loglike - old_loglike);
+  p_accept = exp(new_logpost - old_logpost);
 
 
   // acceptance: the new value is already in mu, so we only act if the move is
@@ -95,7 +94,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 // auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::Function prior) {
 
   // deep copy here for now, ultimately should be an arg.
 
@@ -105,7 +104,7 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
 
   double sd_pi = static_cast<double>(config["sd.pi"]);
 
-  double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+  double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
 
   
   // proposal (normal distribution with SD: config$sd.pi)
@@ -119,20 +118,18 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
     return param;
   }
 
-  // loglike with current value
-  
-  old_loglike = cpp_ll_reporting(data, param, R_NilValue);
+  // logpost with current value
+  old_logpost = cpp_ll_reporting(data, param, R_NilValue) + Rcpp::as<double>(prior(param));
 
 
-  // loglike with current value
+  // logpost with current value
 
-  // new_param["pi"] = new_pi; // I don't think this is useful
-  new_loglike = cpp_ll_reporting(data, new_param, R_NilValue);
+  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue) + Rcpp::as<double>(prior(new_param));
 
   
   // acceptance term
   
-  p_accept = exp(new_loglike - old_loglike);
+  p_accept = exp(new_logpost - old_logpost);
 
 
   // acceptance: the new value is already in pi, so we only act if the move is
@@ -186,6 +183,8 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
 
   for (size_t i = 0; i < N; i++) {
+    // NOTE: local likelihood does not work here. Need to investigate why. 
+
     // loglike with current value
     // old_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
     // old_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i+1)); // term descendents of 'i'

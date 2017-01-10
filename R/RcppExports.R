@@ -49,12 +49,12 @@ cpp_ll_all <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i)
 }
 
-cpp_move_mu <- function(data, param, config) {
-    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config)
+cpp_move_mu <- function(data, param, config, prior) {
+    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config, prior)
 }
 
-cpp_move_pi <- function(data, param, config) {
-    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', data, param, config)
+cpp_move_pi <- function(data, param, config, prior) {
+    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', data, param, config, prior)
 }
 
 cpp_move_t_inf <- function(data, param) {

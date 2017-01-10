@@ -193,7 +193,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
     // proposal (+/- 1)
     new_t_inf[i] += unif_rand() > 0.5 ? 1 : -1; // new proposed value
-    new_param["t.inf"] = new_t_inf;
 
     // loglike with new value
     // new_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
@@ -208,7 +207,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // which case we restore the previous ('old') value
     if (p_accept < unif_rand()) { // reject new values
       new_t_inf[i] = t_inf[i];
-      new_param["t.inf"] = t_inf;
     }
   }
 
@@ -256,8 +254,6 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i+1); // new proposed value (on scale 1 ... N)
 
       // loglike with current value
-      new_param["alpha"] = new_alpha;
-      // new_loglike = cpp_ll_all(data, new_param, R_NilValue);
       new_loglike = cpp_ll_all(data, new_param, i+1);
 
       // acceptance term
@@ -271,7 +267,6 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       // which case we restore the previous ('old') value
       if (p_accept < unif_rand()) { // reject new values
 	new_alpha[i] = alpha[i];
-	new_param["alpha"] = new_alpha;
       }
     }
   }

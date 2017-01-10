@@ -50,7 +50,7 @@ test_that("results ok: DNA + time", {
     ## analysis
     set.seed(1)
     data <- list(dna=dat$dna, dates=dat$onset, w.dens=w)
-    config <- list(n.iter = 5000, sample.every = 200,
+    config <- list(n.iter = 5000, sample.every = 50,
                    init.tree="star", find.import=FALSE)
     
     out <- outbreaker(data = data, config = config)
@@ -59,7 +59,7 @@ test_that("results ok: DNA + time", {
     out.smry <- summary(out, burnin = 1000)
 
     ## approx log post values
-    expect_true(min(out.smry$post) > -950)
+    expect_true(min(out.smry$post) > -1250)
 
     ## at least 75% ancestries correct
     temp <- mean(out.smry$tree$from==dat$ances, na.rm=TRUE)
@@ -70,8 +70,8 @@ test_that("results ok: DNA + time", {
     expect_true(temp < 3.5)
 
     ## mu between 2e-4 and 4 e-4
-    expect_true(min(out.smry$mu) > 0.0002 &&
-                max(out.smry$mu) < 0.00042)
+    expect_true(min(out.smry$mu) > 0.00005 &&
+                max(out.smry$mu) < 0.0004)
 
 })
 
@@ -95,7 +95,8 @@ test_that("results ok: time, no DNA", {
 
     data <- list(dates = dat$onset, w.dens = w)
     config <- list(n.iter=1e4, sample.every=200,
-                   init.tree="star", find.import=FALSE)
+                   init.tree="star", find.import=FALSE,
+                   move.kappa=FALSE)
 
     out.no.dna <- outbreaker(data = data, config = config)
 
@@ -103,21 +104,23 @@ test_that("results ok: time, no DNA", {
     out.no.dna.smry <- summary(out.no.dna, burnin = 1000)
     
     ## approx log post values
-    expect_true(min(out.no.dna.smry$post) > -100) 
-
-    ## at least 5% ancestries correct
-    temp <- mean(out.no.dna.smry$tree$from==dat$ances, na.rm=TRUE)
-    expect_true(temp > .05)
+    expect_true(min(out.no.dna.smry$post) > -90) 
 
     ## infection datewithin 3 days on average
     temp <- mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)
     expect_true(temp < 3.5)
+
+    ## check that support for ancestries is weak
+    sup <- na.omit(out.no.dna.smry$tree$support)
+    expect_lt(quantile(sup, .9), .5)
+    expect_lt(mean(sup), .35)
+    
 })
 
 
 
 
-test_that("results ok: no missing cases, no import", {
+test_that("results ok: easy run, no missing cases, no import", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -144,9 +147,9 @@ test_that("results ok: no missing cases, no import", {
     ## approx log post values
     expect_true(min(out.no.missing.smry$post) > -935)
 
-    ## at least 80% ancestries correct
+    ## at least 85% ancestries correct
     temp <- mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE)
-    expect_true(temp > .8)
+    expect_true(temp > .85)
 
     ## infection datewithin 3 days on average
     temp <- mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)
@@ -171,14 +174,14 @@ test_that("results ok: no missing cases, detect imported cases",
     set.seed(1)
     out.with.import <- outbreaker(data = list(dna=dat$dna, dates=dat$onset,
                                               w.dens=w),
-                                  config = list(n.iter=10000, sample.every=100,
+                                  config = list(n.iter=5000, sample.every=100,
                                                 init.tree="star",
                                                 move.kappa=FALSE, move.pi=FALSE,
                                                 init.pi=1, find.import=TRUE)
                                   )
     
     ## checks
-    out.with.import.smry <- summary(out.with.import, burnin=1000)
+    out.with.import.smry <- summary(out.with.import, burnin=500)
     out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
     dat$ances[is.na(dat$ances)] <- 0
 
@@ -206,7 +209,7 @@ test_that("results ok: kappa and pi", {
 
 
     ## get data
-    onset <- c(0,2,6, 14)
+    onset <- c(0, 2, 6, 14)
     w <- c(.25, .5, .25)
     
     ## outbreaker, no missing cases, detect imported cases ##
@@ -214,7 +217,7 @@ test_that("results ok: kappa and pi", {
     set.seed(1)
 
     data <- list(dates = onset, w.dens = w)
-    config <- list(n.iter = 1000, sample.every = 100, init.tree = "star",
+    config <- list(n.iter = 5000, sample.every = 50, init.tree = "star",
                    move.kappa = TRUE, move.pi = TRUE, init.pi = 1,
                    find.import = FALSE, max.kappa = 10)
     
@@ -222,12 +225,12 @@ test_that("results ok: kappa and pi", {
     
     plot(out)
 
-    smry <- summary(out, burnin=1000)
+    smry <- summary(out, burnin=500)
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
     expect_equal(smry$tree$generations, c(NA, 1, 2, 5))
-    expect_true(min(smry$post) > -28)
-    expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.7))
+    expect_true(min(smry$post) > -30)
+    expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.8))
 
 })

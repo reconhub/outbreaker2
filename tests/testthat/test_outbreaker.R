@@ -50,7 +50,7 @@ test_that("results ok: DNA + time", {
     ## analysis
     set.seed(1)
     data <- list(dna=dat$dna, dates=dat$onset, w.dens=w)
-    config <- list(n.iter = 5000, sample.every = 50,
+    config <- list(n.iter = 20000, sample.every = 200,
                    init.tree="star", find.import=FALSE)
     
     out <- outbreaker(data = data, config = config)
@@ -69,9 +69,9 @@ test_that("results ok: DNA + time", {
     temp <- mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)
     expect_true(temp < 3.5)
 
-    ## mu between 2e-4 and 4 e-4
-    expect_true(min(out.smry$mu) > 0.00005 &&
-                max(out.smry$mu) < 0.0004)
+    ## mu within reasonable ranges
+    expect_true(out.smry$mu[2] > 1e-4 &&
+                out.smry$mu[5] < 3e-4)
 
 })
 
@@ -230,7 +230,7 @@ test_that("results ok: kappa and pi", {
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
     expect_equal(smry$tree$generations, c(NA, 1, 2, 5))
-    expect_true(min(smry$post) > -30)
+    expect_true(min(smry$post) > -35)
     expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.8))
 
 })

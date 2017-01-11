@@ -31,7 +31,9 @@
 // will never change much. Probably not much point in using auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::Function prior) {
+Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
+		       Rcpp::Function prior) {
+
   // deep copy here for now, ultimately should be an arg.
   Rcpp::List new_param = clone(param); 
   Rcpp::NumericVector mu = param["mu"];
@@ -119,12 +121,14 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcp
   }
 
   // logpost with current value
-  old_logpost = cpp_ll_reporting(data, param, R_NilValue) + Rcpp::as<double>(prior(param));
+  old_logpost = cpp_ll_reporting(data, param, R_NilValue) + 
+    Rcpp::as<double>(prior(param));
 
 
   // logpost with current value
 
-  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue) + Rcpp::as<double>(prior(new_param));
+  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue) + 
+    Rcpp::as<double>(prior(new_param));
 
   
   // acceptance term
@@ -176,35 +180,61 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
   Rcpp::IntegerVector t_inf = param["t.inf"];
   Rcpp::IntegerVector new_t_inf = new_param["t.inf"];
   Rcpp::IntegerVector alpha = param["alpha"];
+  Rcpp::IntegerVector local_cases;
 
   size_t N = static_cast<size_t>(data["N"]);
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+  double old_loc_loglike = 0.0, new_loc_loglike = 0.0, p_loc_accept = 0.0;
 
-
+  
   for (size_t i = 0; i < N; i++) {
     // NOTE: local likelihood does not work here. Need to investigate why. 
 
+    local_cases = cpp_find_descendents(param["alpha"], i+1);
+
     // loglike with current value
-    // old_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
-    // old_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i+1)); // term descendents of 'i'
-     old_loglike = cpp_ll_timing(data, param, R_NilValue);
+    // old_loglike = cpp_ll_timing(data, param, R_NilValue);
+    old_loc_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
+
+    // term descendents of 'i'
+    if (local_cases.size() > 0) {
+      old_loc_loglike += cpp_ll_timing(data, param, local_cases);
+    }
 
     // proposal (+/- 1)
     new_t_inf[i] += unif_rand() > 0.5 ? 1 : -1; // new proposed value
 
     // loglike with new value
-    // new_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
-    // new_loglike += cpp_ll_timing(data, param, cpp_find_descendents(param["alpha"], i+1)); // term descendents of 'i'
-    new_loglike = cpp_ll_timing(data, new_param, R_NilValue);
+    // new_loglike = cpp_ll_timing(data, new_param, R_NilValue);
+    new_loc_loglike = cpp_ll_timing(data, new_param, i+1); // term for case 'i' with offset
+
+    // term descendents of 'i'
+    if (local_cases.size() > 0) {
+      new_loc_loglike += cpp_ll_timing(data, new_param, local_cases);
+    }
 
 
     // acceptance term
-    p_accept = exp(new_loglike - old_loglike);
+    // p_accept = exp(new_loglike - old_loglike);
+    p_loc_accept = exp(new_loc_loglike - old_loc_loglike);
 
-    // acceptance: the new value is already in t_inf, so we only act if the move is rejected, in
-    // which case we restore the previous ('old') value
-    if (p_accept < unif_rand()) { // reject new values
+    // Rcpp::Rcout << "p_accept: " << p_accept << "  p_loc_accept: " << p_loc_accept << 
+    //   "  diff: " << p_accept - p_loc_accept << std::endl;
+    // if (abs(p_accept - p_loc_accept) > 0.01) {
+    //   Rprintf("\ndifference is: %f ", abs(p_accept - p_loc_accept));
+    //   Rprintf("\nold ll:%f, new ll:%f, old lll:%f, new lll:%f \n", 
+    // 	      old_loglike, new_loglike,
+    // 	      old_loc_loglike, new_loc_loglike);
+    //   Rcpp::Rcout << "old Tinf: " << t_inf << std::endl;
+    //   Rcpp::Rcout << "new Tinf: " << new_t_inf << std::endl;     
+    // }
+
+
+    // acceptance: the new value is already in t_inf, so we only act if the move
+    // is rejected, in which case we restore the previous ('old') value
+
+    if (p_loc_accept < unif_rand()) { // reject new values
       new_t_inf[i] = t_inf[i];
     }
   }
@@ -239,6 +269,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
   size_t N = static_cast<size_t>(data["N"]);
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+
 
   for (size_t i = 0; i < N; i++) {
 
@@ -304,6 +335,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
   size_t N = static_cast<size_t>(data["N"]);
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
+
 
   for (size_t i = 0; i < N; i++) {
 

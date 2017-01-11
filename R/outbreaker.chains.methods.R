@@ -50,10 +50,15 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
 
 
 #' @rdname outbreaker.chains
+#' 
 #' @param y a character string indicating which result to plot
+#'
 #' @param type a character string indicating the kind of plot to be used (see details)
+#'
 #' @param burnin the number of iterations to be discarded as burnin
-#' @param min.support a number between 0 and 1 indicating the minimum support of ancestries to be plotted; only used if 'type' is 'network'
+#'
+#' @param min.support a number between 0 and 1 indicating the minimum support of
+#' ancestries to be plotted; only used if 'type' is 'network'
 ## #' @param dens.all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
 ## #' @param col the colors to be used for different runs
 #'
@@ -62,11 +67,12 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
 #' @details
 #'  'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
 #'
-#' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density geom_violin aes aes_string coord_flip labs guides
+#' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
+#' geom_violin aes aes_string coord_flip labs guides
 #' @importFrom grDevices xyTable
-plot.outbreaker.chains <- function(x, y="post",
-                                   type=c("trace", "hist", "density", "alpha", "t.inf", "kappa", "network"),
-                                   burnin=0, min.support=0.5, ...) {
+plot.outbreaker.chains <- function(x, y = "post",
+                                   type = c("trace", "hist", "density", "alpha", "t.inf", "kappa", "network"),
+                                   burnin = 0, min.support = 0.5, ...) {
 
     ## CHECKS ##
     type <- match.arg(type)

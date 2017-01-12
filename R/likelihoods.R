@@ -26,9 +26,9 @@
 ## This likelihood corresponds to the probability of observing infection dates
 ## of cases given the infection dates of their ancestors.
 
-make.ll.timing.infections <- function(data) {
+bind_ll_timing_infections <- function(data) {
     if (data$N > 1) {
-        function(param, i=NULL) cpp_ll_timing_infections(data, param, i)
+        function(param, i = NULL) cpp_ll_timing_infections(data, param, i)
     } else {
         function(...) 0
     }
@@ -40,9 +40,9 @@ make.ll.timing.infections <- function(data) {
 ## This likelihood corresponds to the probability of reporting dates of cases given their
 ## infection dates.
 
-make.ll.timing.sampling <- function(data) {
+bind_ll_timing_sampling <- function(data) {
     if (data$N>1) {
-        function(param, i=NULL) cpp_ll_timing_sampling(data, param, i)
+        function(param, i = NULL) cpp_ll_timing_sampling(data, param, i)
     } else {
         function(...) 0
     }
@@ -55,9 +55,9 @@ make.ll.timing.sampling <- function(data) {
 ## This likelihood corresponds to the probability of observing a number of mutations between cases
 ## and their ancestors. See src/likelihoods.cpp for details of the Rcpp implmentation.
 
-make.ll.genetic <- function(data) {
+bind_ll_genetic <- function(data) {
     if (nrow(data$D) > 1) {
-        function(param, i=NULL) cpp_ll_genetic(data, param, i)
+        function(param, i = NULL) cpp_ll_genetic(data, param, i)
     } else {
         function(...) 0
     }
@@ -69,9 +69,9 @@ make.ll.genetic <- function(data) {
 
 ## This likelihood corresponds to the probability of a given number of unreported cases on an ancestry.
 
-make.ll.reporting <- function(data) {
+bind_ll_reporting <- function(data) {
     if (data$N > 1) {
-        function(param, i=NULL) cpp_ll_reporting(data, param, i)
+        function(param, i = NULL) cpp_ll_reporting(data, param, i)
     } else {
         function(...) 0
     }
@@ -86,9 +86,9 @@ make.ll.reporting <- function(data) {
 ##   - p(infection dates): see function cpp_ll_timing_infections
 ##   - p(collection dates): see function cpp_ll_timing_sampling
 
-make.ll.timing <- function(data) {
+bind_ll_timing <- function(data) {
     if (data$N > 1) {
-        function(param, i=NULL) cpp_ll_timing(data, param, i)
+        function(param, i = NULL) cpp_ll_timing(data, param, i)
     } else {
         function(...) 0
     }
@@ -105,9 +105,9 @@ make.ll.timing <- function(data) {
 ##   - p(genetic diversity): see function cpp_ll_genetic
 ##   - p(missing cases): see function cpp_ll_reporting
 
-make.ll.all <- function(data) {
+bind_ll_all <- function(data) {
     if (data$N > 1) {
-        function(param, i=NULL) cpp_ll_all(data, param, i)
+        function(param, i = NULL) cpp_ll_all(data, param, i)
     } else {
         function(...) 0
     }

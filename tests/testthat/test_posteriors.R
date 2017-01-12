@@ -1,19 +1,19 @@
 context("Test posterior functions")
 
 
-## test create.posteriors ##
-test_that("create.posteriors gives expected results", {
+## test create_posteriors ##
+test_that("create_posteriors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## generate data
-    data <- outbreaker.data()
-    config <- outbreaker.config()
-    param <- outbreaker.create.mcmc(data=data, config=config)$current
-    ll <- create.loglike(data)
-    priors <- create.priors(config)
-    out <- create.posteriors(ll, priors)
+    data <- outbreaker_data()
+    config <- outbreaker_config()
+    param <- outbreaker_create_mcmc(data = data, config = config)$current
+    ll <- create_loglike(data)
+    priors <- create_priors(config)
+    out <- create_posteriors(ll, priors)
 
     ## tests
     expect_is(out, "list")
@@ -29,8 +29,8 @@ test_that("create.posteriors gives expected results", {
     ## check that closure worked
     expect_identical(ll$genetic, environment(out$genetic)$loglike$genetic)
     expect_identical(ll$reporting, environment(out$reporting)$loglike$reporting)
-    expect_identical(priors$mu, environment(out$genetic)$prior.mu)
-    expect_identical(priors$pi, environment(out$reporting)$prior.pi)
+    expect_identical(priors$mu, environment(out$genetic)$prior_mu)
+    expect_identical(priors$pi, environment(out$reporting)$prior_pi)
 
 })
 
@@ -45,13 +45,13 @@ test_that("posteriors computations give expected values", {
 
 
     ## generate inputs
-    data(fake.outbreak)
-    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
-    config <- outbreaker.config(data=data)
-    param <- outbreaker.create.mcmc(data=data, config=config)$current
-    ll <- create.loglike(data)
-    priors <- create.priors(config)
-    posteriors <- create.posteriors(ll, priors)
+    data(fake_outbreak)
+    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    config <- outbreaker_config(data = data)
+    param <- outbreaker_create_mcmc(data = data, config = config)$current
+    ll <- create_loglike(data)
+    priors <- create_priors(config)
+    posteriors <- create_posteriors(ll, priors)
 
     ## tests
     expect_equal(posteriors$genetic(param), ll$genetic(param) + priors$mu(param))

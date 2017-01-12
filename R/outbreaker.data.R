@@ -14,40 +14,40 @@
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 #' \link[adegenet]{fasta2DNAbin}.}
 #'
-#' \item{w.dens}{a vector of numeric values indicating the generation time
-#' distribution, reflecting the infectious potential of a case t=1, 2, ...
+#' \item{w_dens}{a vector of numeric values indicating the generation time
+#' distribution, reflecting the infectious potential of a case t = 1, 2, ...
 #' time steps after infection. By convention, it is assumed that
 #' newly infected patients cannot see new infections on the same time step. If not
 #' standardized, this distribution is rescaled to sum to 1.}
 #'
-#' \item{f.dens}{similar to \code{w.dens}, except that this is the distribution
-#' of the colonization time, i.e. time interval during which the pathogen can
+#' \item{f_dens}{similar to \code{w_dens}, except that this is the distribution
+#' of the colonization time, i_e. time interval during which the pathogen can
 #' be sampled from the patient.}
 #'
 #'}
 #'
 #' @param ... a list of data items to be processed (see description)
 #'
-#' @param data optionally, an existing list of data item as returned by \code{outbreaker.data}.
+#' @param data optionally, an existing list of data item as returned by \code{outbreaker_data}.
 #'
-#' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
+#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
 #'
 #' @export
 #'
 #' @examples
 #'
-#' x <- fake.outbreak
-#' outbreaker.data(dates=x$collecDates, dna=x$dat$dna, w.dens=x$w)
+#' x <- fake_outbreak
+#' outbreaker_data(dates = x$collecDates, dna = x$dat$dna, w_dens = x$w)
 #'
-outbreaker.data <- function(..., data=list(...)) {
+outbreaker_data <- function(..., data = list(...)) {
 
     ## SET DEFAULTS ##
-    defaults <- list(dates=NULL, w.dens=NULL, f.dens=NULL, dna=NULL,
-                     N=0L, L=0L, D=NULL, max.range=NA, can.be.ances=NULL,
-                     log.w.dens=NULL, log.f.dens=NULL)
+    defaults <- list(dates = NULL, w_dens = NULL, f_dens = NULL, dna = NULL,
+                     N = 0L, L = 0L, D = NULL, max_range = NA, can_be_ances = NULL,
+                     log_w_dens = NULL, log_f_dens = NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
-    data <- modify.defaults(defaults, data)
+    data <- modify_defaults(defaults, data)
 
 
     ## CHECK DATA ##
@@ -57,42 +57,42 @@ outbreaker.data <- function(..., data=list(...)) {
         if (inherits(data$dates, "POSIXct")) data$dates <- difftime(data$dates, min(data$dates), units="days")
         data$dates <- as.integer(round(data$dates))
         data$N <- length(data$dates)
-        data$max.range <- diff(range(data$dates))
+        data$max_range <- diff(range(data$dates))
         ## get temporal ordering constraint:
         ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
-        data$can.be.ances <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
-        diag(data$can.be.ances) <- FALSE
+        data$can_be_ances <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
+        diag(data$can_be_ances) <- FALSE
     }
 
-    ## CHECK W.DENS
-    if (!is.null(data$w.dens)) {
-        if (any(data$w.dens<0))
+    ## CHECK W_DENS
+    if (!is.null(data$w_dens)) {
+        if (any(data$w_dens<0))
         {
-            stop("w.dens has negative entries (these should be probabilities!)")
+            stop("w_dens has negative entries (these should be probabilities!)")
         }
         ## add an exponential tail summing to 1e-4 to 'w'
         ## to cover the span of the outbreak
         ## (avoids starting with -Inf temporal loglike)
-        if (length(data$w.dens)<data$max.range) {
-            length.to.add <- (data$max.range-length(data$w.dens)) + 10 # +10 to be on the safe side
-            val.to.add <- stats::dexp(seq_len(length.to.add), 1)
-            val.to.add <- 1e-4*(val.to.add/sum(val.to.add))
-            data$w.dens <- c(data$w.dens, val.to.add)
-            data$w.dens <- data$w.dens/sum(data$w.dens)
+        if (length(data$w_dens)<data$max_range) {
+            length_to_add <- (data$max_range-length(data$w_dens)) + 10 # +10 to be on the safe side
+            val_to_add <- stats::dexp(seq_len(length_to_add), 1)
+            val_to_add <- 1e-4*(val_to_add/sum(val_to_add))
+            data$w_dens <- c(data$w_dens, val_to_add)
+            data$w_dens <- data$w_dens/sum(data$w_dens)
         }
-        data$log.w.dens <- matrix(log(data$w.dens), nrow=1)
+        data$log_w_dens <- matrix(log(data$w_dens), nrow = 1)
     }
 
-    ## CHECK F.DENS
-    if (!is.null(data$w.dens) && is.null(data$f.dens)) {
-        data$f.dens <- data$w.dens
+    ## CHECK F_DENS
+    if (!is.null(data$w_dens) && is.null(data$f_dens)) {
+        data$f_dens <- data$w_dens
     }
-    if (!is.null(data$f.dens)) {
-        if (any(data$f.dens<0))
+    if (!is.null(data$f_dens)) {
+        if (any(data$f_dens<0))
         {
-            stop("f.dens has negative entries (these should be probabilities!)")
+            stop("f_dens has negative entries (these should be probabilities!)")
         }
-        data$log.f.dens <- log(data$f.dens)
+        data$log_f_dens <- log(data$f_dens)
     }
 
     ## CHECK DNA
@@ -104,7 +104,7 @@ outbreaker.data <- function(..., data=list(...)) {
         storage.mode(data$D) <- "integer" # essential for C/C++ interface
     } else {
         data$L <- 0L
-        data$D <- matrix(integer(0), ncol=0, nrow=0)
+        data$D <- matrix(integer(0), ncol = 0, nrow = 0)
     }
 
     ## output is a list of checked data

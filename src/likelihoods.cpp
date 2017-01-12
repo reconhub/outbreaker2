@@ -54,7 +54,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i) {
   size_t N = static_cast<size_t>(data["N"]);
   if (N < 2) return 0.0;
   
-  Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+  Rcpp::NumericMatrix w_dens = data["log_w_dens"];
   size_t K = w_dens.nrow();
 
   double mu = Rcpp::as<double>(param["mu"]);
@@ -130,9 +130,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i) {
   if(N < 2) return 0.0;
 
   Rcpp::IntegerVector alpha = param["alpha"];
-  Rcpp::IntegerVector t_inf = param["t.inf"];
+  Rcpp::IntegerVector t_inf = param["t_inf"];
   Rcpp::IntegerVector kappa = param["kappa"];
-  Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+  Rcpp::NumericMatrix w_dens = data["log_w_dens"];
   size_t K = w_dens.nrow();
 
   double out = 0.0;
@@ -196,8 +196,8 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i) {
   if(N < 2) return 0.0;
 
   Rcpp::IntegerVector dates = data["dates"];
-  Rcpp::IntegerVector t_inf = param["t.inf"];
-  Rcpp::NumericVector f_dens = data["log.f.dens"];
+  Rcpp::IntegerVector t_inf = param["t_inf"];
+  Rcpp::NumericVector f_dens = data["log_f_dens"];
 
   double out = 0.0;
 
@@ -250,7 +250,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i) {
 
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i) {
-  Rcpp::NumericMatrix w_dens = data["log.w.dens"];
+  Rcpp::NumericMatrix w_dens = data["log_w_dens"];
   size_t K = w_dens.nrow();
 
   size_t N = static_cast<size_t>(data["N"]);

@@ -39,12 +39,12 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
   Rcpp::NumericVector mu = param["mu"];
   Rcpp::NumericVector new_mu = new_param["mu"];
 
-  double sd_mu = static_cast<double>(config["sd.mu"]);
+  double sd_mu = static_cast<double>(config["sd_mu"]);
 
   double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
 
   
-  // proposal (normal distribution with SD: config$sd.mu)
+  // proposal (normal distribution with SD: config$sd_mu)
 
   new_mu[0] += R::rnorm(0.0, sd_mu); // new proposed value
 
@@ -104,12 +104,12 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcp
   Rcpp::NumericVector pi = param["pi"]; // these are just pointers
   Rcpp::NumericVector new_pi = new_param["pi"]; // these are just pointers
 
-  double sd_pi = static_cast<double>(config["sd.pi"]);
+  double sd_pi = static_cast<double>(config["sd_pi"]);
 
   double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
 
   
-  // proposal (normal distribution with SD: config$sd.pi)
+  // proposal (normal distribution with SD: config$sd_pi)
   
   new_pi[0] += R::rnorm(0.0, sd_pi); // new proposed value
 
@@ -169,7 +169,7 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcp
 // case are also affected.
 
 // - we generate a new vector 'new_t_inf', which will replace the
-// previous pointer defining param["t.inf"].
+// previous pointer defining param["t_inf"].
 
 // [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
@@ -177,8 +177,8 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
   // deep copy here for now, ultimately should be an arg.
   
   Rcpp::List new_param = clone(param); 
-  Rcpp::IntegerVector t_inf = param["t.inf"];
-  Rcpp::IntegerVector new_t_inf = new_param["t.inf"];
+  Rcpp::IntegerVector t_inf = param["t_inf"];
+  Rcpp::IntegerVector new_t_inf = new_param["t_inf"];
   Rcpp::IntegerVector alpha = param["alpha"];
   Rcpp::IntegerVector local_cases;
 
@@ -253,7 +253,7 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 // Movement of ancestries ('alpha') is not vectorised, movements are made one
 // case at a time. This procedure is simply about picking an infector at random
 // amongst cases preceeding the case considered. The original version in
-// 'outbreaker' used to move simultaneously 'alpha', 'kappa' and 't.inf', but
+// 'outbreaker' used to move simultaneously 'alpha', 'kappa' and 't_inf', but
 // current implementation is simpler and seems to mix at least as well. Proper
 // movement of 'alpha' needs this procedure as well as a swapping procedure
 // (swaps are not possible through move.alpha only); in all instances, 'alpha'
@@ -263,7 +263,7 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
-  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
+  Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_alpha = new_param["alpha"];
 
   size_t N = static_cast<size_t>(data["N"]);
@@ -328,8 +328,8 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
-  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
-  Rcpp::List swapinfo; // contains alpha and t.inf
+  Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
+  Rcpp::List swapinfo; // contains alpha and t_inf
   Rcpp::IntegerVector local_cases;
   
   size_t N = static_cast<size_t>(data["N"]);
@@ -362,7 +362,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 
       swapinfo = cpp_swap_cases(param, i+1);
       new_param["alpha"] = swapinfo["alpha"];
-      new_param["t.inf"] = swapinfo["t.inf"];
+      new_param["t_inf"] = swapinfo["t_inf"];
         
       
       // loglike with new parameters
@@ -379,7 +379,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
       
       if (p_accept >= unif_rand()) { // accept new parameters
 	param["alpha"] = new_param["alpha"];
-	param["t.inf"] = new_param["t.inf"];
+	param["t_inf"] = new_param["t_inf"];
       }
     }
   }
@@ -397,7 +397,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 
 
 // Movement of the number of generations on transmission chains ('kappa') is
-// done for one ancestry at a time. As for infection times ('t.inf') we use a
+// done for one ancestry at a time. As for infection times ('t_inf') we use a
 // dumb, symmetric +/- 1 proposal. But because values are typically in a short
 // range (e.g. [1-3]) we probably propose more dumb values here. We may
 // eventually want to bounce back or use and correct for assymetric proposals.
@@ -407,11 +407,11 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) 
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector kappa = param["kappa"]; // pointer to param$kappa
-  Rcpp::IntegerVector t_inf = param["t.inf"]; // pointer to param$t_inf
+  Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_kappa = new_param["kappa"];
 
   size_t N = static_cast<size_t>(data["N"]);
-  size_t K = static_cast<size_t>(config["max.kappa"]);
+  size_t K = static_cast<size_t>(config["max_kappa"]);
   size_t jump;
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;

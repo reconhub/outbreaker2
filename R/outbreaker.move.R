@@ -2,39 +2,39 @@
 #'
 #' This function moves all parameters for outbreaker2.
 #'
-#' @author Thibaut Jombart \email{t.jombart@@imperial.ac.uk}
+#' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
 #'
-#' @inheritParams outbreaker.create.mcmc
+#' @inheritParams outbreaker_create_mcmc
 #'
-#' @param moves a list of movement functions as returned by \code{create.moves}
+#' @param moves a list of movement functions as returned by \code{create_moves}
 #'     (internal function)
 #'
 #' @param param a list of parameters as returned by
-#'     \code{outbreaker.create.mcmc}
+#'     \code{outbreaker_create_mcmc}
 #'
 #' @param densities a list containing lists of functions computing densities,
 #'     named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 #'
 #' @return a potentially modified list of parameters as returned by
-#'     \code{outbreaker.create.mcmc}
+#'     \code{outbreaker_create_mcmc}
 #'
-outbreaker.move <- function(moves, data, param.current,
-                            param.store, config, densities) {
+outbreaker_move <- function(moves, data, param_current,
+                            param_store, config, densities) {
     ## get number of moves ##
     J <- length(moves)
 
     ##browser()
     
     ## RUN MCMC ##
-    for (i in seq.int(2, config$n.iter, 1)) {
+    for (i in seq.int(2, config$n_iter, 1)) {
         ## move parameters / augmented data
         for (j in seq_len(J)) {
             ## move parameters
-            param.current <- moves[[j]](param.current)
+            param_current <- moves[[j]](param_current)
 
             ## safemode
             if (config$paranoid) {
-                diagnostic <- look.for.trouble(param.current, param.store, data)
+                diagnostic <- look_for_trouble(param_current, param_store, data)
                 if (!diagnostic$pass) {
                     stop(paste0(
                         "\n\n PARANOID MODE DETECTED AN ERROR WHILE FINDING IMPORTS:\n",
@@ -45,12 +45,12 @@ outbreaker.move <- function(moves, data, param.current,
         }
 
         ## store outputs if needed
-        if ((i %% config$sample.every) == 0) {
-            param.store <- outbreaker.mcmc.store(param.current, param.store, densities, i)
+        if ((i %% config$sample_every) == 0) {
+            param_store <- outbreaker_mcmc_store(param_current, param_store, densities, i)
         }
 
     } # end of the chain
 
     ## output is a list of saved chain states
-    return(param.store)
+    return(param_store)
 }

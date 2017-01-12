@@ -1,55 +1,55 @@
 #' Basic methods for processing outbreaker results
 #'
-#' Several methods are defined for instances of the class \code{outbreaker.chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}
+#' Several methods are defined for instances of the class \code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}
 #'
-#' @rdname outbreaker.chains
+#' @rdname outbreaker_chains
 #'
-#' @aliases outbreaker.chains print.outbreaker.chains plot.outbreaker.chains summary.outbreaker.chains
+#' @aliases outbreaker_chains print.outbreaker_chains plot.outbreaker_chains summary.outbreaker_chains
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
-#' @param x an \code{outbreaker.chains} object as returned by \code{outbreaker}.
-#' @param n.row the number of rows to display in head and tail; defaults to 3.
-#' @param n.col the number of columns to display; defaults to 8.
+#' @param x an \code{outbreaker_chains} object as returned by \code{outbreaker}.
+#' @param n_row the number of rows to display in head and tail; defaults to 3.
+#' @param n_col the number of columns to display; defaults to 8.
 #' @param ... further arguments to be passed to other methods
 #'
 #' @export
 #' @importFrom utils head tail
 #'
-print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
+print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
     cat("\n\n ///// outbreaker results ///\n")
     cat("\nclass: ", class(x))
     cat("\ndimensions", nrow(x), "rows, ", ncol(x), "columns")
 
     ## process names of variables not shown
-    if (ncol(x) > n.col) {
-        ori.names <- names(x)
-        x <- x[, seq_len(min(n.col, ncol(x)))]
+    if (ncol(x) > n_col) {
+        ori_names <- names(x)
+        x <- x[, seq_len(min(n_col, ncol(x)))]
 
-        not.shown <- setdiff(ori.names, names(x))
+        not_shown <- setdiff(ori_names, names(x))
 
-        alpha.txt <- paste(not.shown[range(grep("alpha", not.shown))], collapse=" - ")
-        t.inf.txt <- paste(not.shown[range(grep("t.inf", not.shown))], collapse=" - ")
-        kappa.txt <- paste(not.shown[range(grep("kappa", not.shown))], collapse=" - ")
+        alpha_txt <- paste(not_shown[range(grep("alpha", not_shown))], collapse=" - ")
+        t_inf_txt <- paste(not_shown[range(grep("t_inf", not_shown))], collapse=" - ")
+        kappa_txt <- paste(not_shown[range(grep("kappa", not_shown))], collapse=" - ")
 
-        cat("\nancestries not shown:", alpha.txt)
-        cat("\ninfection dates not shown:", t.inf.txt)
-        cat("\nintermediate generations not shown:", kappa.txt)
+        cat("\nancestries not shown:", alpha_txt)
+        cat("\ninfection dates not shown:", t_inf_txt)
+        cat("\nintermediate generations not shown:", kappa_txt)
     }
 
     ## heads and tails
     cat("\n\n/// head //\n")
-    print(head(as.data.frame(x), n.row))
+    print(head(as.data.frame(x), n_row))
     cat("\n...")
     cat("\n/// tail //\n")
-    print(tail(as.data.frame(x), n.row))
+    print(tail(as.data.frame(x), n_row))
 }
 
 
 
 
 
-#' @rdname outbreaker.chains
+#' @rdname outbreaker_chains
 #' 
 #' @param y a character string indicating which result to plot
 #'
@@ -57,9 +57,9 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
 #'
 #' @param burnin the number of iterations to be discarded as burnin
 #'
-#' @param min.support a number between 0 and 1 indicating the minimum support of
+#' @param min_support a number between 0 and 1 indicating the minimum support of
 #' ancestries to be plotted; only used if 'type' is 'network'
-## #' @param dens.all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
+## #' @param dens_all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
 ## #' @param col the colors to be used for different runs
 #'
 #' @export
@@ -70,9 +70,9 @@ print.outbreaker.chains <- function(x, n.row=3, n.col=8, ...) {
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
 #' geom_violin aes aes_string coord_flip labs guides
 #' @importFrom grDevices xyTable
-plot.outbreaker.chains <- function(x, y = "post",
-                                   type = c("trace", "hist", "density", "alpha", "t.inf", "kappa", "network"),
-                                   burnin = 0, min.support = 0.5, ...) {
+plot.outbreaker_chains <- function(x, y = "post",
+                                   type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
+                                   burnin = 0, min_support = 0.5, ...) {
 
     ## CHECKS ##
     type <- match.arg(type)
@@ -91,24 +91,24 @@ plot.outbreaker.chains <- function(x, y = "post",
     if (burnin > max(x$step)) {
         stop("burnin exceeds the number of steps in x")
     }
-    x <- x[x$step>burnin,,drop=FALSE]
+    x <- x[x$step>burnin,,drop = FALSE]
 
     ## MAKE PLOT ##
     if (type=="trace") {
-        out <- ggplot(x) + geom_line(aes_string(x="step", y=y)) +
-            labs(x="Iteration", y=y, title=paste("trace:",y))
+        out <- ggplot(x) + geom_line(aes_string(x="step", y = y)) +
+            labs(x="Iteration", y = y, title = paste("trace:",y))
     }
 
     if (type=="hist") {
-        out <- ggplot(x) + geom_histogram(aes_string(x=y)) +
-            geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
-                labs(x=y, title=paste("histogram:",y))
+        out <- ggplot(x) + geom_histogram(aes_string(x = y)) +
+            geom_point(aes_string(x = y, y = 0), shape="|", alpha = 0.5, size = 3) +
+                labs(x = y, title = paste("histogram:",y))
     }
 
     if (type=="density") {
-        out <- ggplot(x) + geom_density(aes_string(x=y)) +
-            geom_point(aes_string(x=y, y=0), shape="|", alpha=0.5, size=3) +
-                labs(x=y, title=paste("density:",y))
+        out <- ggplot(x) + geom_density(aes_string(x = y)) +
+            geom_point(aes_string(x = y, y = 0), shape="|", alpha = 0.5, size = 3) +
+                labs(x = y, title = paste("density:",y))
     }
 
     if (type=="alpha") {
@@ -116,24 +116,24 @@ plot.outbreaker.chains <- function(x, y = "post",
         colnames(alpha) <- seq_len(ncol(alpha))
         from <- as.vector(alpha)
         to <- as.vector(col(alpha))
-        out.dat <- data.frame(xyTable(from,to))
-        out.dat[3] <- out.dat[3]/nrow(x)
-        names(out.dat) <- c("from", "to", "frequency")
+        out_dat <- data.frame(xyTable(from,to))
+        out_dat[3] <- out_dat[3]/nrow(x)
+        names(out_dat) <- c("from", "to", "frequency")
 
-        out <- ggplot(out.dat) +
-            geom_point(aes(x=to, y=from, size=frequency, color=factor(from))) +
-                guides(colour=FALSE) +
+        out <- ggplot(out_dat) +
+            geom_point(aes(x = to, y = from, size = frequency, color = factor(from))) +
+                guides(colour = FALSE) +
                     labs(title="ancestries")
     }
 
-    if (type=="t.inf") {
-        t.inf <- as.matrix(x[,grep("t.inf", names(x))])
-        dates <- as.vector(t.inf)
-        cases <- as.vector(col(t.inf))
-        out.dat <- data.frame(cases=factor(cases), dates=dates)
-        out <- ggplot(out.dat) +
-            geom_violin(aes(x=cases, y=dates, fill=cases)) +
-                coord_flip() + guides(fill=FALSE) +
+    if (type=="t_inf") {
+        t_inf <- as.matrix(x[,grep("t_inf", names(x))])
+        dates <- as.vector(t_inf)
+        cases <- as.vector(col(t_inf))
+        out_dat <- data.frame(cases = factor(cases), dates = dates)
+        out <- ggplot(out_dat) +
+            geom_violin(aes(x = cases, y = dates, fill = cases)) +
+                coord_flip() + guides(fill = FALSE) +
                     labs(title="infection times")
     }
 
@@ -141,40 +141,40 @@ plot.outbreaker.chains <- function(x, y = "post",
         kappa <- as.matrix(x[,grep("kappa", names(x))])
         generations <- as.vector(kappa)
         cases <- as.vector(col(kappa))
-        out.dat <- data.frame(xyTable(generations,cases))
-        out.dat[3] <- out.dat[3]/nrow(x)
-        names(out.dat) <- c("generations", "cases", "frequency")
+        out_dat <- data.frame(xyTable(generations,cases))
+        out_dat[3] <- out_dat[3]/nrow(x)
+        names(out_dat) <- c("generations", "cases", "frequency")
 
-        out <- ggplot(out.dat) +
-            geom_point(aes(x=generations, y=cases, size=frequency, color=factor(cases))) +
-                guides(colour=FALSE) +
+        out <- ggplot(out_dat) +
+            geom_point(aes(x = generations, y = cases, size = frequency, color = factor(cases))) +
+                guides(colour = FALSE) +
                     labs(title="number of generations between cases", x="number of generations to ancestor")
     }
 
     if (type=="network") {
         ## extract edge info: ancestries
-        alpha <- x[, grep("alpha",names(x)), drop=FALSE]
+        alpha <- x[, grep("alpha",names(x)), drop = FALSE]
         from <- unlist(alpha)
         to <- as.vector(col(alpha))
         edges <- stats::na.omit(data.frame(xyTable(from, to)))
         edges[3] <- edges$number/nrow(alpha)
         names(edges) <- c("from", "to", "value")
-        edges <- edges[edges$value > min.support,,drop=FALSE]
+        edges <- edges[edges$value > min_support,,drop = FALSE]
         edges$arrows <- "to"
 
         ## ## extract edge info: timing
-        ## t.inf <- x[, grep("t.inf",names(x)), drop=FALSE]
-        ## mean.time <- apply(t.inf, 2, mean)
-        ## mean.delay <- mean.time[edges$to] - mean.time[edges$from]
-        ## mean.delay[mean.delay<1] <- 1
-        ## edges$label <- paste(round(mean.delay), "days")
+        ## t_inf <- x[, grep("t_inf",names(x)), drop = FALSE]
+        ## mean_time <- apply(t_inf, 2, mean)
+        ## mean_delay <- mean_time[edges$to] - mean_time[edges$from]
+        ## mean_delay[mean_delay<1] <- 1
+        ## edges$label <- paste(round(mean_delay), "days")
 
         ## node info
-        nodes <- list(id=seq_len(ncol(alpha)), label=seq_len(ncol(alpha)))
-        nodes$value <- vapply(nodes$id, function(i) sum(from==i, na.rm=TRUE), numeric(1))/nrow(alpha)
+        nodes <- list(id = seq_len(ncol(alpha)), label = seq_len(ncol(alpha)))
+        nodes$value <- vapply(nodes$id, function(i) sum(from==i, na.rm = TRUE), numeric(1))/nrow(alpha)
 
         ## generate graph
-        out <- visNetwork::visNetwork(nodes=nodes, edges=edges, ...)
+        out <- visNetwork::visNetwork(nodes = nodes, edges = edges, ...)
         out <- visNetwork::visNodes(out, shadow = list(enabled = TRUE, size = 10),
                         color = list(highlight = "red"))
         out <- visNetwork::visEdges(out, arrows = list(
@@ -190,17 +190,17 @@ plot.outbreaker.chains <- function(x, y = "post",
 
 
 
-#' @rdname outbreaker.chains
-#' @param object an \code{outbreaker.chains} object as returned by \code{outbreaker}.
+#' @rdname outbreaker_chains
+#' @param object an \code{outbreaker_chains} object as returned by \code{outbreaker}.
 #' @export
 #' @importFrom stats median
-summary.outbreaker.chains <- function(object, burnin=0, ...) {
+summary.outbreaker_chains <- function(object, burnin = 0, ...) {
     ## check burnin ##
     x <- object
     if (burnin > max(x$step)) {
         stop("burnin exceeds the number of steps in object")
     }
-    x <- x[x$step>burnin,,drop=FALSE]
+    x <- x[x$step>burnin,,drop = FALSE]
 
 
     ## make output ##
@@ -212,7 +212,7 @@ summary.outbreaker.chains <- function(object, burnin=0, ...) {
     out$step <- c(first = min(x$step),
                   last = max(x$step),
                   interval = interv,
-                  n.steps = length(x$step)
+                  n_steps = length(x$step)
                   )
 
 
@@ -237,18 +237,18 @@ summary.outbreaker.chains <- function(object, burnin=0, ...) {
 
     ## function to get most frequent item
     f1 <- function(x) {
-        as.integer(names(sort(table(x, exclude=NULL), decreasing=TRUE)[1]))
+        as.integer(names(sort(table(x, exclude = NULL), decreasing = TRUE)[1]))
     }
     out$tree$from <- apply(alpha, 2, f1)
     out$tree$to <- seq_len(ncol(alpha))
 
-    ## summary of t.inf ##
-    t.inf <- as.matrix(x[,grep("t.inf", names(x))])
-    out$tree$time <- apply(t.inf, 2, median)
+    ## summary of t_inf ##
+    t_inf <- as.matrix(x[,grep("t_inf", names(x))])
+    out$tree$time <- apply(t_inf, 2, median)
 
     ## function to get frequency of most frequent item
     f2 <- function(x) {
-        (sort(table(x), decreasing=TRUE)/length(x))[1]
+        (sort(table(x), decreasing = TRUE)/length(x))[1]
     }
     out$tree$support <- apply(alpha, 2, f2)
 

@@ -33,10 +33,10 @@
 ## #' ## check with microbenchmark
 ## #' if (require(microbenchmark)) {
 ## #' x1 <- make.fast.rand1()
-## #' plot(microbenchmark(x1(), runif (1), times=1e3L), ylim=c(1000,3000))
+## #' plot(microbenchmark(x1(), runif (1), times = 1e3L), ylim = c(1000,3000))
 ## #' }
 ## #'
-## make.fast.rand <- function(..., f=runif, batch.size=5e4, log=FALSE) {
+## make_fast_rand <- function(..., f = runif, batch_size = 5e4, log = FALSE) {
 ##     ## initialize array
 ##     values <- f(batch.size, ...)
 ##     if (log) {
@@ -75,7 +75,7 @@
 ## #' @rdname make.fast.rand
 ## #' @export
 ## #' @aliases  make.fast.rand1
-## make.fast.rand1 <- function(..., f=runif, batch.size=5e4, log=FALSE) {
+## make.fast.rand1 <- function(..., f = runif, batch.size = 5e4, log = FALSE) {
 ##     ## initialize array
 ##     values <- f(batch.size, ...)
 ##     if (log) {

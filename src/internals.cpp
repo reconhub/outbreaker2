@@ -29,14 +29,14 @@
 
 //   Original R code:
 
-// are.possible.alpha <- function(t.inf, i) {
+// are.possible.alpha <- function(t_inf, i) {
 //     if (length(i)>1) {
 //         stop("i has a length > 1")
 //     }
-//     if (any(t.inf[i]==min(t.inf))) {
+//     if (any(t_inf[i]==min(t_inf))) {
 //         return(NA)
 //     }
-//     return(which(t.inf < t.inf[i[1]]))
+//     return(which(t_inf < t_inf[i[1]]))
 // }
 
 // [[Rcpp::export()]]
@@ -80,8 +80,8 @@ size_t cpp_sample1(std::vector<int> x) {
 
 //    Original R version:
 
-// .choose.possible.alpha <- function(t.inf, i) {
-//     return(sample(are.possible.alpha(t.inf=t.inf, i=i), 1))
+// .choose.possible.alpha <- function(t_inf, i) {
+//     return(sample(are.possible.alpha(t_inf=t_inf, i=i), 1))
 // }
 
 // [[Rcpp::export()]]
@@ -207,7 +207,7 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 // - infection time of 'x' becomes that of 'i'
 
 // Note on indexing: 'i', 'x', and values of alpha are on the scale 1:N. The
-// function's output is a list with new alpha and t.inf.
+// function's output is a list with new alpha and t_inf.
 
 // Note on forbidden swaps: two types of swaps are excluded:
 // - 'i' is imported, so that 'alpha[i-1]' is NA_INTEGER
@@ -216,12 +216,12 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 // [[Rcpp::export()]]
 Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
   Rcpp::IntegerVector alpha_in = param["alpha"];
-  Rcpp::IntegerVector t_inf_in = param["t.inf"];
+  Rcpp::IntegerVector t_inf_in = param["t_inf"];
   Rcpp::IntegerVector alpha_out = clone(alpha_in);
   Rcpp::IntegerVector t_inf_out = clone(t_inf_in);
   Rcpp::List out;
   out["alpha"] = alpha_out;
-  out["t.inf"] = t_inf_out;
+  out["t_inf"] = t_inf_out;
       
   size_t N = alpha_in.size();
   
@@ -364,8 +364,8 @@ swap.cases <- function(param, config, i) {
     ## 'i' is now the ancestor of 'x'
     param.current$alpha[x] <- i
 
-    ## swap t.inf
-    param.current$t.inf[c(x,i)] <- param.current$t.inf[c(i,x)]
+    ## swap t_inf
+    param.current$t_inf[c(x,i)] <- param.current$t_inf[c(i,x)]
 
     return(param)
 }

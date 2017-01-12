@@ -7,33 +7,33 @@ test_that("Test detection of imported cases", {
 
 
     ## generate inputs
-    data(fake.outbreak)
-    data <- with(fake.outbreak, outbreaker.data(dates=collecDates, w.dens=w, dna=dat$dna))
-    config <- outbreaker.config(data=data)
-    data <- add.convolutions(data=data, config=config)
-    temp <- outbreaker.create.mcmc(data=data, config=config)
-    param.current <- temp$current
-    param.store <- temp$store
+    data(fake_outbreak)
+    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    config <- outbreaker_config(data = data)
+    data <- add_convolutions(data = data, config = config)
+    temp <- outbreaker_create_mcmc(data = data, config = config)
+    param_current <- temp$current
+    param_store <- temp$store
 
-    ll <- create.loglike(data)
-    priors <- create.priors(config)
-    post <- create.posteriors(ll, priors)
-    densities <- list(loglike=ll, priors=priors, posteriors=post)
+    ll <- create_loglike(data)
+    priors <- create_priors(config)
+    post <- create_posteriors(ll, priors)
+    densities <- list(loglike = ll, priors = priors, posteriors = post)
 
-    moves <- create.moves(config=config, densities=densities)
+    moves <- create_moves(config = config, densities = densities)
 
     ## detect imported cases
-    out <- outbreaker.find.imports(moves = moves, data = data,
-                                   param.current = param.current,
-                                   param.store = param.store,
+    out <- outbreaker_find_imports(moves = moves, data = data,
+                                   param_current = param_current,
+                                   param_store = param_store,
                                    config = config, densities = densities)
 
     ## tests ##
-    expect_identical(which(!out$config$move.alpha), which(!out$config$move.kappa))
-    expect_identical(out$param.store$alpha[[1]], out$param.current$alpha)
-    expect_identical(out$param.store$kappa[[1]], out$param.current$kappa)
-    expect_equal(which(is.na(out$param.current$alpha)), c(1,4,28))
-    expect_true(all(config$move.alpha==!is.na(param.current$alpha)))
+    expect_identical(which(!out$config$move_alpha), which(!out$config$move_kappa))
+    expect_identical(out$param_store$alpha[[1]], out$param_current$alpha)
+    expect_identical(out$param_store$kappa[[1]], out$param_current$kappa)
+    expect_equal(which(is.na(out$param_current$alpha)), c(1,4,28))
+    expect_true(all(config$move_alpha==!is.na(param_current$alpha)))
 
 })
 

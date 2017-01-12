@@ -2,15 +2,15 @@ context("Test prior functions")
 
 
 
-## test outbreaker.create.priors ##
-test_that("create.priors gives expected results", {
+## test outbreaker_create_priors ##
+test_that("create_priors gives expected results", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## generate data
-    config <- outbreaker.config()
-    out <- create.priors(config)
+    config <- outbreaker_config()
+    out <- create_priors(config)
 
     ## tests
     expect_is(out, "list")
@@ -23,8 +23,8 @@ test_that("create.priors gives expected results", {
     expect_true(all(vapply(out, is.function, logical(1))))
 
     ## check that closure worked
-    expect_identical(config$prior.mu, environment(out$mu)$rate)
-    expect_identical(config$prior.pi,
+    expect_identical(config$prior_mu, environment(out$mu)$rate)
+    expect_identical(config$prior_pi,
                      c(environment(out$pi)$shape1, environment(out$pi)$shape2))
 
 })
@@ -40,22 +40,22 @@ test_that("priors have expected values", {
 
 
     ## generate inputs
-    config <- outbreaker.config()
-    param <- outbreaker.create.mcmc(config,
-                                    data=outbreaker.data())$current
+    config <- outbreaker_config()
+    param <- outbreaker_create_mcmc(config,
+                                    data = outbreaker_data())$current
 
-    priors <- create.priors(config)
+    priors <- create_priors(config)
 
     ## generate outputs
-    out.mu <- priors$mu(param)
-    out.pi <- priors$pi(param)
-    out.all <- priors$all(param)
+    out_mu <- priors$mu(param)
+    out_pi <- priors$pi(param)
+    out_all <- priors$all(param)
 
     ## tests
-    expect_equal(out.mu + out.pi, out.all)
-    expect_true(!any(is.na(out.mu)))
-    expect_true(!any(is.na(out.pi)))
-    expect_true(!any(is.na(out.all)))
-    expect_equal(out.all, 8.16209573106)
+    expect_equal(out_mu + out_pi, out_all)
+    expect_true(!any(is.na(out_mu)))
+    expect_true(!any(is.na(out_pi)))
+    expect_true(!any(is.na(out_all)))
+    expect_equal(out_all, 8.16209573106)
 
 })

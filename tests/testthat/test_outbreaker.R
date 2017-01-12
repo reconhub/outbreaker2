@@ -7,28 +7,28 @@ test_that("outbreaker's output have expected format", {
 
 
     ## get data
-    data(fake.outbreak)
-    dat <- fake.outbreak$dat
-    w <- fake.outbreak$w
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
 
     ## run outbreaker
-    data <- list(dna = dat$dna, dates = dat$onset, w.dens = w)
-    config <- list(n.iter=10, sample.every=1, paranoid=TRUE,
-                   find.import=FALSE)
+    data <- list(dna = dat$dna, dates = dat$onset, w_dens = w)
+    config <- list(n_iter = 10, sample_every = 1, paranoid = TRUE,
+                   find_import = FALSE)
     out <- outbreaker(data, config)
 
 
-    out.df <- as.data.frame(out)
+    out_df <- as.data.frame(out)
 
-    data <- list(dates=dat$onset, w.dens=w)
+    data <- list(dates = dat$onset, w_dens = w)
     out2 <- outbreaker(data, config)
 
     ## check output
-    expect_is(out, "outbreaker.chains")
-    expect_is(out.df, "data.frame")
+    expect_is(out, "outbreaker_chains")
+    expect_is(out_df, "data.frame")
     expect_equal(nrow(out), 10)
-    expect_true(!any(is.na(out.df$post)))
-    expect_true(all(out.df$post> -1e30))
+    expect_true(!any(is.na(out_df$post)))
+    expect_true(all(out_df$post> -1e30))
 
 })
 
@@ -42,37 +42,37 @@ test_that("results ok: DNA + time", {
 
 
     ## get data
-    data(fake.outbreak)
-    dat <- fake.outbreak$dat
-    w <- fake.outbreak$w
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
 
     ## outbreaker DNA + time ##
     ## analysis
     set.seed(1)
-    data <- list(dna=dat$dna, dates=dat$onset, w.dens=w)
-    config <- list(n.iter = 10000, sample.every = 50,
-                   init.tree = "star", find.import = FALSE,
-                   move.pi = FALSE)
+    data <- list(dna = dat$dna, dates = dat$onset, w_dens = w)
+    config <- list(n_iter = 10000, sample_every = 50,
+                   init_tree = "star", find_import = FALSE,
+                   move_pi = FALSE)
     
     out <- outbreaker(data = data, config = config)
 
     ## checks
-    out.smry <- summary(out, burnin = 1000)
+    out_smry <- summary(out, burnin = 1000)
 
     ## approx log post values
-    expect_true(min(out.smry$post) > -1250)
+    expect_true(min(out_smry$post) > -1250)
 
     ## at least 75% ancestries correct
-    temp <- mean(out.smry$tree$from==dat$ances, na.rm=TRUE)
+    temp <- mean(out_smry$tree$from==dat$ances, na.rm = TRUE)
     expect_true(temp > .8)
 
     ## infection date within 3 days on average
-    temp <- mean(abs(out.smry$tree$time - dat$onset), na.rm=TRUE)
+    temp <- mean(abs(out_smry$tree$time - dat$onset), na.rm = TRUE)
     expect_true(temp < 3.5)
 
     ## mu within reasonable ranges
-    expect_true(out.smry$mu[2] > 1e-4 &&
-                out.smry$mu[5] < 3e-4)
+    expect_true(out_smry$mu[2] > 1e-4 &&
+                out_smry$mu[5] < 3e-4)
 
 })
 
@@ -86,33 +86,33 @@ test_that("results ok: time, no DNA", {
 
 
     ## get data
-    data(fake.outbreak)
-    dat <- fake.outbreak$dat
-    w <- fake.outbreak$w
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
 
     ## outbreaker time, no DNA ##
     ## analysis
     set.seed(1)
 
-    data <- list(dates = dat$onset, w.dens = w)
-    config <- list(n.iter=1e4, sample.every=200,
-                   init.tree="star", find.import=FALSE,
-                   move.kappa=FALSE)
+    data <- list(dates = dat$onset, w_dens = w)
+    config <- list(n_iter = 1e4, sample_every = 200,
+                   init_tree="star", find_import = FALSE,
+                   move_kappa = FALSE)
 
-    out.no.dna <- outbreaker(data = data, config = config)
+    out_no_dna <- outbreaker(data = data, config = config)
 
     ## checks
-    out.no.dna.smry <- summary(out.no.dna, burnin = 1000)
+    out_no_dna.smry <- summary(out_no_dna, burnin = 1000)
     
     ## approx log post values
-    expect_true(min(out.no.dna.smry$post) > -90) 
+    expect_true(min(out_no_dna.smry$post) > -90) 
 
     ## infection datewithin 3 days on average
-    temp <- mean(abs(out.no.dna.smry$tree$time - dat$onset), na.rm=TRUE)
+    temp <- mean(abs(out_no_dna.smry$tree$time - dat$onset), na.rm = TRUE)
     expect_true(temp < 3.5)
 
     ## check that support for ancestries is weak
-    sup <- na.omit(out.no.dna.smry$tree$support)
+    sup <- na.omit(out_no_dna.smry$tree$support)
     expect_lt(quantile(sup, .9), .5)
     expect_lt(mean(sup), .35)
     
@@ -127,33 +127,33 @@ test_that("results ok: easy run, no missing cases, no import", {
 
 
     ## get data
-    data(fake.outbreak)
-    dat <- fake.outbreak$dat
-    w <- fake.outbreak$w
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
 
     ## outbreaker, no missing cases ##
     ## analysis
     set.seed(1)
-    config <-  list(n.iter = 5e3, sample.every = 100,
-                    init.tree = "star", move.kappa = FALSE,
-                    move.pi = FALSE, init.pi = 1,
-                    find.import = FALSE)
-    data <- list(dna = dat$dna, dates = dat$onset, w.dens = w)
+    config <-  list(n_iter = 5e3, sample_every = 100,
+                    init_tree = "star", move_kappa = FALSE,
+                    move_pi = FALSE, init_pi = 1,
+                    find_import = FALSE)
+    data <- list(dna = dat$dna, dates = dat$onset, w_dens = w)
 
-    out.no.missing <- outbreaker(data = data, config = config)
+    out_no_missing <- outbreaker(data = data, config = config)
 
     ## checks
-    out.no.missing.smry <- summary(out.no.missing, burnin=2000)
+    out_no_missing_smry <- summary(out_no_missing, burnin = 2000)
 
     ## approx log post values
-    expect_true(min(out.no.missing.smry$post) > -935)
+    expect_true(min(out_no_missing_smry$post) > -935)
 
     ## at least 85% ancestries correct
-    temp <- mean(out.no.missing.smry$tree$from==dat$ances, na.rm=TRUE)
+    temp <- mean(out_no_missing_smry$tree$from==dat$ances, na.rm = TRUE)
     expect_true(temp > .85)
 
     ## infection datewithin 3 days on average
-    temp <- mean(abs(out.no.missing.smry$tree$time - dat$onset), na.rm=TRUE)
+    temp <- mean(abs(out_no_missing_smry$tree$time - dat$onset), na.rm = TRUE)
     expect_true(temp < 3.5)
 })
 
@@ -166,35 +166,35 @@ test_that("results ok: no missing cases, detect imported cases",
     
     
     ## get data
-    data(fake.outbreak)
-    dat <- fake.outbreak$dat
-    w <- fake.outbreak$w
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
     
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis
     set.seed(1)
-    out.with.import <- outbreaker(data = list(dna=dat$dna, dates=dat$onset,
-                                              w.dens=w),
-                                  config = list(n.iter=5000, sample.every=100,
-                                                init.tree="star",
-                                                move.kappa=FALSE, move.pi=FALSE,
-                                                init.pi=1, find.import=TRUE)
+    out_with_import <- outbreaker(data = list(dna = dat$dna, dates = dat$onset,
+                                              w_dens = w),
+                                  config = list(n_iter = 5000, sample_every = 100,
+                                                init_tree="star",
+                                                move_kappa = FALSE, move_pi = FALSE,
+                                                init_pi = 1, find_import = TRUE)
                                   )
     
     ## checks
-    out.with.import.smry <- summary(out.with.import, burnin=500)
-    out.with.import.smry$tree$from[is.na(out.with.import.smry$tree$from)] <- 0
+    out_with_import_smry <- summary(out_with_import, burnin = 500)
+    out_with_import_smry$tree$from[is.na(out_with_import_smry$tree$from)] <- 0
     dat$ances[is.na(dat$ances)] <- 0
 
     ## approx log post values
-    expect_true(min(out.with.import.smry$post) > -460)
+    expect_true(min(out_with_import_smry$post) > -460)
 
     ## at least 80% ancestries correct
-    temp <- mean(out.with.import.smry$tree$from==dat$ances, na.rm=TRUE)
+    temp <- mean(out_with_import_smry$tree$from==dat$ances, na.rm = TRUE)
     expect_true(temp >= .80)
 
     ## infection datewithin 3 days on average
-    temp <- mean(abs(out.with.import.smry$tree$time - dat$onset), na.rm=TRUE)
+    temp <- mean(abs(out_with_import_smry$tree$time - dat$onset), na.rm = TRUE)
     expect_true(temp < 3.5) 
     
 })
@@ -217,16 +217,16 @@ test_that("results ok: kappa and pi", {
     ## analysis
     set.seed(1)
 
-    data <- list(dates = onset, w.dens = w)
-    config <- list(n.iter = 10000, sample.every = 50, init.tree = "star",
-                   move.kappa = TRUE, move.pi = TRUE, init.pi = 1,
-                   find.import = FALSE, max.kappa = 10)
+    data <- list(dates = onset, w_dens = w)
+    config <- list(n_iter = 10000, sample_every = 50, init_tree = "star",
+                   move_kappa = TRUE, move_pi = TRUE, init_pi = 1,
+                   find_import = FALSE, max_kappa = 10)
     
     out <- outbreaker(data, config)
     
     plot(out)
 
-    smry <- summary(out, burnin=500)
+    smry <- summary(out, burnin = 500)
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))

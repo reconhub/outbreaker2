@@ -1,7 +1,8 @@
 
 #' Internal functions for outbreaker2
 #'
-#' These functions are meant for internal use in outbreaker2. They are not exported, and their API might change in the future.
+#' These functions are meant for internal use in outbreaker2. They are not
+#' exported, and their API might change in the future.
 #'
 #' \describe{
 #' \item{modify_default}{modify default arguments using user-provided values}
@@ -361,7 +362,7 @@ add_convolutions <- function(data, config) {
     ##  log(mu) * sum(n_mut) + log(1 - mu) * (L-n_mut + (kappa-1)*L)
     ##
 
-    n_mut <- data$D[cbind(i, param$alpha[i], deparse_level = 0)]
+    n_mut <- data$D[cbind(i, param$alpha[i], deparse.level = 0)]
     
     n_non_mut <- (data$L - n_mut) + (param$kappa[i]-1) * data$L
 

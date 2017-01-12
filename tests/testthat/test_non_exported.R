@@ -145,7 +145,7 @@ test_that("Testing find_descendents", {
     expect_equal(cpp_find_descendents(c(1,NA,2,1), 1), c(1L, 4L))
     expect_equal(cpp_find_descendents(c(NA, 1,1,1,2,2,NA,1,1), 1),
                                       c(2L, 3L, 4L, 8L, 9L))
-    expect_equal(cpp_find_descendents(c(NA,1,NA,2), NA.integer_), integer(0))
+    expect_equal(cpp_find_descendents(c(NA,1,NA,2), NA_integer_), integer(0))
 })
 
 
@@ -164,9 +164,9 @@ test_that("Testing add_convolutions", {
     out <- add_convolutions(data = data, config = config)
 
     ## tests
-    expect_is(out$log_w.dens, "matrix")
-    expect_equal(dim(out$log_w.dens), c(5, length(out$w_dens)))
-    expect_true(!any(is.na(out$log_w.dens)))
+    expect_is(out$log_w_dens, "matrix")
+    expect_equal(dim(out$log_w_dens), c(5, length(out$w_dens)))
+    expect_true(!any(is.na(out$log_w_dens)))
 
 })
 

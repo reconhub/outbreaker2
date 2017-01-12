@@ -41,6 +41,7 @@ test_that("ll_timing_infections gives expected results", {
     expect_equal(out, ref)
     expect_equal(out_few_cases, ref_few_cases)
     expect_equal(out_rnd_cases, ref_rnd_cases)
+    
 })
 
 
@@ -94,7 +95,10 @@ test_that("ll$genetic gives expected results", {
 
     ## generate data ##
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
     ll <- outbreaker2:::create_loglike(data)
     config <- outbreaker_config(data = data, init_mu = 0.543e-4)
     param <- outbreaker_create_mcmc(data = data, config = config)$current

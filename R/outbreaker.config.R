@@ -111,6 +111,7 @@
 #' @importFrom utils modifyList
 #'
 outbreaker_config <- function(..., data = NULL, config = NULL) {
+    
     ## PROCESS ... ONLY IF NO CONFIG IS PASSED
     if (is.null(config)) {
         config <- list(...)
@@ -483,16 +484,16 @@ outbreaker_config <- function(..., data = NULL, config = NULL) {
         }
 
         ## recycle move_alpha
-        config$move_alpha <- rep(config$move_alpha, length_out = data$N)
+        config$move_alpha <- rep(config$move_alpha, length.out = data$N)
 
         ## recycle move_t_inf
-        config$move_t_inf <- rep(config$move_t_inf, length_out = data$N)
+        config$move_t_inf <- rep(config$move_t_inf, length.out = data$N)
 
         ## recycle move_kappa
-        config$move_kappa <- rep(config$move_kappa, length_out = data$N)
+        config$move_kappa <- rep(config$move_kappa, length.out = data$N)
 
         ## recycle init_kappa
-        config$init_kappa <- rep(config$init_kappa, length_out = data$N)
+        config$init_kappa <- rep(config$init_kappa, length.out = data$N)
         config$init_kappa[is.na(config$init_alpha)] <- NA
 
         ## disable moves for imported cases

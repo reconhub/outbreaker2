@@ -19,7 +19,7 @@ test_that("test: data are processed fine", {
     expect_equal(out_nodna$L, 0)
     expect_equal(out$L, 1e4)
     expect_equal(out$w_dens, out$f_dens)
-    expect_equal(out$log_w.dens[1,], out$log_f.dens)
+    expect_equal(out$log_w_dens[1,], out$log_f_dens)
     expect_error(outbreaker_data(dates = 1, w_dens = c(0,-1)),
                  "w_dens has negative entries")
 

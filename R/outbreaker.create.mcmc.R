@@ -6,7 +6,7 @@
 #'
 #' @param data a list of data items as returned by \code{outbreaker_data}
 #'
-#' @param config a list of settings as returned by \code{outbreaker_config}
+#' @param config a list of settings as returned by \code{create_config}
 #'
 #' @export
 #'

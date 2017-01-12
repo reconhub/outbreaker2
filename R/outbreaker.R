@@ -13,18 +13,21 @@
 #' N (2014).  Bayesian reconstruction of disease outbreaks by combining
 #' epidemiologic and genomic data. PLoS Computational Biology.
 #'
-#' @seealso \code{\link{outbreaker_data}} to process input data, and \code{\link{outbreaker_config}} to process/set up parameters
+#' @seealso \code{\link{outbreaker_data}} to process input data, and \code{\link{create_config}} to process/set up parameters
 #'
 #' @param data a list of named items containing input data as returned by
 #'     \code{\link{outbreaker_data}}
 #' 
-#' @param config a set of settings as returned by \code{\link{outbreaker_config}}
+#' @param config a set of settings as returned by \code{\link{create_config}}
 ## #' @param loglike a set of log-likelihood functions as returned by \code{\link{create_loglike}}
-## #' @param priors a set of prior functions as returned by \code{\link{outbreaker_create_priors}}
+
+#' @param priors a set of prior functions with enclosed parameters as returned
+#'     by \code{\link{create_priors}}
+
 ## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker_create_posteriors}}
 ## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker_create_moves}}
 ## #'
-#' @seealso \code{\link{outbreaker_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
+#' @seealso \code{\link{create_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
 #'
 #' @examples
 #'
@@ -48,14 +51,14 @@
 #'
 #' }
 outbreaker <- function(data = outbreaker_data(),
-                       config = outbreaker_config()
-                       ) {
+                       config = create_config(),
+                       priors = create_priors(config)) {
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker_data(data = data)
 
     ## CHECK / PROCESS CONFIG ##
-    config <- outbreaker_config(data = data, config = config)
+    config <- create_config(data = data, config = config)
 
     ## ADD CONVOLUTIONS TO DATA ##
     data <- add_convolutions(data = data, config = config)

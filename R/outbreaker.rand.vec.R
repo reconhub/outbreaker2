@@ -6,7 +6,7 @@
 ## #'
 ## #' @rdname outbreaker_rand_vec
 ## #'
-## #' @param config a list of settings as returned by \code{outbreaker_config}
+## #' @param config a list of settings as returned by \code{create_config}
 ## #'
 ## #' @export
 ## #'

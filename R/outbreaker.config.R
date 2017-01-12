@@ -92,7 +92,7 @@
 #' @param data an optional list of data items as returned by \code{outbreaker_data}; if provided,
 #' this allows for further checks of the outbreaker setings.
 #'
-#' @param config a previous set of settings, as returned by \code{outbreaker_config}
+#' @param config a previous set of settings, as returned by \code{create_config}
 #'
 #' @seealso outbreaker_data to check and process data for outbreaker
 #'
@@ -102,24 +102,24 @@
 #'
 #' @examples
 #' ## see default settings
-#' outbreaker_config()
+#' create_config()
 #'
 #' ## change defaults
-#' outbreaker_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+#' create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
 #'
 #'
 #' @importFrom utils modifyList
 #'
-outbreaker_config <- function(..., data = NULL, config = NULL) {
+create_config <- function(..., data = NULL, config = NULL) {
     
     ## PROCESS ... ONLY IF NO CONFIG IS PASSED
     if (is.null(config)) {
         config <- list(...)
-        if (length(config) == 1L && inherits(config, "outbreaker_config")) {
+        if (length(config) == 1L && inherits(config, "create_config")) {
             config <- config[[1]]
         }
     }
-    if (inherits(config, "outbreaker_config")) {
+    if (inherits(config, "create_config")) {
         return(config)
     }
 
@@ -507,7 +507,7 @@ outbreaker_config <- function(..., data = NULL, config = NULL) {
     }
 
     ## output is a list of checked settings with a dedicated class (for printing)
-    class(config) <- c("outbreaker_config", "list")
+    class(config) <- c("create_config", "list")
     return(config)
 }
 

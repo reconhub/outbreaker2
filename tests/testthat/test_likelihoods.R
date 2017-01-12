@@ -18,7 +18,7 @@ test_that("ll_timing_infections gives expected results", {
     alpha <- c(NA,rep(1,4))
     w <- c(.1, .2, .5, .2, .1)
     data <- outbreaker_data(dates = times, w_dens = w)
-    config <- outbreaker_config(data = data, init_tree = alpha)
+    config <- create_config(data = data, init_tree = alpha)
     ll <- outbreaker2:::create_loglike(data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
@@ -60,7 +60,7 @@ test_that("ll$timing_sampling gives expected results", {
     f <- c(.1, .2, .5, .2, .1)
     data <- outbreaker_data(dates = samp_times, f_dens = f)
     ll <- outbreaker2:::create_loglike(data)
-    config <- outbreaker_config(data = data, init_t_inf = times, init_tree = alpha)
+    config <- create_config(data = data, init_t_inf = times, init_tree = alpha)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
@@ -100,7 +100,7 @@ test_that("ll$genetic gives expected results", {
                                  w_dens = w,
                                  dna = dat$dna))
     ll <- outbreaker2:::create_loglike(data)
-    config <- outbreaker_config(data = data, init_mu = 0.543e-4)
+    config <- create_config(data = data, init_mu = 0.543e-4)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
@@ -140,7 +140,7 @@ test_that("ll$reporting gives expected results", {
     ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data, init_mu = 0.543e-4)
+    config <- create_config(data = data, init_mu = 0.543e-4)
     ll <- outbreaker2:::create_loglike(data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
@@ -180,7 +180,7 @@ test_that("ll$timing gives expected results", {
     ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data)
+    config <- create_config(data = data)
     ll <- outbreaker2:::create_loglike(data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
 
@@ -208,7 +208,7 @@ test_that("ll$all gives expected results", {
     ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data)
+    config <- create_config(data = data)
     ll <- outbreaker2:::create_loglike(data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
 
@@ -242,7 +242,7 @@ test_that("ll$all with i specified gives expected results", {
     ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data)
+    config <- create_config(data = data)
     ll <- outbreaker2:::create_loglike(data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
 
@@ -325,7 +325,7 @@ test_that("likelihood functions return -Inf when needed", {
     alpha <- c(NA,rep(1,4))
     w <- c(.1, .2, .5, .2, .1)
     data <- outbreaker_data(dates = times, w_dens = w)
-    config <- outbreaker_config(data = data, init_tree = alpha)
+    config <- create_config(data = data, init_tree = alpha)
     ll <- outbreaker2:::create_loglike(data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))

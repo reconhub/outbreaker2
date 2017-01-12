@@ -2,11 +2,11 @@
 
 S3method(plot,outbreaker_chains)
 S3method(print,outbreaker_chains)
-S3method(print,outbreaker_config)
+S3method(print,create_config)
 S3method(summary,outbreaker_chains)
 export(chains_pal)
 export(outbreaker)
-export(outbreaker_config)
+export(create_config)
 export(outbreaker_create_mcmc)
 export(outbreaker_data)
 export(outbreaker_init_mcmc)

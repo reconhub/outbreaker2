@@ -9,7 +9,7 @@ test_that("create_posteriors gives expected results", {
 
     ## generate data
     data <- outbreaker_data()
-    config <- outbreaker_config()
+    config <- create_config()
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     ll <- create_loglike(data)
     priors <- create_priors(config)
@@ -47,7 +47,7 @@ test_that("posteriors computations give expected values", {
     ## generate inputs
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data)
+    config <- create_config(data = data)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     ll <- create_loglike(data)
     priors <- create_priors(config)

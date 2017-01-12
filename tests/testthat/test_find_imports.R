@@ -9,7 +9,7 @@ test_that("Test detection of imported cases", {
     ## generate inputs
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data)
+    config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
     temp <- outbreaker_create_mcmc(data = data, config = config)
     param_current <- temp$current

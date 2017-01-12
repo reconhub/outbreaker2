@@ -9,7 +9,7 @@ test_that("create_priors gives expected results", {
 
 
     ## generate data
-    config <- outbreaker_config()
+    config <- create_config()
     out <- create_priors(config)
 
     ## tests
@@ -40,7 +40,7 @@ test_that("priors have expected values", {
 
 
     ## generate inputs
-    config <- outbreaker_config()
+    config <- create_config()
     param <- outbreaker_create_mcmc(config,
                                     data = outbreaker_data())$current
 

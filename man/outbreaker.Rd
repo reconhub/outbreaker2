@@ -4,13 +4,13 @@
 \alias{outbreaker}
 \title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
 \usage{
-outbreaker(data = outbreaker_data(), config = outbreaker_config())
+outbreaker(data = outbreaker_data(), config = create_config())
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by
 \code{\link{outbreaker_data}}}
 
-\item{config}{a set of settings as returned by \code{\link{outbreaker_config}}}
+\item{config}{a set of settings as returned by \code{\link{create_config}}}
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
@@ -46,8 +46,8 @@ N (2014).  Bayesian reconstruction of disease outbreaks by combining
 epidemiologic and genomic data. PLoS Computational Biology.
 }
 \seealso{
-\code{\link{outbreaker_data}} to process input data, and \code{\link{outbreaker_config}} to process/set up parameters
+\code{\link{outbreaker_data}} to process input data, and \code{\link{create_config}} to process/set up parameters
 
-\code{\link{outbreaker_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
+\code{\link{create_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
 }
 

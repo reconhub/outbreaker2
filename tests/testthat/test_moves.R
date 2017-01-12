@@ -9,8 +9,8 @@ test_that("parameters and augmented data move", {
     ## generate inputs
     data(fake_outbreak)
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
-    config <- outbreaker_config(data = data)
-    config_no_move <- outbreaker_config(data = data, move_alpha = FALSE, move_t_inf = FALSE,
+    config <- create_config(data = data)
+    config_no_move <- create_config(data = data, move_alpha = FALSE, move_t_inf = FALSE,
                                         move_mu = FALSE, move_pi = FALSE, move_kappa = FALSE)
     data <- add_convolutions(data = data, config = config)
     param <- outbreaker_create_mcmc(data = data, config = config)$current

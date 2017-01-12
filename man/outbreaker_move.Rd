@@ -12,7 +12,7 @@ outbreaker_move(moves, data, param_current, param_store, config, densities)
 
 \item{data}{a list of data items as returned by \code{outbreaker_data}}
 
-\item{config}{a list of settings as returned by \code{outbreaker_config}}
+\item{config}{a list of settings as returned by \code{create_config}}
 
 \item{densities}{a list containing lists of functions computing densities,
 named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}

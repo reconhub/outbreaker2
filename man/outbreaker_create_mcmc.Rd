@@ -9,7 +9,7 @@ outbreaker_create_mcmc(data, config)
 \arguments{
 \item{data}{a list of data items as returned by \code{outbreaker_data}}
 
-\item{config}{a list of settings as returned by \code{outbreaker_config}}
+\item{config}{a list of settings as returned by \code{create_config}}
 }
 \description{
 This function creates initial outputs and parameter states for outbreaker.

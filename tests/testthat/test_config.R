@@ -7,20 +7,20 @@ test_that("test: settings are processed fine", {
     skip_on_cran()
 
 
-    ## ## get data
-    ## x <- fake_outbreak
-    ## dat <- outbreaker_data(dates = x$collecDates, dna = x$dat$dna, w_dens = x$w)
-    ## dat_nodna <- dat
-    ## dat_nodna$D <- dat_nodna$dna <- NULL
-    ## alpha <- rep(1, x$dat$n)
+    ## get data
+    x <- fake_outbreak
+    dat <- outbreaker_data(dates = x$collecDates, dna = x$dat$dna, w_dens = x$w)
+    dat_nodna <- dat
+    dat_nodna$D <- dat_nodna$dna <- NULL
+    alpha <- rep(1, x$dat$n)
 
-    ## ## check output
-    ## expect_is(create_config(), "list")
-    ## expect_is(create_config(), "outbreaker_config")
-    ## expect_is(create_config(data = dat), "list")
-    ## expect_is(create_config(data = dat), "outbreaker_config")
-    ## expect_equal(create_config(init_tree="star", data = dat)$init_alpha,
-    ##              c(NA, rep(1,29)))
+    ## check output
+    expect_is(create_config(), "list")
+    expect_is(create_config(), "outbreaker_config")
+    expect_is(create_config(data = dat), "list")
+    expect_is(create_config(data = dat), "outbreaker_config")
+    expect_equal(create_config(init_tree="star", data = dat)$init_alpha,
+                 c(NA, rep(1,29)))
     expect_equal(create_config(init_tree = alpha)$init_tree,
                  create_config(init_tree = alpha)$init_alpha)
     expect_equal(length(create_config(init_tree="random",data = dat)$init_alpha), dat$N)

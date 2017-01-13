@@ -108,21 +108,20 @@
 #' create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
 #'
 #'
-#' @importFrom utils modifyList
 #'
 create_config <- function(..., data = NULL) {
     
-    ## Arguments are passed through '...' as a list. If the list contains a
-    ## single item which is already an outbreaker_config object, this one is
-    ## still processed. This means all the checks are repeated, and the config
-    ## is matched against data if data are provided. This should in principle
-    ## allow using the same config object for several datasets. It also
-    ## implicitely serves as a checking procedure for existing configs.
-    
+    ## This function returns a list of configuration settings of the class
+    ## 'outbreaker_config'. Arguments are passed through '...' as a list. If the
+    ## list contains a single item which is already an outbreaker_config object,
+    ## this one is still processed. This means all the checks are repeated, and
+    ## the config is matched against data if data are provided. This should in
+    ## principle allow using the same config object for several datasets. It
+    ## also implicitely serves as a checking procedure for existing configs.
+
     config <- list(...)
     if (length(config) == 1L && is.list(config[[1]])) {
         config <- config[[1]]
-        ## return(config[[1]])
     }
 
     ## SET DEFAULTS
@@ -508,7 +507,9 @@ create_config <- function(..., data = NULL) {
         }
     }
 
-    ## output is a list of checked settings with a dedicated class (for printing)
+    ## output is a list of checked settings with a dedicated class (for
+    ## printing)
+    
     class(config) <- c("outbreaker_config", "list")
     return(config)
 }

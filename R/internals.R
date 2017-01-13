@@ -26,7 +26,7 @@ modify_defaults <- function(defaults, x, strict = TRUE) {
     if (strict && (length(extra) > 0L)) {
         stop("Additional invalid options: ", paste(extra, collapse=", "))
     }
-    modifyList(defaults, x)
+    modifyList(defaults, x, keep.null = TRUE) # keep.null is needed here
 }
 
 

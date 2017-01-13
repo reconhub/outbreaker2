@@ -46,3 +46,10 @@ test_that("test: settings are processed fine", {
 })
 
 
+
+
+test_that("validation does not alter valide objects", {
+    c1 <- create_config()
+    c2 <- create_config(c1)
+    expect_identical(c1, c2)
+})

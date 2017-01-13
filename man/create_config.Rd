@@ -4,7 +4,7 @@
 \alias{create_config}
 \title{Set and check parameter settings of outbreaker}
 \usage{
-create_config(..., data = NULL, config = NULL)
+create_config(..., data = NULL)
 }
 \arguments{
 \item{...}{settings to be passed to outbreaker}
@@ -108,6 +108,7 @@ create_config()
 
 ## change defaults
 create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+
 
 
 }

@@ -119,6 +119,7 @@ create_config <- function(..., data = NULL) {
     ## principle allow using the same config object for several datasets. It
     ## also implicitely serves as a checking procedure for existing configs.
 
+    
     config <- list(...)
     if (length(config) == 1L && is.list(config[[1]])) {
         config <- config[[1]]
@@ -136,7 +137,6 @@ create_config <- function(..., data = NULL) {
                      n_iter = 1e4, sample_every = 200, sd_mu = 0.0001, sd_pi = 0.1,
                      prop_alpha_move = 1/4,
                      prop_t_inf_move = 0.2,
-                     batch_size = 1e6,
                      paranoid = FALSE,
                      min_date = -10,
                      max_kappa = 5,
@@ -186,21 +186,23 @@ create_config <- function(..., data = NULL) {
     }
 
     ## check init_kappa
+    if (!is.null(config$init_alpha)) {
+        are_not_imports <- !is.na(config$init_alpha)
+    } else {
+        are_not_imports <- TRUE
+    }
     if (!is.numeric(config$init_kappa)) {
         stop("init_kappa is not a numeric value")
     }
     config$init_kappa <- as.integer(round(config$init_kappa))
-    if (any(config$init_kappa < 1)) {
+    if (any(config$init_kappa < 1, na.rm = TRUE)) {
         stop("init_kappa has values smaller than 1")
     }
-    if (any(config$init_kappa > config$max_kappa)) {
+    if (any(config$init_kappa > config$max_kappa, na.rm = TRUE)) {
         config$init_kappa[config$init_kappa > config$max_kappa] <- config$max_kappa
         warning("values of init_kappa greater than max_kappa have been set to max_kappa")
     }
-    if (!all(is.finite(config$init_kappa))) {
-        stop("init_kappa has values which are infinite or NA")
-    }
-
+ 
 
     ## check init_pi
     if (!is.numeric(config$init_pi)) {
@@ -217,10 +219,10 @@ create_config <- function(..., data = NULL) {
     }
 
     ## check move_alpha
-    if (!is.logical(config$move_alpha)) {
+    if (!all(is.logical(config$move_alpha))) {
         stop("move_alpha is not a logical")
     }
-    if (is.na(config$move_alpha)) {
+    if (any(is.na(config$move_alpha))) {
         stop("move_alpha is NA")
     }
 
@@ -236,8 +238,8 @@ create_config <- function(..., data = NULL) {
     if (!is.logical(config$move_t_inf)) {
         stop("move_t_inf is not a logical")
     }
-    if (is.na(config$move_t_inf)) {
-        stop("move_t_inf is NA")
+    if (any(is.na(config$move_t_inf))) {
+        stop("move_t_inf has NAs")
     }
 
     ## check move_mu
@@ -252,8 +254,8 @@ create_config <- function(..., data = NULL) {
     if (!is.logical(config$move_kappa)) {
         stop("move_kappa is not a logical")
     }
-    if (is.na(config$move_kappa)) {
-        stop("move_kappa is NA")
+    if (any(is.na(config$move_kappa))) {
+        stop("move_kappa has NA")
     }
 
     ## check move_pi
@@ -338,18 +340,7 @@ create_config <- function(..., data = NULL) {
         stop("prop_t_inf_move is infinite or NA")
     }
 
-    ## check batch_size
-    if (!is.numeric(config$batch_size)) {
-        stop("batch_size is not numeric")
-    }
-    if (config$batch_size < 1) {
-        stop("batch_size is less than 1")
-    }
-    if (!is.finite(config$batch_size)) {
-        stop("batch_size is infinite or NA")
-    }
-    config$batch_size <- as.integer(config$batch_size)
-
+    
     ## check paranoid
     if (!is.logical(config$paranoid)) {
         stop("paranoid is not logical")
@@ -479,7 +470,7 @@ create_config <- function(..., data = NULL) {
 
         ## check initial t_inf
         if (!is.null(config$init_t_inf)) {
-            if (any(config$init_t_inf >= data$dates)) {
+            if (any(config$init_t_inf >= data$dates, na.rm = TRUE)) {
                 stop("Initial dates of infection come after sampling dates / dates of onset.")
             }
         }

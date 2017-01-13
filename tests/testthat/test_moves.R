@@ -8,10 +8,15 @@ test_that("parameters and augmented data move", {
 
     ## generate inputs
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak, outbreaker_data(
+        dates = collecDates, w_dens = w, dna = dat$dna))
     config <- create_config(data = data)
-    config_no_move <- create_config(data = data, move_alpha = FALSE, move_t_inf = FALSE,
-                                        move_mu = FALSE, move_pi = FALSE, move_kappa = FALSE)
+    
+    config_no_move <- create_config(move_alpha = FALSE,
+                                    move_t_inf = FALSE,
+                                    move_mu = FALSE, move_pi = FALSE,
+                                    move_kappa = FALSE, data = data)
+
     data <- add_convolutions(data = data, config = config)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     ll <- create_loglike(data)

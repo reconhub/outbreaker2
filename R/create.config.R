@@ -110,20 +110,22 @@
 #'
 #' @importFrom utils modifyList
 #'
-create_config <- function(..., data = NULL, config = NULL) {
+create_config <- function(..., data = NULL) {
     
-    ## PROCESS ... ONLY IF NO CONFIG IS PASSED
-    if (is.null(config)) {
-        config <- list(...)
-        if (length(config) == 1L && inherits(config, "outbreaker_config")) {
-            config <- config[[1]]
-        }
-    }
-    if (inherits(config, "outbreaker_config")) {
-        return(config)
+    ## Arguments are passed through '...' as a list. If the list contains a
+    ## single item which is already an outbreaker_config object, this one is
+    ## still processed. This means all the checks are repeated, and the config
+    ## is matched against data if data are provided. This should in principle
+    ## allow using the same config object for several datasets. It also
+    ## implicitely serves as a checking procedure for existing configs.
+    
+    config <- list(...)
+    if (length(config) == 1L && is.list(config[[1]])) {
+        config <- config[[1]]
+        ## return(config[[1]])
     }
 
-    ## SET DEFAULTS ##
+    ## SET DEFAULTS
     defaults <- list(init_tree = c("seqTrack","star","random"),
                      init_mu = 1e-4,
                      init_t_inf = NULL,

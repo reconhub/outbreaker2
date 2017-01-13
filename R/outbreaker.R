@@ -58,7 +58,7 @@ outbreaker <- function(data = outbreaker_data(),
     data <- outbreaker_data(data = data)
 
     ## CHECK / PROCESS CONFIG ##
-    config <- create_config(data = data, config = config)
+    config <- create_config(config, data = data)
 
     ## ADD CONVOLUTIONS TO DATA ##
     data <- add_convolutions(data = data, config = config)

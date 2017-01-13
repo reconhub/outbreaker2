@@ -1,19 +1,19 @@
 #' Basic methods for processing outbreaker config
 #'
-#' Several methods are defined for instances of the class \code{create_config}, returned by \code{\link{create_config}}, including: \code{print}
+#' Several methods are defined for instances of the class \code{outbreaker_config}, returned by \code{\link{create_config}}, including: \code{print}
 #'
-#' @rdname create_config_methods
+#' @rdname outbreaker_config_methods
 #'
-#' @aliases print.create_config
+#' @aliases print.outbreaker_config
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail_com})
 #'
-#' @param x an \code{create_config} object as returned by \code{create_config}.
+#' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
 #' @param ... further arguments to be passed to other methods
 #'
 #' @export
 #'
-print.create_config <- function(x, ...) {
+print.outbreaker_config <- function(x, ...) {
     cat("\n\n ///// outbreaker settings ///\n")
     cat("\nclass:", class(x))
     cat("\nnumber of items:", length(x))

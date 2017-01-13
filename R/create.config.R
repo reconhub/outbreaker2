@@ -115,11 +115,11 @@ create_config <- function(..., data = NULL, config = NULL) {
     ## PROCESS ... ONLY IF NO CONFIG IS PASSED
     if (is.null(config)) {
         config <- list(...)
-        if (length(config) == 1L && inherits(config, "create_config")) {
+        if (length(config) == 1L && inherits(config, "outbreaker_config")) {
             config <- config[[1]]
         }
     }
-    if (inherits(config, "create_config")) {
+    if (inherits(config, "outbreaker_config")) {
         return(config)
     }
 
@@ -507,7 +507,7 @@ create_config <- function(..., data = NULL, config = NULL) {
     }
 
     ## output is a list of checked settings with a dedicated class (for printing)
-    class(config) <- c("create_config", "list")
+    class(config) <- c("outbreaker_config", "list")
     return(config)
 }
 

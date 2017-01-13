@@ -4,13 +4,17 @@
 \alias{outbreaker}
 \title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
 \usage{
-outbreaker(data = outbreaker_data(), config = create_config())
+outbreaker(data = outbreaker_data(), config = create_config(),
+  priors = create_priors(config))
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by
 \code{\link{outbreaker_data}}}
 
 \item{config}{a set of settings as returned by \code{\link{create_config}}}
+
+\item{priors}{a set of prior functions with enclosed parameters as returned
+by \code{\link{create_priors}}}
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data

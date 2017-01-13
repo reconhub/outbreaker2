@@ -16,9 +16,9 @@ test_that("test: settings are processed fine", {
 
     ## check output
     expect_is(create_config(), "list")
-    expect_is(create_config(), "create_config")
+    expect_is(create_config(), "outbreaker_config")
     expect_is(create_config(data = dat), "list")
-    expect_is(create_config(data = dat), "create_config")
+    expect_is(create_config(data = dat), "outbreaker_config")
     expect_equal(create_config(init_tree="star", data = dat)$init_alpha,
                  c(NA, rep(1,29)))
     expect_equal(create_config(init_tree = alpha)$init_tree,

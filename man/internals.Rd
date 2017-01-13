@@ -21,7 +21,8 @@ contains items not in 'defaults'}
 \item{t_inf}{a vector of infection dates}
 }
 \description{
-These functions are meant for internal use in outbreaker2. They are not exported, and their API might change in the future.
+These functions are meant for internal use in outbreaker2. They are not
+exported, and their API might change in the future.
 }
 \details{
 \describe{

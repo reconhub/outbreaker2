@@ -58,12 +58,14 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
     
   // logpost with current value
 
-  old_logpost = cpp_ll_genetic(data, param, R_NilValue) + Rcpp::as<double>(prior(param));
+  old_logpost = cpp_ll_genetic(data, param, R_NilValue) + 
+    Rcpp::as<double>(prior(param));
 
 
   // logpost with current value
 
-  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue) + Rcpp::as<double>(prior(new_param));
+  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue) + 
+    Rcpp::as<double>(prior(new_param));
 
 
   // acceptance term
@@ -96,7 +98,8 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 // auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::Function prior) {
+Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
+		       Rcpp::Function prior) {
 
   // deep copy here for now, ultimately should be an arg.
 

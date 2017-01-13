@@ -235,3 +235,47 @@ test_that("results ok: kappa and pi", {
     expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.8))
 
 })
+
+
+
+
+
+
+
+test_that("results ok: outbreaker with custom priors",
+{
+    ## skip on CRAN
+    skip_on_cran()
+    
+    
+    ## get data
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
+
+   
+    data <- list(dna = dat$dna, dates = dat$onset, w_dens = w)
+
+    config <-  list(n_iter = 2e3, sample_every = 50,
+                    init_tree = "star", move_kappa = TRUE,
+                    move_pi = TRUE, init_pi = 1,
+                    find_import = FALSE)
+    
+
+    ## plot(function(x) dbeta(x, 100, 1)) # to see the distribution
+
+    f_pi_1 <- function(x) dbeta(x$pi, 100, 1, log = TRUE) # stronger prior
+    f_pi_2 <- function(x) 0.0 # flat prior
+
+    set.seed(1)
+  
+    out_1 <- outbreaker(data, config, priors = list(pi = f_pi_1))
+    out_2 <- outbreaker(data, config, priors = list(pi = f_pi_2))
+
+    smry_1 <- summary(out_1)
+    smry_2 <- summary(out_2)
+    
+    expect_true(smry_1$pi[2] > 0.9)
+    expect_true(smry_2$pi[2] > 0.2 && smry_2$pi[5] < 0.6)
+    
+})

@@ -37,18 +37,22 @@ create_priors <- function(config = NULL, ...) {
     }
     
 
-    ## Use default functions if not user-provided
+    ## Handle config; if config is NULL this will create a default config;
+    ## otherwise it processes it and goes through a bunch of checks
 
-    if (!is.null(config)) {
-        config <- create_config(config)
-    }
+    config <- create_config(config)
+    
+        
 
     ## prior for mutation rate
+
     if (is.null(priors$mu)) {
         priors$mu <- bind_prior_mu(config)
     }
 
+    
     ## prior for reporting rate
+    
     if (is.null(priors$pi)) {
         priors$pi <- bind_prior_pi(config)
     }
@@ -62,8 +66,9 @@ create_priors <- function(config = NULL, ...) {
 
 
     ## check that all priors are there
-
-    priors_names <- names(priors)
+    
+    priors_names <- setdiff(names(priors), "all")
+    
     expected_names <- grep("prior",
                            names(create_config()),
                            value = TRUE)
@@ -84,27 +89,29 @@ create_priors <- function(config = NULL, ...) {
         culprits <- priors_names[!is_function]
         msg <- paste0("The following priors are not functions: ",
                       paste(culprits, collapse = ", "))
-        stop("msg")
+        stop(msg)
     }
 
-    ## check they all have a single parameter 'param'
-    right_args <- vapply(priors,
-                     function(f) formalArgs(f) == "param",
+    ## check they all have a single parameter
+    one_arg <- vapply(priors,
+                     function(f) length(formalArgs(f)) == 1L,
                      logical(1))
-    if (!all(right_args)) {
-        culprits <- priors_names[!is_function]
-        msg <- paste0("The following priors dont' have a single argument 'param': ",
+    if (!all(one_arg)) {
+        culprits <- priors_names[!one_arg]
+        msg <- paste0("The following priors dont' have a single argument: ",
                       paste(culprits, collapse = ", "))
-        stop("msg")
+        stop(msg)
     }
     
 
-    ## Function summing all priors
+    ## Function summing all priors; we only add this one if it is missing
 
-    priors$all <- function(param) {
-        sum(vapply(priors[priors_names],
-                   function(f) f(param), numeric(1)),
-            na.rm = TRUE)
+    if (is.null(priors$all)) {
+        priors$all <- function(param) {
+            sum(vapply(priors[priors_names],
+                       function(f) f(param), numeric(1)),
+                na.rm = TRUE)
+        }
     }
 
 

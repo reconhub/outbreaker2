@@ -59,3 +59,41 @@ test_that("priors have expected values", {
     expect_equal(out_all, 8.16209573106)
 
 })
+
+
+
+
+
+
+test_that("Prior customisation", {
+
+    ## skip on CRAN
+    skip_on_cran()
+
+    
+    ## check default config
+    config <- create_config()
+    expect_equal(create_priors(),
+                     create_priors(config))
+
+    ## check errors
+    msg <- "The following priors are not functions: mu"
+    expect_error(create_priors(mu = "Chtulhu"), msg)
+
+    msg <- "The following priors dont' have a single argument: mu"
+    expect_error(create_priors(mu = plot), msg)
+
+
+    ## custom prior parameters
+    config <- create_config(prior_pi = c(2, 1))
+    p1 <- create_priors(config) # passing config
+    p2 <- create_priors(config = list(prior_pi = c(1,1))) # passing list
+    expect_equal(p1, p2)
+    expect_equal(p1$pi(list(pi = 0.001)),
+                 dbeta(0.001, 2,1, log = TRUE))
+    
+    ## custom function
+    f_mu <- function(x){dexp(x$mu, rate = 100, log = TRUE)}
+    expect_equal(create_priors(mu = f_mu)$mu, f_mu)
+    
+})  

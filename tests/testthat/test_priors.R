@@ -1,6 +1,29 @@
 context("Test prior functions")
 
 
+test_that("Priors in cpp and R give identical results", {
+    ## skip on CRAN
+    skip_on_cran()
+    
+
+    ## generate data
+    param <- list(mu = 0.000123, pi = 0.789)
+    config <- create_config()
+
+    mu_r <- .prior_mu(param, config$prior_mu)
+    mu_cpp <- cpp_prior_mu(param, config)
+
+    pi_r <- .prior_pi(param, config$prior_pi[1], config$prior_pi[2])
+    pi_cpp <- cpp_prior_pi(param, config)
+
+    ## checks
+    expect_equal(mu_r, mu_cpp)
+    expect_equal(pi_r, pi_cpp)    
+})
+
+
+
+
 
 ## test outbreaker_create_priors ##
 test_that("create_priors gives expected results", {

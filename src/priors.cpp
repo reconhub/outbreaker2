@@ -33,6 +33,7 @@
 
 // The prior for the mutation rate 'mu' is an exponential distribution
 
+// [[Rcpp::export(rng = false)]]
 double cpp_prior_mu(Rcpp::List param, Rcpp::List config) {
   // note: R::dexp is parametrised by scale, not rate
 
@@ -50,6 +51,7 @@ double cpp_prior_mu(Rcpp::List param, Rcpp::List config) {
 
 // The prior for the reporting probability 'pi' is an beta distribution
 
+// [[Rcpp::export(rng = false)]]
 double cpp_prior_pi(Rcpp::List param, Rcpp::List config) {
 
   Rcpp::NumericVector shape = config["prior_pi"];

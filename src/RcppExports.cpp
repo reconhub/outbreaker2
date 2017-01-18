@@ -225,3 +225,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_prior_mu
+double cpp_prior_mu(Rcpp::List param, Rcpp::List config);
+RcppExport SEXP outbreaker2_cpp_prior_mu(SEXP paramSEXP, SEXP configSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_prior_mu(param, config));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_prior_pi
+double cpp_prior_pi(Rcpp::List param, Rcpp::List config);
+RcppExport SEXP outbreaker2_cpp_prior_pi(SEXP paramSEXP, SEXP configSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_prior_pi(param, config));
+    return rcpp_result_gen;
+END_RCPP
+}

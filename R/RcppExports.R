@@ -73,3 +73,11 @@ cpp_move_kappa <- function(data, param, config) {
     .Call('outbreaker2_cpp_move_kappa', PACKAGE = 'outbreaker2', data, param, config)
 }
 
+cpp_prior_mu <- function(param, config) {
+    .Call('outbreaker2_cpp_prior_mu', PACKAGE = 'outbreaker2', param, config)
+}
+
+cpp_prior_pi <- function(param, config) {
+    .Call('outbreaker2_cpp_prior_pi', PACKAGE = 'outbreaker2', param, config)
+}
+

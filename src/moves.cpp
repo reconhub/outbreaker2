@@ -2,6 +2,7 @@
 #include <Rmath.h>
 #include "internals.h"
 #include "likelihoods.h"
+#include "priors.h"
 
 
 
@@ -32,7 +33,7 @@
 
 // [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
-		       Rcpp::Function prior) {
+		       Rcpp::RObject custom_prior) {
 
   // deep copy here for now, ultimately should be an arg.
   Rcpp::List new_param = clone(param); 
@@ -54,18 +55,17 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
     return param;
   }
 
+   
+  // compute likelihoods
+  old_logpost = cpp_ll_genetic(data, param, R_NilValue);
+  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue);
+
+
+  // compute priors
+
+  old_logpost += cpp_prior_mu(param, config, custom_prior);
+  new_logpost += cpp_prior_mu(new_param, config, custom_prior);
     
-  // logpost with current value
-
-  old_logpost = cpp_ll_genetic(data, param, R_NilValue) + 
-    Rcpp::as<double>(prior(param));
-
-
-  // logpost with current value
-
-  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue) + 
-    Rcpp::as<double>(prior(new_param));
-
 
   // acceptance term
 
@@ -98,7 +98,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 
 // [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
-		       Rcpp::Function prior) {
+		       Rcpp::RObject custom_prior) {
 
   // deep copy here for now, ultimately should be an arg.
 
@@ -122,15 +122,16 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config,
     return param;
   }
 
-  // logpost with current value
-  old_logpost = cpp_ll_reporting(data, param, R_NilValue) + 
-    Rcpp::as<double>(prior(param));
+  
+  // compute likelihoods
+  old_logpost = cpp_ll_reporting(data, param, R_NilValue);
+  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue);
 
 
-  // logpost with current value
+  // compute priors
 
-  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue) + 
-    Rcpp::as<double>(prior(new_param));
+  old_logpost += cpp_prior_pi(param, config, custom_prior);
+  new_logpost += cpp_prior_pi(new_param, config, custom_prior);
 
   
   // acceptance term

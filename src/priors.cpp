@@ -17,32 +17,39 @@
 
 // ON THE USE OF CLOSURES
 
-// User-specified prior functions are closures which contain the prior
+// User-specified prior functions are R closures which contain the prior
 // parameters, so that the evaluation of the prior is simple and takes a single
 // argument 'param'. On the C++ side, using closures would add unwanted
 // complexity to the code. Besides, closures would have to be created within the
 // movement functions, i.e. every time they are called. Therefore, the C++
-// priors used by default are not closures, and take two arguments:
+// priors used by default are not closures, and take three arguments:
 
 // - param: a Rcpp:List containing parameters
 
 // - config: a Rcpp:List containing parameters for the priors in
 // config["prior_xxx"] where 'xxx' is the name of the relevant parameter
 
+// - custom_function: an optional custom prior function (closure); if NULL
+// (i.e. R_NilValue in C++) then the basic functions are used
 
 
 // The prior for the mutation rate 'mu' is an exponential distribution
 
 // [[Rcpp::export(rng = false)]]
-double cpp_prior_mu(Rcpp::List param, Rcpp::List config) {
-  // note: R::dexp is parametrised by scale, not rate
+double cpp_prior_mu(Rcpp::List param, Rcpp::List config, 
+		    Rcpp::RObject custom_function = R_NilValue) {
 
-  double scale = 1.0 / Rcpp::as<double>(config["prior_mu"]);
+  if (custom_function == R_NilValue) {
+    // note: R::dexp is parametrised by scale, not rate
+    double scale = 1.0 / Rcpp::as<double>(config["prior_mu"]);
 
-  double out = R::dexp(Rcpp::as<double>(param["mu"]), scale, true);
+    return R::dexp(Rcpp::as<double>(param["mu"]), scale, true);
+ } else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-  return out;
-  
+    return Rcpp::as<double>(f(param));
+ }
+ 
 }
 
 
@@ -52,17 +59,34 @@ double cpp_prior_mu(Rcpp::List param, Rcpp::List config) {
 // The prior for the reporting probability 'pi' is an beta distribution
 
 // [[Rcpp::export(rng = false)]]
-double cpp_prior_pi(Rcpp::List param, Rcpp::List config) {
+double cpp_prior_pi(Rcpp::List param, Rcpp::List config, 
+		    Rcpp::RObject custom_function = R_NilValue) {
 
-  Rcpp::NumericVector shape = config["prior_pi"];
+  if (custom_function == R_NilValue) {
+    Rcpp::NumericVector shape = config["prior_pi"];
 
-  double out = R::dbeta(Rcpp::as<double>(param["pi"]), 
-			(double) shape[0], 
-			(double) shape[1], 
-			true);
-  
-  return out;
+    return R::dbeta(Rcpp::as<double>(param["pi"]), 
+			  (double) shape[0], 
+			  (double) shape[1], 
+			  true);
+  } else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+
+    return Rcpp::as<double>(f(param));
+  }
+
 }
 
 
 
+
+// [[Rcpp::export(rng = false)]]
+double cpp_prior_all(Rcpp::List param, Rcpp::List config, 
+		     Rcpp::RObject custom_function_mu = R_NilValue, 
+		     Rcpp::RObject custom_function_pi = R_NilValue) {
+
+  double out = cpp_prior_mu(param, config, custom_function_mu) + 
+    cpp_prior_pi(param, config, custom_function_pi);
+
+  return out;
+}

@@ -49,12 +49,12 @@ cpp_ll_all <- function(data, param, i) {
     .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i)
 }
 
-cpp_move_mu <- function(data, param, config, prior) {
-    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config, prior)
+cpp_move_mu <- function(data, param, config, custom_prior) {
+    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config, custom_prior)
 }
 
-cpp_move_pi <- function(data, param, config, prior) {
-    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', data, param, config, prior)
+cpp_move_pi <- function(data, param, config, custom_prior) {
+    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', data, param, config, custom_prior)
 }
 
 cpp_move_t_inf <- function(data, param) {
@@ -73,11 +73,15 @@ cpp_move_kappa <- function(data, param, config) {
     .Call('outbreaker2_cpp_move_kappa', PACKAGE = 'outbreaker2', data, param, config)
 }
 
-cpp_prior_mu <- function(param, config) {
-    .Call('outbreaker2_cpp_prior_mu', PACKAGE = 'outbreaker2', param, config)
+cpp_prior_mu <- function(param, config, custom_function = NULL) {
+    .Call('outbreaker2_cpp_prior_mu', PACKAGE = 'outbreaker2', param, config, custom_function)
 }
 
-cpp_prior_pi <- function(param, config) {
-    .Call('outbreaker2_cpp_prior_pi', PACKAGE = 'outbreaker2', param, config)
+cpp_prior_pi <- function(param, config, custom_function = NULL) {
+    .Call('outbreaker2_cpp_prior_pi', PACKAGE = 'outbreaker2', param, config, custom_function)
+}
+
+cpp_prior_all <- function(param, config, custom_function_mu = NULL, custom_function_pi = NULL) {
+    .Call('outbreaker2_cpp_prior_all', PACKAGE = 'outbreaker2', param, config, custom_function_mu, custom_function_pi)
 }
 

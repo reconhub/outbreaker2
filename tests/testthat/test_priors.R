@@ -1,7 +1,7 @@
 context("Test prior functions")
 
 
-test_that("Priors in cpp and R give identical results", {
+test_that("Priors in cpp and R references give identical results.", {
     ## skip on CRAN
     skip_on_cran()
     
@@ -25,30 +25,22 @@ test_that("Priors in cpp and R give identical results", {
 
 
 
-## test outbreaker_create_priors ##
-test_that("create_priors gives expected results", {
+test_that("Sum of priors is consistent.", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## generate data
+    param <- list(mu = 0.000123, pi = 0.789)
     config <- create_config()
-    out <- create_priors(config)
 
-    ## tests
-    expect_is(out, "list")
-    expect_equal(length(out), 3)
-    expect_equal(names(out), c("mu",
-                               "pi",
-                               "all")
-                 )
-    ## check that all items are functions
-    expect_true(all(vapply(out, is.function, logical(1))))
-
-    ## check that closure worked
-    expect_identical(config$prior_mu, environment(out$mu)$rate)
-    expect_identical(config$prior_pi,
-                     c(environment(out$pi)$shape1, environment(out$pi)$shape2))
+    p_mu <- cpp_prior_mu(param, config)
+    p_pi <- cpp_prior_pi(param, config)
+    p_all<- cpp_prior_all(param, config)
+    
+ 
+    ## checks
+    expect_equal(p_mu + p_pi, p_all)
 
 })
 
@@ -56,39 +48,7 @@ test_that("create_priors gives expected results", {
 
 
 
-## test plausible values ##
-test_that("priors have expected values", {
-    ## skip on CRAN
-    skip_on_cran()
-
-
-    ## generate inputs
-    config <- create_config()
-    param <- outbreaker_create_mcmc(config,
-                                    data = outbreaker_data())$current
-
-    priors <- create_priors(config)
-
-    ## generate outputs
-    out_mu <- priors$mu(param)
-    out_pi <- priors$pi(param)
-    out_all <- priors$all(param)
-
-    ## tests
-    expect_equal(out_mu + out_pi, out_all)
-    expect_true(!any(is.na(out_mu)))
-    expect_true(!any(is.na(out_pi)))
-    expect_true(!any(is.na(out_all)))
-    expect_equal(out_all, 8.16209573106)
-
-})
-
-
-
-
-
-
-test_that("Prior customisation", {
+test_that("Prior customisation.", {
 
     ## skip on CRAN
     skip_on_cran()
@@ -108,15 +68,28 @@ test_that("Prior customisation", {
 
 
     ## custom prior parameters
-    config <- create_config(prior_pi = c(2, 1))
-    p1 <- create_priors(config) # passing config
-    p2 <- create_priors(config = list(prior_pi = c(1,1))) # passing list
-    expect_equal(p1, p2)
-    expect_equal(p1$pi(list(pi = 0.001)),
-                 dbeta(0.001, 2,1, log = TRUE))
+    mu <- 0.00123123
+    pi  <-  0.8765
+    config <- create_config(prior_mu = 0.01,
+                            prior_pi = c(2, 1))
+    param <- list(mu = mu, pi = pi)
+    p_mu <- cpp_prior_mu(param, config)
+    p_pi <- cpp_prior_pi(param, config)
+    expect_equal(p_mu,
+                 dexp(mu, 0.01, log = TRUE))
+    expect_equal(p_pi,
+                 dbeta(pi, 2, 1, log = TRUE))
+
     
-    ## custom function
-    f_mu <- function(x){dexp(x$mu, rate = 100, log = TRUE)}
-    expect_equal(create_priors(mu = f_mu)$mu, f_mu)
-    
+    ## custom functions
+    f_mu <- function(x) { dexp(x$mu, rate = 100, log = TRUE) }
+    p_mu <- cpp_prior_mu(param, config, f_mu)
+    p_mu_ref <- f_mu(list(mu = mu))
+    expect_equal(p_mu, p_mu_ref)
+
+    f_pi <- function(x) { dexp(x$pi, rate = 12.123, log = TRUE) }
+    p_pi <- cpp_prior_pi(param, config, f_pi)
+    p_pi_ref <- f_pi(list(pi = pi))
+    expect_equal(p_pi, p_pi_ref)
+
 })  

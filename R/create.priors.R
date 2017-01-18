@@ -41,21 +41,31 @@ create_priors <- function(config = NULL, ...) {
     ## otherwise it processes it and goes through a bunch of checks
 
     config <- create_config(config)
-    
-        
 
-    ## prior for mutation rate
 
-    if (is.null(priors$mu)) {
-        priors$mu <- bind_prior_mu(config)
-    }
+    ## Use user-provided priors where provided, default otherwise. The default
+    ## for a prior is NULL, in which case the movement functions in C++ will use
+    ## C++ versions.
+    
+    defaults <- list(mu = NULL, # mutation rate
+                     pi = NULL # reporting probability
+                     )
+    
+    priors <- modify_defaults(defaults, priors, FALSE)
+    priors_names <- setdiff(names(priors), "all")
+
+    ## ## prior for mutation rate
+
+    ## if (is.null(priors$mu)) {
+    ##     priors$mu <- bind_prior_mu(config)
+    ## }
 
     
-    ## prior for reporting rate
+    ## ## prior for reporting rate
     
-    if (is.null(priors$pi)) {
-        priors$pi <- bind_prior_pi(config)
-    }
+    ## if (is.null(priors$pi)) {
+    ##     priors$pi <- bind_prior_pi(config)
+    ## }
 
     
     ## Run checks; these include making sure that:
@@ -67,35 +77,49 @@ create_priors <- function(config = NULL, ...) {
 
     ## check that all priors are there
     
-    priors_names <- setdiff(names(priors), "all")
+    ## priors_names <- setdiff(names(priors), "all")
     
-    expected_names <- grep("prior",
-                           names(create_config()),
-                           value = TRUE)
-    expected_names <- sub("prior_", "", expected_names)
+    ## expected_names <- grep("prior",
+    ##                        names(create_config()),
+    ##                        value = TRUE)
+    ## expected_names <- sub("prior_", "", expected_names)
     
-    if (!all(expected_names %in% priors_names)) {
-        names_missing <- expected_names[!expected_names %in% priors_names]
-        msg <- paste0("The following priors are missing: ",
-                      paste(names_missing, collapse = ", "))
-        stop(msg)
-    }
+    ## if (!all(expected_names %in% priors_names)) {
+    ##     names_missing <- expected_names[!expected_names %in% priors_names]
+    ##     msg <- paste0("The following priors are missing: ",
+    ##                   paste(names_missing, collapse = ", "))
+    ##     stop(msg)
+    ## }
 
     
     ## check all priors are functions
 
-    is_function <- vapply(priors, is.function, logical(1))
-    if (!all(is_function)) {
-        culprits <- priors_names[!is_function]
+    function_or_null <- function(x) {
+        is.null(x) || is.function(x)
+    }
+    
+    is_ok <- vapply(priors, function_or_null, logical(1))
+    
+    if (!all(is_ok)) {
+        culprits <- priors_names[!is_ok]
         msg <- paste0("The following priors are not functions: ",
                       paste(culprits, collapse = ", "))
         stop(msg)
     }
 
+    
     ## check they all have a single parameter
-    one_arg <- vapply(priors,
-                     function(f) length(formalArgs(f)) == 1L,
-                     logical(1))
+
+    with_one_param <- function(x) {
+        if(is.function(x)) {
+            return (length(formalArgs(x)) == 1L)
+        }
+        
+        return(TRUE)
+    }
+    
+    one_arg <- vapply(priors, with_one_param, logical(1))
+
     if (!all(one_arg)) {
         culprits <- priors_names[!one_arg]
         msg <- paste0("The following priors dont' have a single argument: ",
@@ -104,16 +128,20 @@ create_priors <- function(config = NULL, ...) {
     }
     
 
-    ## Function summing all priors; we only add this one if it is missing
+    ## ## Function summing all priors; we only add this one if it is missing
 
-    if (is.null(priors$all)) {
-        priors$all <- function(param) {
-            sum(vapply(priors[priors_names],
-                       function(f) f(param), numeric(1)),
-                na.rm = TRUE)
-        }
+    ## if (is.null(priors$all)) {
+    ##     priors$all <- function(param) {
+    ##         sum(vapply(priors[priors_names],
+    ##                    function(f) f(param), numeric(1)),
+    ##             na.rm = TRUE)
+    ##     }
+    ## }
+
+    priors$all <- function(param) {
+        cpp_prior_all(param, config, priors$mu, priors$pi)
     }
-
+    
 
     class(priors) <- c("outbreaker_priors", "list")
     return(priors)

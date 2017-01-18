@@ -73,7 +73,7 @@ outbreaker <- function(data = outbreaker_data(),
     temp <- outbreaker_create_mcmc(data = data, config = config)
     param_store <- temp$store
     param_current <- temp$current
-    param_store <- outbreaker_init_mcmc(param_current, param_store, loglike, priors)
+    param_store <- outbreaker_init_mcmc(param_current, param_store, loglike, priors, config)
 
 
     ## We put all density functions in a single list 'densities'. This includes

@@ -16,7 +16,7 @@
 ## We use an exponential prior for the mutation rate; the prior rate, which does
 ## not change in the MCMC, is enclosed in the returned function.
 
-.prior_mu <- function(param, rate){
+.prior_mu <- function(param, rate) {
     stats::dexp(param$mu, rate, log = TRUE)
 }
 

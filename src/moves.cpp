@@ -43,7 +43,6 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 
   double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
 
-  
   // proposal (normal distribution with SD: config$sd_mu)
 
   new_mu[0] += R::rnorm(0.0, sd_mu); // new proposed value

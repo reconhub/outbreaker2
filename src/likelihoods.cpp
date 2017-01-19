@@ -54,59 +54,67 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
   size_t N = static_cast<size_t>(data["N"]);
   if (N < 2) return 0.0;
+
+  if (custom_function == R_NilValue) {
   
-  Rcpp::NumericMatrix w_dens = data["log_w_dens"];
-  size_t K = w_dens.nrow();
+    Rcpp::NumericMatrix w_dens = data["log_w_dens"];
+    size_t K = w_dens.nrow();
 
-  double mu = Rcpp::as<double>(param["mu"]);
-  long int L = Rcpp::as<int>(data["L"]);
-  Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
-  Rcpp::IntegerVector kappa = param["kappa"];
+    double mu = Rcpp::as<double>(param["mu"]);
+    long int L = Rcpp::as<int>(data["L"]);
+    Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
+    Rcpp::IntegerVector kappa = param["kappa"];
 
-  size_t n_mut = 0, sum_n_mut = 0;
-  size_t sum_n_non_mut = 0;
+    size_t n_mut = 0, sum_n_mut = 0;
+    size_t sum_n_non_mut = 0;
 
-  // p(mu < 0) = 0
-  if (mu < 0.0) {
-    return R_NegInf;
-  }
+    // p(mu < 0) = 0
+    if (mu < 0.0) {
+      return R_NegInf;
+    }
   
-  // all cases are retained
-  if (i == R_NilValue) {
-    for (size_t j = 0; j < N; j++) {
-      if (alpha[j] != NA_INTEGER) {
-	// kappa restriction
-	if (kappa[j] < 1 || kappa[j] > K) {
-	  return R_NegInf;
+    // all cases are retained
+    if (i == R_NilValue) {
+      for (size_t j = 0; j < N; j++) {
+	if (alpha[j] != NA_INTEGER) {
+	  // kappa restriction
+	  if (kappa[j] < 1 || kappa[j] > K) {
+	    return R_NegInf;
+	  }
+
+	  n_mut = D(j, alpha[j] - 1); // offset
+	  sum_n_mut += n_mut;
+	  sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
+	}
+      }
+
+    } else {
+      // only the cases listed in 'i' are retained
+      size_t length_i = static_cast<size_t>(LENGTH(i));
+      Rcpp::IntegerVector vec_i(i);
+      for (size_t k = 0; k < length_i; k++) {
+	size_t j = vec_i[k] - 1; // offset
+	if (alpha[j] != NA_INTEGER) {
+	  // kappa restriction
+	  if (kappa[j] < 1 || kappa[j] > K) {
+	    return R_NegInf;
+	  }
+
+	  n_mut = D(j, alpha[j] - 1); // offset
+	  sum_n_mut += n_mut;
+	  sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
 	}
 
-	n_mut = D(j, alpha[j] - 1); // offset
-	sum_n_mut += n_mut;
-	sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
       }
     }
+
+    return log(mu) * (double) sum_n_mut + log(1.0 - mu) * (double) sum_n_non_mut;
 
   } else {
-    // only the cases listed in 'i' are retained
-    size_t length_i = static_cast<size_t>(LENGTH(i));
-    Rcpp::IntegerVector vec_i(i);
-    for (size_t k = 0; k < length_i; k++) {
-      size_t j = vec_i[k] - 1; // offset
-      if (alpha[j] != NA_INTEGER) {
-	// kappa restriction
-	if (kappa[j] < 1 || kappa[j] > K) {
-	  return R_NegInf;
-	}
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-	n_mut = D(j, alpha[j] - 1); // offset
-	sum_n_mut += n_mut;
-	sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
-      }
-
-    }
+    return Rcpp::as<double>(f(param));
   }
-
-  return log(mu) * (double) sum_n_mut + log(1.0 - mu) * (double) sum_n_non_mut;
 }
 
 
@@ -132,51 +140,58 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
 
-  Rcpp::IntegerVector alpha = param["alpha"];
-  Rcpp::IntegerVector t_inf = param["t_inf"];
-  Rcpp::IntegerVector kappa = param["kappa"];
-  Rcpp::NumericMatrix w_dens = data["log_w_dens"];
-  size_t K = w_dens.nrow();
+  if (custom_function == R_NilValue) {
+  
+    Rcpp::IntegerVector alpha = param["alpha"];
+    Rcpp::IntegerVector t_inf = param["t_inf"];
+    Rcpp::IntegerVector kappa = param["kappa"];
+    Rcpp::NumericMatrix w_dens = data["log_w_dens"];
+    size_t K = w_dens.nrow();
 
-  double out = 0.0;
+    double out = 0.0;
 
-  // all cases are retained
-  if (i == R_NilValue) {
-    for (size_t j = 0; j < N; j++) {
-      if (alpha[j] != NA_INTEGER) {
-	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
-	if (delay < 1 || delay > w_dens.ncol()) {
-	  return  R_NegInf;
-	}
-	if (kappa[j] < 1 || kappa[j] > K) {
-	  return  R_NegInf;
-	}
+    // all cases are retained
+    if (i == R_NilValue) {
+      for (size_t j = 0; j < N; j++) {
+	if (alpha[j] != NA_INTEGER) {
+	  size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
+	  if (delay < 1 || delay > w_dens.ncol()) {
+	    return  R_NegInf;
+	  }
+	  if (kappa[j] < 1 || kappa[j] > K) {
+	    return  R_NegInf;
+	  }
 	
-	out += w_dens(kappa[j] - 1, delay - 1);
+	  out += w_dens(kappa[j] - 1, delay - 1);
+	}
+      }
+    } else {
+      // only the cases listed in 'i' are retained
+      size_t length_i = static_cast<size_t>(LENGTH(i));
+      Rcpp::IntegerVector vec_i(i);
+      for (size_t k = 0; k < length_i; k++) {
+	size_t j = vec_i[k] - 1; // offset
+	if (alpha[j] != NA_INTEGER) {
+	  size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
+	  if (delay < 1 || delay > w_dens.ncol()) {
+	    return  R_NegInf;
+	  }
+	  if (kappa[j] < 1 || kappa[j] > K) {
+	    return  R_NegInf;
+	  }
+
+	  out += w_dens(kappa[j] - 1, delay - 1);
+	}
+
       }
     }
+
+    return out;
   } else {
-    // only the cases listed in 'i' are retained
-    size_t length_i = static_cast<size_t>(LENGTH(i));
-    Rcpp::IntegerVector vec_i(i);
-    for (size_t k = 0; k < length_i; k++) {
-      size_t j = vec_i[k] - 1; // offset
-      if (alpha[j] != NA_INTEGER) {
-	size_t delay = t_inf[j] - t_inf[alpha[j] - 1]; // offset
-	if (delay < 1 || delay > w_dens.ncol()) {
-	  return  R_NegInf;
-	}
-	if (kappa[j] < 1 || kappa[j] > K) {
-	  return  R_NegInf;
-	}
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-	out += w_dens(kappa[j] - 1, delay - 1);
-      }
-
-    }
+    return Rcpp::as<double>(f(param));
   }
-
-  return out;
 }
 
 
@@ -200,36 +215,43 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i,
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
 
-  Rcpp::IntegerVector dates = data["dates"];
-  Rcpp::IntegerVector t_inf = param["t_inf"];
-  Rcpp::NumericVector f_dens = data["log_f_dens"];
+  if (custom_function == R_NilValue) {
 
-  double out = 0.0;
+    Rcpp::IntegerVector dates = data["dates"];
+    Rcpp::IntegerVector t_inf = param["t_inf"];
+    Rcpp::NumericVector f_dens = data["log_f_dens"];
 
-  // all cases are retained
-  if (i == R_NilValue) {
-    for (size_t j = 0; j < N; j++) {
-      size_t delay = dates[j] - t_inf[j];
-      if (delay < 1 || delay > f_dens.size()) {
-	return  R_NegInf;
+    double out = 0.0;
+
+    // all cases are retained
+    if (i == R_NilValue) {
+      for (size_t j = 0; j < N; j++) {
+	size_t delay = dates[j] - t_inf[j];
+	if (delay < 1 || delay > f_dens.size()) {
+	  return  R_NegInf;
+	}
+	out += f_dens[delay - 1];
       }
-      out += f_dens[delay - 1];
+    } else {
+      // only the cases listed in 'i' are retained
+      size_t length_i = static_cast<size_t>(LENGTH(i));
+      Rcpp::IntegerVector vec_i(i);
+      for (size_t k = 0; k < length_i; k++) {
+	size_t j = vec_i[k] - 1; // offset
+	size_t delay = dates[j] - t_inf[j];
+	if (delay < 1 || delay > f_dens.size()) {
+	  return  R_NegInf;
+	}
+	out += f_dens[delay - 1];
+      }
     }
-  } else {
-    // only the cases listed in 'i' are retained
-    size_t length_i = static_cast<size_t>(LENGTH(i));
-    Rcpp::IntegerVector vec_i(i);
-    for (size_t k = 0; k < length_i; k++) {
-      size_t j = vec_i[k] - 1; // offset
-      size_t delay = dates[j] - t_inf[j];
-      if (delay < 1 || delay > f_dens.size()) {
-	return  R_NegInf;
-      }
-      out += f_dens[delay - 1];
-     }
-  }
 
-  return out;
+    return out;
+  }  else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+
+    return Rcpp::as<double>(f(param));
+  }
 }
 
 
@@ -266,39 +288,46 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i,
   double pi = static_cast<double>(param["pi"]);
   Rcpp::IntegerVector kappa = param["kappa"];
 
-  double out = 0.0;
-
   // p(pi < 0) = p(pi > 1) = 0
   if (pi < 0.0 || pi > 1.0) {
     return R_NegInf;
   }
 
-  // all cases are retained
-  if (i == R_NilValue) {
-    for (size_t j = 0; j < N; j++) {
-      if (kappa[j] != NA_INTEGER) {
-	if (kappa[j] < 1 || kappa[j] > K) {
-	  return  R_NegInf;
-	}
-	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
-      }
-    }
-  } else {
-    // only the cases listed in 'i' are retained
-    size_t length_i = static_cast<size_t>(LENGTH(i));
-    Rcpp::IntegerVector vec_i(i);
-    for (size_t k = 0; k < length_i; k++) {
-      size_t j = vec_i[k] - 1; // offset
-      if (kappa[j] != NA_INTEGER) {
-	if (kappa[j] < 1 || kappa[j] > K) {
-	  return  R_NegInf;
-	}
-	out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
-      }
-    }
-  }
+  if (custom_function == R_NilValue) {
 
-  return out;
+    double out = 0.0;
+
+    // all cases are retained
+    if (i == R_NilValue) {
+      for (size_t j = 0; j < N; j++) {
+	if (kappa[j] != NA_INTEGER) {
+	  if (kappa[j] < 1 || kappa[j] > K) {
+	    return  R_NegInf;
+	  }
+	  out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
+	}
+      }
+    } else {
+      // only the cases listed in 'i' are retained
+      size_t length_i = static_cast<size_t>(LENGTH(i));
+      Rcpp::IntegerVector vec_i(i);
+      for (size_t k = 0; k < length_i; k++) {
+	size_t j = vec_i[k] - 1; // offset
+	if (kappa[j] != NA_INTEGER) {
+	  if (kappa[j] < 1 || kappa[j] > K) {
+	    return  R_NegInf;
+	  }
+	  out += R::dgeom(kappa[j] - 1.0, pi, 1); // first arg must be cast to double
+	}
+      }
+    }
+
+    return out;
+  } else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+
+    return Rcpp::as<double>(f(param));
+  }
 }
 
 
@@ -323,15 +352,22 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
 
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i,
-		     Rcpp::RObject custom_function = R_NilValue) {
+		     Rcpp::RObject custom_functions = R_NilValue) {
 
-  return cpp_ll_timing_infections(data, param, i) + 
-    cpp_ll_timing_sampling(data, param, i);
+  if (custom_functions == R_NilValue) {
+    return cpp_ll_timing_infections(data, param, i) + 
+      cpp_ll_timing_sampling(data, param, i);
+  } else {
+    Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
+    return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) + 
+      cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]);
+
+  }
 }
 
 double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
-		     Rcpp::RObject custom_function = R_NilValue) {
-  return cpp_ll_timing(data, param, Rcpp::wrap(i), custom_function);
+		     Rcpp::RObject custom_functions = R_NilValue) {
+  return cpp_ll_timing(data, param, Rcpp::wrap(i), custom_functions);
 }
 
 
@@ -350,16 +386,28 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
 
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
-		  Rcpp::RObject custom_function = R_NilValue) {
+		  Rcpp::RObject custom_functions = R_NilValue) {
 
-  return cpp_ll_timing_infections(data, param, i) +
-    cpp_ll_timing_sampling(data, param, i) +
-    cpp_ll_genetic(data, param, i) +
-    cpp_ll_reporting(data, param, i);
+  if (custom_functions == R_NilValue) {
+
+    return cpp_ll_timing_infections(data, param, i) +
+      cpp_ll_timing_sampling(data, param, i) +
+      cpp_ll_genetic(data, param, i) +
+      cpp_ll_reporting(data, param, i);
+
+  }  else {
+    Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
+
+    return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) +
+      cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]) +
+      cpp_ll_genetic(data, param, i, list_functions["genetic"]) +
+      cpp_ll_reporting(data, param, i, list_functions["reporting"]);
+   
+  }
 }
 
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, size_t i,
-		  Rcpp::RObject custom_function = R_NilValue) {
-  return cpp_ll_all(data, param, Rcpp::wrap(i), custom_function);
+		  Rcpp::RObject custom_functions = R_NilValue) {
+  return cpp_ll_all(data, param, Rcpp::wrap(i), custom_functions);
 }

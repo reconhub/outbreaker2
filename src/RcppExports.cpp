@@ -129,28 +129,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_ll_timing
-double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_function);
-RcppExport SEXP outbreaker2_cpp_ll_timing(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionSEXP) {
+double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_functions);
+RcppExport SEXP outbreaker2_cpp_ll_timing(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
     Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_ll_timing(data, param, i, custom_function));
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_functions(custom_functionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_ll_timing(data, param, i, custom_functions));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_ll_all
-double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_function);
-RcppExport SEXP outbreaker2_cpp_ll_all(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionSEXP) {
+double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_functions);
+RcppExport SEXP outbreaker2_cpp_ll_all(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
     Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_ll_all(data, param, i, custom_function));
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_functions(custom_functionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_ll_all(data, param, i, custom_functions));
     return rcpp_result_gen;
 END_RCPP
 }

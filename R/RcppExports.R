@@ -41,12 +41,12 @@ cpp_ll_reporting <- function(data, param, i, custom_function = NULL) {
     .Call('outbreaker2_cpp_ll_reporting', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
-cpp_ll_timing <- function(data, param, i, custom_function = NULL) {
-    .Call('outbreaker2_cpp_ll_timing', PACKAGE = 'outbreaker2', data, param, i, custom_function)
+cpp_ll_timing <- function(data, param, i, custom_functions = NULL) {
+    .Call('outbreaker2_cpp_ll_timing', PACKAGE = 'outbreaker2', data, param, i, custom_functions)
 }
 
-cpp_ll_all <- function(data, param, i, custom_function = NULL) {
-    .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i, custom_function)
+cpp_ll_all <- function(data, param, i, custom_functions = NULL) {
+    .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i, custom_functions)
 }
 
 cpp_move_mu <- function(data, param, config, custom_prior) {

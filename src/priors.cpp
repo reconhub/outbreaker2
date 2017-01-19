@@ -85,10 +85,14 @@ double cpp_prior_all(Rcpp::List param, Rcpp::List config,
 		     Rcpp::RObject custom_functions = R_NilValue
 		     ) {
   if (custom_functions == R_NilValue) {
+
     return cpp_prior_mu(param, config) + 
       cpp_prior_pi(param, config);
+
   } else {
+
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
+
     return cpp_prior_mu(param, config, list_functions["mu"]) + 
       cpp_prior_pi(param, config, list_functions["pi"]);
   }

@@ -81,12 +81,15 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 
 
 // [[Rcpp::export(rng = false)]]
-double cpp_prior_all(Rcpp::List param, Rcpp::List config, 
-		     Rcpp::RObject custom_function_mu = R_NilValue, 
-		     Rcpp::RObject custom_function_pi = R_NilValue) {
-
-  double out = cpp_prior_mu(param, config, custom_function_mu) + 
-    cpp_prior_pi(param, config, custom_function_pi);
-
-  return out;
+double cpp_prior_all(Rcpp::List param, Rcpp::List config,
+		     Rcpp::RObject custom_functions = R_NilValue
+		     ) {
+  if (custom_functions == R_NilValue) {
+    return cpp_prior_mu(param, config) + 
+      cpp_prior_pi(param, config);
+  } else {
+    Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
+    return cpp_prior_mu(param, config, list_functions["mu"]) + 
+      cpp_prior_pi(param, config, list_functions["pi"]);
+  }
 }

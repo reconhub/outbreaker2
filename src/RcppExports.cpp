@@ -250,15 +250,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_prior_all
-double cpp_prior_all(Rcpp::List param, Rcpp::List config, Rcpp::RObject custom_function_mu, Rcpp::RObject custom_function_pi);
-RcppExport SEXP outbreaker2_cpp_prior_all(SEXP paramSEXP, SEXP configSEXP, SEXP custom_function_muSEXP, SEXP custom_function_piSEXP) {
+double cpp_prior_all(Rcpp::List param, Rcpp::List config, Rcpp::RObject custom_functions);
+RcppExport SEXP outbreaker2_cpp_prior_all(SEXP paramSEXP, SEXP configSEXP, SEXP custom_functionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function_mu(custom_function_muSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function_pi(custom_function_piSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_prior_all(param, config, custom_function_mu, custom_function_pi));
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_functions(custom_functionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_prior_all(param, config, custom_functions));
     return rcpp_result_gen;
 END_RCPP
 }

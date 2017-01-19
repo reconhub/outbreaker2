@@ -81,7 +81,7 @@ cpp_prior_pi <- function(param, config, custom_function = NULL) {
     .Call('outbreaker2_cpp_prior_pi', PACKAGE = 'outbreaker2', param, config, custom_function)
 }
 
-cpp_prior_all <- function(param, config, custom_function_mu = NULL, custom_function_pi = NULL) {
-    .Call('outbreaker2_cpp_prior_all', PACKAGE = 'outbreaker2', param, config, custom_function_mu, custom_function_pi)
+cpp_prior_all <- function(param, config, custom_functions = NULL) {
+    .Call('outbreaker2_cpp_prior_all', PACKAGE = 'outbreaker2', param, config, custom_functions)
 }
 

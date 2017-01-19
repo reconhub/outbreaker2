@@ -16,7 +16,7 @@ outbreaker_init_mcmc <- function(param_current, param_store, loglike, priors, co
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##
     param_store$like[1] <- loglike$all(param_current)
-    param_store$prior[1] <- cpp_prior_all(param_current, config, priors$mu, priors$pi)
+    param_store$prior[1] <- cpp_prior_all(param_current, config, priors)
     param_store$post[1] <- param_store$like[1] + param_store$prior[1]
 
     return(param_store)

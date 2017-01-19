@@ -139,7 +139,7 @@ create_priors <- function(config = NULL, ...) {
     ## }
 
     priors$all <- function(param) {
-        cpp_prior_all(param, config, priors$mu, priors$pi)
+        cpp_prior_all(param, config, priors)
     }
     
 

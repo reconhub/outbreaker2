@@ -25,28 +25,28 @@ cpp_swap_cases <- function(param, i) {
     .Call('outbreaker2_cpp_swap_cases', PACKAGE = 'outbreaker2', param, i)
 }
 
-cpp_ll_genetic <- function(data, param, i) {
-    .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i)
+cpp_ll_genetic <- function(data, param, i, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
-cpp_ll_timing_infections <- function(data, param, i) {
-    .Call('outbreaker2_cpp_ll_timing_infections', PACKAGE = 'outbreaker2', data, param, i)
+cpp_ll_timing_infections <- function(data, param, i, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_timing_infections', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
-cpp_ll_timing_sampling <- function(data, param, i) {
-    .Call('outbreaker2_cpp_ll_timing_sampling', PACKAGE = 'outbreaker2', data, param, i)
+cpp_ll_timing_sampling <- function(data, param, i, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_timing_sampling', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
-cpp_ll_reporting <- function(data, param, i) {
-    .Call('outbreaker2_cpp_ll_reporting', PACKAGE = 'outbreaker2', data, param, i)
+cpp_ll_reporting <- function(data, param, i, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_reporting', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
-cpp_ll_timing <- function(data, param, i) {
-    .Call('outbreaker2_cpp_ll_timing', PACKAGE = 'outbreaker2', data, param, i)
+cpp_ll_timing <- function(data, param, i, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_timing', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
-cpp_ll_all <- function(data, param, i) {
-    .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i)
+cpp_ll_all <- function(data, param, i, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
 cpp_move_mu <- function(data, param, config, custom_prior) {

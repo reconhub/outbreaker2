@@ -1,7 +1,13 @@
 
+## ON THE PURPOSE OF THESE FUNCTIONS
+
 ## These functions are no longer used in outbreaker2, but were part of the
 ## original implementation, and are still used in testing procedures to ensure
 ## that Rcpp versions give identical results.
+
+
+
+
 
 
 ## This likelihood corresponds to the probability of observing a number of

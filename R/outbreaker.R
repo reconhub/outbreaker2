@@ -19,7 +19,7 @@
 #'     \code{\link{outbreaker_data}}
 #' 
 #' @param config a set of settings as returned by \code{\link{create_config}}
-## #' @param loglike a set of log-likelihood functions as returned by \code{\link{create_loglike}}
+## #' @param loglike a set of log-likelihood functions as returned by \code{\link{custom_likelihood}}
 
 #' @param priors a set of prior functions with enclosed parameters as returned
 #'     by \code{\link{custom_priors}}
@@ -64,7 +64,7 @@ outbreaker <- function(data = outbreaker_data(),
     data <- add_convolutions(data = data, config = config)
 
     ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
-    loglike <- create_loglike()
+    loglike <- custom_likelihood()
     priors <- custom_priors(config, priors)
 
     

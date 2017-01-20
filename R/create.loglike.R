@@ -23,7 +23,7 @@
 ## #'
 ## #' @param ... a named list (see details) of functions, each computing a log-likelihood component.
 ## #'
-## #' @param loglike a list of functions as returned by \code{outbreaker_create_loglike}
+## #' @param loglike a list of functions as returned by \code{outbreaker_custom_likelihood}
 ## #'
 ## #' @details
 ## #' The likelihood functions used by default are:
@@ -53,7 +53,7 @@
 ## This function creates a named list of log-likelihood functions with enclosed
 ## data
 
-create_loglike <- function(...) {
+custom_likelihood <- function(...) {
 
     ## These are all the functions generating various log-likelihood functions;
     ## we list them by alphabetic order

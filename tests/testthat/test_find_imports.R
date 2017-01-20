@@ -15,7 +15,7 @@ test_that("Test detection of imported cases", {
     param_current <- temp$current
     param_store <- temp$store
 
-    ll <- create_loglike()
+    ll <- custom_likelihood()
     priors <- custom_priors(config)
     densities <- list(loglike = ll, priors = priors)
 

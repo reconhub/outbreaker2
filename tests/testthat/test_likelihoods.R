@@ -19,7 +19,7 @@
 ##     w <- c(.1, .2, .5, .2, .1)
 ##     data <- outbreaker_data(dates = times, w_dens = w)
 ##     config <- create_config(data = data, init_tree = alpha)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
@@ -59,7 +59,7 @@
 ##     samp_times <- times + c(1, 1, 2, 3, 4)
 ##     f <- c(.1, .2, .5, .2, .1)
 ##     data <- outbreaker_data(dates = samp_times, f_dens = f)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     config <- create_config(data = data, init_t_inf = times, init_tree = alpha)
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
@@ -99,7 +99,7 @@
 ##                  outbreaker_data(dates = collecDates,
 ##                                  w_dens = w,
 ##                                  dna = dat$dna))
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     config <- create_config(data = data, init_mu = 0.543e-4)
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
@@ -141,7 +141,7 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data, init_mu = 0.543e-4)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
@@ -181,7 +181,7 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 
 ##     ## compute likelihoods
@@ -209,7 +209,7 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 
 ##     ## compute likelihoods
@@ -243,7 +243,7 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 
 ##     ## compute local likelihoods
@@ -278,15 +278,15 @@
 
 
 
-## ## test create_loglike ##
-## test_that("create_loglike create functions with closure", {
+## ## test custom_likelihood ##
+## test_that("custom_likelihood create functions with closure", {
 ##     ## skip on CRAN
 ##     skip_on_cran()
 
 
 ##     ## generate data
 ##     data <- outbreaker_data()
-##     out <- outbreaker2:::create_loglike()
+##     out <- outbreaker2:::custom_likelihood()
 
 ##     ## tests
 ##     expect_is(out, "list")
@@ -326,7 +326,7 @@
 ##     w <- c(.1, .2, .5, .2, .1)
 ##     data <- outbreaker_data(dates = times, w_dens = w)
 ##     config <- create_config(data = data, init_tree = alpha)
-##     ll <- outbreaker2:::create_loglike()
+##     ll <- outbreaker2:::custom_likelihood()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))

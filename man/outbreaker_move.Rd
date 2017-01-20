@@ -7,7 +7,7 @@
 outbreaker_move(moves, data, param_current, param_store, config, densities)
 }
 \arguments{
-\item{moves}{a list of movement functions as returned by \code{create_moves}
+\item{moves}{a list of movement functions as returned by \code{custom_moves}
 (internal function)}
 
 \item{data}{a list of data items as returned by \code{outbreaker_data}}

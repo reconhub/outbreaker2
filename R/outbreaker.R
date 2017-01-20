@@ -25,7 +25,7 @@
 #'     by \code{\link{custom_priors}}
 
 ## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker_create_posteriors}}
-## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker_create_moves}}
+## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker_custom_moves}}
 ## #'
 #' @seealso \code{\link{create_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
 #'
@@ -82,7 +82,7 @@ outbreaker <- function(data = outbreaker_data(),
     densities <- list(loglike = loglike, priors = priors)
 
     ## here we create a list of function for moving parameters
-    moves <- create_moves(config = config, data = data, densities = densities)
+    moves <- custom_moves(config = config, data = data, densities = densities)
 
 
     ## IMPORTS 

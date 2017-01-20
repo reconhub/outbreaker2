@@ -14,7 +14,7 @@
 ## - rand: a list containing pre-generated random numbers
 
 ## See 'likelihood_R' for more detail about the motivation (but basically, it's
-## faster). These functions are later called by 'create_moves()' which will make
+## faster). These functions are later called by 'custom_moves()' which will make
 ## a list of functions with enclosed items.
 
 

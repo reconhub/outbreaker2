@@ -6,7 +6,7 @@
 #'
 #' @inheritParams outbreaker_create_mcmc
 #'
-#' @param moves a list of movement functions as returned by \code{create_moves}
+#' @param moves a list of movement functions as returned by \code{custom_moves}
 #'     (internal function)
 #'
 #' @param param a list of parameters as returned by

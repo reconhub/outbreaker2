@@ -19,7 +19,7 @@ test_that("Test detection of imported cases", {
     priors <- custom_priors(config)
     densities <- list(loglike = ll, priors = priors)
 
-    moves <- create_moves(config = config, data = data, densities = densities)
+    moves <- custom_moves(config = config, data = data, densities = densities)
 
     ## detect imported cases
     out <- outbreaker_find_imports(moves = moves, data = data,

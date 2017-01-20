@@ -23,8 +23,8 @@ test_that("parameters and augmented data move", {
     priors <- custom_priors(config)
     densities <- list(loglike = ll, priors = priors)
 
-    moves <- create_moves(config = config, data = data, densities = densities)
-    moves_no_move <- create_moves(config = config_no_move, densities = densities)
+    moves <- custom_moves(config = config, data = data, densities = densities)
+    moves_no_move <- custom_moves(config = config_no_move, densities = densities)
 
 
     ## test moves lists ##

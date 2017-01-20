@@ -423,6 +423,65 @@ test_that("Customisation with identical functions works", {
     expect_equal(cpp_ll_all(data, param),
                  cpp_ll_all(data, param, , list_functions))
     
+})
 
+
+
+
+
+
+
+
+
+
+
+
+test_that("Customisation with pi-returning functions works", {
+
+    ## skip on CRAN
+    skip_on_cran()
+
+    ## generate data ##
+    data(fake_outbreak)
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
+    config <- create_config(data = data, init_mu = 0.543e-4)
+    param <- create_mcmc(data = data, config = config)$current
+    few_cases <- as.integer(c(1,3,4))
+    rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
+
+  
+    ## generate custom functions with 2 arguments
+    f <- function(data, param) return(pi);
+    
+    list_functions <- custom_likelihoods(genetic = f,
+                       timing_infections = f,
+                       timing_sampling = f,
+                       reporting = f)
+
+
+    ## tests
+    expect_equal(pi,
+                 cpp_ll_genetic(data, param, , f))
+
+    expect_equal(pi, 
+                 cpp_ll_timing_infections(data, param, , f))
+    
+    expect_equal(pi,
+                 cpp_ll_timing_sampling(data, param, , f))
+    
+    expect_equal(pi,
+                 cpp_ll_timing_sampling(data, param, , f))
+    
+    expect_equal(pi,
+                 cpp_ll_reporting(data, param, , f))
+    
+    expect_equal(2 * pi,
+                 cpp_ll_timing(data, param, , list_functions))
+
+    expect_equal(4 * pi,
+                 cpp_ll_all(data, param, , list_functions))
     
 })

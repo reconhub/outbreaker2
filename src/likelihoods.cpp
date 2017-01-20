@@ -47,7 +47,7 @@
 // log(mu) * sum_i(n_mut_i) + log(1-mu) * sum_i((L - n_mut_i) + (L * (kappa_i - 1)))
 
 // [[Rcpp::export(rng = false)]]
-double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
+double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		      Rcpp::RObject custom_function = R_NilValue) {
   Rcpp::NumericMatrix D = data["D"];
   if (D.ncol() < 1) return 0.0;
@@ -135,7 +135,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i,
 // of cases given the infection dates of their ancestors.
 
 // [[Rcpp::export(rng = false)]]
-double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
+double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 				Rcpp::RObject custom_function = R_NilValue) {
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
@@ -210,7 +210,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i,
 // given their infection dates.
 
 // [[Rcpp::export(rng = false)]]
-double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i,
+double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 			      Rcpp::RObject custom_function = R_NilValue) {
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
@@ -277,7 +277,7 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i,
 // - 'kappa-1' is the number of unreported cases
 
 // [[Rcpp::export(rng = false)]]
-double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i,
+double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 			Rcpp::RObject custom_function = R_NilValue) {
   Rcpp::NumericMatrix w_dens = data["log_w_dens"];
   size_t K = w_dens.nrow();
@@ -351,7 +351,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(collection dates): see function cpp_ll_timing_sampling
 
 // [[Rcpp::export(rng = false)]]
-double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i,
+double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		     Rcpp::RObject custom_functions = R_NilValue) {
 
   if (custom_functions == R_NilValue) {
@@ -385,7 +385,7 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(missing cases): see function cpp_ll_reporting
 
 // [[Rcpp::export(rng = false)]]
-double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
+double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		  Rcpp::RObject custom_functions = R_NilValue) {
 
   if (custom_functions == R_NilValue) {

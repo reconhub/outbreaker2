@@ -22,7 +22,7 @@
 ## #' @param loglike a set of log-likelihood functions as returned by \code{\link{create_loglike}}
 
 #' @param priors a set of prior functions with enclosed parameters as returned
-#'     by \code{\link{create_priors}}
+#'     by \code{\link{custom_priors}}
 
 ## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker_create_posteriors}}
 ## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker_create_moves}}
@@ -52,7 +52,7 @@
 #' }
 outbreaker <- function(data = outbreaker_data(),
                        config = create_config(),
-                       priors = create_priors()) {
+                       priors = custom_priors()) {
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker_data(data = data)
@@ -65,7 +65,7 @@ outbreaker <- function(data = outbreaker_data(),
 
     ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
     loglike <- create_loglike()
-    priors <- create_priors(config, priors)
+    priors <- custom_priors(config, priors)
 
     
     ## CREATE AND INITIALIZE MCMC CHAIN ##

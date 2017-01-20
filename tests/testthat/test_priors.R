@@ -56,15 +56,15 @@ test_that("Prior customisation.", {
     
     ## check default config
     config <- create_config()
-    expect_equal(create_priors(),
-                     create_priors(config))
+    expect_equal(custom_priors(),
+                     custom_priors(config))
 
     ## check errors
     msg <- "The following priors are not functions: mu"
-    expect_error(create_priors(mu = "Chtulhu"), msg)
+    expect_error(custom_priors(mu = "Chtulhu"), msg)
 
     msg <- "The following priors dont' have a single argument: mu"
-    expect_error(create_priors(mu = plot), msg)
+    expect_error(custom_priors(mu = plot), msg)
 
 
     ## custom prior parameters

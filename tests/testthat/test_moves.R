@@ -20,7 +20,7 @@ test_that("parameters and augmented data move", {
     data <- add_convolutions(data = data, config = config)
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     ll <- create_loglike()
-    priors <- create_priors(config)
+    priors <- custom_priors(config)
     densities <- list(loglike = ll, priors = priors)
 
     moves <- create_moves(config = config, data = data, densities = densities)

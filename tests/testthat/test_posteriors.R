@@ -12,7 +12,7 @@
 ##     config <- create_config()
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     ll <- create_loglike(data)
-##     priors <- create_priors(config)
+##     priors <- custom_priors(config)
 ##     out <- create_posteriors(ll, priors)
 
 ##     ## tests
@@ -50,7 +50,7 @@
 ##     config <- create_config(data = data)
 ##     param <- outbreaker_create_mcmc(data = data, config = config)$current
 ##     ll <- create_loglike(data)
-##     priors <- create_priors(config)
+##     priors <- custom_priors(config)
 ##     posteriors <- create_posteriors(ll, priors)
 
 ##     ## tests

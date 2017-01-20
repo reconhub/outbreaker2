@@ -4,7 +4,7 @@
 ##
 ## we return a function in which prior parameters are enclosed; see
 ## 'likelihood_R' for more detail about the motivation (but basically, it's
-## faster). These functions are later called by 'create_priors()' which will
+## faster). These functions are later called by 'custom_priors()' which will
 ## attach prior values and make a list of functions with enclosed parameters.
 
 ## Arguments are:

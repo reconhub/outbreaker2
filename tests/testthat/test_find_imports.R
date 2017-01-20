@@ -16,7 +16,7 @@ test_that("Test detection of imported cases", {
     param_store <- temp$store
 
     ll <- create_loglike()
-    priors <- create_priors(config)
+    priors <- custom_priors(config)
     densities <- list(loglike = ll, priors = priors)
 
     moves <- create_moves(config = config, data = data, densities = densities)

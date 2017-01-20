@@ -8,7 +8,7 @@
 #'
 #' @param loglike a list of loglikelihood functions with enclosed data as returned by \code{create_loglike}
 #'
-#' @param priors a list of prior functions with enclosed parameters as returned by \code{create_priors}
+#' @param priors a list of prior functions with enclosed parameters as returned by \code{custom_priors}
 #'
 #' @export
 #'

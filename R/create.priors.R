@@ -8,7 +8,7 @@
 ## need to be either hard-coded or enclosed.
 
 
-create_priors <- function(config = NULL, ...) {
+custom_priors <- function(config = NULL, ...) {
 
     ## This function returns a list of functions with the class
     ## 'outbreaker_priors'. It optionally generates priors and tests some basic

@@ -302,7 +302,7 @@ test_that("results ok: outbreaker with fixed number returning priors and likelih
    
     data <- list(dna = dat$dna, dates = dat$onset, w_dens = w)
 
-    config <-  list(n_iter = 100, sample_every = 1,
+    config <-  list(n_iter = 1000, sample_every = 10,
                     init_tree = "star", move_kappa = TRUE,
                     move_pi = TRUE, init_pi = 1,
                     find_import = FALSE)

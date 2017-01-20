@@ -15,7 +15,8 @@ test_that("parameters and augmented data move", {
     config_no_move <- create_config(move_alpha = FALSE,
                                     move_t_inf = FALSE,
                                     move_mu = FALSE, move_pi = FALSE,
-                                    move_kappa = FALSE, data = data)
+                                    move_kappa = FALSE,
+                                    move_swap_cases = FALSE, data = data)
 
     data <- add_convolutions(data = data, config = config)
     param <- create_mcmc(data = data, config = config)$current

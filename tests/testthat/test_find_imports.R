@@ -11,11 +11,11 @@ test_that("Test detection of imported cases", {
     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
-    temp <- outbreaker_create_mcmc(data = data, config = config)
+    temp <- create_mcmc(data = data, config = config)
     param_current <- temp$current
     param_store <- temp$store
 
-    ll <- custom_likelihood()
+    ll <- custom_likelihoods()
     priors <- custom_priors(config)
     densities <- list(loglike = ll, priors = priors)
 

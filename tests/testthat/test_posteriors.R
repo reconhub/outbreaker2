@@ -10,8 +10,8 @@
 ##     ## generate data
 ##     data <- outbreaker_data()
 ##     config <- create_config()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
-##     ll <- custom_likelihood(data)
+##     param <- create_mcmc(data = data, config = config)$current
+##     ll <- custom_likelihoods(data)
 ##     priors <- custom_priors(config)
 ##     out <- create_posteriors(ll, priors)
 
@@ -48,8 +48,8 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
-##     ll <- custom_likelihood(data)
+##     param <- create_mcmc(data = data, config = config)$current
+##     ll <- custom_likelihoods(data)
 ##     priors <- custom_priors(config)
 ##     posteriors <- create_posteriors(ll, priors)
 

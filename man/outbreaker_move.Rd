@@ -18,11 +18,11 @@ outbreaker_move(moves, data, param_current, param_store, config, densities)
 named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}
 
 \item{param}{a list of parameters as returned by
-\code{outbreaker_create_mcmc}}
+\code{create_mcmc}}
 }
 \value{
 a potentially modified list of parameters as returned by
-    \code{outbreaker_create_mcmc}
+    \code{create_mcmc}
 }
 \description{
 This function moves all parameters for outbreaker2.

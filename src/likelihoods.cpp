@@ -110,10 +110,10 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
     return log(mu) * (double) sum_n_mut + log(1.0 - mu) * (double) sum_n_non_mut;
 
-  } else {
+  } else { // use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-    return Rcpp::as<double>(f(param));
+    return Rcpp::as<double>(f(data, param));
   }
 }
 
@@ -187,10 +187,10 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
     }
 
     return out;
-  } else {
+  } else { // use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-    return Rcpp::as<double>(f(param));
+    return Rcpp::as<double>(f(data, param));
   }
 }
 
@@ -247,10 +247,10 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i,
     }
 
     return out;
-  }  else {
+  }  else { // use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-    return Rcpp::as<double>(f(param));
+    return Rcpp::as<double>(f(data, param));
   }
 }
 
@@ -323,10 +323,10 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i,
     }
 
     return out;
-  } else {
+  } else { // use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
-    return Rcpp::as<double>(f(param));
+    return Rcpp::as<double>(f(data, param));
   }
 }
 
@@ -357,7 +357,7 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i,
   if (custom_functions == R_NilValue) {
     return cpp_ll_timing_infections(data, param, i) + 
       cpp_ll_timing_sampling(data, param, i);
-  } else {
+  } else { // use of a customized likelihood functions
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
     return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) + 
       cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]);
@@ -395,7 +395,7 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
       cpp_ll_genetic(data, param, i) +
       cpp_ll_reporting(data, param, i);
 
-  }  else {
+  }  else { // use of a customized likelihood functions
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
 
     return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) +

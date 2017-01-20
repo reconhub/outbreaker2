@@ -11,7 +11,7 @@ outbreaker_mcmc_store(param_current, param_store, densities, step)
 
 \item{step}{an integer indicating the MCMC iteration being stored}
 
-\item{param}{a list of output items as returned by \code{outbreaker_create_mcmc}}
+\item{param}{a list of output items as returned by \code{create_mcmc}}
 }
 \description{
 This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.

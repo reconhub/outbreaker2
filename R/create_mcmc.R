@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-outbreaker_create_mcmc <- function(data, config) {
+create_mcmc <- function(data, config) {
     ## CREATE EMPTY OUTPUT VECTORS ##
     size <- round(config$n_iter/config$sample_every)
     step <- integer(size)

@@ -12,7 +12,7 @@
 ## #' \item{data}{a list of named items containing input data as returned by
 ## #' \code{\link{outbreaker_data}}}
 ## #'
-## #' \item{param}{a list of parameters as returned by \code{outbreaker_create_mcmc}}
+## #' \item{param}{a list of parameters as returned by \code{create_mcmc}}
 ## #' }
 ## #'
 ## #' Note that unlike \code{outbreaker_custom_moves}, likelihood functions have no
@@ -50,24 +50,22 @@
 
 
 
-## This function creates a named list of log-likelihood functions with enclosed
-## data
 
-custom_likelihood <- function(...) {
+## USING CUSTOM LIKELIHOOD FUNCTIONS
 
-    ## These are all the functions generating various log-likelihood functions;
-    ## we list them by alphabetic order
+## Likelihood functions in outbreaker2 are implemented using Rcpp. However,
+## these functions can also be replaced by customized functions. These can be
+## specified by the user, through the '...' argument of
+## 'custom_likelihoods'. These functions must have 2 arguments:
 
-    ## default_functions <- list(genetic = bind_ll_genetic,
-    ##                           reporting = bind_ll_reporting,
-    ##                           timing_infections = bind_ll_timing_infections,
-    ##                           timing_sampling = bind_ll_timing_sampling,
-    ##                           timing = bind_ll_timing,
-    ##                           all = bind_ll_all
-    ##                           )
+## - data: a valid 'outbreaker_data' list
 
-    ## lapply(default_functions, function(f) f(data))
-  
+## - param: a list containing current parameter states, as returned by create_mcmc
+
+
+
+custom_likelihoods <- function(...) {
+    
     ll_functions <- list(...)
     
     if (length(ll_functions) == 1L && is.list(ll_functions[[1]])) {
@@ -81,9 +79,48 @@ custom_likelihood <- function(...) {
                      timing_sampling = NULL
                      )
 
-    ## out <-  modify_defaults(defaults, ll_functions, FALSE)
+    likelihoods <-  modify_defaults(defaults, ll_functions, FALSE)
+    likelihoods_names <- names(likelihoods)
 
-    out <- defaults
+    
+    
+    ## check all likelihoods are functions
 
-    return(out)
+    function_or_null <- function(x) {
+        is.null(x) || is.function(x)
+    }
+    
+    is_ok <- vapply(likelihoods, function_or_null, logical(1))
+    
+    if (!all(is_ok)) {
+        culprits <- likelihoods_names[!is_ok]
+        msg <- paste0("The following likelihoods are not functions: ",
+                      paste(culprits, collapse = ", "))
+        stop(msg)
+    }
+
+    
+    ## check they all have a single argument
+
+    with_one_arg <- function(x) {
+        if(is.function(x)) {
+            return (length(formalArgs(x)) == 1L)
+        }
+        
+        return(TRUE)
+    }
+    
+    one_arg <- vapply(likelihoods, with_one_arg, logical(1))
+
+    if (!all(one_arg)) {
+        culprits <- likelihoods_names[!one_arg]
+        msg <- paste0("The following likelihoods dont' have a single argument: ",
+                      paste(culprits, collapse = ", "))
+        stop(msg)
+    }
+    
+
+    class(likelihoods) <- c("outbreaker_likelihoods", "list")
+    return(likelihoods)
+
 }

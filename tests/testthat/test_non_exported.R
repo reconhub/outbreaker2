@@ -41,7 +41,7 @@ test_that("Auxiliary functions for ancestries are working", {
     config <- create_config(init_tree = alpha, init_t_inf = t_inf, data = data)
     config2 <- config
     config2$move_alpha <- c(rep(TRUE,4),FALSE, TRUE)
-    param <- outbreaker_create_mcmc(config = config, data = data)$current
+    param <- create_mcmc(config = config, data = data)$current
 
     ## test can be alpha
     expect_equal(can_move_alpha(param, config), c(TRUE, FALSE,rep(TRUE,4)))
@@ -98,7 +98,7 @@ test_that("Testing find_descendents", {
                  outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
     
     config <- create_config(data = data)
-    param <- outbreaker_create_mcmc(data = data, config = config)$current
+    param <- create_mcmc(data = data, config = config)$current
 
     ## tests
     expect_equal(find_descendents(param, 1), c(2,4,28))

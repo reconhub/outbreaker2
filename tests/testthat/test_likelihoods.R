@@ -19,8 +19,8 @@
 ##     w <- c(.1, .2, .5, .2, .1)
 ##     data <- outbreaker_data(dates = times, w_dens = w)
 ##     config <- create_config(data = data, init_tree = alpha)
-##     ll <- outbreaker2:::custom_likelihood()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     ll <- outbreaker2:::custom_likelihoods()
+##     param <- create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
 
@@ -59,9 +59,9 @@
 ##     samp_times <- times + c(1, 1, 2, 3, 4)
 ##     f <- c(.1, .2, .5, .2, .1)
 ##     data <- outbreaker_data(dates = samp_times, f_dens = f)
-##     ll <- outbreaker2:::custom_likelihood()
+##     ll <- outbreaker2:::custom_likelihoods()
 ##     config <- create_config(data = data, init_t_inf = times, init_tree = alpha)
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     param <- create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
 
@@ -99,9 +99,9 @@
 ##                  outbreaker_data(dates = collecDates,
 ##                                  w_dens = w,
 ##                                  dna = dat$dna))
-##     ll <- outbreaker2:::custom_likelihood()
+##     ll <- outbreaker2:::custom_likelihoods()
 ##     config <- create_config(data = data, init_mu = 0.543e-4)
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     param <- create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
 
@@ -141,8 +141,8 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data, init_mu = 0.543e-4)
-##     ll <- outbreaker2:::custom_likelihood()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     ll <- outbreaker2:::custom_likelihoods()
+##     param <- create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
 
@@ -181,8 +181,8 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     ll <- outbreaker2:::custom_likelihood()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     ll <- outbreaker2:::custom_likelihoods()
+##     param <- create_mcmc(data = data, config = config)$current
 
 ##     ## compute likelihoods
 ##     out <- ll$timing(param)
@@ -209,8 +209,8 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     ll <- outbreaker2:::custom_likelihood()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     ll <- outbreaker2:::custom_likelihoods()
+##     param <- create_mcmc(data = data, config = config)$current
 
 ##     ## compute likelihoods
 ##     out <- ll$all(param = param)
@@ -243,8 +243,8 @@
 ##     data(fake_outbreak)
 ##     data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
 ##     config <- create_config(data = data)
-##     ll <- outbreaker2:::custom_likelihood()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     ll <- outbreaker2:::custom_likelihoods()
+##     param <- create_mcmc(data = data, config = config)$current
 
 ##     ## compute local likelihoods
 ##     sum_local_timing_sampling <- sum(sapply(seq_len(data$N), ll$timing_sampling, param = param))
@@ -286,7 +286,7 @@
 
 ##     ## generate data
 ##     data <- outbreaker_data()
-##     out <- outbreaker2:::custom_likelihood()
+##     out <- outbreaker2:::custom_likelihoods()
 
 ##     ## tests
 ##     expect_is(out, "list")
@@ -326,8 +326,8 @@
 ##     w <- c(.1, .2, .5, .2, .1)
 ##     data <- outbreaker_data(dates = times, w_dens = w)
 ##     config <- create_config(data = data, init_tree = alpha)
-##     ll <- outbreaker2:::custom_likelihood()
-##     param <- outbreaker_create_mcmc(data = data, config = config)$current
+##     ll <- outbreaker2:::custom_likelihoods()
+##     param <- create_mcmc(data = data, config = config)$current
 ##     few_cases <- as.integer(c(1,3,4))
 ##     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
 

@@ -6,7 +6,7 @@
 #'
 #' @inheritParams outbreaker
 #'
-#' @param param a list of output items as returned by \code{outbreaker_create_mcmc}
+#' @param param a list of output items as returned by \code{create_mcmc}
 #'
 #' @param densities a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 #'

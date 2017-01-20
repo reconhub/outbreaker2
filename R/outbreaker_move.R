@@ -4,19 +4,19 @@
 #'
 #' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
 #'
-#' @inheritParams outbreaker_create_mcmc
+#' @inheritParams create_mcmc
 #'
 #' @param moves a list of movement functions as returned by \code{custom_moves}
 #'     (internal function)
 #'
 #' @param param a list of parameters as returned by
-#'     \code{outbreaker_create_mcmc}
+#'     \code{create_mcmc}
 #'
 #' @param densities a list containing lists of functions computing densities,
 #'     named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 #'
 #' @return a potentially modified list of parameters as returned by
-#'     \code{outbreaker_create_mcmc}
+#'     \code{create_mcmc}
 #'
 outbreaker_move <- function(moves, data, param_current,
                             param_store, config, densities) {

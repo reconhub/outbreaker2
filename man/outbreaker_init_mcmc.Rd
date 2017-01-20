@@ -11,7 +11,7 @@ outbreaker_init_mcmc(param_current, param_store, loglike, priors)
 
 \item{priors}{a list of prior functions with enclosed parameters as returned by \code{custom_priors}}
 
-\item{param}{a list of data items as returned by \code{outbreaker_create_mcmc}}
+\item{param}{a list of data items as returned by \code{create_mcmc}}
 }
 \description{
 This function creates initial outputs and parameter states for outbreaker.

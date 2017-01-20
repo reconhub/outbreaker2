@@ -7,7 +7,7 @@
 outbreaker_mcmc_shape(param, data)
 }
 \arguments{
-\item{param}{a list of output items as returned by \code{outbreaker_create_mcmc}}
+\item{param}{a list of output items as returned by \code{create_mcmc}}
 
 \item{data}{a list of data items as returned by \code{outbreaker_data}}
 }

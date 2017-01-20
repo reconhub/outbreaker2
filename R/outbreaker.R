@@ -66,7 +66,6 @@ outbreaker <- function(data = outbreaker_data(),
     ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
     loglike <- create_loglike()
     priors <- create_priors(config, priors)
-    posteriors <- create_posteriors(loglike, priors)
 
     
     ## CREATE AND INITIALIZE MCMC CHAIN ##
@@ -80,7 +79,7 @@ outbreaker <- function(data = outbreaker_data(),
     ## 3 lists, for: log-likelihood, priors, and posteriors. All functions have
     ## enclosed items so that only the 'param' argument is needed.
 
-    densities <- list(loglike = loglike, priors = priors, posteriors = posteriors)
+    densities <- list(loglike = loglike, priors = priors)
 
     ## here we create a list of function for moving parameters
     moves <- create_moves(config = config, data = data, densities = densities)

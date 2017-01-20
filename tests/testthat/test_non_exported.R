@@ -49,23 +49,10 @@ test_that("Auxiliary functions for ancestries are working", {
 
     ## test ancestor selection
     set.seed(1)
-    to_move <- replicate(10,select_alpha_to_move(param,config))
+    to_move <- replicate(10, select_alpha_to_move(param,config))
     expect_equal(to_move, c(3,3,4,6,3,6,6,5,5,1))
-    to_move2 <- replicate(10,select_alpha_to_move(param,config2))
+    to_move2 <- replicate(10, select_alpha_to_move(param,config2))
     expect_equal(to_move2, c(1,1,4,3,6,3,4,6,3,6))
-
-    ## tests non swapping (imported case)
-    expect_warning(res <- outbreaker2:::swap_cases(param, config, 2))
-    expect_equal(param, res)
-
-    ## trying swap x->i to i->x when x is imported (forbidden)
-    res <- outbreaker2:::swap_cases(param, config, 1)
-    expect_equal(res$alpha, param$alpha)
-
-    ## test full swapping
-    res <- outbreaker2:::swap_cases(param, config, 3)
-    expect_equal(res$alpha, c(3,NA,2,1,1,3))
-    expect_equal(res$t_inf, c(3,1,2,4,4,3))
 
 })
 
@@ -95,30 +82,7 @@ test_that("Ancestries swapping in Rcpp works", {
     
 })
 
-## ## test check_i ##
-## test_that("Testing check_i", {
-##     ## skip on CRAN
-##     skip_on_cran()
-##
 
-##     ## generate data
-##     alpha <- c(2, NA, 1, 3, 3, 1)
-##     t_inf <- c(2, 1, 3, 4, 4, 3)
-##     data <- outbreaker_data(dates = t_inf+1)
-
-##     ## tests
-##     expect_error(check_i(data, 0:10))
-##     expect_error(check_i(data, -13))
-##     expect_error(check_i(data, 5:11))
-##     expect_error(check_i(data, c(NA,2)))
-##     expect_error(check_i(data, "1"))
-##     expect_error(check_i(data, TRUE))
-##     expect_equal(check_i(data, NULL), 1:6)
-##     expect_equal(check_i(data, 6),6)
-##     expect_equal(check_i(data, c(1,3,2)), c(1,3,2))
-##     expect_equal(check_i(data, 1:6), 1:6)
-
-## })
 
 
 
@@ -151,6 +115,8 @@ test_that("Testing find_descendents", {
 
 
 
+
+
 test_that("Testing add_convolutions", {
     ## skip on CRAN
     skip_on_cran()
@@ -158,7 +124,9 @@ test_that("Testing add_convolutions", {
 
     ## generate data
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak, outbreaker_data(dates = collecDates,
+                                                w_dens = w,
+                                                dna = dat$dna))
     config <- create_config(data = data)
 
     out <- add_convolutions(data = data, config = config)
@@ -169,6 +137,8 @@ test_that("Testing add_convolutions", {
     expect_true(!any(is.na(out$log_w_dens)))
 
 })
+
+
 
 
 

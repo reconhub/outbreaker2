@@ -54,44 +54,8 @@ create_priors <- function(config = NULL, ...) {
     priors <- modify_defaults(defaults, priors, FALSE)
     priors_names <- setdiff(names(priors), "all")
 
-    ## ## prior for mutation rate
-
-    ## if (is.null(priors$mu)) {
-    ##     priors$mu <- bind_prior_mu(config)
-    ## }
-
     
-    ## ## prior for reporting rate
-    
-    ## if (is.null(priors$pi)) {
-    ##     priors$pi <- bind_prior_pi(config)
-    ## }
-
-    
-    ## Run checks; these include making sure that:
-
-    ## - all priors are there
-    ## - all priors are functions
-    ## - all priors have a single argument 'param'
-
-
-    ## check that all priors are there
-    
-    ## priors_names <- setdiff(names(priors), "all")
-    
-    ## expected_names <- grep("prior",
-    ##                        names(create_config()),
-    ##                        value = TRUE)
-    ## expected_names <- sub("prior_", "", expected_names)
-    
-    ## if (!all(expected_names %in% priors_names)) {
-    ##     names_missing <- expected_names[!expected_names %in% priors_names]
-    ##     msg <- paste0("The following priors are missing: ",
-    ##                   paste(names_missing, collapse = ", "))
-    ##     stop(msg)
-    ## }
-
-    
+     
     ## check all priors are functions
 
     function_or_null <- function(x) {
@@ -125,21 +89,6 @@ create_priors <- function(config = NULL, ...) {
         msg <- paste0("The following priors dont' have a single argument: ",
                       paste(culprits, collapse = ", "))
         stop(msg)
-    }
-    
-
-    ## ## Function summing all priors; we only add this one if it is missing
-
-    ## if (is.null(priors$all)) {
-    ##     priors$all <- function(param) {
-    ##         sum(vapply(priors[priors_names],
-    ##                    function(f) f(param), numeric(1)),
-    ##             na.rm = TRUE)
-    ##     }
-    ## }
-
-    priors$all <- function(param) {
-        cpp_prior_all(param, config, priors)
     }
     
 

@@ -17,8 +17,7 @@ test_that("Test detection of imported cases", {
 
     ll <- create_loglike()
     priors <- create_priors(config)
-    post <- create_posteriors(ll, priors)
-    densities <- list(loglike = ll, priors = priors, posteriors = post)
+    densities <- list(loglike = ll, priors = priors)
 
     moves <- create_moves(config = config, data = data, densities = densities)
 

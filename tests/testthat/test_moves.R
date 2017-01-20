@@ -21,8 +21,7 @@ test_that("parameters and augmented data move", {
     param <- outbreaker_create_mcmc(data = data, config = config)$current
     ll <- create_loglike()
     priors <- create_priors(config)
-    post <- create_posteriors(ll, priors)
-    densities <- list(loglike = ll, priors = priors, posteriors = post)
+    densities <- list(loglike = ll, priors = priors)
 
     moves <- create_moves(config = config, data = data, densities = densities)
     moves_no_move <- create_moves(config = config_no_move, densities = densities)

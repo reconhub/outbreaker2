@@ -4,7 +4,7 @@
 ## argument 'param'; all the rest (e.g. likelihood, prior, posterior functions,
 ## config, etc) is enclosed in the functions.
 
-create_moves <- function(config, data, densities) {
+custom_moves <- function(config, data, densities) {
 
     ## These are all the functions generating various movement functions; we
     ## list them by alphabetic order.

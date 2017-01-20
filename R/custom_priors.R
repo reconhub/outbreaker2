@@ -1,33 +1,37 @@
 
 
-## This function creates a named list of prior functions with enclosed prior
-## parameters. It accepts an argument ... which can be used to pass custom prior
-## functions. If not provided, then default priors are built from using
-## 'config'. If provided, function must have a single argument 'param', which is
-## a list containing all the parameters of the models. Parameters of the priors
-## need to be either hard-coded or enclosed.
+## SPECIFYING PRIORS
+
+## There are three ways a user can specify priors:
+
+## 1) Default: this is what happens when the 'config' has default values of
+## prior parameters.
+
+## 2) Customized parameters: in this case, the prior functions are the default
+## ones from the package, but will use custom parameters, specified by the user
+## through config$prior_[parameter name]
+
+## 3) Customized functions: in this case, prior functions themselves are
+## specified by the user, through the '...' argument of 'custom_priors'. The
+## requirements is that such functions must have either hard-coded parameters or
+## enclosed values. They will take a single argument which is a list containing
+## all model parameters with the class 'outbreaker_param'.
 
 
 custom_priors <- function(config = NULL, ...) {
 
     ## This function returns a list of functions with the class
-    ## 'outbreaker_priors'. It optionally generates priors and tests some basic
-    ## properties of the prior functions. There are three ways a user can
-    ## specify priors:
+    ## 'outbreaker_priors'. It is used to process custom priors passed by the
+    ## user. Each item of the list will be a prior function. If not provided,
+    ## the default value is 'NULL', in which case c++ priors will have the
+    ## default behaviour. This function tests some basic properties of the prior
+    ## functions:
 
-    ## 1) Defaults: this is what happens when the 'config' has default values of
-    ## prior parameters.
+    ## 1) that if not NULL, the prior is a function
 
-    ## 2) Customized parameters: in this case, the prior functions are the
-    ## default ones from the package, but will use custom parameters, passed
-    ## through config$prior_[parameter name]
+    ## 2) that if a function, it has a single argument called 'param'
 
-    ## 3) Customized functions: in this case, prior functions themselves are
-    ## specified by the user, through the '...' argument. The requirements is
-    ## that such functions must have either hard-coded parameters or enclosed
-    ## values. They will take a single argument 'param', which is a list
-    ## containing all model parameters with the class 'outbreaker_param'.
-
+ 
 
     ## Get user-specified prior functions
     
@@ -52,7 +56,7 @@ custom_priors <- function(config = NULL, ...) {
                      )
     
     priors <- modify_defaults(defaults, priors, FALSE)
-    priors_names <- setdiff(names(priors), "all")
+    priors_names <- names(priors)
 
     
      
@@ -72,9 +76,9 @@ custom_priors <- function(config = NULL, ...) {
     }
 
     
-    ## check they all have a single parameter
+    ## check they all have a single argument
 
-    with_one_param <- function(x) {
+    with_one_arg <- function(x) {
         if(is.function(x)) {
             return (length(formalArgs(x)) == 1L)
         }
@@ -82,7 +86,7 @@ custom_priors <- function(config = NULL, ...) {
         return(TRUE)
     }
     
-    one_arg <- vapply(priors, with_one_param, logical(1))
+    one_arg <- vapply(priors, with_one_arg, logical(1))
 
     if (!all(one_arg)) {
         culprits <- priors_names[!one_arg]

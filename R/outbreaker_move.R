@@ -23,7 +23,6 @@ outbreaker_move <- function(moves, data, param_current,
     ## get number of moves ##
     J <- length(moves)
 
-    ##browser()
     
     ## RUN MCMC ##
     for (i in seq.int(2, config$n_iter, 1)) {

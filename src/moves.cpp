@@ -153,6 +153,7 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 
 
 
+
 // ---------------------------
 
 // Movement of infection dates are +/- 1 from current states. These movements
@@ -222,17 +223,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
     // p_accept = exp(new_loglike - old_loglike);
     p_loc_accept = exp(new_loc_loglike - old_loc_loglike);
 
-    // Rcpp::Rcout << "p_accept: " << p_accept << "  p_loc_accept: " << p_loc_accept << 
-    //   "  diff: " << p_accept - p_loc_accept << std::endl;
-    // if (abs(p_accept - p_loc_accept) > 0.01) {
-    //   Rprintf("\ndifference is: %f ", abs(p_accept - p_loc_accept));
-    //   Rprintf("\nold ll:%f, new ll:%f, old lll:%f, new lll:%f \n", 
-    // 	      old_loglike, new_loglike,
-    // 	      old_loc_loglike, new_loc_loglike);
-    //   Rcpp::Rcout << "old Tinf: " << t_inf << std::endl;
-    //   Rcpp::Rcout << "new Tinf: " << new_t_inf << std::endl;     
-    // }
-
 
     // acceptance: the new value is already in t_inf, so we only act if the move
     // is rejected, in which case we restore the previous ('old') value
@@ -292,11 +282,6 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
       // acceptance term
       p_accept = exp(new_loglike - old_loglike);
 
-      // std::vector<int> calpha = Rcpp::as<std::vector<int> >(alpha);
-      // Rcpp::Rcout << "\ni: " << i << " old1: " << old_loglike << "  new1: " << new_loglike << "  ratio1: " << p_accept << std::endl;
-      // Rcpp::Rcout << "\ni: " << i << " old2: " << old_loglike2 << "  new2: " << new_loglike2 << "  ratio2: " << p_accept2 << std::endl;
-
-      // acceptance: the new value is already in alpha, so we only act if the move is rejected, in
       // which case we restore the previous ('old') value
       if (p_accept < unif_rand()) { // reject new values
 	new_alpha[i] = alpha[i];

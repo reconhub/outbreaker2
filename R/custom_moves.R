@@ -24,12 +24,12 @@ custom_moves <- function(config, data, densities) {
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##
     ## remove move$alpha if no ancestry can be moved
     if (!any(config$move_alpha)) {
-        out$alpha <-  out$swap_cases <- NULL
+        out$alpha <- NULL
     }
 
     ## remove move$t_inf if disabled
     if (!any(config$move_t_inf)) {
-        out$t_inf <-  out$swap_cases <- NULL
+        out$t_inf <- NULL
     }
 
     ## remove move$mu if disabled
@@ -37,10 +37,8 @@ custom_moves <- function(config, data, densities) {
         out$mu <- NULL
     }
 
-    ## remove swap if disabled, or if some alpha/t_inf cannot be moved
-    if (!any(config$move_swap_cases) ||
-       !any(config$move_alpha) ||
-       !any(config$move_t_inf)) {
+    ## remove swap if disabled
+    if (!any(config$move_swap_cases)) {
         out$swap_cases <- NULL
     }
 

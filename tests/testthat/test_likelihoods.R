@@ -376,7 +376,11 @@ test_that("Customisation with identical functions works", {
     ## skip on CRAN
     skip_on_cran()
 
-    ## generate data ##
+    ## check custom_likelihoods
+    expect_identical(custom_likelihoods(),
+                     custom_likelihoods(custom_likelihoods()))
+    
+    ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak,
                  outbreaker_data(dates = collecDates,

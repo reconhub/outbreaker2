@@ -102,19 +102,19 @@ custom_likelihoods <- function(...) {
     
     ## check they all have a single argument
 
-    with_one_arg <- function(x) {
+    with_two_args <- function(x) {
         if(is.function(x)) {
-            return (length(formalArgs(x)) == 1L)
+            return (length(formalArgs(x)) == 2L)
         }
         
         return(TRUE)
     }
     
-    one_arg <- vapply(likelihoods, with_one_arg, logical(1))
+    two_args <- vapply(likelihoods, with_two_args, logical(1))
 
-    if (!all(one_arg)) {
-        culprits <- likelihoods_names[!one_arg]
-        msg <- paste0("The following likelihoods dont' have a single argument: ",
+    if (!all(two_args)) {
+        culprits <- likelihoods_names[!two_args]
+        msg <- paste0("The following likelihoods dont' have two arguments: ",
                       paste(culprits, collapse = ", "))
         stop(msg)
     }

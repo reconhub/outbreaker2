@@ -279,3 +279,55 @@ test_that("results ok: outbreaker with custom priors",
     expect_true(smry_2$pi[2] > 0.2 && smry_2$pi[5] < 0.6)
     
 })
+
+
+
+
+
+
+
+
+test_that("results ok: outbreaker with zero-returning priors and likelihoods",
+{
+    ## skip on CRAN
+    skip_on_cran()
+    
+    
+    ## get data
+    
+    data(fake_outbreak)
+    dat <- fake_outbreak$dat
+    w <- fake_outbreak$w
+
+   
+    data <- list(dna = dat$dna, dates = dat$onset, w_dens = w)
+
+    config <-  list(n_iter = 100, sample_every = 1,
+                    init_tree = "star", move_kappa = TRUE,
+                    move_pi = TRUE, init_pi = 1,
+                    find_import = FALSE)
+
+    
+    ## custom functions
+
+    f1 <- function(x) return(0.0)
+    f2 <- function(x, y) return(0.0)
+    f3 <- function(x) return(1.123)
+    
+    priors1 <- custom_priors(mu = f1, pi = f1)
+    priors2 <- custom_priors(mu = f1, pi = f3)
+    
+    ll <- custom_likelihoods(genetic = f2,
+                             timing_infections = f2,
+                             timing_sampling = f2,
+                             reporting = f2)
+
+    
+    ## tests    
+    out1 <- outbreaker(data, config, priors1, ll)
+    out2 <- outbreaker(data, config, priors2, ll)
+
+    expect_true(all(out1$post == 0))
+    expect_true(all(out2$post == 1.123))
+    
+})

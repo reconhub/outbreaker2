@@ -14,7 +14,7 @@
 #'
 #' @export
 #'
-outbreaker_mcmc_store <- function(param_current, param_store, densities, step) {
+outbreaker_mcmc_store <- function(param_current, param_store, data, config, densities, step) {
     ## UPDATE COUNTER
     counter <- param_store$counter <- param_store$counter + 1
 
@@ -22,8 +22,8 @@ outbreaker_mcmc_store <- function(param_current, param_store, densities, step) {
     param_store$step[counter] <- step
 
     ## STORE LIKELIHOOD, PRIOR, POSTERIOR
-    param_store$like[counter] <- densities$loglike$all(param_current)
-    param_store$prior[counter] <- densities$priors$all(param_current)
+    param_store$like[counter] <- cpp_ll_all(data, param_current, NULL, densities$loglike)
+    param_store$prior[counter] <- cpp_prior_all(param_current, config, densities$priors)
     param_store$post[counter] <- param_store$like[counter] + param_store$prior[counter]
 
     ## PARAMETERS AND AUGMENTED DATA

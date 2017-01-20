@@ -4,7 +4,7 @@
 ## argument 'param'; all the rest (e.g. likelihood, prior, posterior functions,
 ## config, etc) is enclosed in the functions.
 
-create_moves <- function(config, densities) {
+create_moves <- function(config, data, densities) {
 
     ## These are all the functions generating various movement functions; we
     ## list them by alphabetic order.
@@ -18,7 +18,7 @@ create_moves <- function(config, densities) {
                      kappa = make_move_kappa
                      )
 
-    out <- lapply(default_functions, function(f) f(config, densities))
+    out <- lapply(default_functions, function(f) f(config, data, densities))
 
 
     ## REMOVE FUNCTIONS IF MOVEMENTS DISABLED ##

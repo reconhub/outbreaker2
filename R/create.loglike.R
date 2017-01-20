@@ -53,19 +53,37 @@
 ## This function creates a named list of log-likelihood functions with enclosed
 ## data
 
-create_loglike <- function(data) {
+create_loglike <- function(...) {
 
     ## These are all the functions generating various log-likelihood functions;
     ## we list them by alphabetic order
 
-    default_functions <- list(genetic = bind_ll_genetic,
-                              reporting = bind_ll_reporting,
-                              timing_infections = bind_ll_timing_infections,
-                              timing_sampling = bind_ll_timing_sampling,
-                              timing = bind_ll_timing,
-                              all = bind_ll_all
-                              )
+    ## default_functions <- list(genetic = bind_ll_genetic,
+    ##                           reporting = bind_ll_reporting,
+    ##                           timing_infections = bind_ll_timing_infections,
+    ##                           timing_sampling = bind_ll_timing_sampling,
+    ##                           timing = bind_ll_timing,
+    ##                           all = bind_ll_all
+    ##                           )
 
-    lapply(default_functions, function(f) f(data))
+    ## lapply(default_functions, function(f) f(data))
+  
+    ll_functions <- list(...)
+    
+    if (length(ll_functions) == 1L && is.list(ll_functions[[1]])) {
+        ll_functions <- ll_functions[[1]]
+    }
+    
 
+    defaults <- list(genetic = NULL,
+                     reporting = NULL,
+                     timing_infections = NULL,
+                     timing_sampling = NULL
+                     )
+
+    ## out <-  modify_defaults(defaults, ll_functions, FALSE)
+
+    out <- defaults
+
+    return(out)
 }

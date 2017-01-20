@@ -64,7 +64,7 @@ outbreaker <- function(data = outbreaker_data(),
     data <- add_convolutions(data = data, config = config)
 
     ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
-    loglike <- create_loglike(data)
+    loglike <- create_loglike()
     priors <- create_priors(config, priors)
     posteriors <- create_posteriors(loglike, priors)
 
@@ -73,7 +73,7 @@ outbreaker <- function(data = outbreaker_data(),
     temp <- outbreaker_create_mcmc(data = data, config = config)
     param_store <- temp$store
     param_current <- temp$current
-    param_store <- outbreaker_init_mcmc(param_current, param_store, loglike, priors, config)
+    param_store <- outbreaker_init_mcmc(data, param_current, param_store, loglike, priors, config)
 
 
     ## We put all density functions in a single list 'densities'. This includes
@@ -83,7 +83,7 @@ outbreaker <- function(data = outbreaker_data(),
     densities <- list(loglike = loglike, priors = priors, posteriors = posteriors)
 
     ## here we create a list of function for moving parameters
-    moves <- create_moves(config = config, densities = densities)
+    moves <- create_moves(config = config, data = data, densities = densities)
 
 
     ## IMPORTS 

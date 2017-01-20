@@ -46,7 +46,7 @@ outbreaker_move <- function(moves, data, param_current,
 
         ## store outputs if needed
         if ((i %% config$sample_every) == 0) {
-            param_store <- outbreaker_mcmc_store(param_current, param_store, densities, i)
+            param_store <- outbreaker_mcmc_store(param_current, param_store, data, config, densities, i)
         }
 
     } # end of the chain

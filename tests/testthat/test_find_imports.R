@@ -15,12 +15,12 @@ test_that("Test detection of imported cases", {
     param_current <- temp$current
     param_store <- temp$store
 
-    ll <- create_loglike(data)
+    ll <- create_loglike()
     priors <- create_priors(config)
     post <- create_posteriors(ll, priors)
     densities <- list(loglike = ll, priors = priors, posteriors = post)
 
-    moves <- create_moves(config = config, densities = densities)
+    moves <- create_moves(config = config, data = data, densities = densities)
 
     ## detect imported cases
     out <- outbreaker_find_imports(moves = moves, data = data,

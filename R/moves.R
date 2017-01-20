@@ -26,8 +26,7 @@
 ## but really provided through 'config', seems fine as the range of real values
 ## will never change much. Probably not much point in using auto-tuning here.
 
-make_move_mu <- function(config, densities) {
-    data <- environment(densities$loglike$genetic)$data
+make_move_mu <- function(config, data, densities) {
     prior <- densities$priors$mu
     ## .move_mu(config, densities) # uncomment for pure R version
     function(param) {
@@ -43,8 +42,7 @@ make_move_mu <- function(config, densities) {
 ## this may not be sustainable for larger datasets. The non-vectorised option
 ## will be slower and speed-up with C/C++ will be more substantial then.
 
-make_move_t_inf <- function(config, densities) {
-    data <- environment(densities$loglike$timing)$data
+make_move_t_inf <- function(config, data, densities) {
     ## .move_t_inf(config, densities)
     function(param) {
         cpp_move_t_inf(data, param)
@@ -64,8 +62,7 @@ make_move_t_inf <- function(config, densities) {
 ## of 'alpha' needs this procedure as well as a swapping procedure (swaps are
 ## not possible through move_alpha only).
 
-make_move_alpha <- function(config, densities) {
-    data <- environment(densities$loglike$timing)$data
+make_move_alpha <- function(config, data, densities) {
     ## .move_alpha(config, densities)
     function(param) {
         cpp_move_alpha(data, param)
@@ -86,8 +83,7 @@ make_move_alpha <- function(config, densities) {
 ## changes for this move to scale well with outbreak size. The complicated bit
 ## is that the move impacts all descendents from 'a' as well as 'x'.
 
-make_move_swap_cases <- function(config, densities) {
-    data <- environment(densities$loglike$timing)$data
+make_move_swap_cases <- function(config, data, densities) {
     ##.move_swap_cases(config, densities) # uncomment for pure R version
     function(param) {
         cpp_move_swap_cases(data, param)
@@ -105,8 +101,7 @@ make_move_swap_cases <- function(config, densities) {
 ## proposed here, so it may not be worth it to use a non-symmetric proposal
 ## (e.g. log-normal).
 
-make_move_pi <- function(config, densities) {
-    data <- environment(densities$loglike$genetic)$data
+make_move_pi <- function(config, data, densities) {
     prior <- densities$priors$pi
     ##.move_pi(config, densities) # uncomment for pure R version
     function(param) {
@@ -125,8 +120,7 @@ make_move_pi <- function(config, densities) {
 ## range (e.g. [1-3]) we probably propose more dumb values here. We may
 ## eventually want to bounce back or use and correct for assymetric proposals.
 
-make_move_kappa <- function(config, densities) {
-    data <- environment(densities$loglike$genetic)$data
+make_move_kappa <- function(config, data, densities) {
     ##.move_kappa(config, densities) # uncomment for pure R version
     function(param) {
         cpp_move_kappa(data, param, config)

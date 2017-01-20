@@ -287,7 +287,7 @@ test_that("results ok: outbreaker with custom priors",
 
 
 
-test_that("results ok: outbreaker with zero-returning priors and likelihoods",
+test_that("results ok: outbreaker with fixed number returning priors and likelihoods",
 {
     ## skip on CRAN
     skip_on_cran()

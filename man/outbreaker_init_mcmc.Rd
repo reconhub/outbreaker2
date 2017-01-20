@@ -7,7 +7,7 @@
 outbreaker_init_mcmc(param_current, param_store, loglike, priors)
 }
 \arguments{
-\item{loglike}{a list of loglikelihood functions with enclosed data as returned by \code{create_loglike}}
+\item{loglike}{a list of loglikelihood functions with enclosed data as returned by \code{custom_likelihood}}
 
 \item{priors}{a list of prior functions with enclosed parameters as returned by \code{custom_priors}}
 

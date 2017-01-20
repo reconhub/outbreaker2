@@ -18,7 +18,7 @@
 ## all model parameters with the class 'outbreaker_param'.
 
 
-custom_priors <- function(config = NULL, ...) {
+custom_priors <- function(...) {
 
     ## This function returns a list of functions with the class
     ## 'outbreaker_priors'. It is used to process custom priors passed by the
@@ -40,12 +40,6 @@ custom_priors <- function(config = NULL, ...) {
         priors <- priors[[1]]
     }
     
-
-    ## Handle config; if config is NULL this will create a default config;
-    ## otherwise it processes it and goes through a bunch of checks
-
-    config <- create_config(config)
-
 
     ## Use user-provided priors where provided, default otherwise. The default
     ## for a prior is NULL, in which case the movement functions in C++ will use

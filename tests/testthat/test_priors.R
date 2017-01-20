@@ -57,7 +57,7 @@ test_that("Prior customisation.", {
     ## check default config
     config <- create_config()
     expect_equal(custom_priors(),
-                     custom_priors(config))
+                     custom_priors())
 
     ## check errors
     msg <- "The following priors are not functions: mu"

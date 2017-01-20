@@ -52,7 +52,8 @@
 #' }
 outbreaker <- function(data = outbreaker_data(),
                        config = create_config(),
-                       priors = custom_priors()) {
+                       priors = custom_priors(),
+                       likelihoods = custom_likelihoods()) {
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker_data(data = data)
@@ -63,9 +64,9 @@ outbreaker <- function(data = outbreaker_data(),
     ## ADD CONVOLUTIONS TO DATA ##
     data <- add_convolutions(data = data, config = config)
 
-    ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
-    loglike <- custom_likelihoods()
-    priors <- custom_priors(config, priors)
+    ## PROCESS CUSTOM FUNCTIONS FOR PRIORS AND LIKELIHOOD ##
+    priors <- custom_priors(priors)
+    loglike <- custom_likelihoods(likelihoods)
 
     
     ## CREATE AND INITIALIZE MCMC CHAIN ##

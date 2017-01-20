@@ -20,7 +20,7 @@ test_that("parameters and augmented data move", {
     data <- add_convolutions(data = data, config = config)
     param <- create_mcmc(data = data, config = config)$current
     ll <- custom_likelihoods()
-    priors <- custom_priors(config)
+    priors <- custom_priors()
     densities <- list(loglike = ll, priors = priors)
 
     moves <- custom_moves(config = config, data = data, densities = densities)

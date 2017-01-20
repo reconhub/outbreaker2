@@ -364,10 +364,65 @@ test_that("likelihood functions return -Inf when needed", {
     expect_equal(out_all_few_cases, ref_few_cases)
     expect_equal(out_all_rnd_cases, ref_rnd_cases)
 
-
-
 })
 
 
 
 
+
+
+test_that("Customisation with identical functions works", {
+
+    ## skip on CRAN
+    skip_on_cran()
+
+    ## generate data ##
+    data(fake_outbreak)
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
+    config <- create_config(data = data, init_mu = 0.543e-4)
+    param <- create_mcmc(data = data, config = config)$current
+    few_cases <- as.integer(c(1,3,4))
+    rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
+
+  
+    ## generate custom functions with 2 arguments
+    f_genetic <- function(data,param) cpp_ll_genetic(data, param)
+    f_timing_infections = function(data,param) cpp_ll_timing_infections(data, param)
+    f_timing_sampling = function(data,param) cpp_ll_timing_sampling(data, param)
+    f_reporting = function(data,param) cpp_ll_reporting(data, param)
+    
+    list_functions <- custom_likelihoods(genetic = f_genetic,
+                       timing_infections = f_timing_infections,
+                       timing_sampling = f_timing_sampling,
+                       reporting = f_reporting)
+
+
+    ## tests
+    expect_equal(cpp_ll_genetic(data, param),
+                 cpp_ll_genetic(data, param, , f_genetic))
+
+    expect_equal(cpp_ll_timing_infections(data, param),
+                 cpp_ll_timing_infections(data, param, , f_timing_infections))
+    
+
+    expect_equal(cpp_ll_timing_sampling(data, param),
+                 cpp_ll_timing_sampling(data, param, , f_timing_sampling))
+    
+    expect_equal(cpp_ll_timing_sampling(data, param),
+                 cpp_ll_timing_sampling(data, param, , f_timing_sampling))
+    
+    expect_equal(cpp_ll_reporting(data, param),
+                 cpp_ll_reporting(data, param, , f_reporting))
+    
+    expect_equal(cpp_ll_timing(data, param),
+                 cpp_ll_timing(data, param, , list_functions))
+
+    expect_equal(cpp_ll_all(data, param),
+                 cpp_ll_all(data, param, , list_functions))
+    
+
+    
+})

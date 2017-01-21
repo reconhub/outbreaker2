@@ -104,7 +104,7 @@ custom_likelihoods <- function(...) {
 
     with_two_args <- function(x) {
         if(is.function(x)) {
-            return (length(formalArgs(x)) == 2L)
+            return (length(methods::formalArgs(x)) == 2L)
         }
         
         return(TRUE)

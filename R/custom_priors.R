@@ -74,7 +74,7 @@ custom_priors <- function(...) {
 
     with_one_arg <- function(x) {
         if(is.function(x)) {
-            return (length(formalArgs(x)) == 1L)
+            return (length(methods::formalArgs(x)) == 1L)
         }
         
         return(TRUE)

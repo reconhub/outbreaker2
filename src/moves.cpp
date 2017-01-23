@@ -33,7 +33,8 @@
 
 // [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
-		       Rcpp::RObject custom_prior) {
+		       Rcpp::RObject custom_ll = R_NilValue,
+		       Rcpp::RObject custom_prior = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
   Rcpp::List new_param = clone(param); 
@@ -57,8 +58,8 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 
    
   // compute likelihoods
-  old_logpost = cpp_ll_genetic(data, param, R_NilValue);
-  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue);
+  old_logpost = cpp_ll_genetic(data, param, R_NilValue, custom_ll);
+  new_logpost = cpp_ll_genetic(data, new_param, R_NilValue, custom_ll);
 
 
   // compute priors
@@ -98,7 +99,8 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 
 // [[Rcpp::export(rng = true)]]
 Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
-		       Rcpp::RObject custom_prior) {
+		       Rcpp::RObject custom_ll = R_NilValue,
+		       Rcpp::RObject custom_prior = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
 
@@ -124,8 +126,8 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 
   
   // compute likelihoods
-  old_logpost = cpp_ll_reporting(data, param, R_NilValue);
-  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue);
+  old_logpost = cpp_ll_reporting(data, param, R_NilValue, custom_ll);
+  new_logpost = cpp_ll_reporting(data, new_param, R_NilValue, custom_ll);
 
 
   // compute priors
@@ -176,7 +178,8 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 // previous pointer defining param["t_inf"].
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
+Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param,
+			  Rcpp::RObject list_custom_ll = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
   
@@ -199,11 +202,11 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
     // loglike with current value
     // old_loglike = cpp_ll_timing(data, param, R_NilValue);
-    old_loc_loglike = cpp_ll_timing(data, param, i+1); // term for case 'i' with offset
+    old_loc_loglike = cpp_ll_timing(data, param, i+1, list_custom_ll); // term for case 'i' with offset
 
     // term descendents of 'i'
     if (local_cases.size() > 0) {
-      old_loc_loglike += cpp_ll_timing(data, param, local_cases);
+      old_loc_loglike += cpp_ll_timing(data, param, local_cases, list_custom_ll);
     }
 
     // proposal (+/- 1)
@@ -211,11 +214,11 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 
     // loglike with new value
     // new_loglike = cpp_ll_timing(data, new_param, R_NilValue);
-    new_loc_loglike = cpp_ll_timing(data, new_param, i+1); // term for case 'i' with offset
+    new_loc_loglike = cpp_ll_timing(data, new_param, i+1, list_custom_ll); // term for case 'i' with offset
 
     // term descendents of 'i'
     if (local_cases.size() > 0) {
-      new_loc_loglike += cpp_ll_timing(data, new_param, local_cases);
+      new_loc_loglike += cpp_ll_timing(data, new_param, local_cases, list_custom_ll);
     }
 
 
@@ -253,7 +256,8 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param) {
 // is on the scale 1:N.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
+Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param, 
+			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
@@ -271,13 +275,13 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 
       // loglike with current value
       // old_loglike = cpp_ll_all(data, param, R_NilValue);
-      old_loglike = cpp_ll_all(data, param, i+1); // offset
+      old_loglike = cpp_ll_all(data, param, i+1, list_custom_ll); // offset
 
       // proposal (+/- 1)
       new_alpha[i] = cpp_pick_possible_ancestor(t_inf, i+1); // new proposed value (on scale 1 ... N)
 
       // loglike with current value
-      new_loglike = cpp_ll_all(data, new_param, i+1);
+      new_loglike = cpp_ll_all(data, new_param, i+1, list_custom_ll);
 
       // acceptance term
       p_accept = exp(new_loglike - old_loglike);
@@ -312,7 +316,8 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param) {
 // is that the move impacts all descendents from 'a' as well as 'x'.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
+Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param,
+			       Rcpp::RObject list_custom_ll = R_NilValue) {
 
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
@@ -343,7 +348,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 
       // loglike with current parameters
 
-      old_loglike = cpp_ll_all(data, param, local_cases); // offset
+      old_loglike = cpp_ll_all(data, param, local_cases, list_custom_ll); // offset
 
 
       // proposal: swap case 'i' and its ancestor
@@ -355,7 +360,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
       
       // loglike with new parameters
 
-      new_loglike = cpp_ll_all(data, new_param, local_cases);
+      new_loglike = cpp_ll_all(data, new_param, local_cases, list_custom_ll);
       
       
       // acceptance term
@@ -391,7 +396,8 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param) {
 // eventually want to bounce back or use and correct for assymetric proposals.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) {
+Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
+			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector kappa = param["kappa"]; // pointer to param$kappa
@@ -423,11 +429,11 @@ Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config) 
       } else {
 	
 	// loglike with current parameters	
-	old_loglike = cpp_ll_all(data, param, i+1);
+	old_loglike = cpp_ll_all(data, param, i+1, list_custom_ll);
 
 
 	// loglike with new parameters
-	new_loglike = cpp_ll_all(data, new_param, i+1);
+	new_loglike = cpp_ll_all(data, new_param, i+1, list_custom_ll);
 
 				 
 	// acceptance term

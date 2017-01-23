@@ -24,8 +24,8 @@ test_that("Function binding throws errors as expected", {
     expect_error(bind_to_function(cpp_ll_genetic, data), msg)
 
     msg <- paste("Arguments of cpp_move_mu are missing from '...'",
-                  "and have no default: custom_prior")
-    expect_error(bind_to_function(cpp_move_mu, data = data, config = config),
+                  "and have no default: config")
+    expect_error(bind_to_function(cpp_move_mu, data = data),
                  msg)
 
 })

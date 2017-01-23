@@ -63,4 +63,4 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		  Rcpp::RObject custom_functions = R_NilValue);
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, size_t i,
-		  Rcpp::RObject custom_function = R_NilValue);
+		  Rcpp::RObject custom_functions = R_NilValue);

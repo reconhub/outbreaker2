@@ -54,7 +54,7 @@ outbreaker <- function(data = outbreaker_data(),
                        config = create_config(),
                        priors = custom_priors(),
                        likelihoods = custom_likelihoods(),
-                       moves = NULL
+                       moves = custom_moves()
                        ) {
 
     ## CHECKS / PROCESS DATA ##
@@ -80,8 +80,8 @@ outbreaker <- function(data = outbreaker_data(),
 
 
     ## here we create a list of function for moving parameters
-    moves <- create_moves(moves, config = config, data = data,
-                          likelihoods = loglike, priors = priors)
+    moves <- bind_moves(moves, config = config, data = data,
+                        likelihoods = loglike, priors = priors)
 
 
     ## IMPORTS 

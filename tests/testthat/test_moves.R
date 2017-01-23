@@ -23,9 +23,9 @@ test_that("parameters and augmented data move", {
     ll <- custom_likelihoods()
     priors <- custom_priors()
 
-    moves <- create_moves(config = config, data = data,
+    moves <- bind_moves(config = config, data = data,
                           likelihoods = ll, priors = priors)
-    moves_no_move <- create_moves(config = config_no_move,
+    moves_no_move <- bind_moves(config = config_no_move,
                                   likelihoods = ll, priors = priors)
 
 

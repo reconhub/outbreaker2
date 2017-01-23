@@ -15,9 +15,9 @@
 ## #' \item{param}{a list of parameters as returned by \code{create_mcmc}}
 ## #' }
 ## #'
-## #' Note that unlike \code{create_moves}, likelihood functions have no
+## #' Note that unlike \code{bind_moves}, likelihood functions have no
 ## #' mandatory names. They only need to be compatible with the movement functions
-## #' used in \code{create_moves}. See 'details' for defaults.
+## #' used in \code{bind_moves}. See 'details' for defaults.
 ## #'
 ## #' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
 ## #'

@@ -5,7 +5,7 @@
 #' 'param'. This is used to reduce the number of arguments passed around to
 #' likelihood or movement functions. This is needed when using custom functions
 #' via \code{\link{custom_priors}}, \code{\link{custom_likelihoods}}, or
-#' \code{\link{create_moves}}.
+#' \code{\link{bind_moves}}.
 #' 
 #' @param f The function to which arguments are bound.
 #' 

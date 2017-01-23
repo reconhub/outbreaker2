@@ -19,7 +19,7 @@ test_that("Test detection of imported cases", {
     priors <- custom_priors()
     densities <- list(loglike = ll, priors = priors)
 
-    moves <- create_moves(config = config, data = data,
+    moves <- bind_moves(config = config, data = data,
                           likelihoods = ll,
                           priors = priors)
 

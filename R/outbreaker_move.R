@@ -6,7 +6,7 @@
 #'
 #' @inheritParams create_mcmc
 #'
-#' @param moves a list of movement functions as returned by \code{custom_moves}
+#' @param moves a list of movement functions as returned by \code{create_moves}
 #'     (internal function)
 #'
 #' @param param a list of parameters as returned by
@@ -19,7 +19,8 @@
 #'     \code{create_mcmc}
 #'
 outbreaker_move <- function(moves, data, param_current,
-                            param_store, config, densities) {
+                            param_store, config,
+                            likelihoods, priors) {
     ## get number of moves ##
     J <- length(moves)
 
@@ -45,7 +46,8 @@ outbreaker_move <- function(moves, data, param_current,
 
         ## store outputs if needed
         if ((i %% config$sample_every) == 0) {
-            param_store <- outbreaker_mcmc_store(param_current, param_store, data, config, densities, i)
+            param_store <- outbreaker_mcmc_store(param_current, param_store, data,
+                                                 config, likelihoods, priors, i)
         }
 
     } # end of the chain

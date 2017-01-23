@@ -4,7 +4,7 @@
 ## argument 'param'; all the rest (e.g. likelihood, prior, posterior functions,
 ## config, etc) is enclosed in the functions.
 
-custom_moves <- function(config, data, likelihoods, priors) {
+create_moves <- function(..., config, data, likelihoods, priors) {
 
     ## These are all the functions generating various movement functions; we
     ## list them by alphabetic order.
@@ -17,8 +17,12 @@ custom_moves <- function(config, data, likelihoods, priors) {
                      kappa = cpp_move_kappa
                      )
 
-    ## out <- modify_defaults(defaults, custom_moves)
-    out <- defaults
+    ## Note: it is impossible to predict what custom likelihood or priors should
+    ## be enclosed with a new type of movement; for now we restrict movements to
+    ## those listed in defaults.
+    
+    custom_moves <- list(...)
+    out <- modify_defaults(defaults, custom_moves, TRUE)
     
    
     ## Binding:
@@ -99,7 +103,7 @@ custom_moves <- function(config, data, likelihoods, priors) {
     }
 
 
-    ## the output is a list of movement functions with enclosed stuff ##
+    ## the output is a list of movement functions with enclosed objects ##
     return(out)
 
 }

@@ -393,10 +393,10 @@ test_that("Customisation with identical functions works", {
 
   
     ## generate custom functions with 2 arguments
-    f_genetic <- function(data,param) cpp_ll_genetic(data, param)
-    f_timing_infections = function(data,param) cpp_ll_timing_infections(data, param)
-    f_timing_sampling = function(data,param) cpp_ll_timing_sampling(data, param)
-    f_reporting = function(data,param) cpp_ll_reporting(data, param)
+    f_genetic <- function(data, param) cpp_ll_genetic(data, param)
+    f_timing_infections  <-  function(data, param) cpp_ll_timing_infections(data, param)
+    f_timing_sampling  <-  function(data, param) cpp_ll_timing_sampling(data, param)
+    f_reporting  <-  function(data, param) cpp_ll_reporting(data, param)
     
     list_functions <- custom_likelihoods(genetic = f_genetic,
                        timing_infections = f_timing_infections,

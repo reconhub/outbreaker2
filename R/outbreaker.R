@@ -25,7 +25,7 @@
 #'     by \code{\link{custom_priors}}
 
 ## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker_create_posteriors}}
-## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker_custom_moves}}
+## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker_create_mcmc}}
 ## #'
 #' @seealso \code{\link{create_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
 #'
@@ -53,7 +53,9 @@
 outbreaker <- function(data = outbreaker_data(),
                        config = create_config(),
                        priors = custom_priors(),
-                       likelihoods = custom_likelihoods()) {
+                       likelihoods = custom_likelihoods(),
+                       moves = NULL
+                       ) {
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker_data(data = data)
@@ -73,17 +75,12 @@ outbreaker <- function(data = outbreaker_data(),
     temp <- create_mcmc(data = data, config = config)
     param_store <- temp$store
     param_current <- temp$current
-    param_store <- outbreaker_init_mcmc(data, param_current, param_store, loglike, priors, config)
+    param_store <- outbreaker_init_mcmc(data, param_current, param_store,
+                                        loglike, priors, config)
 
-
-    ## We put all density functions in a single list 'densities'. This includes
-    ## 3 lists, for: log-likelihood, priors, and posteriors. All functions have
-    ## enclosed items so that only the 'param' argument is needed.
-
-    densities <- list(loglike = loglike, priors = priors)
 
     ## here we create a list of function for moving parameters
-    moves <- custom_moves(config = config, data = data,
+    moves <- create_moves(..., config = config, data = data,
                           likelihoods = loglike, priors = priors)
 
 
@@ -104,6 +101,7 @@ outbreaker <- function(data = outbreaker_data(),
     param_store <- temp$param_store
     config <- temp$config
 
+    
     ## PERFORM MCMC
     
     ## procedure is the same as before, with some cases fixed as 'imported'
@@ -113,7 +111,8 @@ outbreaker <- function(data = outbreaker_data(),
                                    param_current = param_current,
                                    param_store = param_store,
                                    config = config,
-                                   densities = densities)
+                                   likelihoods = loglike,
+                                   priors = priors)
 
 
     ## SHAPE RESULTS

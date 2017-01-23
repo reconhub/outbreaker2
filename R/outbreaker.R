@@ -83,7 +83,8 @@ outbreaker <- function(data = outbreaker_data(),
     densities <- list(loglike = loglike, priors = priors)
 
     ## here we create a list of function for moving parameters
-    moves <- custom_moves(config = config, data = data, densities = densities)
+    moves <- custom_moves(config = config, data = data,
+                          likelihoods = loglike, priors = priors)
 
 
     ## IMPORTS 

@@ -32,7 +32,7 @@
 // will never change much. Probably not much point in using auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
+Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config, 
 		       Rcpp::RObject custom_ll = R_NilValue,
 		       Rcpp::RObject custom_prior = R_NilValue) {
 
@@ -98,7 +98,7 @@ Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 // auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
+Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config, 
 		       Rcpp::RObject custom_ll = R_NilValue,
 		       Rcpp::RObject custom_prior = R_NilValue) {
 
@@ -178,7 +178,7 @@ Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config,
 // previous pointer defining param["t_inf"].
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param,
+Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
@@ -256,7 +256,7 @@ Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param,
 // is on the scale 1:N.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param, 
+Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data, 
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
@@ -316,7 +316,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param,
 // is that the move impacts all descendents from 'a' as well as 'x'.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param,
+Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
 			       Rcpp::RObject list_custom_ll = R_NilValue) {
 
   Rcpp::List new_param = clone(param);
@@ -396,7 +396,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param,
 // eventually want to bounce back or use and correct for assymetric proposals.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config, 
+Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config, 
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha

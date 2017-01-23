@@ -210,7 +210,7 @@ test_that("results ok: kappa and pi", {
 
 
     ## get data
-    onset <- c(0, 2, 6, 14)
+    onset <- c(0, 2, 6, 13)
     w <- c(.25, .5, .25)
     
     ## outbreaker, no missing cases, detect imported cases ##
@@ -221,6 +221,7 @@ test_that("results ok: kappa and pi", {
     config <- list(n_iter = 10000, sample_every = 50, init_tree = "star",
                    move_kappa = TRUE, move_pi = TRUE, init_pi = 1,
                    find_import = FALSE, max_kappa = 10)
+    
     
     out <- outbreaker(data, config)
     

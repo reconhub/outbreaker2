@@ -21,13 +21,24 @@
 #' @export
 #' 
 bind_to_function <- function(f, ...) {
+
+    ## We isolate the arguments of 'f' and identify those without defaults,
+    ## which need to be provided through '...'. Arguments of 'f' which have a
+    ## default value will be replaced with content of '...' if provided. The
+    ## function returned is a closure with a single argument 'param', and with
+    ## all non-default arguments in its environment.
+    
+    dots <- list(...)
+    dots_names <- names(dots)
+    f_args <- setdiff(names(formals(f)), "param")
+    have_no_default <- vapply(formals(f)[f_args], is.symbol, logical(1))
+    f_args_no_default <- names(have_no_default)[have_no_default]
+
+
     ## CHECKS ##
     if (is.primitive(f)) {
         stop("Cannot use with primitive functions")
     }
-    dots <- list(...)
-    dots_names <- names(dots)
-    f_args <- names(formals(f))
 
     ## Nothing to do if nothing provided
     if (length(dots) == 0) {
@@ -44,8 +55,9 @@ bind_to_function <- function(f, ...) {
 
     ## Name duplication is not allowed
     if (any(duplicated(dots_names))) {
-        stop("Duplicated formal arguments: ",
+        msg <- sprintf("Duplicated formal arguments: ",
              collapse(unique(dots_names[duplicated(dots_names)])))
+        stop(msg)
     }
 
     ## ... cannot contain 'param'
@@ -53,12 +65,18 @@ bind_to_function <- function(f, ...) {
         stop("'...' cannot contain an argument 'param'")
     }
 
-    ## make sure all arguments of 'f' but 'param' are in '...' 
-    if (!identical(setdiff(f_args, dots_names), "param")) {
-        missing_args <- paste(setdiff(f_args, dots_names), collapse = ", ")
-        stop("Arguments of %s are missing %s from '...': ",
+    
+    ## make sure all arguments of 'f' which don't have default values but
+    ## 'param' are in '...'
+    
+    are_missing <- !f_args_no_default %in% dots_names
+    if (any(are_missing)) {
+        missing_args <- f_args_no_default[are_missing] 
+        missing_args <- paste(missing_args, collapse = ", ")
+        msg <- sprintf("Arguments of %s are missing from '...' and have no default: %s",
              deparse(substitute(f)),
              missing_args)
+        stop(msg)
     }
 
     ## remove arguments that are not part of 'f'

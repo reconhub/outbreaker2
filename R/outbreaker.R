@@ -99,7 +99,7 @@ outbreaker <- function(data = outbreaker_data(),
                                     param_current = param_current,
                                     param_store = param_store,
                                     config = config,
-                                    densities = densities)
+                                    likelihoods = loglike)
     param_current <- temp$param_current
     param_store <- temp$param_store
     config <- temp$config

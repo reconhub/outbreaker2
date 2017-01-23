@@ -19,13 +19,15 @@ test_that("Test detection of imported cases", {
     priors <- custom_priors()
     densities <- list(loglike = ll, priors = priors)
 
-    moves <- custom_moves(config = config, data = data, densities = densities)
+    moves <- custom_moves(config = config, data = data,
+                          likelihoods = ll,
+                          priors = priors)
 
     ## detect imported cases
     out <- outbreaker_find_imports(moves = moves, data = data,
                                    param_current = param_current,
                                    param_store = param_store,
-                                   config = config, densities = densities)
+                                   config = config, likelihoods = ll)
 
     ## tests ##
     expect_identical(which(!out$config$move_alpha), which(!out$config$move_kappa))

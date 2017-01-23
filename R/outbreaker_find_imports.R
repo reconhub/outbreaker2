@@ -8,7 +8,9 @@
 ## which the ancestor will be 'NA'.
 
 
-outbreaker_find_imports <- function(moves, data, param_current, param_store, config, densities) {
+outbreaker_find_imports <- function(moves, data, param_current,
+                                    param_store, config,
+                                    likelihoods) {
     ## send back unchanged chains if config disabled the detection of imported cases ##
     if (!config$find_import) {
         return(list(config = config,
@@ -49,7 +51,7 @@ outbreaker_find_imports <- function(moves, data, param_current, param_store, con
         ## store outputs if needed
         if ((i %% config$sample_every_import) == 0 && i>1000) {
             influences[counter,] <- - vapply(seq_len(data$N),
-                                             function(i) cpp_ll_all(data, param_current, i, densities$loglike),
+                                             function(i) cpp_ll_all(data, param_current, i, likelihoods),
                                              numeric(1))
             counter <- counter + 1L
         }

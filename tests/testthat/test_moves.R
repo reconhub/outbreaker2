@@ -22,10 +22,11 @@ test_that("parameters and augmented data move", {
     param <- create_mcmc(data = data, config = config)$current
     ll <- custom_likelihoods()
     priors <- custom_priors()
-    densities <- list(loglike = ll, priors = priors)
 
-    moves <- custom_moves(config = config, data = data, densities = densities)
-    moves_no_move <- custom_moves(config = config_no_move, densities = densities)
+    moves <- custom_moves(config = config, data = data,
+                          likelihoods = ll, priors = priors)
+    moves_no_move <- custom_moves(config = config_no_move,
+                                  likelihoods = ll, priors = priors)
 
 
     ## test moves lists ##
@@ -33,12 +34,15 @@ test_that("parameters and augmented data move", {
     expect_equal(length(moves), 6L)
     expect_true(all(vapply(moves, is.function, logical(1))))
 
+    
+
+    
     ## test moves ##
     for (i in seq_along(moves)) {
-        ## test closures
-        expect_identical(environment(moves[[i]])$config, config)
-        expect_identical(environment(moves[[i]])$densities, densities)
 
+        ## chech closure: data
+        expect_identical(environment(moves[[i]])$data, data)
+        
         ## make moves
         set.seed(1)
         res <- moves[[i]](param = param)

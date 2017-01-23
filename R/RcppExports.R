@@ -49,28 +49,28 @@ cpp_ll_all <- function(data, param, i = NULL, custom_functions = NULL) {
     .Call('outbreaker2_cpp_ll_all', PACKAGE = 'outbreaker2', data, param, i, custom_functions)
 }
 
-cpp_move_mu <- function(data, param, config, list_custom_ll = NULL, list_custom_priors = NULL) {
-    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', data, param, config, list_custom_ll, list_custom_priors)
+cpp_move_mu <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
+    .Call('outbreaker2_cpp_move_mu', PACKAGE = 'outbreaker2', param, data, config, custom_ll, custom_prior)
 }
 
-cpp_move_pi <- function(data, param, config, list_custom_ll = NULL, list_custom_priors = NULL) {
-    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', data, param, config, list_custom_ll, list_custom_priors)
+cpp_move_pi <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
+    .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', param, data, config, custom_ll, custom_prior)
 }
 
-cpp_move_t_inf <- function(data, param, list_custom_ll = NULL) {
-    .Call('outbreaker2_cpp_move_t_inf', PACKAGE = 'outbreaker2', data, param, list_custom_ll)
+cpp_move_t_inf <- function(param, data, list_custom_ll = NULL) {
+    .Call('outbreaker2_cpp_move_t_inf', PACKAGE = 'outbreaker2', param, data, list_custom_ll)
 }
 
-cpp_move_alpha <- function(data, param, list_custom_ll = NULL) {
-    .Call('outbreaker2_cpp_move_alpha', PACKAGE = 'outbreaker2', data, param, list_custom_ll)
+cpp_move_alpha <- function(param, data, list_custom_ll = NULL) {
+    .Call('outbreaker2_cpp_move_alpha', PACKAGE = 'outbreaker2', param, data, list_custom_ll)
 }
 
-cpp_move_swap_cases <- function(data, param, list_custom_ll = NULL) {
-    .Call('outbreaker2_cpp_move_swap_cases', PACKAGE = 'outbreaker2', data, param, list_custom_ll)
+cpp_move_swap_cases <- function(param, data, list_custom_ll = NULL) {
+    .Call('outbreaker2_cpp_move_swap_cases', PACKAGE = 'outbreaker2', param, data, list_custom_ll)
 }
 
-cpp_move_kappa <- function(data, param, config, list_custom_ll = NULL) {
-    .Call('outbreaker2_cpp_move_kappa', PACKAGE = 'outbreaker2', data, param, config, list_custom_ll)
+cpp_move_kappa <- function(param, data, config, list_custom_ll = NULL) {
+    .Call('outbreaker2_cpp_move_kappa', PACKAGE = 'outbreaker2', param, data, config, list_custom_ll)
 }
 
 cpp_prior_mu <- function(param, config, custom_function = NULL) {

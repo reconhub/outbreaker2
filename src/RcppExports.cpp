@@ -155,85 +155,85 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_move_mu
-Rcpp::List cpp_move_mu(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::RObject list_custom_ll, Rcpp::RObject list_custom_priors);
-RcppExport SEXP outbreaker2_cpp_move_mu(SEXP dataSEXP, SEXP paramSEXP, SEXP configSEXP, SEXP list_custom_llSEXP, SEXP list_custom_priorsSEXP) {
+Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config, Rcpp::RObject custom_ll, Rcpp::RObject custom_prior);
+RcppExport SEXP outbreaker2_cpp_move_mu(SEXP paramSEXP, SEXP dataSEXP, SEXP configSEXP, SEXP custom_llSEXP, SEXP custom_priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_ll(list_custom_llSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_priors(list_custom_priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_move_mu(data, param, config, list_custom_ll, list_custom_priors));
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_move_mu(param, data, config, custom_ll, custom_prior));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_move_pi
-Rcpp::List cpp_move_pi(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::RObject list_custom_ll, Rcpp::RObject list_custom_priors);
-RcppExport SEXP outbreaker2_cpp_move_pi(SEXP dataSEXP, SEXP paramSEXP, SEXP configSEXP, SEXP list_custom_llSEXP, SEXP list_custom_priorsSEXP) {
+Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config, Rcpp::RObject custom_ll, Rcpp::RObject custom_prior);
+RcppExport SEXP outbreaker2_cpp_move_pi(SEXP paramSEXP, SEXP dataSEXP, SEXP configSEXP, SEXP custom_llSEXP, SEXP custom_priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_ll(list_custom_llSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_priors(list_custom_priorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_move_pi(data, param, config, list_custom_ll, list_custom_priors));
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_move_pi(param, data, config, custom_ll, custom_prior));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_move_t_inf
-Rcpp::List cpp_move_t_inf(Rcpp::List data, Rcpp::List param, Rcpp::RObject list_custom_ll);
-RcppExport SEXP outbreaker2_cpp_move_t_inf(SEXP dataSEXP, SEXP paramSEXP, SEXP list_custom_llSEXP) {
+Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data, Rcpp::RObject list_custom_ll);
+RcppExport SEXP outbreaker2_cpp_move_t_inf(SEXP paramSEXP, SEXP dataSEXP, SEXP list_custom_llSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_ll(list_custom_llSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_move_t_inf(data, param, list_custom_ll));
+    rcpp_result_gen = Rcpp::wrap(cpp_move_t_inf(param, data, list_custom_ll));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_move_alpha
-Rcpp::List cpp_move_alpha(Rcpp::List data, Rcpp::List param, Rcpp::RObject list_custom_ll);
-RcppExport SEXP outbreaker2_cpp_move_alpha(SEXP dataSEXP, SEXP paramSEXP, SEXP list_custom_llSEXP) {
+Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data, Rcpp::RObject list_custom_ll);
+RcppExport SEXP outbreaker2_cpp_move_alpha(SEXP paramSEXP, SEXP dataSEXP, SEXP list_custom_llSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_ll(list_custom_llSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_move_alpha(data, param, list_custom_ll));
+    rcpp_result_gen = Rcpp::wrap(cpp_move_alpha(param, data, list_custom_ll));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_move_swap_cases
-Rcpp::List cpp_move_swap_cases(Rcpp::List data, Rcpp::List param, Rcpp::RObject list_custom_ll);
-RcppExport SEXP outbreaker2_cpp_move_swap_cases(SEXP dataSEXP, SEXP paramSEXP, SEXP list_custom_llSEXP) {
+Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data, Rcpp::RObject list_custom_ll);
+RcppExport SEXP outbreaker2_cpp_move_swap_cases(SEXP paramSEXP, SEXP dataSEXP, SEXP list_custom_llSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_ll(list_custom_llSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_move_swap_cases(data, param, list_custom_ll));
+    rcpp_result_gen = Rcpp::wrap(cpp_move_swap_cases(param, data, list_custom_ll));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_move_kappa
-Rcpp::List cpp_move_kappa(Rcpp::List data, Rcpp::List param, Rcpp::List config, Rcpp::RObject list_custom_ll);
-RcppExport SEXP outbreaker2_cpp_move_kappa(SEXP dataSEXP, SEXP paramSEXP, SEXP configSEXP, SEXP list_custom_llSEXP) {
+Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config, Rcpp::RObject list_custom_ll);
+RcppExport SEXP outbreaker2_cpp_move_kappa(SEXP paramSEXP, SEXP dataSEXP, SEXP configSEXP, SEXP list_custom_llSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type list_custom_ll(list_custom_llSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_move_kappa(data, param, config, list_custom_ll));
+    rcpp_result_gen = Rcpp::wrap(cpp_move_kappa(param, data, config, list_custom_ll));
     return rcpp_result_gen;
 END_RCPP
 }

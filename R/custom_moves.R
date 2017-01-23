@@ -10,12 +10,12 @@ custom_moves <- function(config, data, densities) {
     ## list them by alphabetic order.
 
     ## SET DEFAULTS ##
-    default_functions <- list(mu = make_move_mu,
-                     t_inf = make_move_t_inf,
-                     alpha = make_move_alpha,
-                     swap_cases = make_move_swap_cases,
-                     pi = make_move_pi,
-                     kappa = make_move_kappa
+    default_functions <- list(mu = bind_move_mu,
+                     t_inf = bind_move_t_inf,
+                     alpha = bind_move_alpha,
+                     swap_cases = bind_move_swap_cases,
+                     pi = bind_move_pi,
+                     kappa = bind_move_kappa
                      )
 
     out <- lapply(default_functions, function(f) f(config, data, densities))

@@ -15,7 +15,6 @@ modify_defaults <- function(defaults, x, strict = TRUE) {
 
 
 
-
 ## This function pics potential infectors at random in the past, for each case.
 
 ralpha <- function(t_inf) {

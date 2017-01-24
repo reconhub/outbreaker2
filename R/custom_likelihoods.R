@@ -1,53 +1,50 @@
 #' Customise likelihood functions for outbreaker
 #'
-#' This function creates a named list of functions, each implementing a
-#' customised log-likelihood components of outbreaker. Functions which are not
-#' customised will result in a NULL component. User-provided functions will be
-#' checked to ensure the right arguments are present. All log-likelihood
-#' functions should have to following arguments:
+#' This function is used to specify customised likelihood functions for
+#' outbreaker. Custom functions are specified as a named list or series of
+#' comma-separated, named arguments, indicating which log-likelihood component
+#' they compute. Values currently available are:
+#'
+#' \itemize{
+#' 
+#' \item \code{genetic}: the genetic likelihood; by default, the function
+#' \code{cpp_ll_genetic} is used.
+#'
+#' \item \code{timing_sampling}: the likelihood of sampling times; by default, the function
+#' \code{cpp_ll_timing_sampling} is used.
+#'
+#' \item \code{timing_infections}: the likelihood of infection times; by default, the function
+#' \code{cpp_ll_timing_infections} is used.
+#' 
+#' \item \code{reporting}: the likelihood of the reporting process; by default,
+#' the function \code{cpp_ll_reporting} is used.
+#' }
+#' 
+#' All log-likelihood functions should have to following arguments:
 #'  
 #' \itemize{
 #'
 #' \item \code{data}: a list of named items containing input data as returned by
 #' \code{\link{outbreaker_data}}
 #'
-#' \item \code{param}: a list of parameters with the class \code{\link{outbreaker_param}}
-#' }
-#'
-#' Note that unlike \code{bind_moves}, likelihood functions have no
-#' mandatory names. They only need to be compatible with the movement functions
-#' used in \code{bind_moves}. See 'details' for defaults.
-#'
-#' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
-#'
-#' @param ... a named list (see details) of functions, each computing a log-likelihood component.
-#'
-#' @param loglike a list of functions as returned by \code{outbreaker_custom_likelihood}
-#'
-#' @details
-#' The likelihood functions used by default are:
-#' \describe{
-#'
-#' \item{timing_infections}{corresponds to the probability of delays between
-#' cases (generation time)}
-#'
-#' \item{timing_sampling}{corresponds to the probability of delays between
-#' infection and reporting}
-#'
-#' \item{timing}{corresponds to the probability of all delays}
-#'
-#' \item{genetic}{corresponds to the probability of the genetic sequences given
-#' the transmission tree}
-#'
-#' \item{all}{corresponds to the overal probability of the data}
+#' \item \code{param}: a list of parameters with the class
+#' \code{\link{outbreaker_param}}
 #'
 #' }
 #'
+#' 
+#' @return
+#' A named list of functions with the class \code{custom_likelihood}, each
+#'     implementing a customised log-likelihood components of
+#'     outbreaker. Functions which are not customised will result in a NULL
+#'     component.
+#'
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#'
+#' @param ... a named list of functions, each computing a log-likelihood component.
 #'
 #' @return a list of named functions
 #'
-
-
 
 
 ## USING CUSTOM LIKELIHOOD FUNCTIONS
@@ -59,7 +56,8 @@
 
 ## - data: a valid 'outbreaker_data' list
 
-## - param: a list containing current parameter states, as returned by create_mcmc
+## - param: a list containing current parameter states, as returned by
+## - create_mcmc
 
 custom_likelihoods <- function(...) {
     
@@ -121,3 +119,45 @@ custom_likelihoods <- function(...) {
     return(likelihoods)
 
 }
+
+
+
+
+
+
+
+#' @rdname custom_likelihoods
+#' 
+#' @export
+#' 
+#' @aliases print.custom_likelihoods
+#'
+#' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
+#' 
+#' @param ... further arguments to be passed to other methods
+ 
+print.custom_likelihoods <- function(x, ...) {
+    cat("\n\n ///// outbreaker custom likelihoods ///\n")
+    cat("\nclass:", class(x))
+    cat("\nnumber of items:", length(x), "\n\n")
+
+    is_custom <- !vapply(x, is.null, FALSE)
+
+
+    names_default <- names(x)[!is_custom]
+    if (length(names_default) > 0) {
+        cat("/// custom likelihoods set to NULL (default used) //\n")
+        print(x[!is_custom])
+    }
+
+
+    names_custom <- names(x)[is_custom]
+    if (length(names_custom) > 0) {
+        cat("/// custom likelihoods //\n")
+        print(x[is_custom])
+    }
+
+    return(invisible(NULL))
+
+}
+

@@ -93,7 +93,7 @@
 #'
 #' @seealso outbreaker_data to check and process data for outbreaker
 #'
-#' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @export
 #'

@@ -194,15 +194,13 @@ print.custom_priors <- function(x, ...) {
     if (length(names_default) > 0) {
         cat("/// custom priors set to NULL (default used) //\n")
         print(x[!is_custom])
-        ## cat("\n")
-    }
+   }
 
 
     names_custom <- names(x)[is_custom]
     if (length(names_custom) > 0) {
         cat("/// custom priors //\n")
         print(x[is_custom])
-        ## cat("\n")
     }
 
     return(invisible(NULL))

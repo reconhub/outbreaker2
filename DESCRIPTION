@@ -22,7 +22,8 @@ Imports:
     Rcpp,
     ape,
     ggplot2,
-    visNetwork
+    magrittr,
+    visNetwork,
 LazyData: true
 LinkingTo:
     Rcpp

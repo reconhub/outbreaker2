@@ -1,22 +1,94 @@
 
+#' Customise priors for outbreaker
+#'
+#' Priors can be specified in several ways in outbreaker2 (see details and
+#' examples). The most flexible way to specify a prior is to provide a prior
+#' function directly. This function must take an argument 'param', which is a
+#' list which contains all the states of the parameters and augmented data. See
+#' the documentation of \link{outbreaker_param} for more information.
+#'
+#' @details
+#' There are three ways a user can specify priors:\cr
+#'
+#' 1) Default: this is what happens when the 'config' has default values of
+#' prior parameters.\cr
 
-## SPECIFYING PRIORS
-
-## There are three ways a user can specify priors:
-
-## 1) Default: this is what happens when the 'config' has default values of
-## prior parameters.
-
-## 2) Customized parameters: in this case, the prior functions are the default
-## ones from the package, but will use custom parameters, specified by the user
-## through config$prior_[parameter name]
-
-## 3) Customized functions: in this case, prior functions themselves are
-## specified by the user, through the '...' argument of 'custom_priors'. The
-## requirements is that such functions must have either hard-coded parameters or
-## enclosed values. They will take a single argument which is a list containing
-## all model parameters with the class 'outbreaker_param'.
-
+#' 2) Customized parameters: in this case, the prior functions are the default
+#' ones from the package, but will use custom parameters, specified by the user
+#' through \code{\link{create_config}}.\cr
+#'
+#' 3) Customized functions: in this case, prior functions themselves are
+#' specified by the user, through the '...' argument of 'custom_priors'. The
+#' requirements is that such functions must have either hard-coded parameters or
+#' enclosed values. They will take a single argument which is a list containing
+#' all model parameters with the class 'outbreaker_param'. ALL PRIORS functions
+#' are expected to return values on a LOG SCALE.\cr
+#'
+#' Priors currently used for the model are:
+#' \itemize{
+#'
+#' \item mu (mutation rate): default function is an exponential distribution
+#' implemented in \code{outbreaker:::cpp_prior_mu}. New prior functions should
+#' use \code{x$mu} to refer to the current value of \code{mu}, assuming their
+#' argument is called \code{x}.
+#' 
+#' \item pi (reporting probability): default function is a beta distribution
+#' implemented in \code{outbreaker:::cpp_prior_pi}. New prior functions should
+#' use \code{x$pi} to refer to the current value of \code{pi}, assuming their
+#' argument is called \code{x}.
+#' 
+#' }
+#'
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
+#'
+#' @export
+#'
+#' @param ... A list or a series of named, comma-separated functions
+#'     implementing priors. Each function must have a single argument, which
+#'     corresponds to a 'outbreaker_param' list.
+#'
+#' @return A list of custom functions with class \code{custom_priors}. Values
+#'     set to \code{NULL} will be ignored and default functions will be used
+#'     instead.
+#' 
+#' @examples
+#'
+#' ## BASIC CONFIGURATION
+#' custom_priors()
+#' 
+#' 
+#' ## SPECIFYING PRIOR PARAMETERS
+#' ## - this will need to be passed to outbreaker
+#' default_config <- create_config()
+#' new_config <- create_config(prior_mu = 1e-5,
+#'                         prior_pi = c(2, 1))
+#'
+#' ## - to check the prior manually, default settings:
+#' param <- list(mu = 0.001, pi = 0.9)
+#' cpp_prior_mu(param, default_config)
+#' cpp_prior_pi(param, default_config)
+#' 
+#' cpp_prior_mu(param, new_config)
+#' cpp_prior_pi(param, new_config)
+#'
+#' ## these correspond to:
+#' dexp(0.001, 0.01, log = TRUE)
+#' dbeta(0.9, 2, 1, log = TRUE)
+#' 
+#'
+#' ## SPECIFYING A PRIOR FUNCTION
+#'
+#' ## flat prior for pi between 0.5 and 1
+#' f <- function(x) {ifelse(x$pi > 0.5, log(2), log(0))}
+#' priors <- custom_priors(pi = f)
+#' priors # this should be passed to outbreaker
+#' 
+#' ## test the prior manually
+#' priors$pi(list(pi=1))
+#' priors$pi(list(pi=.6))
+#' priors$pi(list(pi=.2))
+#' priors$pi(list(pi=.49))
+#' 
 
 custom_priors <- function(...) {
 
@@ -90,6 +162,50 @@ custom_priors <- function(...) {
     }
     
 
-    class(priors) <- c("outbreaker_priors", "list")
+    class(priors) <- c("custom_priors", "list")
     return(priors)
 }
+
+
+
+
+
+
+
+#' @rdname custom_priors
+#' 
+#' @export
+#' 
+#' @aliases print.custom_priors
+#'
+#' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
+#' 
+#' @param ... further arguments to be passed to other methods
+ 
+print.custom_priors <- function(x, ...) {
+    cat("\n\n ///// outbreaker custom priors ///\n")
+    cat("\nclass:", class(x))
+    cat("\nnumber of items:", length(x), "\n\n")
+
+    is_custom <- !vapply(x, is.null, FALSE)
+
+
+    names_default <- names(x)[!is_custom]
+    if (length(names_default) > 0) {
+        cat("/// custom priors set to NULL (default used) //\n")
+        print(x[!is_custom])
+        ## cat("\n")
+    }
+
+
+    names_custom <- names(x)[is_custom]
+    if (length(names_custom) > 0) {
+        cat("/// custom priors //\n")
+        print(x[is_custom])
+        ## cat("\n")
+    }
+
+    return(invisible(NULL))
+
+}
+

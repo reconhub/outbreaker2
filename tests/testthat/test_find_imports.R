@@ -8,7 +8,10 @@ test_that("Test detection of imported cases", {
 
     ## generate inputs
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
     temp <- create_mcmc(data = data, config = config)
@@ -17,17 +20,20 @@ test_that("Test detection of imported cases", {
 
     ll <- custom_likelihoods()
     priors <- custom_priors()
-    densities <- list(loglike = ll, priors = priors)
+    moves <- custom_moves()
 
-    moves <- bind_moves(config = config, data = data,
-                          likelihoods = ll,
-                          priors = priors)
+    moves <- bind_moves(moves = moves,
+                        config = config,
+                        data = data,
+                        likelihoods = ll,
+                        priors = priors)
 
     ## detect imported cases
     out <- outbreaker_find_imports(moves = moves, data = data,
                                    param_current = param_current,
                                    param_store = param_store,
-                                   config = config, likelihoods = ll)
+                                   config = config,
+                                   likelihoods = ll)
 
     ## tests ##
     expect_identical(which(!out$config$move_alpha), which(!out$config$move_kappa))

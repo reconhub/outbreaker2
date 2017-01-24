@@ -57,3 +57,60 @@ test_that("parameters and augmented data move", {
 })
 
 
+
+
+
+
+
+test_that("Customisation of moves works", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## generate inputs
+    data(fake_outbreak)
+    data <- with(fake_outbreak, outbreaker_data(
+        dates = collecDates, w_dens = w, dna = dat$dna))
+    config <- create_config(data = data)
+    data <- add_convolutions(data = data, config = config)
+    param <- create_mcmc(data = data, config = config)$current
+    ll <- custom_likelihoods()
+    priors <- custom_priors()
+
+    ## check re-input consistency
+    expect_identical(custom_moves(),
+                     custom_moves(custom_moves()))
+
+    ## check custom_moves defaults
+    moves <- custom_moves()
+
+    expect_length(moves, 6L)
+    expect_true(all(vapply(moves, is.function, FALSE)))
+    expect_named(moves)
+    expected_names <- c("mu", "pi", "alpha", "swap_cases", "t_inf", "kappa")
+    expect_true(all(expected_names %in% names(moves)))
+
+
+    ## check binding
+    moves <- bind_moves(moves, config = config, data = data,
+                          likelihoods = ll, priors = priors)
+
+    exp_names <- c("custom_prior", "custom_ll", "config", "data")
+    expect_true(all(exp_names %in% names(environment(moves$mu))))
+
+    exp_names <- c("custom_prior", "custom_ll", "config", "data")
+    expect_true(all(exp_names %in% names(environment(moves$pi))))
+
+    exp_names <- c("list_custom_ll", "data")
+    expect_true(all(exp_names %in% names(environment(moves$alpha))))
+
+    exp_names <- c("list_custom_ll", "data")
+    expect_true(all(exp_names %in% names(environment(moves$swap_cases))))
+
+    exp_names <- c("list_custom_ll", "data")
+    expect_true(all(exp_names %in% names(environment(moves$t_inf))))
+
+    exp_names <- c("list_custom_ll", "config", "data")
+    expect_true(all(exp_names %in% names(environment(moves$kappa))))
+    
+})

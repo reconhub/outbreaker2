@@ -4,9 +4,10 @@
 ## argument 'param'; all the rest (e.g. likelihood, prior, posterior functions,
 ## config, etc) is enclosed in the functions.
 
-bind_moves <- function(moves, config, data, likelihoods, priors) {
+bind_moves <- function(moves = custom_moves(), config, data,
+                       likelihoods, priors) {
 
-    out <- moves
+    out <- custom_moves(moves)
     
    
     ## Binding:

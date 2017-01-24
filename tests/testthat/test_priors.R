@@ -19,6 +19,7 @@ test_that("Priors in cpp and R references give identical results.", {
     ## checks
     expect_equal(mu_r, mu_cpp)
     expect_equal(pi_r, pi_cpp)    
+
 })
 
 

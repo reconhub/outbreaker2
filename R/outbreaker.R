@@ -80,8 +80,11 @@ outbreaker <- function(data = outbreaker_data(),
 
 
     ## here we create a list of function for moving parameters
-    moves <- bind_moves(moves, config = config, data = data,
-                        likelihoods = loglike, priors = priors)
+    moves <- bind_moves(moves = moves,
+                        config = config,
+                        data = data,
+                        likelihoods = loglike,
+                        priors = priors)
 
 
     ## IMPORTS 

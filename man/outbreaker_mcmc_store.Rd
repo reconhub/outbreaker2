@@ -4,7 +4,8 @@
 \alias{outbreaker_mcmc_store}
 \title{Stores MCMC samples for outbreaker}
 \usage{
-outbreaker_mcmc_store(param_current, param_store, data, config, densities, step)
+outbreaker_mcmc_store(param_current, param_store, data, config, likelihoods,
+  priors, step)
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by
@@ -12,7 +13,8 @@ outbreaker_mcmc_store(param_current, param_store, data, config, densities, step)
 
 \item{config}{a set of settings as returned by \code{\link{create_config}}}
 
-\item{densities}{a list containing lists of functions computing densities, named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}
+\item{priors}{a set of prior functions with enclosed parameters as returned
+by \code{\link{custom_priors}}}
 
 \item{step}{an integer indicating the MCMC iteration being stored}
 

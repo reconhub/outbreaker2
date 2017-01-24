@@ -88,6 +88,22 @@ bind_moves <- function(moves = custom_moves(), config, data,
     }
 
 
+    ## perform binding for new unknown movements
+    known_moves <- names(custom_moves())
+    new_moves <- !names(out) %in% known_moves
+    if (any(new_moves)) {
+        for (i in seq_along(out)) {
+            if (new_moves[i]) {
+                out[[i]] <- bind_to_function(out[[i]],
+                                             data = data,
+                                             config = config,
+                                             likelihoods = likelihoods,
+                                             priors = priors
+                                             )
+            }
+        } 
+    }
+    
     ## the output is a list of movement functions with enclosed objects ##
     return(out)
 

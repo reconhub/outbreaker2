@@ -4,21 +4,18 @@
 \alias{outbreaker_move}
 \title{Movements of augmented data and parameters for outbreaker2}
 \usage{
-outbreaker_move(moves, data, param_current, param_store, config, densities)
+outbreaker_move(moves, data, param_current, param_store, config, likelihoods,
+  priors)
 }
 \arguments{
 \item{moves}{a list of movement functions as returned by \code{bind_moves}
 (internal function)}
 
-\item{data}{a list of data items as returned by \code{outbreaker_data}}
-
-\item{config}{a list of settings as returned by \code{create_config}}
+\item{param}{a list of parameters as returned by
+\code{create_mcmc}}
 
 \item{densities}{a list containing lists of functions computing densities,
 named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'}
-
-\item{param}{a list of parameters as returned by
-\code{create_mcmc}}
 }
 \value{
 a potentially modified list of parameters as returned by

@@ -5,7 +5,8 @@
 \title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
 \usage{
 outbreaker(data = outbreaker_data(), config = create_config(),
-  priors = custom_priors(), likelihoods = custom_likelihoods())
+  priors = custom_priors(), likelihoods = custom_likelihoods(),
+  moves = custom_moves())
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by

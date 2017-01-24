@@ -7,12 +7,9 @@
 create_config(..., data = NULL)
 }
 \arguments{
-\item{...}{settings to be passed to outbreaker}
-
-\item{data}{an optional list of data items as returned by \code{outbreaker_data}; if provided,
-this allows for further checks of the outbreaker setings.}
-
-\item{config}{a previous set of settings, as returned by \code{create_config}}
+\item{data}{an optional list of data items as returned by
+\code{outbreaker_data}; if provided, this allows for further checks of
+the outbreaker setings.}
 }
 \description{
 This function defines settings for outbreaker.  It takes a list of named
@@ -113,7 +110,7 @@ create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
 
 }
 \author{
-Thibaut Jombart (\email{t.jombart@imperial.ac.uk})
+Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
 \seealso{
 outbreaker_data to check and process data for outbreaker

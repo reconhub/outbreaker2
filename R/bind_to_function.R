@@ -55,8 +55,11 @@ bind_to_function <- function(f, ...) {
 
     ## Name duplication is not allowed
     if (any(duplicated(dots_names))) {
+        duplicated_args <- paste(unique(dots_names[duplicated(dots_names)]),
+                                 collapse = ", ")
         msg <- sprintf("Duplicated formal arguments: ",
-             collapse(unique(dots_names[duplicated(dots_names)])))
+                       duplicated_args)
+             
         stop(msg)
     }
 
@@ -73,7 +76,7 @@ bind_to_function <- function(f, ...) {
     if (any(are_missing)) {
         missing_args <- f_args_no_default[are_missing] 
         missing_args <- paste(missing_args, collapse = ", ")
-        msg <- sprintf("Arguments of %s are missing from '...' and have no default: %s",
+        msg <- sprintf("Arguments of %s missing from '...' with no default: %s",
              deparse(substitute(f)),
              missing_args)
         stop(msg)

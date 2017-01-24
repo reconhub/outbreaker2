@@ -1,15 +1,15 @@
-#' Shape MCMC samples into outputs for outbreaker
-#'
-#' This function shapes MCMC samples for outbreaker into a data.frame with the class \code{outbreaker_chains}.
-#'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail_com})
-#'
-#' @param param a list of output items as returned by \code{create_mcmc}
-#'
-#' @param data a list of data items as returned by \code{outbreaker_data}
-#'
-#' @export
-#'
+## #' Shape MCMC samples into outputs for outbreaker
+## #'
+## #' This function shapes MCMC samples for outbreaker into a data.frame with the class \code{outbreaker_chains}.
+## #'
+## #' @author Thibaut Jombart (\email{thibautjombart@@gmail_com})
+## #'
+## #' @param param a list of output items as returned by \code{create_mcmc}
+## #'
+## #' @param data a list of data items as returned by \code{outbreaker_data}
+## #'
+## #' @export
+## #'
 outbreaker_mcmc_shape <- function(param, data) {
     ## unfold ancestries ##
     if (!all(vapply(param$alpha, length, integer(1))==data$N)) {

@@ -75,11 +75,11 @@ new_config <- create_config(prior_mu = 1e-5,
 
 ## - to check the prior manually, default settings:
 param <- list(mu = 0.001, pi = 0.9)
-cpp_prior_mu(param, default_config)
-cpp_prior_pi(param, default_config)
+outbreaker2:::cpp_prior_mu(param, default_config)
+outbreaker2:::cpp_prior_pi(param, default_config)
 
-cpp_prior_mu(param, new_config)
-cpp_prior_pi(param, new_config)
+outbreaker2:::cpp_prior_mu(param, new_config)
+outbreaker2:::cpp_prior_pi(param, new_config)
 
 ## these correspond to:
 dexp(0.001, 0.01, log = TRUE)

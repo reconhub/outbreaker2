@@ -1,17 +1,17 @@
-#' Initianilizes outputs for outbreaker
-#'
-#' This function creates initial outputs and parameter states for outbreaker.
-#'
-#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
-#'
-#' @param param a list of data items as returned by \code{create_mcmc}
-#'
-#' @param loglike a list of loglikelihood functions with enclosed data as returned by \code{custom_likelihood}
-#'
-#' @param priors a list of prior functions with enclosed parameters as returned by \code{custom_priors}
-#'
-#' @export
-#'
+## #' Initianilizes outputs for outbreaker
+## #'
+## #' This function creates initial outputs and parameter states for outbreaker.
+## #'
+## #' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
+## #'
+## #' @param param a list of data items as returned by \code{create_mcmc}
+## #'
+## #' @param loglike a list of loglikelihood functions with enclosed data as returned by \code{custom_likelihood}
+## #'
+## #' @param priors a list of prior functions with enclosed parameters as returned by \code{custom_priors}
+## #'
+## #' @export
+## #'
 outbreaker_init_mcmc <- function(data, param_current, param_store, loglike, priors, config) {
 
     ## COMPUTE INITIAL LIKE/PRIOR/POST ##

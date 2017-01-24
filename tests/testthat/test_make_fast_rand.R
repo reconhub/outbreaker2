@@ -1,4 +1,4 @@
-## context("Test make.fast functions")
+## context("Test make_fast functions")
 
 
 ## ## test plausible values ##
@@ -9,8 +9,8 @@
 
 ##     ## generate data ##
 ##     size <- as.integer(sample(10:100,1))
-##     x <- make.fast.rand(batch.size=size)
-##     x1 <- make.fast.rand1(batch.size=size)
+##     x <- make_fast_rand(batch_size = size)
+##     x1 <- make_fast_rand1(batch_size = size)
 
 ##     ## tests ##
 ##     ## test length of pre-generated vector
@@ -22,18 +22,18 @@
 ##     expect_true(length(x1())==1L)
 
 ##     ## test values
-##     set.seed(1);a <- make.fast.rand(mean=1, sd=1.123, f=rnorm)(10)
-##     set.seed(1);b <- rnorm(10, mean=1, sd=1.123)
+##     set.seed(1);a <- make_fast_rand(mean = 1, sd = 1.123, f = rnorm)(10)
+##     set.seed(1);b <- rnorm(10, mean = 1, sd = 1.123)
 ##     expect_equal(a,b)
 
 ##     ## test counters
-##     y1 <- make.fast.rand1()
+##     y1 <- make_fast_rand1()
 ##     i <- environment(y1)$counter
 ##     expect_equal(i, 0L)
 ##     y1()
 ##     i <- environment(y1)$counter
 ##     expect_equal(i, 1L)
-##     y <- make.fast.rand()
+##     y <- make_fast_rand()
 ##     y(4)
 ##     expect_equal(environment(y)$counter, 4L)
 

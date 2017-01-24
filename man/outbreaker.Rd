@@ -4,12 +4,18 @@
 \alias{outbreaker}
 \title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
 \usage{
-outbreaker(data = outbreaker.data(), config = outbreaker.config())
+outbreaker(data = outbreaker_data(), config = create_config(),
+  priors = custom_priors(), likelihoods = custom_likelihoods(),
+  moves = custom_moves())
 }
 \arguments{
-\item{data}{a list of named items containing input data as returned by \code{\link{outbreaker.data}}}
+\item{data}{a list of named items containing input data as returned by
+\code{\link{outbreaker_data}}}
 
-\item{config}{a set of settings as returned by \code{\link{outbreaker.config}}}
+\item{config}{a set of settings as returned by \code{\link{create_config}}}
+
+\item{priors}{a set of prior functions with enclosed parameters as returned
+by \code{\link{custom_priors}}}
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
@@ -17,27 +23,27 @@ Outbreaker2: disease outbreak reconstruction using epidemiological and genetic d
 \examples{
 
 ## get data
-data(fake.outbreak)
-dat <- fake.outbreak$dat
-w <- fake.outbreak$w
+data(fake_outbreak)
+dat <- fake_outbreak$dat
+w <- fake_outbreak$w
 
 \dontrun{
 ## run outbreaker
-out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-config=list(n.iter=2e4, sample.every=200))
+out <- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = w),
+config = list(n_iter = 2e4, sample_every = 200))
 plot(out)
 as.data.frame(out)
 
 ## run outbreaker, no DNA sequences
-out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-config=list(n.iter=2e4, sample.every=200))
+out2 <- outbreaker(data = list(dates = dat$onset, w_dens = w),
+config = list(n_iter = 2e4, sample_every = 200))
 plot(out2)
 as.data.frame(out2)
 
 }
 }
 \author{
-Thibaut Jombart (\email{t.jombart@imperial.ac.uk})
+Thibaut Jombart (\email{t_jombart@imperial_ac_uk})
 }
 \references{
 Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
@@ -45,8 +51,8 @@ N (2014).  Bayesian reconstruction of disease outbreaks by combining
 epidemiologic and genomic data. PLoS Computational Biology.
 }
 \seealso{
-\code{\link{outbreaker.data}} to process input data, and \code{\link{outbreaker.config}} to process/set up parameters
+\code{\link{outbreaker_data}} to process input data, and \code{\link{create_config}} to process/set up parameters
 
-\code{\link{outbreaker.config}} to see default parameters / set parameters and \code{\link{outbreaker.data}} to process input data
+\code{\link{create_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
 }
 

@@ -1,15 +1,17 @@
 context("Test movements")
 
 ## test various movements  ##
-test_that("parameters and augmented data move", {
+test_that("Movements preserve param structure", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## generate inputs
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(
-        dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
     config <- create_config(data = data)
     
     config_no_move <- create_config(move_alpha = FALSE,
@@ -61,16 +63,17 @@ test_that("parameters and augmented data move", {
 
 
 
-
-test_that("Customisation of moves works", {
+test_that("Binding of moves works", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## generate inputs
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(
-        dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
     param <- create_mcmc(data = data, config = config)$current
@@ -112,5 +115,51 @@ test_that("Customisation of moves works", {
 
     exp_names <- c("list_custom_ll", "config", "data")
     expect_true(all(exp_names %in% names(environment(moves$kappa))))
+    
+})
+
+
+
+
+
+
+test_that("Customisation of moves works", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## generate inputs
+    data(fake_outbreak)
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = collecDates,
+                                 w_dens = w,
+                                 dna = dat$dna))
+    config <- create_config(data = data, n_iter = 1000,
+                            find_import = FALSE,
+                            sample_every = 10)
+    data <- add_convolutions(data = data, config = config)
+    param <- create_mcmc(data = data, config = config)$current
+    ll <- custom_likelihoods()
+    priors <- custom_priors()
+
+
+    ## check custom movement for mu - outside outbreaker
+    f <- function(param, data, config = NULL) {
+        return(param)
+    }
+
+    moves <- bind_moves(list(mu = f), config = config, data = data,
+                          likelihoods = ll, priors = priors)
+
+    expect_identical(body(moves$mu), body(f))
+    expect_identical(names(formals(moves$mu)), "param")
+    expect_identical(data, environment(moves$mu)$data)
+    expect_identical(config, environment(moves$mu)$config)
+    expect_identical(moves$mu(param), param)
+
+
+    ## same check, run within outbreaker
+    out <- outbreaker(data, config, moves = list(mu = f))
+    expect_true(all(out$mu == 1e-4))
     
 })

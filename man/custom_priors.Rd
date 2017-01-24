@@ -15,8 +15,6 @@ implementing priors. Each function must have a single argument, which
 corresponds to a 'outbreaker_param' list.}
 
 \item{x}{an \code{outbreaker_config} object as returned by \code{create_config}.}
-
-\item{...}{further arguments to be passed to other methods}
 }
 \value{
 A list of custom functions with class \code{custom_priors}. Values

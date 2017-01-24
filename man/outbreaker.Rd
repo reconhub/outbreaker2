@@ -14,8 +14,14 @@ outbreaker(data = outbreaker_data(), config = create_config(),
 
 \item{config}{a set of settings as returned by \code{\link{create_config}}}
 
-\item{priors}{a set of prior functions with enclosed parameters as returned
-by \code{\link{custom_priors}}}
+\item{priors}{a set of log-prior functions as returned by
+\code{\link{custom_priors}}}
+
+\item{likelihoods}{a set of log-likelihood functions as returned by
+\code{\link{custom_likelihoods}}}
+
+\item{moves}{a set of movement functions as returned by
+\code{\link{custom_moves}}}
 }
 \description{
 Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
@@ -47,12 +53,27 @@ Thibaut Jombart (\email{t_jombart@imperial_ac_uk})
 }
 \references{
 Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
-N (2014).  Bayesian reconstruction of disease outbreaks by combining
-epidemiologic and genomic data. PLoS Computational Biology.
+    N (2014).  Bayesian reconstruction of disease outbreaks by combining
+    epidemiologic and genomic data. PLoS Computational Biology.
 }
 \seealso{
-\code{\link{outbreaker_data}} to process input data, and \code{\link{create_config}} to process/set up parameters
+\code{\link{outbreaker_data}} to process input data, and
+    \code{\link{create_config}} to process/set up parameters
 
-\code{\link{create_config}} to see default parameters / set parameters and \code{\link{outbreaker_data}} to process input data
+\itemize{
+
+\item \code{\link{outbreaker_data}} to process input data
+
+\item \code{\link{create_config}} to see default parameters, and set
+parameters, including prior parameters
+
+\item \code{\link{custom_priors}} to specify custom prior functions
+
+\item \code{\link{custom_likelihoods}} to specify custom likelihood functions
+
+\item \code{\link{custom_moves}} to create movement functions and specify
+custom movements
+
+}
 }
 

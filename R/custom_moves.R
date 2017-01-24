@@ -44,7 +44,7 @@
 #' \code{\link{outbreaker_data}}
 #'
 #' \item \code{config}:  a list of named items containing input data as returned by
-#' \code{\link{outbreaker_config}}
+#' \code{\link{create_config}}
 #' 
 #' \item \code{likelihoods}: a list of named custom likelihood functions as returned by
 #' \code{\link{custom_likelihoods}}
@@ -139,7 +139,6 @@ custom_moves <- function(...) {
 #'
 #' @param x an \code{outbreaker_moves} object as returned by \code{create_moves}.
 #' 
-#' @param ... further arguments to be passed to other methods
  
 print.outbreaker_moves <- function(x, ...) {
     cat("\n\n ///// outbreaker movement functions ///\n")

@@ -13,8 +13,6 @@ custom_likelihoods(...)
 \item{...}{a named list of functions, each computing a log-likelihood component.}
 
 \item{x}{an \code{outbreaker_config} object as returned by \code{create_config}.}
-
-\item{...}{further arguments to be passed to other methods}
 }
 \value{
 A named list of functions with the class \code{custom_likelihood}, each

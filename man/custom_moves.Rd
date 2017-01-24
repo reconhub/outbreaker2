@@ -14,8 +14,6 @@ custom_moves(...)
 implementing movements of parameters or augmented data.}
 
 \item{x}{an \code{outbreaker_moves} object as returned by \code{create_moves}.}
-
-\item{...}{further arguments to be passed to other methods}
 }
 \value{
 A list of movement functions with a single argument 'param', with
@@ -64,7 +62,7 @@ movements (i.e. none of the names specified above), the closure will contain:
 \code{\link{outbreaker_data}}
 
 \item \code{config}:  a list of named items containing input data as returned by
-\code{\link{outbreaker_config}}
+\code{\link{create_config}}
 
 \item \code{likelihoods}: a list of named custom likelihood functions as returned by
 \code{\link{custom_likelihoods}}

@@ -15,9 +15,8 @@ bind_to_function(f, ...)
 This function takes a function \code{f} and a series of named arguments, and
 returns a closure of \code{f} which will only rely on one single argument
 'param'. This is used to reduce the number of arguments passed around to
-likelihood or movement functions. This is needed when using custom functions
-via \code{\link{custom_priors}}, \code{\link{custom_likelihoods}}, or
-\code{\link{bind_moves}}.
+likelihood or movement functions. This functionality is used internally when
+creating closures of custom moves in \code{bind_moves}.
 }
 \author{
 Initial code by Rich FitzJohn (see 'references') with some

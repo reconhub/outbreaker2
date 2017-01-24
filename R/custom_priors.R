@@ -180,7 +180,6 @@ custom_priors <- function(...) {
 #'
 #' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
 #' 
-#' @param ... further arguments to be passed to other methods
  
 print.custom_priors <- function(x, ...) {
     cat("\n\n ///// outbreaker custom priors ///\n")

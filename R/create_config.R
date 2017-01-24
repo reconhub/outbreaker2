@@ -507,7 +507,7 @@ create_config <- function(..., data = NULL) {
 
 
 
-#' @rdname outbreaker_config
+#' @rdname create_config
 #' 
 #' @export
 #' 

@@ -131,7 +131,7 @@ custom_moves <- function(...) {
 
 
 
-#' @rdname outbreaker_moves
+#' @rdname custom_moves
 #' 
 #' @export
 #' 

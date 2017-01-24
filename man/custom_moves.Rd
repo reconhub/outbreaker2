@@ -2,13 +2,20 @@
 % Please edit documentation in R/custom_moves.R
 \name{custom_moves}
 \alias{custom_moves}
+\alias{print.outbreaker_moves}
 \title{Customise samplers for outbreaker}
 \usage{
 custom_moves(...)
+
+\method{print}{outbreaker_moves}(x, ...)
 }
 \arguments{
 \item{...}{A list or a series of named, comma-separated functions
 implementing movements of parameters or augmented data.}
+
+\item{x}{an \code{outbreaker_moves} object as returned by \code{create_moves}.}
+
+\item{...}{further arguments to be passed to other methods}
 }
 \value{
 A list of movement functions with a single argument 'param', with

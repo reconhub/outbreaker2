@@ -1,17 +1,17 @@
-#' Stores MCMC samples for outbreaker
-#'
-#' This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.
-#'
-#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
-#'
-#' @inheritParams outbreaker
-#'
-#' @param param a list of output items as returned by \code{create_mcmc}
-#'
-#' @param step an integer indicating the MCMC iteration being stored
-#'
-#' @export
-#'
+## #' Stores MCMC samples for outbreaker
+## #'
+## #' This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.
+## #'
+## #' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
+## #'
+## #' @inheritParams outbreaker
+## #'
+## #' @param param a list of output items as returned by \code{create_mcmc}
+## #'
+## #' @param step an integer indicating the MCMC iteration being stored
+## #'
+## #' @export
+## #'
 outbreaker_mcmc_store <- function(param_current, param_store, data, config,
                                   likelihoods, priors, step) {
     ## UPDATE COUNTER

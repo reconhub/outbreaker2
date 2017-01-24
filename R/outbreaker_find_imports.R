@@ -1,11 +1,13 @@
 
-## This function is not exported and is meant for internal use in outbreaker2. It is near identical
-## to the MCMC implemented by 'outbreaker.move'. The only difference is it has its own number of
-## iterations ('config$n.iter.import') and sampling frequency ('config$sample.every.import'), and
-## stores individual likelihoods for each case and saved iteration. The rationale is to use these
-## chains to compute the 'global influences' of each case, flag outliers based on these values and
-## an arbitrary threshold ('config$outlier.threshold'), and mark these cases as imported, i.e. for
-## which the ancestor will be 'NA'.
+## This function is not exported and is meant for internal use in
+## outbreaker2. It is near identical to the MCMC implemented by
+## 'outbreaker.move'. The only difference is it has its own number of iterations
+## ('config$n.iter.import') and sampling frequency
+## ('config$sample.every.import'), and stores individual likelihoods for each
+## case and saved iteration. The rationale is to use these chains to compute the
+## 'global influences' of each case, flag outliers based on these values and an
+## arbitrary threshold ('config$outlier.threshold'), and mark these cases as
+## imported, i.e. for which the ancestor will be 'NA'.
 
 
 outbreaker_find_imports <- function(moves, data, param_current,

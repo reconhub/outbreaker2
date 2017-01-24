@@ -1,3 +1,4 @@
+#'
 #' Customise likelihood functions for outbreaker
 #'
 #' This function is used to specify customised likelihood functions for
@@ -44,6 +45,8 @@
 #' @param ... a named list of functions, each computing a log-likelihood component.
 #'
 #' @return a list of named functions
+#'
+#' @export
 #'
 
 

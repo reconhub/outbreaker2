@@ -1,23 +1,22 @@
-#' Movements of augmented data and parameters for outbreaker2
-#'
-#' This function moves all parameters for outbreaker2.
-#'
-#' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
-#'
-#' @inheritParams create_mcmc
-#'
-#' @param moves a list of movement functions as returned by \code{bind_moves}
-#'     (internal function)
-#'
-#' @param param a list of parameters as returned by
-#'     \code{create_mcmc}
-#'
-#' @param densities a list containing lists of functions computing densities,
-#'     named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
-#'
-#' @return a potentially modified list of parameters as returned by
-#'     \code{create_mcmc}
-#'
+## #' Movements of augmented data and parameters for outbreaker2
+## #'
+## #' This function moves all parameters for outbreaker2.
+## #'
+## #' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
+## #'
+## #'
+## #' @param moves a list of movement functions as returned by \code{bind_moves}
+## #'     (internal function)
+## #'
+## #' @param param a list of parameters as returned by
+## #'     \code{create_mcmc}
+## #'
+## #' @param densities a list containing lists of functions computing densities,
+## #'     named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
+## #'
+## #' @return a potentially modified list of parameters as returned by
+## #'     \code{create_mcmc}
+## #'
 outbreaker_move <- function(moves, data, param_current,
                             param_store, config,
                             likelihoods, priors) {

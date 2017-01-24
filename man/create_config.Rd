@@ -2,14 +2,21 @@
 % Please edit documentation in R/create_config.R
 \name{create_config}
 \alias{create_config}
+\alias{print.outbreaker_config}
 \title{Set and check parameter settings of outbreaker}
 \usage{
 create_config(..., data = NULL)
+
+\method{print}{outbreaker_config}(x, ...)
 }
 \arguments{
+\item{...}{further arguments to be passed to other methods}
+
 \item{data}{an optional list of data items as returned by
 \code{outbreaker_data}; if provided, this allows for further checks of
 the outbreaker setings.}
+
+\item{x}{an \code{outbreaker_config} object as returned by \code{create_config}.}
 }
 \description{
 This function defines settings for outbreaker.  It takes a list of named

@@ -27,15 +27,15 @@
 #' Priors currently used for the model are:
 #' \itemize{
 #'
-#' \item mu (mutation rate): default function is an exponential distribution
-#' implemented in \code{outbreaker:::cpp_prior_mu}. New prior functions should
-#' use \code{x$mu} to refer to the current value of \code{mu}, assuming their
-#' argument is called \code{x}.
+#' \item \code{mu} (mutation rate): default function is an exponential
+#' distribution implemented in \code{outbreaker:::cpp_prior_mu}. New prior
+#' functions should use \code{x$mu} to refer to the current value of \code{mu},
+#' assuming their argument is called \code{x}.
 #' 
-#' \item pi (reporting probability): default function is a beta distribution
-#' implemented in \code{outbreaker:::cpp_prior_pi}. New prior functions should
-#' use \code{x$pi} to refer to the current value of \code{pi}, assuming their
-#' argument is called \code{x}.
+#' \item \code{pi} (reporting probability): default function is a beta
+#' distribution implemented in \code{outbreaker:::cpp_prior_pi}. New prior
+#' functions should use \code{x$pi} to refer to the current value of \code{pi},
+#' assuming their argument is called \code{x}.
 #' 
 #' }
 #'

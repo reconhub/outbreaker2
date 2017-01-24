@@ -1,52 +1,51 @@
-## #' Create likelihood functions for outbreaker
-## #'
-## #' This function creates a named list of functions, each of which are compute
-## #' log-likelihood components of outbreaker.  If these functions are provided as
-## #' input, they will be used. Otherwise, default functions will be used.
-## #'
-## #' User-provided functions will be checked to ensure the right arguments are
-## #' present. All log-likelihood functions should have to following arguments:
-## #'  
-## #' \describe{
-## #'
-## #' \item{data}{a list of named items containing input data as returned by
-## #' \code{\link{outbreaker_data}}}
-## #'
-## #' \item{param}{a list of parameters as returned by \code{create_mcmc}}
-## #' }
-## #'
-## #' Note that unlike \code{bind_moves}, likelihood functions have no
-## #' mandatory names. They only need to be compatible with the movement functions
-## #' used in \code{bind_moves}. See 'details' for defaults.
-## #'
-## #' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
-## #'
-## #' @param ... a named list (see details) of functions, each computing a log-likelihood component.
-## #'
-## #' @param loglike a list of functions as returned by \code{outbreaker_custom_likelihood}
-## #'
-## #' @details
-## #' The likelihood functions used by default are:
-## #' \describe{
-## #'
-## #' \item{timing_infections}{corresponds to the probability of delays between
-## #' cases (generation time)}
-## #'
-## #' \item{timing_sampling}{corresponds to the probability of delays between
-## #' infection and reporting}
-## #'
-## #' \item{timing}{corresponds to the probability of all delays}
-## #'
-## #' \item{genetic}{corresponds to the probability of the genetic sequences given
-## #' the transmission tree}
-## #'
-## #' \item{all}{corresponds to the overal probability of the data}
-## #'
-## #' }
-## #'
-## #'
-## #' @return a list of named functions
-## #'
+#' Customise likelihood functions for outbreaker
+#'
+#' This function creates a named list of functions, each implementing a
+#' customised log-likelihood components of outbreaker. Functions which are not
+#' customised will result in a NULL component. User-provided functions will be
+#' checked to ensure the right arguments are present. All log-likelihood
+#' functions should have to following arguments:
+#'  
+#' \itemize{
+#'
+#' \item \code{data}: a list of named items containing input data as returned by
+#' \code{\link{outbreaker_data}}
+#'
+#' \item \code{param}: a list of parameters with the class \code{\link{outbreaker_param}}
+#' }
+#'
+#' Note that unlike \code{bind_moves}, likelihood functions have no
+#' mandatory names. They only need to be compatible with the movement functions
+#' used in \code{bind_moves}. See 'details' for defaults.
+#'
+#' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
+#'
+#' @param ... a named list (see details) of functions, each computing a log-likelihood component.
+#'
+#' @param loglike a list of functions as returned by \code{outbreaker_custom_likelihood}
+#'
+#' @details
+#' The likelihood functions used by default are:
+#' \describe{
+#'
+#' \item{timing_infections}{corresponds to the probability of delays between
+#' cases (generation time)}
+#'
+#' \item{timing_sampling}{corresponds to the probability of delays between
+#' infection and reporting}
+#'
+#' \item{timing}{corresponds to the probability of all delays}
+#'
+#' \item{genetic}{corresponds to the probability of the genetic sequences given
+#' the transmission tree}
+#'
+#' \item{all}{corresponds to the overal probability of the data}
+#'
+#' }
+#'
+#'
+#' @return a list of named functions
+#'
 
 
 
@@ -118,7 +117,7 @@ custom_likelihoods <- function(...) {
     }
     
 
-    class(likelihoods) <- c("outbreaker_likelihoods", "list")
+    class(likelihoods) <- c("custom_likelihoods", "list")
     return(likelihoods)
 
 }

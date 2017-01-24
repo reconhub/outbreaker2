@@ -1,15 +1,15 @@
-#' Initianilizes outputs for outbreaker
-#'
-#' This function creates initial outputs and parameter states for outbreaker.
-#'
-#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
-#'
-#' @param data a list of data items as returned by \code{outbreaker_data}
-#'
-#' @param config a list of settings as returned by \code{create_config}
-#'
-#' @export
-#'
+## #' Initianilizes outputs for outbreaker
+## #'
+## #' This function creates initial outputs and parameter states for outbreaker.
+## #'
+## #' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
+## #'
+## #' @param data a list of data items as returned by \code{outbreaker_data}
+## #'
+## #' @param config a list of settings as returned by \code{create_config}
+## #'
+## #' @export
+## #'
 create_mcmc <- function(data, config) {
     ## CREATE EMPTY OUTPUT VECTORS ##
     size <- round(config$n_iter/config$sample_every)
@@ -33,18 +33,24 @@ create_mcmc <- function(data, config) {
     counter <- 1L
 
 
-    ## SHAPE CHAIN ##
-    out <- list(store = list(
+    store <- list(
                 size = size, step = step,
                 post = post, like = like, prior = prior,
                 alpha = alpha, t_inf = t_inf, mu = mu, kappa = kappa, pi = pi,
                 counter = counter
-                ),
-                current = list(
-                alpha = current_alpha, t_inf = current_t_inf, mu = current_mu,
-                kappa = current_kappa, pi = current_pi
                 )
-                )
+
+    current  <- list(
+        alpha = current_alpha, t_inf = current_t_inf, mu = current_mu,
+        kappa = current_kappa, pi = current_pi
+    )
+    class(current) <- c("outbreaker_param", "list")
+    
+    
+    
+    ## SHAPE CHAIN ##
+    out <- list(store = store,
+                current = current)
     return(out)
 }
 

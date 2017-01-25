@@ -7,101 +7,144 @@
 #'
 #' @rdname outbreaker
 #'
-#' @author Thibaut Jombart (\email{t.jombart@@imperial.ac.uk})
+#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
 #'
 #' @references Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
-#' N (2014).  Bayesian reconstruction of disease outbreaks by combining
-#' epidemiologic and genomic data. PLoS Computational Biology.
+#'     N (2014).  Bayesian reconstruction of disease outbreaks by combining
+#'     epidemiologic and genomic data. PLoS Computational Biology.
 #'
-#' @seealso \code{\link{outbreaker.data}} to process input data, and \code{\link{outbreaker.config}} to process/set up parameters
+#' @seealso \code{\link{outbreaker_data}} to process input data, and
+#'     \code{\link{create_config}} to process/set up parameters
 #'
-#' @param data a list of named items containing input data as returned by \code{\link{outbreaker.data}}
-#' @param config a set of settings as returned by \code{\link{outbreaker.config}}
-## #' @param loglike a set of log-likelihood functions as returned by \code{\link{create.loglike}}
-## #' @param priors a set of prior functions as returned by \code{\link{outbreaker.create.priors}}
-## #' @param posteriors a set of posterior functions as returned by \code{\link{outbreaker.create.posteriors}}
-## #' @param moves a set of movement functions stored in a named list as returned by \code{\link{outbreaker.create.moves}}
-## #'
-#' @seealso \code{\link{outbreaker.config}} to see default parameters / set parameters and \code{\link{outbreaker.data}} to process input data
+#' @param data a list of named items containing input data as returned by
+#'     \code{\link{outbreaker_data}}
+#' 
+#' @param config a set of settings as returned by \code{\link{create_config}}
+#' 
+#' @param likelihoods a set of log-likelihood functions as returned by
+#'     \code{\link{custom_likelihoods}}
+#' 
+#' @param priors a set of log-prior functions as returned by
+#'     \code{\link{custom_priors}}
+#' 
+#' @param moves a set of movement functions as returned by
+#'     \code{\link{custom_moves}}
+
+#' @seealso
+#'
+#' \itemize{
+#'
+#' \item \code{\link{outbreaker_data}} to process input data
+#'
+#' \item \code{\link{create_config}} to see default parameters, and set
+#' parameters, including prior parameters
+#'
+#' \item \code{\link{custom_priors}} to specify custom prior functions
+#' 
+#' \item \code{\link{custom_likelihoods}} to specify custom likelihood functions
+#'
+#' \item \code{\link{custom_moves}} to create movement functions and specify
+#' custom movements
+#' 
+#' }
 #'
 #' @examples
 #'
 #' ## get data
-#' data(fake.outbreak)
-#' dat <- fake.outbreak$dat
-#' w <- fake.outbreak$w
+#' data(fake_outbreak)
+#' dat <- fake_outbreak$dat
+#' w <- fake_outbreak$w
 #'
 #' \dontrun{
 #' ## run outbreaker
-#' out <- outbreaker(data=list(dna=dat$dna, dates=dat$onset, w.dens=w),
-#' config=list(n.iter=2e4, sample.every=200))
+#' out <- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = w),
+#' config = list(n_iter = 2e4, sample_every = 200))
 #' plot(out)
 #' as.data.frame(out)
 #'
 #' ## run outbreaker, no DNA sequences
-#' out2 <- outbreaker(data=list(dates=dat$onset, w.dens=w),
-#' config=list(n.iter=2e4, sample.every=200))
+#' out2 <- outbreaker(data = list(dates = dat$onset, w_dens = w),
+#' config = list(n_iter = 2e4, sample_every = 200))
 #' plot(out2)
 #' as.data.frame(out2)
 #'
 #' }
-
-outbreaker <- function(data = outbreaker.data(),
-                       config = outbreaker.config()
+outbreaker <- function(data = outbreaker_data(),
+                       config = create_config(),
+                       priors = custom_priors(),
+                       likelihoods = custom_likelihoods(),
+                       moves = custom_moves()
                        ) {
 
     ## CHECKS / PROCESS DATA ##
-    data <- outbreaker.data(data=data)
+    data <- outbreaker_data(data = data)
 
     ## CHECK / PROCESS CONFIG ##
-    config <- outbreaker.config(data=data, config=config)
+    config <- create_config(config, data = data)
 
     ## ADD CONVOLUTIONS TO DATA ##
-    data <- add.convolutions(data=data, config=config)
+    data <- add_convolutions(data = data, config = config)
 
-    ## MAKE A LIST OF LIKELIHOOD, PRIOR AND POSTERIOR FUNCTIONS WITH ENCLOSED DATA ##
-    loglike <- create.loglike(data)
-    priors <- create.priors(config)
-    posteriors <- create.posteriors(loglike, priors)
+    ## PROCESS CUSTOM FUNCTIONS FOR PRIORS AND LIKELIHOOD ##
+    priors <- custom_priors(priors)
+    loglike <- custom_likelihoods(likelihoods)
 
+    
     ## CREATE AND INITIALIZE MCMC CHAIN ##
-    param <- outbreaker.create.mcmc(data=data, config=config)
-    param <- outbreaker.init.mcmc(param=param, loglike=loglike, priors=priors)
+    temp <- create_mcmc(data = data, config = config)
+    param_store <- temp$store
+    param_current <- temp$current
+    param_store <- outbreaker_init_mcmc(data, param_current, param_store,
+                                        loglike, priors, config)
 
-
-    ## We put all density functions in a single list 'densities'. This includes 3 lists, for:
-    ## log-likelihood, priors, and posteriors. All functions have enclosed items so that only the
-    ## 'param' argument is needed.
-
-    densities <- list(loglike=loglike, priors=priors, posteriors=posteriors)
 
     ## here we create a list of function for moving parameters
-    moves <- create.moves(config=config, densities=densities)
+    moves <- bind_moves(moves = moves,
+                        config = config,
+                        data = data,
+                        likelihoods = loglike,
+                        priors = priors)
 
 
+    ## IMPORTS 
 
-    ## MCMC ##
+    ## preliminary run to detect imported cases this relies on a shorter run of
+    ## the MCMC, then computing the average 'global influence' (-loglike) of
+    ## each data point, identifying outliers (based on fixed threshold) and
+    ## marking outliers down as 'imported cases'.
 
-    ## preliminary run to detect imported cases this relies on a shorter run of the MCMC,
-    ## then computing the average 'global influence' (-loglike) of each data point, identifying
-    ## outliers (based on fixed threshold) and marking outliers down as 'imported cases'.
-
-    temp <- outbreaker.find.imports(moves=moves, data=data, param=param, config=config,
-                                    densities=densities)
-    param <- temp$param
+    temp <- outbreaker_find_imports(moves = moves,
+                                    data = data,
+                                    param_current = param_current,
+                                    param_store = param_store,
+                                    config = config,
+                                    likelihoods = loglike)
+    param_current <- temp$param_current
+    param_store <- temp$param_store
     config <- temp$config
 
-    ## perform mcmc
+    
+    ## PERFORM MCMC
+    
     ## procedure is the same as before, with some cases fixed as 'imported'
-    param <- outbreaker.move(moves=moves, data=data, param=param,
-                    config=config, densities=densities)
+    
+    param_store <- outbreaker_move(moves = moves,
+                                   data = data,
+                                   param_current = param_current,
+                                   param_store = param_store,
+                                   config = config,
+                                   likelihoods = loglike,
+                                   priors = priors)
 
 
-    ## SHAPE RESULTS ##
-    ## this takes the chains generated by 'outbreaker.move', stored as a list, and
-    ## puts everything back together as a single data.frame; augmented data stored as vectors
-    ## (e.g. 'alpha') become numbered columns of the data.frame (e.g. 'alpha.1', 'alpha.2' etc.)
-    out <- outbreaker.mcmc.shape(param=param, data=data)
+    ## SHAPE RESULTS
+    
+    ## this takes the chains generated by 'outbreaker_move', stored as a list,
+    ## and puts everything back together as a single data.frame; augmented data
+    ## stored as vectors (e_g. 'alpha') become numbered columns of the
+    ## data.frame (e_g. 'alpha.1', 'alpha.2' etc.)
+    
+    out <- outbreaker_mcmc_shape(param_store, data)
 
     return(out)
 }

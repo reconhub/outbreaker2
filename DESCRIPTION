@@ -15,14 +15,15 @@ Suggests:
 Depends:
     R (>= 3.0.0)
 Imports:
+    utils,
+    methods,
+    stats,
+    grDevices,
     Rcpp,
     ape,
     ggplot2,
-    visNetwork,
     magrittr,
-    grDevices,
-    stats,
-    utils
+    visNetwork,
 LazyData: true
 LinkingTo:
     Rcpp

@@ -14,6 +14,10 @@
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 #' \link[adegenet]{fasta2DNAbin}.}
 #'
+#' \item{ctd}{the contact tracing data provided as a matrix or dataframe of two
+#' columns, indicating a reported contact between the two individuals whose ids
+#' are provided in a given row of the data.}
+#'
 #' \item{w_dens}{a vector of numeric values indicating the generation time
 #' distribution, reflecting the infectious potential of a case t = 1, 2, ...
 #' time steps after infection. By convention, it is assumed that
@@ -42,9 +46,10 @@
 outbreaker_data <- function(..., data = list(...)) {
 
     ## SET DEFAULTS ##
-    defaults <- list(dates = NULL, w_dens = NULL, f_dens = NULL, dna = NULL,
+    defaults <- list(dates = NULL, w_dens = NULL, f_dens = NULL, dna = NULL, ctd = NULL,
                      N = 0L, L = 0L, D = NULL, max_range = NA, can_be_ances = NULL,
-                     log_w_dens = NULL, log_f_dens = NULL)
+                     log_w_dens = NULL, log_f_dens = NULL, C = NULL, C_combn = NULL,
+                     C_nrow = NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
     data <- modify_defaults(defaults, data)
@@ -107,12 +112,33 @@ outbreaker_data <- function(..., data = list(...)) {
         data$D <- matrix(integer(0), ncol = 0, nrow = 0)
     }
 
+    ## CHECK CTD
+    if (!is.null(data$ctd)) {
+        if (!inherits(data$ctd, c("matrix", "data.frame"))) {
+            stop("ctd is not a matrix or data.frame")
+        }
+        if (!is.matrix(data$ctd)) data$ctd <- as.matrix(data$ctd)
+        not.found <- data$ctd[any(!data$ctd %in% 1:data$N)]
+        if (length(not.found) != 0) {
+            not.found <- sort(unique(not.found))
+            stop(paste("Individual(s)", paste(not.found, collapse = ", "),
+                       "are unknown cases (idx < 1 or > N")
+                 )
+        }
+        C <- matrix(0, data$N, data$N)
+        for(i in seq_len(nrow(data$ctd))) {
+            pair <- data$ctd[i,]
+            C[pair[[1]], pair[[2]]] <- C[pair[[2]], pair[[1]]] <- 1
+        }
+        data$C <- C
+        data$C_combn <- data$N*(data$N - 1)/2
+        data$C_nrow <- nrow(data$ctd)
+    } else {
+        data$C <- matrix(integer(0), ncol = 0, nrow = 0)
+    }
+
     ## output is a list of checked data
     return(data)
 
 }
-
-
-
-
 

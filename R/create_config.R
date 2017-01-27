@@ -29,6 +29,10 @@
 #'
 #' \item{init.pi}{initial value for the reporting probability}
 #'
+#' \item{init_eps}{initial value for the contact reporting coverage}
+#'
+#' \item{init_lambda}{initial value for the non-transmission contact rate}
+#'
 #' \item{move.alpha}{a vector of logicals indicating, for each case, if the
 #' ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
 #' TRUE; the vector is recycled if needed.}
@@ -42,6 +46,14 @@
 #'
 #' \item{move.pi}{a logical indicating whether the reporting probability
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+#'
+#' \item{move_eps}{a logical indicating whether the contact reporting coverage
+#' should be estimated ('moved' in the MCMC), or not at all, defaulting to
+#' TRUE.}
+#'
+#' \item{move_lambda}{a logical indicating wheter the non-transmission contact
+#' rate should be estimated ('moved' in the MCMC), or not at all, defaulting to
+#' TRUE.}
 #'
 #' \item{move.kappa}{a logical indicating whether the number of generations
 #' between two successive cases should be estimated ('moved' in the MCMC), or
@@ -60,6 +72,12 @@
 #'
 #' \item{sd_pi}{the standard deviation for the Normal proposal for the reporting
 #' probability}
+#'
+#' \item{sd_eps}{the standard deviation for the Normal proposal for the
+#' contact reporting coverage}
+#'
+#' \item{sd_lambda}{the standard deviation for the Normal proposal for the
+#' non-transmission contact rate}
 #'
 #' \item{prop_alpha_move}{the proportion of ancestries to move at each iteration
 #' of the MCMC}
@@ -85,6 +103,13 @@
 #' \item{prior_pi}{a numeric vector of length 2 indicating the first and second
 #' parameter of the beta prior for the reporting probability 'pi'}
 #'
+#' \item{prior_eps}{a numeric vector of length 2 indicating the first and second
+#' parameter of the beta prior for the contact reporting coverage 'eps'}
+#'
+#' \item{prior_lambda}{a numeric vector of length 2 indicating the first and
+#' second parameter of the beta prior for the non-transmission contact rate
+#' 'lambda'}
+#'
 #' }
 #'
 #' @param data an optional list of data items as returned by
@@ -107,7 +132,7 @@
 #'
 #'
 create_config <- function(..., data = NULL) {
-    
+
     ## This function returns a list of configuration settings of the class
     ## 'outbreaker_config'. Arguments are passed through '...' as a list. If the
     ## list contains a single item which is already an outbreaker_config object,
@@ -116,7 +141,7 @@ create_config <- function(..., data = NULL) {
     ## principle allow using the same config object for several datasets. It
     ## also implicitely serves as a checking procedure for existing configs.
 
-    
+
     config <- list(...)
     if (length(config) == 1L && is.list(config[[1]])) {
         config <- config[[1]]
@@ -129,9 +154,13 @@ create_config <- function(..., data = NULL) {
                      init_alpha = NULL,
                      init_kappa = 1,
                      init_pi = 0.9,
+                     init_eps = 0.5,
+                     init_lambda = 0.05,
                      move_alpha = TRUE, move_swap_cases = TRUE, move_t_inf = TRUE,
                      move_mu = TRUE, move_kappa = TRUE, move_pi = TRUE,
+                     move_eps = TRUE, move_lambda = TRUE,
                      n_iter = 1e4, sample_every = 200, sd_mu = 0.0001, sd_pi = 0.1,
+                     sd_eps = 0.1, sd_lambda = 0.05,
                      prop_alpha_move = 1/4,
                      prop_t_inf_move = 0.2,
                      paranoid = FALSE,
@@ -142,7 +171,9 @@ create_config <- function(..., data = NULL) {
                      n_iter_import = 5000,
                      sample_every_import = 100,
                      prior_mu = 1000,
-                     prior_pi = c(10,1))
+                     prior_pi = c(10,1),
+                     prior_eps = c(1,1),
+                     prior_lambda = c(1,1))
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify_defaults(defaults, config)
@@ -199,7 +230,7 @@ create_config <- function(..., data = NULL) {
         config$init_kappa[config$init_kappa > config$max_kappa] <- config$max_kappa
         warning("values of init_kappa greater than max_kappa have been set to max_kappa")
     }
- 
+
 
     ## check init_pi
     if (!is.numeric(config$init_pi)) {
@@ -214,6 +245,37 @@ create_config <- function(..., data = NULL) {
     if (!is.finite(config$init_pi)) {
         stop("init_pi is infinite or NA")
     }
+
+
+    ## check init_eps
+    if (!is.numeric(config$init_eps)) {
+        stop("init_eps is not a numeric value")
+    }
+    if (config$init_eps < 0) {
+        stop("init_eps is negative")
+    }
+    if (config$init_eps > 1) {
+        stop("init_eps is greater than 1")
+    }
+    if (!is.finite(config$init_eps)) {
+        stop("init_eps is infinite or NA")
+    }
+
+
+    ## check init_lambda
+    if (!is.numeric(config$init_lambda)) {
+        stop("init_lambda is not a numeric value")
+    }
+    if (config$init_lambda < 0) {
+        stop("init_lambda is negative")
+    }
+    if (config$init_lambda > 1) {
+        stop("init_lambda is greater than 1")
+    }
+    if (!is.finite(config$init_lambda)) {
+        stop("init_lambda is infinite or NA")
+    }
+
 
     ## check move_alpha
     if (!all(is.logical(config$move_alpha))) {
@@ -263,6 +325,22 @@ create_config <- function(..., data = NULL) {
         stop("move_pi is NA")
     }
 
+    ## check move_eps
+    if (!is.logical(config$move_eps)) {
+        stop("move_eps is not a logical")
+    }
+    if (is.na(config$move_eps)) {
+        stop("move_eps is NA")
+    }
+
+    ## check move_lambda
+    if (!is.logical(config$move_lambda)) {
+        stop("move_lambda is not a logical")
+    }
+    if (is.na(config$move_lambda)) {
+        stop("move_lambda is NA")
+    }
+
     ## check n_iter
     if (!is.numeric(config$n_iter)) {
         stop("n_iter is not a numeric value")
@@ -309,6 +387,28 @@ create_config <- function(..., data = NULL) {
         stop("sd_pi is infinite or NA")
     }
 
+    ## check sd_eps
+    if (!is.numeric(config$sd_eps)) {
+        stop("sd_eps is not a numeric value")
+    }
+    if (config$sd_eps < 1e-10) {
+        stop("sd_eps is close to zero or negative")
+    }
+    if (!is.finite(config$sd_eps)) {
+        stop("sd_eps is infinite or NA")
+    }
+
+    ## check sd_lambda
+    if (!is.numeric(config$sd_lambda)) {
+        stop("sd_lambda is not a numeric value")
+    }
+    if (config$sd_lambda < 1e-10) {
+        stop("sd_lambda is close to zero or negative")
+    }
+    if (!is.finite(config$sd_lambda)) {
+        stop("sd_lambda is infinite or NA")
+    }
+
     ## check prop_alpha_move
     if (!is.numeric(config$prop_alpha_move)) {
         stop("prop_alpha_move is not a numeric value")
@@ -337,7 +437,7 @@ create_config <- function(..., data = NULL) {
         stop("prop_t_inf_move is infinite or NA")
     }
 
-    
+
     ## check paranoid
     if (!is.logical(config$paranoid)) {
         stop("paranoid is not logical")
@@ -429,6 +529,35 @@ create_config <- function(..., data = NULL) {
     }
    if (!all(is.finite(config$prior_pi))) {
         stop("prior_pi is has values which are infinite or NA")
+   }
+
+    ## check prior value for eps
+    if (!all(is.numeric(config$prior_eps))) {
+        stop("prior_eps has non-numeric values")
+    }
+    if (any(config$prior_eps < 0)) {
+        stop("prior_eps has negative values")
+    }
+    if (length(config$prior_eps)!=2L) {
+        stop("prior_eps should be a vector of length 2")
+    }
+    if (!all(is.finite(config$prior_eps))) {
+        stop("prior_eps is has values which are infinite or NA")
+    }
+
+
+    ## check prior value for lambda
+    if (!all(is.numeric(config$prior_lambda))) {
+        stop("prior_lambda has non-numeric values")
+    }
+    if (any(config$prior_lambda < 0)) {
+        stop("prior_lambda has negative values")
+    }
+    if (length(config$prior_lambda)!=2L) {
+        stop("prior_lambda should be a vector of length 2")
+    }
+    if (!all(is.finite(config$prior_lambda))) {
+        stop("prior_lambda is has values which are infinite or NA")
     }
 
 
@@ -493,11 +622,16 @@ create_config <- function(..., data = NULL) {
         if(is.null(data$D) || nrow(data$D)<1) {
             config$move_mu <- FALSE
         }
+
+        ## disable moves for eps and lambda if no CTD is provided
+        if(is.null(data$C) || nrow(data$C) < 1) {
+            config$move_eps <- config$move_lambda <- FALSE
+        }
     }
 
     ## output is a list of checked settings with a dedicated class (for
     ## printing)
-    
+
     class(config) <- c("outbreaker_config", "list")
     return(config)
 }
@@ -508,15 +642,15 @@ create_config <- function(..., data = NULL) {
 
 
 #' @rdname create_config
-#' 
+#'
 #' @export
-#' 
+#'
 #' @aliases print.outbreaker_config
 #'
 #' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
-#' 
+#'
 #' @param ... further arguments to be passed to other methods
- 
+
 print.outbreaker_config <- function(x, ...) {
     cat("\n\n ///// outbreaker settings ///\n")
     cat("\nclass:", class(x))

@@ -128,6 +128,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_ll_contact
+double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_function);
+RcppExport SEXP outbreaker2_cpp_ll_contact(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_ll_contact(data, param, i, custom_function));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_ll_timing
 double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_functions);
 RcppExport SEXP outbreaker2_cpp_ll_timing(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionsSEXP) {
@@ -181,6 +194,36 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_move_pi(param, data, config, custom_ll, custom_prior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_move_eps
+Rcpp::List cpp_move_eps(Rcpp::List param, Rcpp::List data, Rcpp::List config, Rcpp::RObject custom_ll, Rcpp::RObject custom_prior);
+RcppExport SEXP outbreaker2_cpp_move_eps(SEXP paramSEXP, SEXP dataSEXP, SEXP configSEXP, SEXP custom_llSEXP, SEXP custom_priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_move_eps(param, data, config, custom_ll, custom_prior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_move_lambda
+Rcpp::List cpp_move_lambda(Rcpp::List param, Rcpp::List data, Rcpp::List config, Rcpp::RObject custom_ll, Rcpp::RObject custom_prior);
+RcppExport SEXP outbreaker2_cpp_move_lambda(SEXP paramSEXP, SEXP dataSEXP, SEXP configSEXP, SEXP custom_llSEXP, SEXP custom_priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_move_lambda(param, data, config, custom_ll, custom_prior));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -258,6 +301,30 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_prior_pi(param, config, custom_function));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_prior_eps
+double cpp_prior_eps(Rcpp::List param, Rcpp::List config, Rcpp::RObject custom_function);
+RcppExport SEXP outbreaker2_cpp_prior_eps(SEXP paramSEXP, SEXP configSEXP, SEXP custom_functionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_prior_eps(param, config, custom_function));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_prior_lambda
+double cpp_prior_lambda(Rcpp::List param, Rcpp::List config, Rcpp::RObject custom_function);
+RcppExport SEXP outbreaker2_cpp_prior_lambda(SEXP paramSEXP, SEXP configSEXP, SEXP custom_functionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_prior_lambda(param, config, custom_function));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -22,7 +22,7 @@ The main functions of the package are:
 
 \item \code{\link{outbreaker_data}}: function to process input data
 
-\item \code{\link{create}}: function to create default and customise
+\item \code{\link{create_config}}: function to create default and customise
 configuration settings
 
 \item \code{\link{custom_priors}}: function to specify customised prior

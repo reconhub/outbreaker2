@@ -57,6 +57,16 @@ distribution implemented in \code{outbreaker:::cpp_prior_pi}. New prior
 functions should use \code{x$pi} to refer to the current value of \code{pi},
 assuming their argument is called \code{x}.
 
+\item \code{eps} (contact reporting coverage): default function is a beta
+distribution implemented in \code{outbreaker:::cpp_prior_eps}. New prior
+functions should use \code{x$eps} to refer to the current value of \code{eps},
+assuming their argument is called \code{x}.
+
+\item \code{lambda} (non-transmission contact rate): default function is a
+beta distribution implemented in \code{outbreaker:::cpp_prior_lambda}. New
+prior functions should use \code{x$lambda} to refer to the current value of
+\code{lambda}, assuming their argument is called \code{x}.
+
 }
 }
 \examples{

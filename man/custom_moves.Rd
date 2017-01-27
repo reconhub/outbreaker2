@@ -34,6 +34,12 @@ movement they implement. Values currently available are:
 \item \code{pi}: movement of the reporting probability; by default, the function
 \code{cpp_move_pi} is used.
 
+\item \code{eps}: movement of the contact reporting coverage; by default, the
+function \code{cpp_move_eps} is used.
+
+\item \code{lambda}: the movement of the non-transmission contact rate; the
+function \code{cpp_move_lambda} is used.
+
 \item \code{alpha}: movement of the transmission tree, by randomly proposing
 infectors in the pool of cases infected before; by default, the function
 \code{cpp_move_alpha} is used.

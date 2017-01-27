@@ -30,3 +30,21 @@
     stats::dbeta(param$pi, shape1, shape2, log = TRUE)
 }
 
+
+## We use a beta prior for the contact reporting coverage (which contrains it to lie
+## between 0 and 1); the 2 shape parameters, which do not change in the MCMC,
+## are enclosed in the returned function.
+
+.prior_eps <- function(param, shape1, shape2) {
+    stats::dbeta(param$eps, shape1, shape2, log = TRUE)
+}
+
+
+
+## We use a beta prior for the non-transmission contact rate (which contrains it
+## to lie between 0 and 1); the 2 shape parameters, which do not change in the
+## MCMC, are enclosed in the returned function.
+
+.prior_lambda <- function(param, shape1, shape2) {
+    stats::dbeta(param$lambda, shape1, shape2, log = TRUE)
+}

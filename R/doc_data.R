@@ -5,7 +5,7 @@
 #'
 #' @aliases fake_outbreak
 #' @docType data
-#' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
+#' @author Thibaut Jombart \email{thibautjombart@@gmail.com}
 #' @keywords datasets
 "fake_outbreak"
 

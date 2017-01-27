@@ -30,7 +30,7 @@
 #'
 #' @param data optionally, an existing list of data item as returned by \code{outbreaker_data}.
 #'
-#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @export
 #'

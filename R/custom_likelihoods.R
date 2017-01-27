@@ -19,10 +19,10 @@
 #'
 #' \item \code{reporting}: the likelihood of the reporting process; by default,
 #' the function \code{cpp_ll_reporting} is used.
-#' }
 #'
 #' \item \code{contact}: the likelihood of the contact tracing data; by default,
 #' the function \code{cpp_ll_contact} is used.
+#' }
 #'
 #' All log-likelihood functions should have to following arguments:
 #'

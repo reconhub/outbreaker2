@@ -41,6 +41,10 @@ cpp_ll_reporting <- function(data, param, i = NULL, custom_function = NULL) {
     .Call('outbreaker2_cpp_ll_reporting', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }
 
+cpp_ll_contact <- function(data, param, i = NULL, custom_function = NULL) {
+    .Call('outbreaker2_cpp_ll_contact', PACKAGE = 'outbreaker2', data, param, i, custom_function)
+}
+
 cpp_ll_timing <- function(data, param, i = NULL, custom_functions = NULL) {
     .Call('outbreaker2_cpp_ll_timing', PACKAGE = 'outbreaker2', data, param, i, custom_functions)
 }
@@ -55,6 +59,14 @@ cpp_move_mu <- function(param, data, config, custom_ll = NULL, custom_prior = NU
 
 cpp_move_pi <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
     .Call('outbreaker2_cpp_move_pi', PACKAGE = 'outbreaker2', param, data, config, custom_ll, custom_prior)
+}
+
+cpp_move_eps <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
+    .Call('outbreaker2_cpp_move_eps', PACKAGE = 'outbreaker2', param, data, config, custom_ll, custom_prior)
+}
+
+cpp_move_lambda <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
+    .Call('outbreaker2_cpp_move_lambda', PACKAGE = 'outbreaker2', param, data, config, custom_ll, custom_prior)
 }
 
 cpp_move_t_inf <- function(param, data, list_custom_ll = NULL) {
@@ -79,6 +91,14 @@ cpp_prior_mu <- function(param, config, custom_function = NULL) {
 
 cpp_prior_pi <- function(param, config, custom_function = NULL) {
     .Call('outbreaker2_cpp_prior_pi', PACKAGE = 'outbreaker2', param, config, custom_function)
+}
+
+cpp_prior_eps <- function(param, config, custom_function = NULL) {
+    .Call('outbreaker2_cpp_prior_eps', PACKAGE = 'outbreaker2', param, config, custom_function)
+}
+
+cpp_prior_lambda <- function(param, config, custom_function = NULL) {
+    .Call('outbreaker2_cpp_prior_lambda', PACKAGE = 'outbreaker2', param, config, custom_function)
 }
 
 cpp_prior_all <- function(param, config, custom_functions = NULL) {

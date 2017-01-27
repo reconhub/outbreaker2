@@ -35,8 +35,8 @@ outbreaker_mcmc_shape <- function(param, data) {
     ## shape data.frame and convert ##
     param <- data.frame(step = param$step,
                         post = param$post, like = param$like, prior = param$prior,
-                        mu = param$mu, pi = param$pi,
-                        param$alpha, param$t_inf, param$kappa)
+                        mu = param$mu, pi = param$pi, eps = param$eps,
+                        lambda = param$lambda, param$alpha, param$t_inf, param$kappa)
 
     ## output is a data.frame containing all parameters and augmented data, with a dedicated
     ## class (for summary, plotting, etc.)

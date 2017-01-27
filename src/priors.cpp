@@ -3,7 +3,7 @@
 #include "internals.h"
 
 
-// ON WHEN THESE ARE USED 
+// ON WHEN THESE ARE USED
 
 // These functions implement various default priors. The alternative to these
 // defaults is using user-specified closures, which only take one parameter
@@ -36,7 +36,7 @@
 // The prior for the mutation rate 'mu' is an exponential distribution
 
 // [[Rcpp::export(rng = false)]]
-double cpp_prior_mu(Rcpp::List param, Rcpp::List config, 
+double cpp_prior_mu(Rcpp::List param, Rcpp::List config,
 		    Rcpp::RObject custom_function = R_NilValue) {
 
   if (custom_function == R_NilValue) {
@@ -49,25 +49,25 @@ double cpp_prior_mu(Rcpp::List param, Rcpp::List config,
 
     return Rcpp::as<double>(f(param));
  }
- 
+
 }
 
 
 
 
 
-// The prior for the reporting probability 'pi' is an beta distribution
+// The prior for the reporting probability 'pi' is a beta distribution
 
 // [[Rcpp::export(rng = false)]]
-double cpp_prior_pi(Rcpp::List param, Rcpp::List config, 
+double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 		    Rcpp::RObject custom_function = R_NilValue) {
 
   if (custom_function == R_NilValue) {
     Rcpp::NumericVector shape = config["prior_pi"];
 
-    return R::dbeta(Rcpp::as<double>(param["pi"]), 
-			  (double) shape[0], 
-			  (double) shape[1], 
+    return R::dbeta(Rcpp::as<double>(param["pi"]),
+			  (double) shape[0],
+			  (double) shape[1],
 			  true);
   } else {
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
@@ -78,6 +78,48 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 }
 
 
+// The prior for the contact reporting coverage 'eps' is a beta distribution
+
+// [[Rcpp::export(rng = false)]]
+double cpp_prior_eps(Rcpp::List param, Rcpp::List config,
+		    Rcpp::RObject custom_function = R_NilValue) {
+
+  if (custom_function == R_NilValue) {
+    Rcpp::NumericVector shape = config["prior_eps"];
+
+    return R::dbeta(Rcpp::as<double>(param["eps"]),
+			  (double) shape[0],
+			  (double) shape[1],
+			  true);
+  } else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+
+    return Rcpp::as<double>(f(param));
+  }
+
+}
+
+
+// The prior for the non-transmision contact rate 'lambda' is a beta distribution
+
+// [[Rcpp::export(rng = false)]]
+double cpp_prior_lambda(Rcpp::List param, Rcpp::List config,
+		    Rcpp::RObject custom_function = R_NilValue) {
+
+  if (custom_function == R_NilValue) {
+    Rcpp::NumericVector shape = config["prior_lambda"];
+
+    return R::dbeta(Rcpp::as<double>(param["lambda"]),
+			  (double) shape[0],
+			  (double) shape[1],
+			  true);
+  } else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+
+    return Rcpp::as<double>(f(param));
+  }
+
+}
 
 
 // [[Rcpp::export(rng = false)]]
@@ -86,14 +128,18 @@ double cpp_prior_all(Rcpp::List param, Rcpp::List config,
 		     ) {
   if (custom_functions == R_NilValue) {
 
-    return cpp_prior_mu(param, config) + 
-      cpp_prior_pi(param, config);
+    return cpp_prior_mu(param, config) +
+      cpp_prior_pi(param, config) +
+      cpp_prior_eps(param, config) +
+      cpp_prior_lambda(param, config);
 
   } else {
 
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
 
-    return cpp_prior_mu(param, config, list_functions["mu"]) + 
-      cpp_prior_pi(param, config, list_functions["pi"]);
+    return cpp_prior_mu(param, config, list_functions["mu"]) +
+      cpp_prior_pi(param, config, list_functions["pi"]) +
+      cpp_prior_eps(param, config, list_functions["eps"]) +
+      cpp_prior_lambda(param, config, list_functions["lambda"]);
   }
 }

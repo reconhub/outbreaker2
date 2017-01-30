@@ -32,12 +32,12 @@
 // will never change much. Probably not much point in using auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config, 
+Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 		       Rcpp::RObject custom_ll = R_NilValue,
 		       Rcpp::RObject custom_prior = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
-  Rcpp::List new_param = clone(param); 
+  Rcpp::List new_param = clone(param);
   Rcpp::NumericVector mu = param["mu"];
   Rcpp::NumericVector new_mu = new_param["mu"];
 
@@ -51,12 +51,12 @@ Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
 
   // automatic rejection of negative mu
-  
+
   if (new_mu[0] < 0.0) {
     return param;
   }
 
-   
+
   // compute likelihoods
   old_logpost = cpp_ll_genetic(data, param, R_NilValue, custom_ll);
   new_logpost = cpp_ll_genetic(data, new_param, R_NilValue, custom_ll);
@@ -66,7 +66,7 @@ Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
   old_logpost += cpp_prior_mu(param, config, custom_prior);
   new_logpost += cpp_prior_mu(new_param, config, custom_prior);
-    
+
 
   // acceptance term
 
@@ -79,7 +79,7 @@ Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config,
   if (p_accept < unif_rand()) { // reject new values
     return param;
   }
-  
+
   return new_param;
 }
 
@@ -90,7 +90,7 @@ Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
 // ---------------------------
 
-// Movement of the Reporting probability 'pi' is done using a dumb normal
+// movement of the Reporting probability 'pi' is done using a dumb normal
 // proposal. This is satisfying for now - we only reject a few non-sensical
 // values outside the range [0;1]. The SD of the proposal (implicitely contained
 // in rand$pi.rnorm1, but really provided through 'config', seems fine as the
@@ -98,13 +98,13 @@ Rcpp::List cpp_move_mu(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 // auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config, 
+Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 		       Rcpp::RObject custom_ll = R_NilValue,
 		       Rcpp::RObject custom_prior = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
 
-  Rcpp::List new_param = clone(param); 
+  Rcpp::List new_param = clone(param);
   Rcpp::NumericVector pi = param["pi"]; // these are just pointers
   Rcpp::NumericVector new_pi = new_param["pi"]; // these are just pointers
 
@@ -112,9 +112,9 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
   double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
 
-  
+
   // proposal (normal distribution with SD: config$sd_pi)
-  
+
   new_pi[0] += R::rnorm(0.0, sd_pi); // new proposed value
 
 
@@ -124,7 +124,7 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
     return param;
   }
 
-  
+
   // compute likelihoods
   old_logpost = cpp_ll_reporting(data, param, R_NilValue, custom_ll);
   new_logpost = cpp_ll_reporting(data, new_param, R_NilValue, custom_ll);
@@ -135,24 +135,149 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
   old_logpost += cpp_prior_pi(param, config, custom_prior);
   new_logpost += cpp_prior_pi(new_param, config, custom_prior);
 
-  
+
   // acceptance term
-  
+
   p_accept = exp(new_logpost - old_logpost);
 
 
   // acceptance: the new value is already in pi, so we only act if the move is
   // rejected, in which case we restore the previous ('old') value
-  
+
   if (p_accept < unif_rand()) { // reject new values
     return param;
   }
-  
+
   return new_param;
 }
 
 
 
+// ---------------------------
+
+// movement of the contact reporting coverage 'eps' is done using a dumb normal
+// proposal. This is satisfying for now - we only reject a few non-sensical
+// values outside the range [0;1]. The SD of the proposal is provided through
+// 'config'; this seems fine as the range of real values will never change
+// much. Probably not much point in using auto-tuning here.
+
+// [[Rcpp::export(rng = true)]]
+Rcpp::List cpp_move_eps(Rcpp::List param, Rcpp::List data, Rcpp::List config,
+		       Rcpp::RObject custom_ll = R_NilValue,
+		       Rcpp::RObject custom_prior = R_NilValue) {
+
+  // deep copy here for now, ultimately should be an arg.
+
+  Rcpp::List new_param = clone(param);
+  Rcpp::NumericVector eps = param["eps"]; // these are just pointers
+  Rcpp::NumericVector new_eps = new_param["eps"]; // these are just pointers
+
+  double sd_eps = static_cast<double>(config["sd_eps"]);
+
+  double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
+
+
+  // proposal (normal distribution with SD: config$sd_eps)
+
+  new_eps[0] += R::rnorm(0.0, sd_eps); // new proposed value
+
+
+  // automatic rejection of eps outside [0;1]
+
+  if (new_eps[0] < 0.0 || new_eps[0] > 1.0) {
+    return param;
+  }
+
+
+  // compute likelihoods
+  old_logpost = cpp_ll_contact(data, param, R_NilValue, custom_ll);
+  new_logpost = cpp_ll_contact(data, new_param, R_NilValue, custom_ll);
+
+
+  // compute priors
+
+  old_logpost += cpp_prior_eps(param, config, custom_prior);
+  new_logpost += cpp_prior_eps(new_param, config, custom_prior);
+
+
+  // acceptance term
+
+  p_accept = exp(new_logpost - old_logpost);
+
+
+  // acceptance: the new value is already in eps, so we only act if the move is
+  // rejected, in which case we restore the previous ('old') value
+
+  if (p_accept < unif_rand()) { // reject new values
+    return param;
+  }
+
+  return new_param;
+}
+
+
+
+// ---------------------------
+
+// movement of the non-transmission contact rate 'eps' is done using a dumb
+// normal proposal. This is satisfying for now - we only reject a few
+// non-sensical values outside the range [0;1]. The SD of the proposal is
+// provided through 'config'; this seems fine as the range of real values will
+// never change much. Probably not much point in using auto-tuning here.
+
+// [[Rcpp::export(rng = true)]]
+Rcpp::List cpp_move_lambda(Rcpp::List param, Rcpp::List data, Rcpp::List config,
+		       Rcpp::RObject custom_ll = R_NilValue,
+		       Rcpp::RObject custom_prior = R_NilValue) {
+
+  // deep copy here for now, ultimately should be an arg.
+
+  Rcpp::List new_param = clone(param);
+  Rcpp::NumericVector lambda = param["lambda"]; // these are just pointers
+  Rcpp::NumericVector new_lambda = new_param["lambda"]; // these are just pointers
+
+  double sd_lambda = static_cast<double>(config["sd_lambda"]);
+
+  double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
+
+
+  // proposal (normal distribution with SD: config$sd_lambda)
+
+  new_lambda[0] += R::rnorm(0.0, sd_lambda); // new proposed value
+
+
+  // automatic rejection of lambda outside [0;1]
+
+  if (new_lambda[0] < 0.0 || new_lambda[0] > 1.0) {
+    return param;
+  }
+
+
+  // compute likelihoods
+  old_logpost = cpp_ll_contact(data, param, R_NilValue, custom_ll);
+  new_logpost = cpp_ll_contact(data, new_param, R_NilValue, custom_ll);
+
+
+  // compute priors
+
+  old_logpost += cpp_prior_lambda(param, config, custom_prior);
+  new_logpost += cpp_prior_lambda(new_param, config, custom_prior);
+
+
+  // acceptance term
+
+  p_accept = exp(new_logpost - old_logpost);
+
+
+  // acceptance: the new value is already in lambda, so we only act if the move is
+  // rejected, in which case we restore the previous ('old') value
+
+  if (p_accept < unif_rand()) { // reject new values
+    return param;
+  }
+
+  return new_param;
+}
 
 
 
@@ -182,8 +307,8 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
 
   // deep copy here for now, ultimately should be an arg.
-  
-  Rcpp::List new_param = clone(param); 
+
+  Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector t_inf = param["t_inf"];
   Rcpp::IntegerVector new_t_inf = new_param["t_inf"];
   Rcpp::IntegerVector alpha = param["alpha"];
@@ -194,9 +319,9 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
   double old_loc_loglike = 0.0, new_loc_loglike = 0.0, p_loc_accept = 0.0;
 
-  
+
   for (size_t i = 0; i < N; i++) {
-    // NOTE: local likelihood does not work here. Need to investigate why. 
+    // NOTE: local likelihood does not work here. Need to investigate why.
 
     local_cases = cpp_find_descendents(param["alpha"], i+1);
 
@@ -256,7 +381,7 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
 // is on the scale 1:N.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data, 
+Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data,
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
@@ -324,7 +449,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
   Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
   Rcpp::List swapinfo; // contains alpha and t_inf
   Rcpp::IntegerVector local_cases;
-  
+
   size_t N = static_cast<size_t>(data["N"]);
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
@@ -342,9 +467,9 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
       // - the descendents of 'i'
       // - 'alpha[i]'
       // - the descendents of 'alpha[i]' (other than 'i')
-      
+
       local_cases = cpp_find_local_cases(param["alpha"], i+1);
-	
+
 
       // loglike with current parameters
 
@@ -356,20 +481,20 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
       swapinfo = cpp_swap_cases(param, i+1);
       new_param["alpha"] = swapinfo["alpha"];
       new_param["t_inf"] = swapinfo["t_inf"];
-        
-      
+
+
       // loglike with new parameters
 
       new_loglike = cpp_ll_all(data, new_param, local_cases, list_custom_ll);
-      
-      
+
+
       // acceptance term
-      
+
       p_accept = exp(new_loglike - old_loglike);
 
 
       // acceptance: change param only if new values is accepted
-      
+
       if (p_accept >= unif_rand()) { // accept new parameters
 	param["alpha"] = new_param["alpha"];
 	param["t_inf"] = new_param["t_inf"];
@@ -396,7 +521,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
 // eventually want to bounce back or use and correct for assymetric proposals.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config, 
+Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
@@ -412,7 +537,7 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
   for (size_t i = 0; i < N; i++) {
 
-    // only non-NA ancestries are moved    
+    // only non-NA ancestries are moved
     if (alpha[i] != NA_INTEGER) {
 
       // propose new kappa
@@ -423,24 +548,24 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
       // only look into this move if new kappa is positive and smaller than the
       // maximum value; if not, remember to reset the value of new_kappa to that
       // of kappa, otherwise we implicitely accept stupid moves automatically
-      
+
       if (new_kappa[i] < 1 || new_kappa[i] > K) {
 	new_kappa[i] = kappa[i];
       } else {
-	
-	// loglike with current parameters	
+
+	// loglike with current parameters
 	old_loglike = cpp_ll_all(data, param, i+1, list_custom_ll);
 
 
 	// loglike with new parameters
 	new_loglike = cpp_ll_all(data, new_param, i+1, list_custom_ll);
 
-				 
+
 	// acceptance term
 	p_accept = exp(new_loglike - old_loglike);
 
 
-	// acceptance: change param only if new values is accepted      
+	// acceptance: change param only if new values is accepted
 	if (p_accept >= unif_rand()) { // accept new parameters
 	  // Rprintf("\naccepting kappa:%d  (p: %f  old ll:  %f  new ll: %f",
 	  // 		new_kappa[i], p_accept, old_loglike, new_loglike);
@@ -448,7 +573,7 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 	} else {
 	  new_kappa[i] = kappa[i];
 	}
-      } 
+      }
     }
 
   }

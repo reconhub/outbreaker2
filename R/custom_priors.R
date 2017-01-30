@@ -31,12 +31,22 @@
 #' distribution implemented in \code{outbreaker:::cpp_prior_mu}. New prior
 #' functions should use \code{x$mu} to refer to the current value of \code{mu},
 #' assuming their argument is called \code{x}.
-#' 
+#'
 #' \item \code{pi} (reporting probability): default function is a beta
 #' distribution implemented in \code{outbreaker:::cpp_prior_pi}. New prior
 #' functions should use \code{x$pi} to refer to the current value of \code{pi},
 #' assuming their argument is called \code{x}.
-#' 
+#'
+#' \item \code{eps} (contact reporting coverage): default function is a beta
+#' distribution implemented in \code{outbreaker:::cpp_prior_eps}. New prior
+#' functions should use \code{x$eps} to refer to the current value of \code{eps},
+#' assuming their argument is called \code{x}.
+#'
+#' \item \code{lambda} (non-transmission contact rate): default function is a
+#' beta distribution implemented in \code{outbreaker:::cpp_prior_lambda}. New
+#' prior functions should use \code{x$lambda} to refer to the current value of
+#' \code{lambda}, assuming their argument is called \code{x}.
+#'
 #' }
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
@@ -50,13 +60,13 @@
 #' @return A list of custom functions with class \code{custom_priors}. Values
 #'     set to \code{NULL} will be ignored and default functions will be used
 #'     instead.
-#' 
+#'
 #' @examples
 #'
 #' ## BASIC CONFIGURATION
 #' custom_priors()
-#' 
-#' 
+#'
+#'
 #' ## SPECIFYING PRIOR PARAMETERS
 #' ## - this will need to be passed to outbreaker
 #' default_config <- create_config()
@@ -67,14 +77,14 @@
 #' param <- list(mu = 0.001, pi = 0.9)
 #' outbreaker2:::cpp_prior_mu(param, default_config)
 #' outbreaker2:::cpp_prior_pi(param, default_config)
-#' 
+#'
 #' outbreaker2:::cpp_prior_mu(param, new_config)
 #' outbreaker2:::cpp_prior_pi(param, new_config)
 #'
 #' ## these correspond to:
 #' dexp(0.001, 0.01, log = TRUE)
 #' dbeta(0.9, 2, 1, log = TRUE)
-#' 
+#'
 #'
 #' ## SPECIFYING A PRIOR FUNCTION
 #'
@@ -82,13 +92,13 @@
 #' f <- function(x) {ifelse(x$pi > 0.5, log(2), log(0))}
 #' priors <- custom_priors(pi = f)
 #' priors # this should be passed to outbreaker
-#' 
+#'
 #' ## test the prior manually
 #' priors$pi(list(pi=1))
 #' priors$pi(list(pi=.6))
 #' priors$pi(list(pi=.2))
 #' priors$pi(list(pi=.49))
-#' 
+#'
 
 custom_priors <- function(...) {
 
@@ -103,37 +113,39 @@ custom_priors <- function(...) {
 
     ## 2) that if a function, it has a single argument called 'param'
 
- 
+
 
     ## Get user-specified prior functions
-    
+
     priors <- list(...)
     if (length(priors) == 1L && is.list(priors[[1]])) {
         priors <- priors[[1]]
     }
-    
+
 
     ## Use user-provided priors where provided, default otherwise. The default
     ## for a prior is NULL, in which case the movement functions in C++ will use
     ## C++ versions.
-    
+
     defaults <- list(mu = NULL, # mutation rate
-                     pi = NULL # reporting probability
+                     pi = NULL, # reporting probability
+                     eps = NULL, # contact reporting coverage
+                     lambda = NULL # non-transmission contact rate
                      )
-    
+
     priors <- modify_defaults(defaults, priors, FALSE)
     priors_names <- names(priors)
 
-    
-     
+
+
     ## check all priors are functions
 
     function_or_null <- function(x) {
         is.null(x) || is.function(x)
     }
-    
+
     is_ok <- vapply(priors, function_or_null, logical(1))
-    
+
     if (!all(is_ok)) {
         culprits <- priors_names[!is_ok]
         msg <- paste0("The following priors are not functions: ",
@@ -141,17 +153,17 @@ custom_priors <- function(...) {
         stop(msg)
     }
 
-    
+
     ## check they all have a single argument
 
     with_one_arg <- function(x) {
         if(is.function(x)) {
             return (length(methods::formalArgs(x)) == 1L)
         }
-        
+
         return(TRUE)
     }
-    
+
     one_arg <- vapply(priors, with_one_arg, logical(1))
 
     if (!all(one_arg)) {
@@ -160,7 +172,7 @@ custom_priors <- function(...) {
                       paste(culprits, collapse = ", "))
         stop(msg)
     }
-    
+
 
     class(priors) <- c("custom_priors", "list")
     return(priors)
@@ -173,14 +185,14 @@ custom_priors <- function(...) {
 
 
 #' @rdname custom_priors
-#' 
+#'
 #' @export
-#' 
+#'
 #' @aliases print.custom_priors
 #'
 #' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
-#' 
- 
+#'
+
 print.custom_priors <- function(x, ...) {
     cat("\n\n ///// outbreaker custom priors ///\n")
     cat("\nclass:", class(x))

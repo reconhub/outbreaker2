@@ -2,7 +2,7 @@
 ## #'
 ## #' This function creates stores MCMC samples for outbreaker: augmented data and parameter states, likelihood, priors and posterior.
 ## #'
-## #' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
+## #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 ## #'
 ## #' @inheritParams outbreaker
 ## #'

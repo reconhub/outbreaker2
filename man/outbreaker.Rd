@@ -2,7 +2,7 @@
 % Please edit documentation in R/outbreaker.R
 \name{outbreaker}
 \alias{outbreaker}
-\title{Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data}
+\title{outbreaker2: main function for reconstructing disease outbreaks}
 \usage{
 outbreaker(data = outbreaker_data(), config = create_config(),
   priors = custom_priors(), likelihoods = custom_likelihoods(),
@@ -24,7 +24,19 @@ outbreaker(data = outbreaker_data(), config = create_config(),
 \code{\link{custom_moves}}}
 }
 \description{
-Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
+The function \code{outbreaker} is the main function of the package. It runs
+processes various inputs (data, configuration settings, custom priors,
+likelihoods and movement functions) and explores the space of plausible
+transmission trees of a densely sampled outbreaks.\cr
+}
+\details{
+The emphasis of 'outbreaker2' is on modularity, which enables customisation
+of priors, likelihoods and even movements of parameters and augmented data by
+the user. This the dedicated vignette on this topic
+\code{vignette("outbreaker2_custom")}.\cr
+
+This package is in testing state. Please email the authors if you plan on
+using it.
 }
 \examples{
 
@@ -49,7 +61,7 @@ as.data.frame(out2)
 }
 }
 \author{
-Thibaut Jombart (\email{t_jombart@imperial_ac_uk})
+Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
 \references{
 Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
@@ -62,17 +74,19 @@ Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 
 \itemize{
 
-\item \code{\link{outbreaker_data}} to process input data
+\item \code{\link{outbreaker_data}}: function to process input data
 
-\item \code{\link{create_config}} to see default parameters, and set
-parameters, including prior parameters
+\item \code{\link{create_config}}: function to create default and customise
+configuration settings
 
-\item \code{\link{custom_priors}} to specify custom prior functions
+\item \code{\link{custom_priors}}: function to specify customised prior
+functions
 
-\item \code{\link{custom_likelihoods}} to specify custom likelihood functions
+\item \code{\link{custom_likelihoods}}: function to specify customised likelihoods
+functions
 
-\item \code{\link{custom_moves}} to create movement functions and specify
-custom movements
+\item \code{\link{custom_moves}}: function to create default and customise movement
+functions
 
 }
 }

@@ -1,13 +1,26 @@
-#' Outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
+#' outbreaker2: main function for reconstructing disease outbreaks
 #'
+#' The function \code{outbreaker} is the main function of the package. It runs
+#' processes various inputs (data, configuration settings, custom priors,
+#' likelihoods and movement functions) and explores the space of plausible
+#' transmission trees of a densely sampled outbreaks.\cr
+#' 
+#' The emphasis of 'outbreaker2' is on modularity, which enables customisation
+#' of priors, likelihoods and even movements of parameters and augmented data by
+#' the user. This the dedicated vignette on this topic
+#' \code{vignette("outbreaker2_custom")}.\cr
 #'
+#' This package is in testing state. Please email the authors if you plan on
+#' using it.
+#'
+#' 
 #' @export
 #'
 #' @aliases outbreaker
 #'
 #' @rdname outbreaker
 #'
-#' @author Thibaut Jombart (\email{t_jombart@@imperial_ac_uk})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @references Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 #'     N (2014).  Bayesian reconstruction of disease outbreaks by combining
@@ -34,17 +47,19 @@
 #'
 #' \itemize{
 #'
-#' \item \code{\link{outbreaker_data}} to process input data
+#' \item \code{\link{outbreaker_data}}: function to process input data
 #'
-#' \item \code{\link{create_config}} to see default parameters, and set
-#' parameters, including prior parameters
+#' \item \code{\link{create_config}}: function to create default and customise
+#' configuration settings
 #'
-#' \item \code{\link{custom_priors}} to specify custom prior functions
-#' 
-#' \item \code{\link{custom_likelihoods}} to specify custom likelihood functions
+#' \item \code{\link{custom_priors}}: function to specify customised prior
+#' functions
 #'
-#' \item \code{\link{custom_moves}} to create movement functions and specify
-#' custom movements
+#' \item \code{\link{custom_likelihoods}}: function to specify customised likelihoods
+#' functions
+#'
+#' \item \code{\link{custom_moves}}: function to create default and customise movement
+#' functions
 #' 
 #' }
 #'

@@ -1,4 +1,5 @@
 [![Travis-CI Build Status](https://travis-ci.org/thibautjombart/outbreaker2.png?branch=master)](https://travis-ci.org/thibautjombart/outbreaker2)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/thibautjombart/outbreaker2?branch=master&svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2)
 [![codecov.io](https://codecov.io/github/thibautjombart/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/thibautjombart/outbreaker2?branch=master)
 
 # outbreaker2

@@ -1,10 +1,42 @@
+#' outbreaker2: a platform for disease outbreak reconstruction
 #'
-#' outbreaker2: disease outbreak reconstruction using epidemiological and genetic data
+#' This package provides a statistical platform for reconstructing transmission
+#' trees ('who infects whom') in densely sampled disease outbreaks. It
+#' reimplements, as a particular case, the model of 'outbreaker' (see
+#' references). 'outbreaker2' extends and replaces 'outbreaker'. \cr
 #'
-#' This package re-implements the model introduced by Jombart et al. (PLoS Comput. Biol, 2014) for disease outbreak reconstruction using epidemiological and genetic data. This new version is an alternative to the original package 'outbreaker', relying on a more parsimonious use of C code and implementing new, more flexible sampling approaches.
+#' The emphasis of 'outbreaker2' is on modularity, which enables customisation
+#' of priors, likelihoods and even movements of parameters and augmented data by
+#' the user. This the dedicated vignette on this topic
+#' \code{vignette("outbreaker2_custom")}.\cr
+#'
+#' The main functions of the package are:
+#' \itemize{
+#'
+#' \item \code{\link{outbreaker}}: main function to run analyses
+#'
+#' \item \code{\link{outbreaker_data}}: function to process input data
+#'
+#' \item \code{\link{create_config}}: function to create default and customise
+#' configuration settings
+#'
+#' \item \code{\link{custom_priors}}: function to specify customised prior
+#' functions
+#'
+#' \item \code{\link{custom_likelihoods}}: function to specify customised likelihoods
+#' functions
+#'
+#' \item \code{\link{custom_moves}}: function to create default and customise movement
+#' functions
+#' 
+#' }
+#'
+#' 
+#' This package is in testing state. Please email the authors if you plan on
+#' using it.
 #'
 #'
-#' @author Thibaut Jombart \email{t_jombart@@imperial_ac_uk}
+#' @author Thibaut Jombart \email{thibautjombart@@gmail.com}
 #'
 #' @name outbreaker_package
 #'

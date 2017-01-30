@@ -1,0 +1,69 @@
+---
+title: "Introduction to outbreaker2"
+author: "Thibaut Jombart"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette:
+     toc: true
+     toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  fig.width=8, 
+  fig.height=5, 
+  fig.path="figs-introduction/"
+)
+```
+
+
+This tutorial provides a worked example of outbreak reconstruction using *outbreaker2*. For installation guidelines, a general overview of the package's functionalities as well as other resources, see the 'overview' vignette.
+
+
+<br>
+
+# A small simulated outbreak
+
+## Loading the data
+
+
+First, we load the data:
+```{r, data}
+fake_outbreak
+```
+
+
+
+
+<br>
+
+# Running the analysis with defaults
+
+
+
+<br>
+
+# Customising settings and priors
+
+
+
+
+<br>
+
+# Analysing the results
+
+## Plotting results
+
+## Using `summary`
+
+## Consensus tree
+
+

@@ -56,7 +56,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
   if (N < 2) return 0.0;
 
   if (custom_function == R_NilValue) {
-  
+
     Rcpp::NumericMatrix w_dens = data["log_w_dens"];
     size_t K = w_dens.nrow();
 
@@ -72,7 +72,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     if (mu < 0.0) {
       return R_NegInf;
     }
-  
+
     // all cases are retained
     if (i == R_NilValue) {
       for (size_t j = 0; j < N; j++) {
@@ -141,7 +141,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i = R_Ni
   if(N < 2) return 0.0;
 
   if (custom_function == R_NilValue) {
-  
+
     Rcpp::IntegerVector alpha = param["alpha"];
     Rcpp::IntegerVector t_inf = param["t_inf"];
     Rcpp::IntegerVector kappa = param["kappa"];
@@ -161,7 +161,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i = R_Ni
 	  if (kappa[j] < 1 || kappa[j] > K) {
 	    return  R_NegInf;
 	  }
-	
+
 	  out += w_dens(kappa[j] - 1, delay - 1);
 	}
       }
@@ -341,6 +341,98 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
 
 
 
+// ---------------------------
+
+// This likelihood corresponds to the probability of observing a a reported
+// contact between cases and their ancestors. See
+// src/likelihoods.cpp for details of the Rcpp implmentation.
+
+// The likelihood is based on the contact status between a case and its
+// ancestor; this is extracted from a pairwise contact matrix (data$C), the
+// log-likelihood is computed as:
+// true_pos*eps + false_pos*eps*xi +
+// false_neg*(1- eps) + true_neg*(1 - eps*xi)
+//
+// with:
+// 'eps' is the contact reporting coverage
+// 'lambda' is the non-transmission contact rate
+// 'true_pos' is the number of contacts between transmission pairs
+// 'false_pos' is the number of contact between non-transmission pairs
+// 'false_neg' is the number of transmission pairs without contact
+// 'true_neg' is the number of non-transmission pairs without contact
+
+// [[Rcpp::export(rng = false)]]
+double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
+		       Rcpp::RObject custom_function = R_NilValue) {
+  Rcpp::NumericMatrix C = data["C"];
+  if (C.ncol() < 1) return 0.0;
+
+  size_t C_combn = static_cast<size_t>(data["C_combn"]);
+  size_t C_nrow = static_cast<size_t>(data["C_nrow"]);
+
+  size_t N = static_cast<size_t>(data["N"]);
+  if (N < 2) return 0.0;
+
+  if (custom_function == R_NilValue) {
+
+    double eps = Rcpp::as<double>(param["eps"]);
+    double lambda = Rcpp::as<double>(param["lambda"]);
+    Rcpp::IntegerVector alpha = param["alpha"];
+
+    size_t true_pos = 0;
+    size_t false_pos = 0;
+    size_t false_neg = 0;
+    size_t true_neg = 0;
+    size_t imports = 0;
+
+    // p(eps < 0 || lambda < 0) = 0
+    if (eps < 0.0 || lambda < 0.0) {
+      return R_NegInf;
+    }
+
+    // all cases are retained (currently no support for i subsetting)
+    for (size_t j = 0; j < N; j++) {
+      if (alpha[j] == NA_INTEGER) {
+	imports += 1;
+      } else {
+	true_pos += C(j, alpha[j] - 1); // offset
+      }
+    }
+
+    false_pos = C_nrow - true_pos;
+    false_neg = N - imports - true_pos;
+    true_neg = C_combn - true_pos - false_pos - false_neg;
+
+    return log(eps) * (double) true_pos +
+      log(eps*lambda) * (double) false_pos +
+      log(1 - eps) * (double) false_neg +
+      log(1 - eps*lambda) * (double) true_neg;
+
+  } else { //use of a customized likelihood function
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+
+    return Rcpp::as<double>(f(data, param));
+  }
+}
+
+
+double cpp_ll_contact(Rcpp::List data, Rcpp::List param, size_t i,
+		      Rcpp::RObject custom_function = R_NilValue) {
+  return cpp_ll_contact(data, param, Rcpp::wrap(i), custom_function);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ---------------------------
 
@@ -355,11 +447,11 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		     Rcpp::RObject custom_functions = R_NilValue) {
 
   if (custom_functions == R_NilValue) {
-    return cpp_ll_timing_infections(data, param, i) + 
+    return cpp_ll_timing_infections(data, param, i) +
       cpp_ll_timing_sampling(data, param, i);
   } else { // use of a customized likelihood functions
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
-    return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) + 
+    return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) +
       cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]);
 
   }
@@ -393,7 +485,8 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     return cpp_ll_timing_infections(data, param, i) +
       cpp_ll_timing_sampling(data, param, i) +
       cpp_ll_genetic(data, param, i) +
-      cpp_ll_reporting(data, param, i);
+      cpp_ll_reporting(data, param, i) +
+      cpp_ll_contact(data, param, i);
 
   }  else { // use of a customized likelihood functions
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
@@ -401,8 +494,9 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) +
       cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]) +
       cpp_ll_genetic(data, param, i, list_functions["genetic"]) +
-      cpp_ll_reporting(data, param, i, list_functions["reporting"]);
-   
+      cpp_ll_reporting(data, param, i, list_functions["reporting"]) +
+      cpp_ll_contact(data, param, i, list_functions["contact"]);
+
   }
 }
 

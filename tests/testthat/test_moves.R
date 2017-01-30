@@ -13,10 +13,11 @@ test_that("Movements preserve param structure", {
                                  w_dens = w,
                                  dna = dat$dna))
     config <- create_config(data = data)
-    
+
     config_no_move <- create_config(move_alpha = FALSE,
                                     move_t_inf = FALSE,
                                     move_mu = FALSE, move_pi = FALSE,
+                                    move_eps = FALSE, move_lambda = FALSE,
                                     move_kappa = FALSE,
                                     move_swap_cases = FALSE, data = data)
 
@@ -36,15 +37,15 @@ test_that("Movements preserve param structure", {
     expect_equal(length(moves), 6L)
     expect_true(all(vapply(moves, is.function, logical(1))))
 
-    
 
-    
+
+
     ## test moves ##
     for (i in seq_along(moves)) {
 
         ## chech closure: data
         expect_identical(environment(moves[[i]])$data, data)
-        
+
         ## make moves
         set.seed(1)
         res <- moves[[i]](param = param)
@@ -87,10 +88,10 @@ test_that("Binding of moves works", {
     ## check custom_moves defaults
     moves <- custom_moves()
 
-    expect_length(moves, 6L)
+    expect_length(moves, 8L)
     expect_true(all(vapply(moves, is.function, FALSE)))
     expect_named(moves)
-    expected_names <- c("mu", "pi", "alpha", "swap_cases", "t_inf", "kappa")
+    expected_names <- c("mu", "pi", "eps", "lambda", "alpha", "swap_cases", "t_inf", "kappa")
     expect_true(all(expected_names %in% names(moves)))
 
 
@@ -115,7 +116,7 @@ test_that("Binding of moves works", {
 
     exp_names <- c("list_custom_ll", "config", "data")
     expect_true(all(exp_names %in% names(environment(moves$kappa))))
-    
+
 })
 
 
@@ -161,5 +162,5 @@ test_that("Customisation of moves works", {
     ## same check, run within outbreaker
     out <- outbreaker(data, config, moves = list(mu = f))
     expect_true(all(out$mu == 1e-4))
-    
+
 })

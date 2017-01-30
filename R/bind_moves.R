@@ -8,15 +8,15 @@ bind_moves <- function(moves = custom_moves(), config, data,
                        likelihoods, priors) {
 
     out <- custom_moves(moves)
-    
-   
+
+
     ## Binding:
 
     ## Each function needs to go through binding separately, as custom functions
     ## for likelihoods and priors often correspond to the same argument in
     ## different functions.
-    
- 
+
+
     ## remove move$mu if disabled
     if (!any(config$move_mu)) {
         out$mu <- NULL
@@ -28,7 +28,7 @@ bind_moves <- function(moves = custom_moves(), config, data,
                                    custom_prior = priors$mu
                                    )
     }
-    
+
 
     ## remove move$pi if disabled
     if (!any(config$move_pi)) {
@@ -41,7 +41,32 @@ bind_moves <- function(moves = custom_moves(), config, data,
                                    custom_prior = priors$pi
                                    )
     }
-    
+
+
+    ## remove move$eps if disabled
+    if (!any(config$move_eps)) {
+        out$eps <- NULL
+    } else {
+        out$eps <- bind_to_function(out$eps,
+                                   data = data,
+                                   config = config,
+                                   custom_ll = likelihoods$contact,
+                                   custom_prior = priors$eps
+                                   )
+    }
+
+    ## remove move$lambda if disabled
+    if (!any(config$move_lambda)) {
+        out$lambda <- NULL
+    } else {
+        out$lambda <- bind_to_function(out$lambda,
+                                   data = data,
+                                   config = config,
+                                   custom_ll = likelihoods$contact,
+                                   custom_prior = priors$lambda
+                                   )
+    }
+
 
     ## remove move$alpha if no ancestry can be moved
     if (!any(config$move_alpha)) {
@@ -52,7 +77,7 @@ bind_moves <- function(moves = custom_moves(), config, data,
                                       list_custom_ll = likelihoods
                                       )
     }
-    
+
 
     ## remove move$t_inf if disabled
     if (!any(config$move_t_inf)) {
@@ -101,9 +126,9 @@ bind_moves <- function(moves = custom_moves(), config, data,
                                              priors = priors
                                              )
             }
-        } 
+        }
     }
-    
+
     ## the output is a list of movement functions with enclosed objects ##
     return(out)
 

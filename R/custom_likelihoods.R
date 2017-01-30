@@ -7,7 +7,7 @@
 #' they compute. Values currently available are:
 #'
 #' \itemize{
-#' 
+#'
 #' \item \code{genetic}: the genetic likelihood; by default, the function
 #' \code{cpp_ll_genetic} is used.
 #'
@@ -16,13 +16,16 @@
 #'
 #' \item \code{timing_infections}: the likelihood of infection times; by default, the function
 #' \code{cpp_ll_timing_infections} is used.
-#' 
+#'
 #' \item \code{reporting}: the likelihood of the reporting process; by default,
 #' the function \code{cpp_ll_reporting} is used.
+#'
+#' \item \code{contact}: the likelihood of the contact tracing data; by default,
+#' the function \code{cpp_ll_contact} is used.
 #' }
-#' 
+#'
 #' All log-likelihood functions should have to following arguments:
-#'  
+#'
 #' \itemize{
 #'
 #' \item \code{data}: a list of named items containing input data as returned by
@@ -33,7 +36,7 @@
 #'
 #' }
 #'
-#' 
+#'
 #' @return
 #' A named list of functions with the class \code{custom_likelihood}, each
 #'     implementing a customised log-likelihood components of
@@ -63,33 +66,34 @@
 ## - create_mcmc
 
 custom_likelihoods <- function(...) {
-    
+
     ll_functions <- list(...)
-    
+
     if (length(ll_functions) == 1L && is.list(ll_functions[[1]])) {
         ll_functions <- ll_functions[[1]]
     }
-    
+
 
     defaults <- list(genetic = NULL,
                      reporting = NULL,
                      timing_infections = NULL,
-                     timing_sampling = NULL
+                     timing_sampling = NULL,
+                     contact = NULL
                      )
 
     likelihoods <-  modify_defaults(defaults, ll_functions, FALSE)
     likelihoods_names <- names(likelihoods)
 
-    
-    
+
+
     ## check all likelihoods are functions
 
     function_or_null <- function(x) {
         is.null(x) || is.function(x)
     }
-    
+
     is_ok <- vapply(likelihoods, function_or_null, logical(1))
-    
+
     if (!all(is_ok)) {
         culprits <- likelihoods_names[!is_ok]
         msg <- paste0("The following likelihoods are not functions: ",
@@ -97,17 +101,17 @@ custom_likelihoods <- function(...) {
         stop(msg)
     }
 
-    
+
     ## check they all have a single argument
 
     with_two_args <- function(x) {
         if(is.function(x)) {
             return (length(methods::formalArgs(x)) == 2L)
         }
-        
+
         return(TRUE)
     }
-    
+
     two_args <- vapply(likelihoods, with_two_args, logical(1))
 
     if (!all(two_args)) {
@@ -116,7 +120,7 @@ custom_likelihoods <- function(...) {
                       paste(culprits, collapse = ", "))
         stop(msg)
     }
-    
+
 
     class(likelihoods) <- c("custom_likelihoods", "list")
     return(likelihoods)
@@ -130,14 +134,14 @@ custom_likelihoods <- function(...) {
 
 
 #' @rdname custom_likelihoods
-#' 
+#'
 #' @export
-#' 
+#'
 #' @aliases print.custom_likelihoods
 #'
 #' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
-#' 
- 
+#'
+
 print.custom_likelihoods <- function(x, ...) {
     cat("\n\n ///// outbreaker custom likelihoods ///\n")
     cat("\nclass:", class(x))

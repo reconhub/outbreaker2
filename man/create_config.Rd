@@ -49,6 +49,10 @@ values of kappa; defaults to 1.}
 
 \item{init.pi}{initial value for the reporting probability}
 
+\item{init_eps}{initial value for the contact reporting coverage}
+
+\item{init_lambda}{initial value for the non-transmission contact rate}
+
 \item{move.alpha}{a vector of logicals indicating, for each case, if the
 ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
 TRUE; the vector is recycled if needed.}
@@ -62,6 +66,14 @@ should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 
 \item{move.pi}{a logical indicating whether the reporting probability
 should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
+
+\item{move_eps}{a logical indicating whether the contact reporting coverage
+should be estimated ('moved' in the MCMC), or not at all, defaulting to
+TRUE.}
+
+\item{move_lambda}{a logical indicating wheter the non-transmission contact
+rate should be estimated ('moved' in the MCMC), or not at all, defaulting to
+TRUE.}
 
 \item{move.kappa}{a logical indicating whether the number of generations
 between two successive cases should be estimated ('moved' in the MCMC), or
@@ -80,6 +92,12 @@ rates}
 
 \item{sd_pi}{the standard deviation for the Normal proposal for the reporting
 probability}
+
+\item{sd_eps}{the standard deviation for the Normal proposal for the
+contact reporting coverage}
+
+\item{sd_lambda}{the standard deviation for the Normal proposal for the
+non-transmission contact rate}
 
 \item{prop_alpha_move}{the proportion of ancestries to move at each iteration
 of the MCMC}
@@ -103,6 +121,13 @@ for the mutation rate 'mu'}
 
 \item{prior_pi}{a numeric vector of length 2 indicating the first and second
 parameter of the beta prior for the reporting probability 'pi'}
+
+\item{prior_eps}{a numeric vector of length 2 indicating the first and second
+parameter of the beta prior for the contact reporting coverage 'eps'}
+
+\item{prior_lambda}{a numeric vector of length 2 indicating the first and
+second parameter of the beta prior for the non-transmission contact rate
+'lambda'}
 
 }
 }

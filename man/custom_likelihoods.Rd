@@ -55,7 +55,7 @@ All log-likelihood functions should have to following arguments:
 \code{\link{outbreaker_data}}
 
 \item \code{param}: a list of parameters with the class
-\code{\link{outbreaker_param}}
+\code{\link{create_param}}
 
 }
 }

@@ -22,7 +22,7 @@ MCMC. \code{current} is a list with the class \code{outbreaker_param}, used
 for storing 'current' states of the MCMC. \cr \cr
 
 \code{outbreaker_store} class content:
-itemize{
+\itemize{
 
  \item \code{size}: The length of the list, corresponding to the number of samples saved from the MCMC.
 

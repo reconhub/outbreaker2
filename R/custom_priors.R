@@ -5,7 +5,7 @@
 #' examples). The most flexible way to specify a prior is to provide a prior
 #' function directly. This function must take an argument 'param', which is a
 #' list which contains all the states of the parameters and augmented data. See
-#' the documentation of \link{outbreaker_param} for more information.
+#' the documentation of \link{create_param} for more information.
 #'
 #' @details
 #' There are three ways a user can specify priors:\cr

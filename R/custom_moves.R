@@ -39,7 +39,7 @@
 #'
 #'
 #' Movement functions must have an argument \code{param}, which is a list of
-#' parameters and augmented data of the class \code{\link{outbreaker_param}}.
+#' parameters and augmented data of the class \code{\link{create_param}}.
 #' Each movement function will be enclosed with its other arguments, so that the
 #' resulting function will have a single argument 'param'. For non-standard
 #' movements (i.e. none of the names specified above), the closure will contain:

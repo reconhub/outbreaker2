@@ -1,0 +1,53 @@
+---
+title: "Using custom priors, likelihood, or movements in outbreaker2"
+author: "Thibaut Jombart"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette:
+     toc: true
+     toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Customisation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  fig.width=8, 
+  fig.height=5, 
+  fig.path="figs-customisation/"
+)
+```
+
+
+In this vignette, we show how custom functions for priors, likelihood, or movement of parameters and augmented data can be used in *outbreaker2*. In all these functions, the process will be similar:
+
+1. write your own function with the right arguments
+2. pass this function as an argument to a `custom...` function
+3. pass the result to *outbreaker2*
+
+Note that 2-3 can be a single step if passing the function to the arguments of *outbreaker2* directly. Also note that **all priors and likelihoods are expected on a log scale**. Finally, also note that while the various `custom...` functions will try to some extent to check that the provided functions are valid, such tests are very difficult to implement. In short: you are using these custom features at your own risks - make sure these functions work before passing them to *outbreaker2*.
+
+
+
+
+<br>
+
+# Customising priors
+
+Priors of *outbreaker2* must be a function of an `outbreaker_param` object.
+
+
+```{r, data}
+
+
+
+```
+
+
+

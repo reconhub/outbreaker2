@@ -63,7 +63,7 @@
 ## - data: a valid 'outbreaker_data' list
 
 ## - param: a list containing current parameter states, as returned by
-## - create_mcmc
+## - create_param
 
 custom_likelihoods <- function(...) {
 

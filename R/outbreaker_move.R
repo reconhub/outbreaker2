@@ -9,13 +9,13 @@
 ## #'     (internal function)
 ## #'
 ## #' @param param a list of parameters as returned by
-## #'     \code{create_mcmc}
+## #'     \code{create_param}
 ## #'
 ## #' @param densities a list containing lists of functions computing densities,
 ## #'     named: 'loglike' (log-likelihoods), 'priors' and 'posteriors'
 ## #'
 ## #' @return a potentially modified list of parameters as returned by
-## #'     \code{create_mcmc}
+## #'     \code{create_param}
 ## #'
 outbreaker_move <- function(moves, data, param_current,
                             param_store, config,

@@ -22,7 +22,7 @@ test_that("Movements preserve param structure", {
                                     move_swap_cases = FALSE, data = data)
 
     data <- add_convolutions(data = data, config = config)
-    param <- create_mcmc(data = data, config = config)$current
+    param <- create_param(data = data, config = config)$current
     ll <- custom_likelihoods()
     priors <- custom_priors()
 
@@ -77,7 +77,7 @@ test_that("Binding of moves works", {
                                  dna = dat$dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
-    param <- create_mcmc(data = data, config = config)$current
+    param <- create_param(data = data, config = config)$current
     ll <- custom_likelihoods()
     priors <- custom_priors()
 
@@ -139,7 +139,7 @@ test_that("Customisation of moves works", {
                             find_import = FALSE,
                             sample_every = 10)
     data <- add_convolutions(data = data, config = config)
-    param <- create_mcmc(data = data, config = config)$current
+    param <- create_param(data = data, config = config)$current
     ll <- custom_likelihoods()
     priors <- custom_priors()
 

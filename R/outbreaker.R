@@ -106,7 +106,7 @@ outbreaker <- function(data = outbreaker_data(),
 
     
     ## CREATE AND INITIALIZE MCMC CHAIN ##
-    temp <- create_mcmc(data = data, config = config)
+    temp <- create_param(data = data, config = config)
     param_store <- temp$store
     param_current <- temp$current
     param_store <- outbreaker_init_mcmc(data, param_current, param_store,

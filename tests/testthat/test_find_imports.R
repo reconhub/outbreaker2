@@ -14,7 +14,7 @@ test_that("Test detection of imported cases", {
                                  dna = dat$dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
-    temp <- create_mcmc(data = data, config = config)
+    temp <- create_param(data = data, config = config)
     param_current <- temp$current
     param_store <- temp$store
 

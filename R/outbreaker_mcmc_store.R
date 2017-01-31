@@ -6,7 +6,7 @@
 ## #'
 ## #' @inheritParams outbreaker
 ## #'
-## #' @param param a list of output items as returned by \code{create_mcmc}
+## #' @param param a list of output items as returned by \code{create_param}
 ## #'
 ## #' @param step an integer indicating the MCMC iteration being stored
 ## #'

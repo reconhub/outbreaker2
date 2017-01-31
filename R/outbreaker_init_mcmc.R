@@ -4,7 +4,7 @@
 ## #'
 ## #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 ## #'
-## #' @param param a list of data items as returned by \code{create_mcmc}
+## #' @param param a list of data items as returned by \code{create_param}
 ## #'
 ## #' @param loglike a list of loglikelihood functions with enclosed data as returned by \code{custom_likelihood}
 ## #'

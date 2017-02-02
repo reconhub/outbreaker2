@@ -9,10 +9,10 @@ test_that("test: settings are processed fine", {
 
     ## get data
     x <- fake_outbreak
-    dat <- outbreaker_data(dates = x$collecDates, dna = x$dat$dna, w_dens = x$w)
+    dat <- outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
     dat_nodna <- dat
     dat_nodna$D <- dat_nodna$dna <- NULL
-    alpha <- rep(1, x$dat$n)
+    alpha <- rep(1, length(x$ances))
 
     ## check output
     expect_is(create_config(), "list")

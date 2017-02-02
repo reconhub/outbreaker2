@@ -20,4 +20,3 @@ plot(1:8, col = chains_pal(8), cex = 10, pch = 20)
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail_com})
 }
-

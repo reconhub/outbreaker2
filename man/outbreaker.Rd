@@ -42,12 +42,11 @@ using it.
 
 ## get data
 data(fake_outbreak)
-dat <- fake_outbreak$dat
-w <- fake_outbreak$w
+dat <- fake_outbreak
 
 \dontrun{
 ## run outbreaker
-out <- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = w),
+out <- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = dat$w),
 config = list(n_iter = 2e4, sample_every = 200))
 plot(out)
 as.data.frame(out)
@@ -59,9 +58,6 @@ plot(out2)
 as.data.frame(out2)
 
 }
-}
-\author{
-Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
 \references{
 Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
@@ -90,4 +86,6 @@ functions
 
 }
 }
-
+\author{
+Thibaut Jombart (\email{thibautjombart@gmail.com})
+}

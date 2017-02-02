@@ -88,9 +88,9 @@ test_that("cpp_ll_genetic gives expected results", {
     ## generate data ##
     data(fake_outbreak)
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates,
+                 outbreaker_data(dates = sample,
                                  w_dens = w,
-                                 dna = dat$dna))
+                                 dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
@@ -130,7 +130,8 @@ test_that("cpp_ll_reporting gives expected results", {
 
     ## generate data
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = sample, w_dens = w, dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
@@ -169,7 +170,8 @@ test_that("cpp_ll_timing gives expected results", {
 
     ## generate data
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = sample, w_dens = w, dna = dna))
     config <- create_config(data = data)
     param <- create_param(data = data, config = config)$current
 
@@ -196,7 +198,8 @@ test_that("cpp_ll_all gives expected results", {
 
     ## generate data
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = sample, w_dens = w, dna = dna))
     config <- create_config(data = data)
     param <- create_param(data = data, config = config)$current
 
@@ -229,7 +232,8 @@ test_that("cpp_ll_all with i specified gives expected results", {
 
     ## generate data
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = sample, w_dens = w, dna = dna))
     config <- create_config(data = data)
     param <- create_param(data = data, config = config)$current
 
@@ -383,9 +387,9 @@ test_that("Customisation with identical functions works", {
     ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates,
+                 outbreaker_data(dates = sample,
                                  w_dens = w,
-                                 dna = dat$dna))
+                                 dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
@@ -448,9 +452,9 @@ test_that("Customisation with pi-returning functions works", {
     ## generate data ##
     data(fake_outbreak)
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates,
+                 outbreaker_data(dates = sample,
                                  w_dens = w,
-                                 dna = dat$dna))
+                                 dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))

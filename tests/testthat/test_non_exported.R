@@ -95,7 +95,7 @@ test_that("Testing find_descendents", {
 
     ## generate data
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates, w_dens = w, dna = dat$dna))
+                 outbreaker_data(dates = sample, w_dens = w, dna = dna))
     
     config <- create_config(data = data)
     param <- create_param(data = data, config = config)$current
@@ -124,9 +124,10 @@ test_that("Testing add_convolutions", {
 
     ## generate data
     data(fake_outbreak)
-    data <- with(fake_outbreak, outbreaker_data(dates = collecDates,
-                                                w_dens = w,
-                                                dna = dat$dna))
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = sample,
+                                 w_dens = w,
+                                 dna = dna))
     config <- create_config(data = data)
 
     out <- add_convolutions(data = data, config = config)

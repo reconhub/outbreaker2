@@ -38,25 +38,88 @@ genome sequences for 30 cases:
 
 
 ```{r, data}
-library(outbreaker2)
 library(ape)
+library(outbreaker2)
 
+col <- "#6666cc"
 fake_outbreak
 ```
 
+Here, we will use the dates of case isolation `$sample`, DNA sequences `$dna`, and the empirical distribution of the generation time `$w`, which can be visualised as:
+```{r, w}
 
+plot(fake_outbreak$w, type = "h", xlim = c(0, 5), 
+     lwd = 30, col = col, lend = 2, 
+     xlab = "Days after infection", 
+     ylab = "p(new case)", 
+     main = "Generation time distribution")
+
+```
 
 
 <br>
 
 # Running the analysis with defaults
 
+By default, *outbreaker2* uses the settings defined by `create_config()`; see
+the documentation of this function for details. Note that the main function of
+*outbreaker2* is called `outbreaker` (without number). The function's arguments are:
+
+```{r}
+args(outbreaker)
+```
+
+The only mandatory input really is the data. For most cases, customising the
+method will be done through `config` and the function `create_config()`, which
+creates default and alters settings such as prior parameters, length and rate of
+sampling from the MCMC, and definition of which parameters should be estimated
+('moved'). The last arguments of `outbreaker` are used to specify custom prior,
+likelihood, and movement functions, and are detailed in the '*Customisation*'
+vignette.
 
 
-<br>
+Let us run the analysis with default settings:
 
-# Customising settings and priors
+```{r, first_run, cache = TRUE}
 
+dna <- fake_outbreak$dna
+dates <- fake_outbreak$sample
+w <- fake_outbreak$w
+data <- outbreaker_data(dna = dna, dates = dates, w_dens = w)
+res <- outbreaker(data = data)
+
+```
+
+This analysis will take around 40 seconds on a modern computer. Note that
+*outbreaker2* is slower than *outbreaker* for the same number of iterations, but
+the two implementations are actually different. In particular, *outbreaker2*
+performs many more moves than the original package for each iteration of the
+MCMC, resulting in more efficient mixing. In short: *outbreaker2* is slower, but
+it requires far less iterations.
+
+
+Results are stored in a `data.frame` with the special class `outbreaker_chains`:
+```{r}
+
+class(res)
+dim(res)
+res
+
+```
+
+Each row of `res` contains a sample from the MCMC. For each, informations about
+the step (iteration of the MCMC), log-values of posterior, likelihood and
+priors, and all parameters and augmented data are returned. Ancestries
+(i.e. indices of the most recent ancestral case for a given case), are indicated
+by `alpha.[index of the case]`, dates of infections by `t_inf.[index of the
+case]`, and number of generations between cases and their infector / ancestor by
+`kappa.[index of the case]`:
+
+```{r}
+
+names(res)
+
+```
 
 
 
@@ -64,10 +127,84 @@ fake_outbreak
 
 # Analysing the results
 
-## Plotting results
+## Graphics 
+
+Results can be visualised using `plot`, which has several options and can be
+used to derive various kinds of graphics (see `?plot.outbreaker_chains`).  The
+basic plot shows the trace of the log-posterior values, which is useful to
+assess mixing:
+
+```{r, basic_trace}
+
+plot(res)
+
+```
+
+The second argument of `plot` can be used to visualise traces of any
+other column in `res`:
+
+```{r, traces}
+
+plot(res, "prior")
+plot(res, "mu")
+plot(res, "mu")
+plot(res, "t_inf.15")
+
+```
+
+`burnin` can be used to discard the first iterations prior to mixing:
+
+```{r, basic_trace_burn}
+
+## compare this to plot(res)
+plot(res, burnin = 500)
+
+```
+
+`type` indicates the type of graphic to plot; roughly:
+
+- `trace` for traces of the MCMC (default)
+
+- `hist`, `density` to assess distributions of quantitative values
+
+- `alpha`, `network` to visualise ancestries / transmission tree; note that
+  `network` opens up an interactive plot and requires a web browser with
+  Javascript enabled; the argument `min_support` is useful to select only the
+  most supported ancestries and avoid displaying too many links
+
+- `kappa` to visualise the distributions generations between cases and their
+  ancestor / infector
+
+Here are a few examples:
+
+```{r, many_plots}
+
+plot(res, "mu", "hist", burnin = 500)
+
+plot(res, "mu", "density", burnin = 500)
+
+plot(res, type = "alpha", burnin = 500)
+
+plot(res, type = "t_inf", burnin = 500)
+
+plot(res, type = "kappa", burnin = 500)
+
+plot(res, type = "network", burnin = 500, min_support = 0.01)
+
+```
+
+
 
 ## Using `summary`
 
+
+
 ## Consensus tree
+
+
+
+<br>
+
+# Customising settings and priors
 
 

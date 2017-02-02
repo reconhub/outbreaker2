@@ -46,10 +46,9 @@ be sampled from the patient.}
 \examples{
 
 x <- fake_outbreak
-outbreaker_data(dates = x$collecDates, dna = x$dat$dna, w_dens = x$w)
+outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
 
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
-

@@ -9,8 +9,8 @@ test_that("test: data are processed fine", {
 
     ## get data
     x <- fake_outbreak
-    out <- outbreaker_data(dates = x$collecDates, dna = x$dat$dna, w_dens = x$w)
-    out_nodna <- outbreaker_data(dates = x$collecDates, w_dens = x$w)
+    out <- outbreaker_data(dates = x$onset, dna = x$dna, w_dens = x$w)
+    out_nodna <- outbreaker_data(dates = x$onset, w_dens = x$w)
 
     ## check output
     expect_is(out, "list")

@@ -94,4 +94,3 @@ This function creates initial outputs and parameter states for outbreaker.
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
-

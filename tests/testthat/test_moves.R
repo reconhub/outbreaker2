@@ -9,9 +9,9 @@ test_that("Movements preserve param structure", {
     ## generate inputs
     data(fake_outbreak)
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates,
+                 outbreaker_data(dates = onset,
                                  w_dens = w,
-                                 dna = dat$dna))
+                                 dna = dna))
     config <- create_config(data = data)
 
     config_no_move <- create_config(move_alpha = FALSE,
@@ -72,9 +72,9 @@ test_that("Binding of moves works", {
     ## generate inputs
     data(fake_outbreak)
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates,
+                 outbreaker_data(dates = onset,
                                  w_dens = w,
-                                 dna = dat$dna))
+                                 dna = dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)
     param <- create_param(data = data, config = config)$current
@@ -132,9 +132,9 @@ test_that("Customisation of moves works", {
     ## generate inputs
     data(fake_outbreak)
     data <- with(fake_outbreak,
-                 outbreaker_data(dates = collecDates,
+                 outbreaker_data(dates = onset,
                                  w_dens = w,
-                                 dna = dat$dna))
+                                 dna = dna))
     config <- create_config(data = data, n_iter = 1000,
                             find_import = FALSE,
                             sample_every = 10)

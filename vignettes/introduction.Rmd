@@ -25,18 +25,22 @@ knitr::opts_chunk$set(
 ```
 
 
-This tutorial provides a worked example of outbreak reconstruction using *outbreaker2*. For installation guidelines, a general overview of the package's functionalities as well as other resources, see the 'overview' vignette.
+This tutorial provides a worked example of outbreak reconstruction using
+*outbreaker2*. For installation guidelines, a general overview of the package's
+functionalities as well as other resources, see the 'overview' vignette:
+```{r, eval=FALSE}
+vignette("Overview", package = "outbreaker2")
+```
+
+We will be analysing a small simulated outbreak distributed with the package,
+`fake_outbreak`. This dataset contains simulated dates of onsets and pathogen
+genome sequences for 30 cases:
 
 
-<br>
-
-# A small simulated outbreak
-
-## Loading the data
-
-
-First, we load the data:
 ```{r, data}
+library(outbreaker2)
+library(ape)
+
 fake_outbreak
 ```
 

@@ -94,6 +94,7 @@ rejected:
 ## should be pi = function(x){0.0}
 custom_priors(pi = 0.0)
 
+## wrong: two arguments
 custom_priors(pi = function(x, y){0.0})
 
 ```

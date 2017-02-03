@@ -156,12 +156,15 @@ plot.outbreaker_chains <- function(x, y = "post",
         alpha <- x[, grep("alpha",names(x)), drop = FALSE]
         from <- unlist(alpha)
         to <- as.vector(col(alpha))
+        N <- ncol(alpha)
         edges <- stats::na.omit(data.frame(xyTable(from, to)))
         edges[3] <- edges$number/nrow(alpha)
         names(edges) <- c("from", "to", "value")
         edges <- edges[edges$value > min_support,,drop = FALSE]
         edges$arrows <- "to"
-
+        case_cols <- cases_pal(N)
+        edges$color <- case_cols[edges$from]
+        
         
         ## ## extract edge info: timing
         ## t_inf <- x[, grep("t_inf",names(x)), drop = FALSE]
@@ -179,7 +182,13 @@ plot.outbreaker_chains <- function(x, y = "post",
         nodes$value <- vapply(nodes$id,
                               find_nodes_size,
                               numeric(1))
+        nodes$color <- case_cols
+        nodes$shape <- rep("dot", N)
 
+        smry <- summary(x, burnin = burnin)
+        is_imported <- is.na(smry$tree$from)
+        nodes$shaped[is_imported] <- "star"
+        
         ## generate graph
         out <- visNetwork::visNetwork(nodes = nodes, edges = edges, ...)
         out <- visNetwork::visNodes(out, shadow = list(enabled = TRUE, size = 10),

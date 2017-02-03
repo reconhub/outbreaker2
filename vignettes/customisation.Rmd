@@ -88,7 +88,7 @@ Note that `custom_priors` does more than just adding the custom function to a
 list. For instance, the following customisations are all wrong, and rightfully
 rejected:
 
-```{r, wrong_prior}
+```{r, wrong_prior, error = TRUE}
 
 ## wrong: not a function
 ## should be pi = function(x){0.0}

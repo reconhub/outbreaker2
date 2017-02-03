@@ -162,7 +162,7 @@ plot(res, "t_inf.15")
 ```{r, basic_trace_burn}
 
 ## compare this to plot(res)
-plot(res, burnin = 500)
+plot(res, burnin = 2000)
 
 ```
 
@@ -184,17 +184,17 @@ Here are a few examples:
 
 ```{r, many_plots}
 
-plot(res, "mu", "hist", burnin = 500)
+plot(res, "mu", "hist", burnin = 2000)
 
-plot(res, "mu", "density", burnin = 500)
+plot(res, "mu", "density", burnin = 2000)
 
-plot(res, type = "alpha", burnin = 500)
+plot(res, type = "alpha", burnin = 2000)
 
-plot(res, type = "t_inf", burnin = 500)
+plot(res, type = "t_inf", burnin = 2000)
 
-plot(res, type = "kappa", burnin = 500)
+plot(res, type = "kappa", burnin = 2000)
 
-plot(res, type = "network", burnin = 500, min_support = 0.01)
+plot(res, type = "network", burnin = 2000, min_support = 0.01)
 
 ```
 
@@ -250,7 +250,7 @@ set.seed(1)
 
 res2 <- outbreaker(data, config2)
 plot(res2)
-plot(res2, burn = 500)
+plot(res2, burnin = 2000)
 
 ```
 
@@ -265,9 +265,10 @@ tree2 <- summary(res2, burnin = 4000)$tree
 
 comparison <- data.frame(case = 1:30,
                        	 inferred = paste(tree2$from),
-			 true = paste(fake_outbreak$ances))
+			 true = paste(fake_outbreak$ances),
+			 stringsAsFactors = FALSE)
 			 
-comparison$correct <- with(comparison, inferred==true)			   
+comparison$correct <- comparison$inferred == comparison$true
 comparison
 
 ```

@@ -3,9 +3,15 @@ Version: 1.0-0
 Date: 2029-09-11
 Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
-Authors@R: c(person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = c("aut", "cre")), 
-	     person("Finlay", "Campbell", email = "f.campbell15@imperial.ac.uk", role = c("aut")),
-	     person("Rich", "Fitzjohn", email = "r.fitzjohn@imperial.ac.uk", role = c("aut")))
+Authors@R: c(person("Thibaut", "Jombart",
+                    email = "thibautjombart@gmail.com",
+		    role = c("aut", "cre")), 
+	     person("Finlay", "Campbell",
+	            email = "f.campbell15@imperial.ac.uk",
+		    role = c("aut")),
+	     person("Rich", "Fitzjohn",
+	            email = "r.fitzjohn@imperial.ac.uk",
+		    role = c("aut")))
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information.
@@ -13,7 +19,9 @@ License: GPL (>=2)
 Suggests:
     coda,
     microbenchmark,
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 Depends:
     R (>= 3.0.0)
 Imports:
@@ -30,3 +38,4 @@ LazyData: true
 LinkingTo: Rcpp
 RoxygenNote: 5.0.1
 SystemRequirements: C++11
+VignetteBuilder: knitr

@@ -59,6 +59,9 @@ as.data.frame(out2)
 
 }
 }
+\author{
+Thibaut Jombart (\email{thibautjombart@gmail.com})
+}
 \references{
 Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
     N (2014).  Bayesian reconstruction of disease outbreaks by combining
@@ -86,6 +89,4 @@ functions
 
 }
 }
-\author{
-Thibaut Jombart (\email{thibautjombart@gmail.com})
-}
+

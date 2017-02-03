@@ -62,3 +62,4 @@ All log-likelihood functions should have to following arguments:
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
+

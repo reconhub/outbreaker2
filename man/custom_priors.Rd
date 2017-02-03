@@ -111,3 +111,4 @@ priors$pi(list(pi=.49))
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com}).
 }
+

@@ -19,7 +19,7 @@ test_that("outbreaker's output have expected format", {
 
     out_df <- as.data.frame(out)
 
-    data <- list(dates = x$onset, w_dens = w)
+    data <- list(dates = x$onset, w_dens = x$w)
     out2 <- outbreaker(data, config)
 
     ## check output
@@ -99,7 +99,7 @@ test_that("results ok: time, no DNA", {
     out_no_dna <- outbreaker(data = data, config = config)
 
     ## checks
-    out_no_dna.smry ## <- summary(out_no_dna, burnin = 1000)
+    out_no_dna.smry <- summary(out_no_dna, burnin = 1000)
     
     ## approx log post values
     expect_true(min(out_no_dna.smry$post) > -90) 

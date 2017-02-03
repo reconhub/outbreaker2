@@ -12,3 +12,4 @@ CTD.outbreaker2.Rproj
 *.dll
 vignettes/*html
 vignettes/*cache*
+docs/articles/*cache*

@@ -267,10 +267,11 @@ comparison <- data.frame(case = 1:30,
 			 
 comparison$correct <- comparison$inferred == comparison$true
 comparison
+mean(comparison$correct)
 
 ```
 
-The consensus tree is near perfect. Let's visualise the posterior trees:
+Let's visualise the posterior trees:
 
 ```{r, net2}
 

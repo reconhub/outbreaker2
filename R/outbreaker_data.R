@@ -75,6 +75,12 @@ outbreaker_data <- function(..., data = list(...)) {
         {
             stop("w_dens has negative entries (these should be probabilities!)")
         }
+        ## Remove trailing zeroes to prevent starting with -Inf temporal loglike
+        if(data$w_dens[length(data$w_dens)] == 0) {
+            final_index <- max(which(data$w_dens > 0))
+            data$w_dens <- data$w_dens[1:final_index]
+            warning("Removed trailing zeroes found in w_dens")
+        }
         ## add an exponential tail summing to 1e-4 to 'w'
         ## to cover the span of the outbreak
         ## (avoids starting with -Inf temporal loglike)

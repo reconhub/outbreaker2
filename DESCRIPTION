@@ -5,7 +5,7 @@ Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
 Authors@R: c(person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = c("aut", "cre")), 
 	     person("Finlay", "Campbell", email = "f.campbell15@imperial.ac.uk", role = c("aut")),
-	     person("Rich", "Fitzjohn", email = "r.fitzjohn@imperial.ac.uk, role = c("aut")))
+	     person("Rich", "Fitzjohn", email = "r.fitzjohn@imperial.ac.uk", role = c("aut")))
 Maintainer: Thibaut Jombart <thibautjombart@gmail.com>
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information.

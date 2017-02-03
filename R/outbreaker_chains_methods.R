@@ -72,7 +72,7 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @importFrom grDevices xyTable
 plot.outbreaker_chains <- function(x, y = "post",
                                    type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
-                                   burnin = 0, min_support = 0.5, ...) {
+                                   burnin = 0, min_support = 0.1, ...) {
 
     ## CHECKS ##
     type <- match.arg(type)
@@ -162,6 +162,7 @@ plot.outbreaker_chains <- function(x, y = "post",
         edges <- edges[edges$value > min_support,,drop = FALSE]
         edges$arrows <- "to"
 
+        
         ## ## extract edge info: timing
         ## t_inf <- x[, grep("t_inf",names(x)), drop = FALSE]
         ## mean_time <- apply(t_inf, 2, mean)
@@ -170,8 +171,14 @@ plot.outbreaker_chains <- function(x, y = "post",
         ## edges$label <- paste(round(mean_delay), "days")
 
         ## node info
-        nodes <- list(id = seq_len(ncol(alpha)), label = seq_len(ncol(alpha)))
-        nodes$value <- vapply(nodes$id, function(i) sum(from==i, na.rm = TRUE), numeric(1))/nrow(alpha)
+        find_nodes_size <- function(i) {
+            sum(from==i, na.rm = TRUE) / nrow(alpha)
+        }
+        nodes <- data.frame(id = seq_len(ncol(alpha)),
+                            label = seq_len(ncol(alpha)))
+        nodes$value <- vapply(nodes$id,
+                              find_nodes_size,
+                              numeric(1))
 
         ## generate graph
         out <- visNetwork::visNetwork(nodes = nodes, edges = edges, ...)

@@ -11,7 +11,7 @@
 
 \method{plot}{outbreaker_chains}(x, y = "post", type = c("trace", "hist",
   "density", "alpha", "t_inf", "kappa", "network"), burnin = 0,
-  min_support = 0.5, ...)
+  min_support = 0.1, ...)
 
 \method{summary}{outbreaker_chains}(object, burnin = 0, ...)
 }

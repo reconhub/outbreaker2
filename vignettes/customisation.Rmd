@@ -50,7 +50,9 @@ passing them to *outbreaker2*.
 
 Priors of *outbreaker2* must be a function of an `outbreaker_param` list (see
 `?outbreaker_param`). Here, we decide to use a step function rather than the
-default Beta function as a prior for *pi*, the reporting probability.
+default Beta function as a prior for *pi*, the reporting probability, and a flat
+prior between 0 and 1 for the mutation rate (which is technically a probability
+in the basic genetic model used in *outbreaker2*).
 
 
 We start by defining two functions: an auxiliary function `f` which returns
@@ -78,8 +80,16 @@ While `f` is a useful function to visualise the prior, `f_pi` is the function
 which will be passed to `outbreaker`. To do so, we pass it to `custom_priors`:
 
 ```{r, custom_prior}
+f_mu <- function(param) {
+  if (param$mu < 0 || param$mu > 1) {
+    return(-Inf)
+  } else {
+    return(0.0)
+  }
+  
+}
 
-priors <- custom_priors(pi = f_pi)
+priors <- custom_priors(pi = f_pi, mu = f_mu)
 priors
 
 ```
@@ -99,5 +109,238 @@ custom_priors(pi = function(x, y){0.0})
 
 ```
 
+We can now use the new priors to run `outbreaker` on the `fake_outbreak` data
+(see [*introduction vignette*](introduction.html)):
 
+```{r, run_custom_priors, cache = TRUE}
+
+dna <- fake_outbreak$dna
+dates <- fake_outbreak$sample
+w <- fake_outbreak$w
+data <- outbreaker_data(dna = dna, dates = dates, w_dens = w)
+
+## we set the seed to ensure results won't change
+set.seed(1)
+
+
+res <- outbreaker(data = data, priors = priors)
+
+```
+
+We can check the results first by looking at the traces, and then by plotting
+the posterior distributions of `pi` and `mu`, respectively:
+
+```{r, traces_custom_priors}
+
+plot(res)
+plot(res, "pi", burnin = 500)
+plot(res, "mu", burnin = 500)
+plot(res, "pi", type = "density", burnin = 500)
+plot(res, "mu", type = "hist", burnin = 500)
+
+```
+
+Note that we are using density and histograms here for illustrative purposes,
+but there is no reason to prefer one or the other for a specific
+parameter.
+
+
+Interestingly, the trace of `pi` suggests that the MCMC oscillates between two
+different states, on either bound of the interval on which the prior is positive
+(it is `-Inf` outside (0.8; 1)). This may be a consequence of the step function,
+which causes sharp 'cliffs' in the posterior landscape. What shall one do to
+derive good samples from the posterior distribution in this kind of situation?
+There are several options, which in fact apply to typical cases of multi-modal
+posterior distributions:
+
+- Avoid 'cliffs', i.e. sharp drops in the posterior landscape, typically created
+  by using step-functions in likelihoods and in priors.
+
+- Use larger samples, i.e. run more MCMC iterations.
+
+- Use a different sampler, better than Metropolis-Hasting at deriving samples
+  from multi-modal distributions.
+
+
+Because we know what the real transmission tree is for this dataset, we can
+assess how the new priors impacted the inference of the transmission tree.
+
+```{r, tree_custom_priors}
+
+summary(res, burnin = 500)
+tree <- summary(res, burnin = 500)$tree
+
+comparison <- data.frame(case = 1:30,
+                       	 inferred = paste(tree$from),
+			 true = paste(fake_outbreak$ances),
+			 stringsAsFactors = FALSE)
+			 
+comparison$correct <- comparison$inferred == comparison$true
+comparison
+mean(comparison$correct)
+
+```
+
+
+
+
+
+<br>
+
+# Customizing likelihood
+
+Likelihood functions customisation works identically to prior functions. The
+only difference is that custom functions will take two arguments (`data` and
+`param`) instead of one in the prior functions. The function used to specify
+custom likelihood is `custom_likelihoods`. Each custom function will correspond
+to a specific likelihood component:
+
+```{r, likelihood_components}
+
+custom_likelihoods()
+
+```
+
+see `?custom_likelihoods` for details of these components, and see the section
+'Extending the model' for new, other components. As for `custom_priors`, a few
+checks are performed by `custom_likelihoods`:
+
+```{r, wrong_likelihood, error = TRUE}
+
+## wrong: not a function
+custom_likelihoods(genetic = "fubar")
+
+## wrong: only one argument
+custom_likelihoods(genetic = function(x){ 0.0 })
+
+```
+
+A trivial customisation is to disable some or all of the likelihood components
+of the model by returning a finite constant. Here, we apply this to two cases:
+first, we will disable all likelihood components as a sanity check, making sure
+that the transmission tree landscape is explored freely by the MCMC. Second, we
+will recreate the [Wallinga & Teunis (1994)](http://dx.doi.org/10.1093/aje/kwh255)
+model, by disabling specific components.
+
+
+
+## A null model
+
+```{r, null_model}
+
+f_null <- function(data, param) {
+   return(0.0)
+}
+
+null_model <- custom_likelihoods(genetic = f_null,
+	      	                 timing_sampling = f_null,
+				 timing_infections = f_null,
+				 reporting = f_null,
+				 contact = f_null)
+
+null_model
+
+```
+
+
+We also specify settings via the `config` argument to avoid detecting imported
+cases, reduce the number of iterations and sampling each of them:
+
+```{r, run_null_model, cache = TRUE}
+
+null_config <- list(find_import = FALSE,
+	            n_iter = 500,
+		    sample_every = 1)
+
+set.seed(1)
+
+res_null <- outbreaker(data = data,
+                             config = null_config,
+			     likelihoods = null_model)
+```
+
+
+```{r, res_null_model}
+
+plot(res_null)
+plot(res_null, "pi")
+plot(res_null, "mu")
+
+```
+
+By typical MCMC standards, these traces look appaling, as they haven't reach
+stationarity (i.e. same mean and variance over time), and are grossly
+autocorrelated in parts. Fair enough, as these are only the first 500 iterations
+of the MCMC, so that autocorrelation is expected. In fact, what we observe here
+literally is the random walk across the posterior landscape, which in this case
+is only impacted by the priors.
+
+
+We can check that transmission trees are indeed freely explored:
+
+```{r, null_trees}
+
+plot(res_null, type = "alpha")
+
+```
+
+Do **not** try to render the corresponding network using `plot(..., type =
+"network")` as the force-direction algorithm will go insane. However, this
+network can be visualised using *igraph*, extracting the edges and nodes from
+the plot (without displaying it):
+
+```{r, null_net}
+
+## extract nodes and edges from the visNetwork object
+temp <- plot(res_null, type = "network", min_support = 0)
+class(temp)
+head(temp$x$edges)
+head(temp$x$nodes)
+
+## make an igraph object
+library(igraph)
+
+net_null <- graph.data.frame(temp$x$edges,
+                             vertices = temp$x$nodes[1:4])
+			     
+plot(net_null, layout = layout.circle,
+     main = "Null model, posterior trees")
+
+```
+
+We can derive similar diagnostics for the number of generations betweens cases
+(`kappa`), only constrained by default settings to be between 1 and 5, and for
+the infection dates (*t_inf*):
+
+```{r, res_null_diag}
+
+plot(res_null, type = "kappa")
+plot(res_null, type = "t_inf")
+
+```
+
+Finally, we can verify that the distributions of `mu` and `pi` match their
+priors, respectively an exponential distribution with rate 1000 and a beta with
+parameters 10 and 1. Here, we get a qualitative assessment by comparing the
+observed distribution (histograms) to the densities of similar sized random
+samples from the priors:
+
+```{r, res_null_priors}
+
+par(xpd=TRUE)
+hist(res_null$mu, prob = TRUE, col = "grey",
+     border = "white",
+     main = "Distribution of mu")
+
+invisible(replicate(30,
+     points(density(rexp(500, 1000)), type = "l", col = "blue")))
+
+
+hist(res_null$pi, prob = TRUE, col = "grey",
+     border = "white", main = "Distribution of pi")
+
+invisible(replicate(30,
+     points(density(rbeta(500, 10, 1)), type = "l", col = "blue")))
+
+```
 

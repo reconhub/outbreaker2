@@ -24,7 +24,8 @@
 #' the function \code{cpp_ll_contact} is used.
 #' }
 #'
-#' All log-likelihood functions should have to following arguments:
+#' All log-likelihood functions should have the following arguments, in this
+#' order:
 #'
 #' \itemize{
 #'

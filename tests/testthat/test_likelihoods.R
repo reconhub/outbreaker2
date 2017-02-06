@@ -27,8 +27,8 @@ test_that("ll_timing_infections gives expected results", {
     ref_rnd_cases <- .ll_timing_infections(data, param, rnd_cases)
 
     expect_is(out, "numeric")
-    expect_equal(out, -6.214608098)
-    expect_equal(out_few_cases, -2.30258509299405)
+    expect_equal(out, -6.59584881763949)
+    expect_equal(out_few_cases, -2.4932054526027)
 
     ## test against reference
     expect_equal(out, ref)
@@ -52,7 +52,9 @@ test_that("cpp_ll_timing_sampling gives expected results", {
     samp_times <- times + c(1, 1, 2, 3, 4)
     f <- c(.1, .2, .5, .2, .1)
     data <- outbreaker_data(dates = samp_times, f_dens = f)
-    config <- create_config(data = data, init_t_inf = times, init_tree = alpha)
+    config <- create_config(data = data,
+                            init_t_inf = times,
+                            init_tree = alpha)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
@@ -67,8 +69,8 @@ test_that("cpp_ll_timing_sampling gives expected results", {
     ref_rnd_cases <- .ll_timing_sampling(data, param, rnd_cases)
 
     expect_is(out, "numeric")
-    expect_equal(out, -8.51719319142)
-    expect_equal(out_few_cases, -4.60517018598809)
+    expect_equal(out, -8.99374409043786)
+    expect_equal(out_few_cases, -4.89110072540107)
 
     ## test against reference
     expect_equal(out, ref)
@@ -180,10 +182,11 @@ test_that("cpp_ll_timing gives expected results", {
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -162.133443661423)
+    expect_equal(out, -156.155925484468)
 
     ## test that likelihoods add up
-    expect_equal(out, cpp_ll_timing_sampling(data, param) + cpp_ll_timing_infections(data, param))
+    expect_equal(out, cpp_ll_timing_sampling(data, param) +
+                      cpp_ll_timing_infections(data, param))
 
 })
 
@@ -211,7 +214,7 @@ test_that("cpp_ll_all gives expected results", {
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -1115.21438541)
+    expect_equal(out, -1109.2368672328)
 
     ## test that likelihoods add up
     expect_equal(out_timing + out_genetic + out_reporting, out)

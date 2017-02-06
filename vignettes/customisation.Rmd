@@ -344,3 +344,97 @@ invisible(replicate(30,
 
 ```
 
+
+
+
+
+
+<br>
+
+## A model using symptom onset only
+
+We can use data and likelihood customisation to change the default *outbreaker2*
+model into a [Wallinga & Teunis (1994)](http://dx.doi.org/10.1093/aje/kwh255)
+model. To do so, we need to:
+
+- Remove the DNA sequences from the data; alternatively we could also specify a
+  'null' function (i.e. returning a finite constant, as above) for the genetic
+  likelihood.
+
+- Disable all likelihood components other than `timing_infections` using
+  `custom_likelihoods`. This means that the dates provided will be treated as
+  dates of symptom onset, and the timing distribution `w` will be taken as the
+  serial interval.
+
+- Disable the detection of imported cases, and forcing all `kappa` values to be
+  1.
+
+
+
+While these are fairly major changes, they are straightforward to implement. We
+first create the dataset and custom likelihood functions:
+
+```{r, wt_custom}
+
+onset_data <- outbreaker_data(dates = fake_outbreak$onset,
+	      	              w_dens = fake_outbreak$w)
+
+wt_model <- custom_likelihoods(timing_sampling = f_null,
+                               reporting = f_null)
+
+```
+
+To fix parameters or augmented data (here, fix all `kappa` values to 1), we set
+the initial states to the desired values and disable the corresponding moves:
+
+```{r, wt_config}
+
+wt_config <- create_config(init_kappa = 1, move_kappa = FALSE,
+                           init_pi = 1, move_pi = FALSE,
+			   move_mu = FALSE)
+
+```
+
+We can now run the analyses for this new model:
+```{r, run_wt, cache = TRUE}
+
+set.seed(1)
+
+res_wt <- outbreaker(data = onset_data,
+	               config = wt_config,
+	               likelihoods = wt_model)
+		       
+```
+
+
+```{r, res_wt}
+
+plot(res_wt)
+plot(res_wt, burnin = 500)
+plot(res_wt, burnin = 500, type = "alpha")
+summary(res_wt)
+
+```
+
+As before for the 'null' model, the transmission tree is very poorly resolved in
+this case. We use the same approach to visualise it: extract nodes and edges
+from the `visNetork` object, use this information to create an `igraph` object,
+and visualise the result using a circular layout:
+
+```{r, wt_net}
+
+## extract nodes and edges from the visNetwork object
+temp <- plot(res_wt, type = "network", min_support = 0.05)
+class(temp)
+head(temp$x$edges)
+head(temp$x$nodes)
+
+## make an igraph object
+
+net_wt <- graph.data.frame(temp$x$edges,
+                             vertices = temp$x$nodes[1:4])
+			     
+plot(net_wt, layout = layout.circle,
+     main = "WT model, posterior trees")
+
+```

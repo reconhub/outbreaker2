@@ -50,7 +50,7 @@ passing them to *outbreaker2*.
 
 Priors of *outbreaker2* must be a function of an `outbreaker_param` list (see
 `?outbreaker_param`). Here, we decide to use a step function rather than the
-default Beta function as a prior for *pi*, the reporting probability.
+default Beta function as a prior for *pi*, the reporting probability, and a flat prior between 0 and 1 for the mutation rate (which is technically a probability in the basic genetic model used in *outbreaker2*).
 
 
 We start by defining two functions: an auxiliary function `f` which returns
@@ -78,8 +78,16 @@ While `f` is a useful function to visualise the prior, `f_pi` is the function
 which will be passed to `outbreaker`. To do so, we pass it to `custom_priors`:
 
 ```{r, custom_prior}
+f_mu <- function(param) {
+  if (param$mu < 0 || param$mu > 1) {
+    return(-Inf)
+  } else {
+    return(0.0)
+  }
+  
+}
 
-priors <- custom_priors(pi = f_pi)
+priors <- custom_priors(pi = f_pi, mu = f_mu)
 priors
 
 ```
@@ -98,6 +106,83 @@ custom_priors(pi = 0.0)
 custom_priors(pi = function(x, y){0.0})
 
 ```
+
+We can now use the new priors to run `outbreaker` on the `fake_outbreak` data (see [*introduction vignette*](introduction.html)):
+
+```{r, run_custom_priors, cache = TRUE}
+
+dna <- fake_outbreak$dna
+dates <- fake_outbreak$sample
+w <- fake_outbreak$w
+data <- outbreaker_data(dna = dna, dates = dates, w_dens = w)
+
+## we set the seed to ensure results won't change
+set.seed(1)
+
+
+res <- outbreaker(data = data, priors = priors)
+
+```
+
+We can check the results first by looking at the traces, and then by plotting
+the posterior distributions of `pi` and `mu`, respectively:
+
+```{r, traces_custom_priors}
+
+plot(res)
+plot(res, "pi", burnin = 500)
+plot(res, "mu", burnin = 500)
+plot(res, "pi", type = "density", burnin = 500)
+plot(res, "mu", type = "hist", burnin = 500)
+
+```
+
+Note that we are using density and histograms here for illustrative purposes,
+but there is no reason to prefer one or the other for a specific
+parameter.
+
+
+Interestingly, the trace of `pi` suggests that the MCMC oscillates between two
+different states, on either bound of the interval on which the prior is positive
+(it is `-Inf` outside (0.8; 1)). This may be a consequence of the step function,
+which causes sharp 'cliffs' in the posterior landscape. What shall one do to
+derive good samples from the posterior distribution in this kind of situation?
+There are several options, which in fact apply to typical cases of multi-modal
+posterior distributions:
+
+- Avoid 'cliffs', i.e. sharp drops in the posterior landscape, typically created
+  by using step-functions in likelihoods and in priors.
+
+- Use larger samples, i.e. run more MCMC iterations.
+
+- Use a different sampler, better than Metropolis-Hasting at deriving samples
+  from multi-modal distributions.
+
+
+Because we know what the real transmission tree is for this dataset, we can
+assess how the new priors impacted the inference of the transmission tree.
+
+```{r, tree_custom_priors}
+
+summary(res, burnin = 500)
+tree <- summary(res, burnin = 500)$tree
+
+comparison <- data.frame(case = 1:30,
+                       	 inferred = paste(tree$from),
+			 true = paste(fake_outbreak$ances),
+			 stringsAsFactors = FALSE)
+			 
+comparison$correct <- comparison$inferred == comparison$true
+comparison
+mean(comparison$correct)
+
+```
+
+
+
+
+
+
 
 
 

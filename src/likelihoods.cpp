@@ -364,8 +364,8 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		       Rcpp::RObject custom_function = R_NilValue) {
-  Rcpp::NumericMatrix C = data["C"];
-  if (C.ncol() < 1) return 0.0;
+  Rcpp::NumericMatrix contacts = data["contacts"];
+  if (contacts.ncol() < 1) return 0.0;
 
   size_t C_combn = static_cast<size_t>(data["C_combn"]);
   size_t C_nrow = static_cast<size_t>(data["C_nrow"]);
@@ -399,7 +399,7 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
       } else if (kappa[j] > 1) {
 	unobsv_case += 1;
       } else {
-	true_pos += C(j, alpha[j] - 1); // offset
+	true_pos += contacts(j, alpha[j] - 1); // offset
       }
     }
 

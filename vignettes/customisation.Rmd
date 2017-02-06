@@ -520,45 +520,72 @@ known and can be directly sampled from. He, we use this principle to provide a
 toy example of custom movemet for `mu`, assuming that this conditional
 distribution is always an Exponential distribution with a rate of 1000 (which is
 also the prior used by default for `mu`). In short, we sample from the prior
-directly. This is easy to implement; we add a console message to ensure that
-the function is indeed used:
+directly. This is easy to implement; to make sure that the function is actually
+used, we set a global variable changed when the function is called.
 
 
 ```{r, custom_move_mu}
 
 move_mu <- function(param, config) {
+
+  NEW_MOVE_HAS_BEEN_USED <<- TRUE
   param$mu <- rexp(1, config$prior_mu)  
   return(param)
+  
 }
 
 moves <- custom_moves(mu = move_mu)
 
-```
-
-
-```{r, run_move_mu}
-
-
+quick_config <- list(n_iter = 500, sample_every = 1, find_import = FALSE)
 
 ```
 
+Note that the new movement function `move_mu` has two arguments, and that we do
+not specify `config`. Internally, what happens is:
 
+```{r, bind_moves}
 
+## bind quick_config to function
+move_mu_intern <- bind_to_function(move_mu, config = quick_config)
 
-```{r, tree_custom_priors}
+## new function has just one argument
+move_mu_intern
 
-summary(res, burnin = 500)
-tree <- summary(res, burnin = 500)$tree
+## 'config' is in the function's environment
+names(environment(move_mu_intern))
 
-comparison <- data.frame(case = 1:30,
-                       	 inferred = paste(tree$from),
-			 true = paste(fake_outbreak$ances),
-			 stringsAsFactors = FALSE)
-			 
-comparison$correct <- comparison$inferred == comparison$true
-comparison
-mean(comparison$correct)
+## 'config' is actually 'quick_config'
+identical(environment(move_mu_intern)$config, quick_config)
 
 ```
+
+
+We perform a quick run using this new movement:
+
+```{r, run_custom_move_mu}
+
+NEW_MOVE_HAS_BEEN_USED <- FALSE
+
+set.seed(1)
+res_move_mu <- outbreaker(data, quick_config, moves = moves)
+NEW_MOVE_HAS_BEEN_USED
+
+plot(res_move_mu)
+plot(res_move_mu, "pi")
+plot(res_move_mu, "mu")
+
+```
+
+This short, full trace, clearly hasn't mixed well (as is to be expected). But
+while we see the effect of accept/reject sampling (Metropolis algorithm) for
+`pi` with a lot of autocorrelation, the trace of `mu` shows complete
+independence between successive values. While the Gibbs sampler used here is not
+correct, this result is: a Gibbs sampler will be more efficient than the
+classical Metropolis(-Hasting) algorithm for a given number a iterations.
+
+
+
+
+
 
 

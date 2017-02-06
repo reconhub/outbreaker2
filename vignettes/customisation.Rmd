@@ -446,3 +446,119 @@ plot(net_wt, layout = layout.circle,
 
 
 
+<br>
+
+# Customising movements
+
+Customising movements works in similar ways to priors and likelihoods. In
+practice, this type of customisation is more complex as it most likely will
+require evaluation of likelihoods and priors, and therefore require the user to
+know which functions to all, and how. These are documented in the [API
+vignette](Rcpp_API.html). In the following, we provide two examples:
+
+- a (fake) Gibbs sampler for the movement of the mutation rate `mu`
+
+- a new movement of ancestries in which a 'good' transmission tree is used as
+  proposal
+
+But before getting into these, we need to explicit how movements are happening
+in *outbreaker2*.
+
+
+
+## Movements in *outbreaker2*
+
+At the core of the `outbreaker` function, movements are implemented as a list of
+functions, which are all evaluated in turn during every iteration of the
+MCMC. All movement functions must obey two rules:
+
+- The first argument must be an `outbreaker_param` object (typically called
+  `param` in the original code); see `?create_param` for details.
+
+- All movement functions must return a valid, `outbreaker_param` object.
+
+
+However, a new difficulty compared to prior or likelihood customisation is that
+different movements may require different components of the model, and a
+different set of arguments after `param`. In fact, this can be seen by examining
+the arguments of all the default movement functions:
+
+```{r, move_defaults}
+
+lapply(custom_moves(),  args)
+
+```
+
+To handle this difficulty, *outbreaker2* transforms every movement function
+before running the MCMC into a new function with a single parameter `param`,
+attaching all other required argument to the function's environment. The
+function achieving this transformation is called `bind_moves`. This function
+'knows' what these components are for known moves listed aboves. For new,
+unknown moves, it attaches the following components, provided they are used as
+arguments of the new function:
+
+- `data`: the processed data; see `?outbreaker_data`
+
+- `config`: the configuration list; see `create_config`
+
+- `likelihoods`: a list of custom likelihood functions; see
+  `?custom_likelihoods`
+
+- `priors`: a list of custom prior functions; see `?custom_priors`
+
+
+See examples in `?bind_moves` for details of how this process works.
+
+
+
+
+
+## A (fake) Gibbs sampler for `mu`
+
+A Gibbs sampler supposes that the conditional distribution of a parameter is
+known and can be directly sampled from. He, we use this principle to provide a
+toy example of custom movemet for `mu`, assuming that this conditional
+distribution is always an Exponential distribution with a rate of 1000 (which is
+also the prior used by default for `mu`). In short, we sample from the prior
+directly. This is easy to implement; we add a console message to ensure that
+the function is indeed used:
+
+
+```{r, custom_move_mu}
+
+move_mu <- function(param, config) {
+  param$mu <- rexp(1, config$prior_mu)  
+  return(param)
+}
+
+moves <- custom_moves(mu = move_mu)
+
+```
+
+
+```{r, run_move_mu}
+
+
+
+```
+
+
+
+
+```{r, tree_custom_priors}
+
+summary(res, burnin = 500)
+tree <- summary(res, burnin = 500)$tree
+
+comparison <- data.frame(case = 1:30,
+                       	 inferred = paste(tree$from),
+			 true = paste(fake_outbreak$ances),
+			 stringsAsFactors = FALSE)
+			 
+comparison$correct <- comparison$inferred == comparison$true
+comparison
+mean(comparison$correct)
+
+```
+
+

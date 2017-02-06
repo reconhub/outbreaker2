@@ -282,8 +282,6 @@ We can check that transmission trees are indeed freely explored:
 
 plot(res_null, type = "alpha")
 
-plot(res_null, type = "network")
-
 ```
 
 Do **not** try to render the corresponding network using `plot(..., type =
@@ -305,7 +303,6 @@ library(igraph)
 net_null <- graph.data.frame(temp$x$edges,
                              vertices = temp$x$nodes[1:4])
 			     
-plot(net_null, layout = layout.circle)
 plot(net_null, layout = layout.circle,
      main = "Null model, posterior trees")
 
@@ -330,6 +327,7 @@ samples from the priors:
 
 ```{r, res_null_priors}
 
+par(xpd=TRUE)
 hist(res_null$mu, prob = TRUE, col = "grey",
      border = "white",
      main = "Distribution of mu")

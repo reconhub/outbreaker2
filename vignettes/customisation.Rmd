@@ -458,8 +458,8 @@ vignette](Rcpp_API.html). In the following, we provide two examples:
 
 - a (fake) Gibbs sampler for the movement of the mutation rate `mu`
 
-- a new movement of ancestries in which a 'good' transmission tree is used as
-  proposal
+- a new 'naive' movement of ancestries in which infectors are picked at random
+  from all cases
 
 But before getting into these, we need to explicit how movements are happening
 in *outbreaker2*.
@@ -516,8 +516,8 @@ See examples in `?bind_moves` for details of how this process works.
 ## A (fake) Gibbs sampler for `mu`
 
 A Gibbs sampler supposes that the conditional distribution of a parameter is
-known and can be directly sampled from. He, we use this principle to provide a
-toy example of custom movemet for `mu`, assuming that this conditional
+known and can directly be sampled from. Here, we use this principle to provide a
+toy example of custom movement for `mu`, assuming that this conditional
 distribution is always an Exponential distribution with a rate of 1000 (which is
 also the prior used by default for `mu`). In short, we sample from the prior
 directly. This is easy to implement; to make sure that the function is actually
@@ -586,6 +586,99 @@ classical Metropolis(-Hasting) algorithm for a given number a iterations.
 
 
 
+<br>
+
+## A new movement of ancestries
+
+Moves of ancestries are done in two ways in outbreaker: by picking ancestors at
+random from any prior case, and by swapping cases from a transmission
+link. Here, we implement a new move, which will propose infectors which have
+been infected on the same day of the current infector. As before, we will use
+global variables to keep track of the resulting movements (see `N_ACCEPT` and
+`N_REJECT`).
+
+
+```{r, new_move_ances}
+
+new_move_ances <- function(param, data, custom_likelihoods = NULL) {
+#browser()
+for (i in 1:data$N) {
+    current_ances <- param$alpha[i]
+    if (!is.na(current_ances)) {
+      ## find cases infected on the same days
+      current_t_inf <- param$t_inf[current_ances]
+      pool <- which(param$t_inf == current_t_inf)
+      pool <- setdiff(pool, i)
+      
+      if (length(pool) > 0) {
+        ## propose new ancestor
+        current_ll <- cpp_ll_all(data, param, i = i, custom_likelihoods)
+        param$alpha[i] <- sample(pool, 1)
+        new_ll <- cpp_ll_all(data, param, i = i, custom_likelihoods)
+
+        ## likelihood ratio - no correction, move is symmetric
+        ratio <- exp(new_ll - current_ll)
+
+        ## accept / reject
+        if (runif(1) <= ratio) { # accept
+          N_ACCEPT <<- N_ACCEPT + 1
+        } else { # reject
+          N_REJECT <<- N_REJECT + 1
+          param$alpha[i] <- current_ances
+        }
+      }
+    }
+  }
+  return(param)
+}
+
+moves <- custom_moves(new_move = new_move_ances)
+
+```
+
+We can now use this new move in our transmission tree reconstruction. We will
+use a shorter chain than the defaults as this new move is likely to be computer
+intensive.
 
 
 
+```{r, run_new_move, cache = TRUE}
+
+N_ACCEPT <- 0
+N_REJECT <- 0
+
+set.seed(1)
+res_new_move <- outbreaker(data, list(move_kappa = FALSE), moves = moves)
+
+N_ACCEPT
+N_REJECT
+
+```
+
+
+```{r, res_new_move}
+
+plot(res_new_move)
+plot(res_new_move, type = "alpha")
+summary(res_new_move)
+
+```
+
+Results show a switch to a new mode at about 5000 iterations. Let us compare the
+consensus tree to the actual one (store in `fake_outbreak$ances`):
+
+```{r, check_new_move}
+
+summary(res_new_move, burnin = 5000)
+tree2 <- summary(res_new_move, burnin = 5000)$tree
+
+comparison <- data.frame(case = 1:30,
+                       	 inferred = paste(tree2$from),
+			 true = paste(fake_outbreak$ances),
+			 stringsAsFactors = FALSE)
+			 
+comparison$correct <- comparison$inferred == comparison$true
+comparison
+mean(comparison$correct)
+
+```

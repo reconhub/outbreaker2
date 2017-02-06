@@ -50,7 +50,7 @@
       <h1>Using custom priors, likelihood, or movements in outbreaker2</h1>
                         <h4 class="author">Thibaut Jombart</h4>
             
-            <h4 class="date">2017-02-03</h4>
+            <h4 class="date">2017-02-06</h4>
           </div>
 
     
@@ -68,7 +68,7 @@
 <div id="customising-priors" class="section level1">
 <h1 class="hasAnchor">
 <html><body><a href="#customising-priors" class="anchor"> </a></body></html>Customising priors</h1>
-<p>Priors of <em>outbreaker2</em> must be a function of an <code>outbreaker_param</code> list (see <code>?outbreaker_param</code>). Here, we decide to use a step function rather than the default Beta function as a prior for <em>pi</em>, the reporting probability.</p>
+<p>Priors of <em>outbreaker2</em> must be a function of an <code>outbreaker_param</code> list (see <code>?outbreaker_param</code>). Here, we decide to use a step function rather than the default Beta function as a prior for <em>pi</em>, the reporting probability, and a flat prior between 0 and 1 for the mutation rate (which is technically a probability in the basic genetic model used in <em>outbreaker2</em>).</p>
 <p>We start by defining two functions: an auxiliary function <code>f</code> which returns values on the natural scale, and which we can use for plotting the prior distribution, and then a function <code>f_pi</code> which will be used for the customisation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span>function(pi) {
     <span class="kw">ifelse</span>(pi &lt;<span class="st"> </span><span class="fl">0.8</span>, <span class="dv">0</span>, <span class="dv">5</span>)
@@ -83,8 +83,18 @@ f_pi &lt;-<span class="st"> </span>function(param) {
      <span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">"New prior for "</span>, pi)))</code></pre></div>
 <p><img src="figs-customisation/f_pi-1.png" width="768"></p>
 <p>While <code>f</code> is a useful function to visualise the prior, <code>f_pi</code> is the function which will be passed to <code>outbreaker</code>. To do so, we pass it to <code>custom_priors</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-priors &lt;-<span class="st"> </span><span class="kw"><a href="../reference/custom_priors.html">custom_priors</a></span>(<span class="dt">pi =</span> f_pi)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(outbreaker2)
+
+f_mu &lt;-<span class="st"> </span>function(param) {
+  if (param$mu &lt;<span class="st"> </span><span class="dv">0</span> ||<span class="st"> </span>param$mu &gt;<span class="st"> </span><span class="dv">1</span>) {
+    <span class="kw">return</span>(-<span class="ot">Inf</span>)
+  } else {
+    <span class="kw">return</span>(<span class="fl">0.0</span>)
+  }
+  
+}
+
+priors &lt;-<span class="st"> </span><span class="kw"><a href="../reference/custom_priors.html">custom_priors</a></span>(<span class="dt">pi =</span> f_pi, <span class="dt">mu =</span> f_mu)
 priors
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
@@ -94,9 +104,6 @@ priors
 <span class="co">#&gt; number of items: 4 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; /// custom priors set to NULL (default used) //</span>
-<span class="co">#&gt; $mu</span>
-<span class="co">#&gt; NULL</span>
-<span class="co">#&gt; </span>
 <span class="co">#&gt; $eps</span>
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
@@ -104,12 +111,24 @@ priors
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; /// custom priors //</span>
+<span class="co">#&gt; $mu</span>
+<span class="co">#&gt; function (param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     if (param$mu &lt; 0 || param$mu &gt; 1) {</span>
+<span class="co">#&gt;         return(-Inf)</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     else {</span>
+<span class="co">#&gt;         return(0)</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; $pi</span>
 <span class="co">#&gt; function (param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     log(f(param$pi))</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x564fb5732df0&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span></code></pre></div>
 <p>Note that <code>custom_priors</code> does more than just adding the custom function to a list. For instance, the following customisations are all wrong, and rightfully rejected:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 ## wrong: not a function
@@ -120,6 +139,783 @@ priors
 ## wrong: two arguments
 <span class="kw"><a href="../reference/custom_priors.html">custom_priors</a></span>(<span class="dt">pi =</span> function(x, y){<span class="fl">0.0</span>})
 <span class="co">#&gt; Error in custom_priors(pi = function(x, y) {: The following priors dont' have a single argument: pi</span></code></pre></div>
+<p>We can now use the new priors to run <code>outbreaker</code> on the <code>fake_outbreak</code> data (see <a href="introduction.html"><em>introduction vignette</em></a>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+dna &lt;-<span class="st"> </span>fake_outbreak$dna
+dates &lt;-<span class="st"> </span>fake_outbreak$sample
+w &lt;-<span class="st"> </span>fake_outbreak$w
+data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker_data.html">outbreaker_data</a></span>(<span class="dt">dna =</span> dna, <span class="dt">dates =</span> dates, <span class="dt">w_dens =</span> w)
+
+## we set the seed to ensure results won't change
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+
+
+res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker.html">outbreaker</a></span>(<span class="dt">data =</span> data, <span class="dt">priors =</span> priors)</code></pre></div>
+<p>We can check the results first by looking at the traces, and then by plotting the posterior distributions of <code>pi</code> and <code>mu</code>, respectively:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">plot</span>(res)</code></pre></div>
+<p><img src="figs-customisation/traces_custom_priors-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res, <span class="st">"pi"</span>, <span class="dt">burnin =</span> <span class="dv">500</span>)</code></pre></div>
+<p><img src="figs-customisation/traces_custom_priors-2.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res, <span class="st">"mu"</span>, <span class="dt">burnin =</span> <span class="dv">500</span>)</code></pre></div>
+<p><img src="figs-customisation/traces_custom_priors-3.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res, <span class="st">"pi"</span>, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">burnin =</span> <span class="dv">500</span>)</code></pre></div>
+<p><img src="figs-customisation/traces_custom_priors-4.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res, <span class="st">"mu"</span>, <span class="dt">type =</span> <span class="st">"hist"</span>, <span class="dt">burnin =</span> <span class="dv">500</span>)
+<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
+<p><img src="figs-customisation/traces_custom_priors-5.png" width="768"></p>
+<p>Note that we are using density and histograms here for illustrative purposes, but there is no reason to prefer one or the other for a specific parameter.</p>
+<p>Interestingly, the trace of <code>pi</code> suggests that the MCMC oscillates between two different states, on either bound of the interval on which the prior is positive (it is <code>-Inf</code> outside (0.8; 1)). This may be a consequence of the step function, which causes sharp ‘cliffs’ in the posterior landscape. What shall one do to derive good samples from the posterior distribution in this kind of situation? There are several options, which in fact apply to typical cases of multi-modal posterior distributions:</p>
+<ul>
+<li><p>Avoid ‘cliffs’, i.e. sharp drops in the posterior landscape, typically created by using step-functions in likelihoods and in priors.</p></li>
+<li><p>Use larger samples, i.e. run more MCMC iterations.</p></li>
+<li><p>Use a different sampler, better than Metropolis-Hasting at deriving samples from multi-modal distributions.</p></li>
+</ul>
+<p>Because we know what the real transmission tree is for this dataset, we can assess how the new priors impacted the inference of the transmission tree.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">summary</span>(res, <span class="dt">burnin =</span> <span class="dv">500</span>)
+<span class="co">#&gt; $step</span>
+<span class="co">#&gt;    first     last interval  n_steps </span>
+<span class="co">#&gt;      550    10000       50      190 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $post</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  -703.9  -592.0  -558.9  -554.5  -527.8  -430.7 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $like</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  -705.5  -593.7  -560.5  -556.2  -529.4  -432.3 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $prior</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;   1.609   1.609   1.609   1.609   1.609   1.609 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mu</span>
+<span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
+<span class="co">#&gt; 2.788e-05 5.948e-05 7.069e-05 7.661e-05 8.602e-05 1.848e-04 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  0.8000  0.8036  0.8087  0.8262  0.8185  0.9976 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $tree</span>
+<span class="co">#&gt;    from to time   support generations</span>
+<span class="co">#&gt; 1    NA  1 -1.0        NA          NA</span>
+<span class="co">#&gt; 2     1  2  1.0 1.0000000         1.0</span>
+<span class="co">#&gt; 3     2  3  3.0 0.9947368         1.0</span>
+<span class="co">#&gt; 4    NA  4  2.0        NA          NA</span>
+<span class="co">#&gt; 5     3  5  4.0 0.9842105         1.0</span>
+<span class="co">#&gt; 6     4  6  5.0 0.9736842         1.0</span>
+<span class="co">#&gt; 7     4  7  5.0 1.0000000         1.0</span>
+<span class="co">#&gt; 8     5  8  6.0 0.9631579         1.0</span>
+<span class="co">#&gt; 9     6  9  6.0 1.0000000         1.0</span>
+<span class="co">#&gt; 10    6 10  7.0 1.0000000         1.0</span>
+<span class="co">#&gt; 11    7 11  7.0 0.5105263         1.0</span>
+<span class="co">#&gt; 12    5 12  7.0 0.8315789         1.0</span>
+<span class="co">#&gt; 13    9 13  7.0 1.0000000         1.0</span>
+<span class="co">#&gt; 14    5 14  7.0 0.8000000         1.0</span>
+<span class="co">#&gt; 15    5 15  7.5 0.7789474         1.0</span>
+<span class="co">#&gt; 16    4 16  8.0 0.5052632         2.0</span>
+<span class="co">#&gt; 17    4 17  7.0 0.6684211         1.5</span>
+<span class="co">#&gt; 18    5 18  9.0 0.4526316         2.0</span>
+<span class="co">#&gt; 19    9 19  9.0 1.0000000         2.0</span>
+<span class="co">#&gt; 20   10 20 10.0 0.9947368         2.0</span>
+<span class="co">#&gt; 21   11 21 10.0 0.9789474         2.0</span>
+<span class="co">#&gt; 22   11 22 11.0 0.9842105         2.0</span>
+<span class="co">#&gt; 23   13 23  9.0 1.0000000         2.0</span>
+<span class="co">#&gt; 24   13 24 10.0 1.0000000         3.0</span>
+<span class="co">#&gt; 25   13 25  9.0 1.0000000         2.0</span>
+<span class="co">#&gt; 26   17 26 10.0 0.9894737         3.0</span>
+<span class="co">#&gt; 27   17 27 11.0 1.0000000         3.0</span>
+<span class="co">#&gt; 28   NA 28  9.0        NA          NA</span>
+<span class="co">#&gt; 29   10 29 11.0 1.0000000         2.0</span>
+<span class="co">#&gt; 30   13 30 11.0 0.9842105         3.0</span>
+tree &lt;-<span class="st"> </span><span class="kw">summary</span>(res, <span class="dt">burnin =</span> <span class="dv">500</span>)$tree
+
+comparison &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">case =</span> <span class="dv">1</span>:<span class="dv">30</span>,
+                         <span class="dt">inferred =</span> <span class="kw">paste</span>(tree$from),
+             <span class="dt">true =</span> <span class="kw">paste</span>(fake_outbreak$ances),
+             <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+             
+comparison$correct &lt;-<span class="st"> </span>comparison$inferred ==<span class="st"> </span>comparison$true
+comparison
+<span class="co">#&gt;    case inferred true correct</span>
+<span class="co">#&gt; 1     1       NA   NA    TRUE</span>
+<span class="co">#&gt; 2     2        1    1    TRUE</span>
+<span class="co">#&gt; 3     3        2    2    TRUE</span>
+<span class="co">#&gt; 4     4       NA   NA    TRUE</span>
+<span class="co">#&gt; 5     5        3    3    TRUE</span>
+<span class="co">#&gt; 6     6        4    4    TRUE</span>
+<span class="co">#&gt; 7     7        4    4    TRUE</span>
+<span class="co">#&gt; 8     8        5    5    TRUE</span>
+<span class="co">#&gt; 9     9        6    6    TRUE</span>
+<span class="co">#&gt; 10   10        6    6    TRUE</span>
+<span class="co">#&gt; 11   11        7    7    TRUE</span>
+<span class="co">#&gt; 12   12        5    8   FALSE</span>
+<span class="co">#&gt; 13   13        9    9    TRUE</span>
+<span class="co">#&gt; 14   14        5    5    TRUE</span>
+<span class="co">#&gt; 15   15        5    5    TRUE</span>
+<span class="co">#&gt; 16   16        4    7   FALSE</span>
+<span class="co">#&gt; 17   17        4    7   FALSE</span>
+<span class="co">#&gt; 18   18        5    8   FALSE</span>
+<span class="co">#&gt; 19   19        9    9    TRUE</span>
+<span class="co">#&gt; 20   20       10   10    TRUE</span>
+<span class="co">#&gt; 21   21       11   11    TRUE</span>
+<span class="co">#&gt; 22   22       11   11    TRUE</span>
+<span class="co">#&gt; 23   23       13   13    TRUE</span>
+<span class="co">#&gt; 24   24       13   13    TRUE</span>
+<span class="co">#&gt; 25   25       13   13    TRUE</span>
+<span class="co">#&gt; 26   26       17   17    TRUE</span>
+<span class="co">#&gt; 27   27       17   17    TRUE</span>
+<span class="co">#&gt; 28   28       NA   NA    TRUE</span>
+<span class="co">#&gt; 29   29       10   10    TRUE</span>
+<span class="co">#&gt; 30   30       13   13    TRUE</span>
+<span class="kw">mean</span>(comparison$correct)
+<span class="co">#&gt; [1] 0.8666667</span></code></pre></div>
+<p><br></p>
+</div>
+<div id="customizing-likelihood" class="section level1">
+<h1 class="hasAnchor">
+<html><body><a href="#customizing-likelihood" class="anchor"> </a></body></html>Customizing likelihood</h1>
+<p>Likelihood functions customisation works identically to prior functions. The only difference is that custom functions will take two arguments (<code>data</code> and <code>param</code>) instead of one in the prior functions. The function used to specify custom likelihood is <code>custom_likelihoods</code>. Each custom function will correspond to a specific likelihood component:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw"><a href="../reference/custom_likelihoods.html">custom_likelihoods</a></span>()
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  ///// outbreaker custom likelihoods ///</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; class: custom_likelihoods list</span>
+<span class="co">#&gt; number of items: 5 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; /// custom likelihoods set to NULL (default used) //</span>
+<span class="co">#&gt; $genetic</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $reporting</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $timing_infections</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $timing_sampling</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $contact</span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+<p>see <code><a href="../reference/custom_likelihoods.html">?custom_likelihoods</a></code> for details of these components, and see the section ‘Extending the model’ for new, other components. As for <code>custom_priors</code>, a few checks are performed by <code>custom_likelihoods</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+## wrong: not a function
+<span class="kw"><a href="../reference/custom_likelihoods.html">custom_likelihoods</a></span>(<span class="dt">genetic =</span> <span class="st">"fubar"</span>)
+<span class="co">#&gt; Error in custom_likelihoods(genetic = "fubar"): The following likelihoods are not functions: genetic</span>
+
+## wrong: only one argument
+<span class="kw"><a href="../reference/custom_likelihoods.html">custom_likelihoods</a></span>(<span class="dt">genetic =</span> function(x){ <span class="fl">0.0</span> })
+<span class="co">#&gt; Error in custom_likelihoods(genetic = function(x) {: The following likelihoods dont' have two arguments: genetic</span></code></pre></div>
+<p>A trivial customisation is to disable some or all of the likelihood components of the model by returning a finite constant. Here, we apply this to two cases: first, we will disable all likelihood components as a sanity check, making sure that the transmission tree landscape is explored freely by the MCMC. Second, we will recreate the <a href="http://dx.doi.org/10.1093/aje/kwh255">Wallinga &amp; Teunis (1994)</a> model, by disabling specific components.</p>
+<div id="a-null-model" class="section level2">
+<h2 class="hasAnchor">
+<html><body><a href="#a-null-model" class="anchor"> </a></body></html>A null model</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+f_null &lt;-<span class="st"> </span>function(data, param) {
+   <span class="kw">return</span>(<span class="fl">0.0</span>)
+}
+
+null_model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/custom_likelihoods.html">custom_likelihoods</a></span>(<span class="dt">genetic =</span> f_null,
+                             <span class="dt">timing_sampling =</span> f_null,
+                 <span class="dt">timing_infections =</span> f_null,
+                 <span class="dt">reporting =</span> f_null,
+                 <span class="dt">contact =</span> f_null)
+
+null_model
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  ///// outbreaker custom likelihoods ///</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; class: custom_likelihoods list</span>
+<span class="co">#&gt; number of items: 5 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; /// custom likelihoods //</span>
+<span class="co">#&gt; $genetic</span>
+<span class="co">#&gt; function (data, param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     return(0)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $reporting</span>
+<span class="co">#&gt; function (data, param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     return(0)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $timing_infections</span>
+<span class="co">#&gt; function (data, param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     return(0)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $timing_sampling</span>
+<span class="co">#&gt; function (data, param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     return(0)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $contact</span>
+<span class="co">#&gt; function (data, param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     return(0)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610055d0930&gt;</span></code></pre></div>
+<p>We also specify settings via the <code>config</code> argument to avoid detecting imported cases, reduce the number of iterations and sampling each of them:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+null_config &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">find_import =</span> <span class="ot">FALSE</span>,
+                <span class="dt">n_iter =</span> <span class="dv">500</span>,
+            <span class="dt">sample_every =</span> <span class="dv">1</span>)
+
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+
+res_null &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker.html">outbreaker</a></span>(<span class="dt">data =</span> data,
+                             <span class="dt">config =</span> null_config,
+                 <span class="dt">likelihoods =</span> null_model)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">plot</span>(res_null)</code></pre></div>
+<p><img src="figs-customisation/res_null_model-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_null, <span class="st">"pi"</span>)</code></pre></div>
+<p><img src="figs-customisation/res_null_model-2.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_null, <span class="st">"mu"</span>)</code></pre></div>
+<p><img src="figs-customisation/res_null_model-3.png" width="768"></p>
+<p>By typical MCMC standards, these traces look appaling, as they haven’t reach stationarity (i.e. same mean and variance over time), and are grossly autocorrelated in parts. Fair enough, as these are only the first 500 iterations of the MCMC, so that autocorrelation is expected. In fact, what we observe here literally is the random walk across the posterior landscape, which in this case is only impacted by the priors.</p>
+<p>We can check that transmission trees are indeed freely explored:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">plot</span>(res_null, <span class="dt">type =</span> <span class="st">"alpha"</span>)
+<span class="co">#&gt; Warning: Removed 500 rows containing missing values (geom_point).</span></code></pre></div>
+<p><img src="figs-customisation/null_trees-1.png" width="768"></p>
+<p>Do <strong>not</strong> try to render the corresponding network using <code>plot(..., type = "network")</code> as the force-direction algorithm will go insane. However, this network can be visualised using <em>igraph</em>, extracting the edges and nodes from the plot (without displaying it):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+## extract nodes and edges from the visNetwork object
+temp &lt;-<span class="st"> </span><span class="kw">plot</span>(res_null, <span class="dt">type =</span> <span class="st">"network"</span>, <span class="dt">min_support =</span> <span class="dv">0</span>)
+<span class="kw">class</span>(temp)
+<span class="co">#&gt; [1] "visNetwork" "htmlwidget"</span>
+<span class="kw">head</span>(temp$x$edges)
+<span class="co">#&gt;   from to value arrows   color</span>
+<span class="co">#&gt; 1    1  2 0.034     to #CCDDFF</span>
+<span class="co">#&gt; 2    1  3 0.008     to #CCDDFF</span>
+<span class="co">#&gt; 3    1  4 0.014     to #CCDDFF</span>
+<span class="co">#&gt; 4    1  5 0.022     to #CCDDFF</span>
+<span class="co">#&gt; 5    1  6 0.008     to #CCDDFF</span>
+<span class="co">#&gt; 6    1  7 0.012     to #CCDDFF</span>
+<span class="kw">head</span>(temp$x$nodes)
+<span class="co">#&gt;   id label value   color shape shaped</span>
+<span class="co">#&gt; 1  1     1 0.446 #CCDDFF   dot   star</span>
+<span class="co">#&gt; 2  2     2 0.222 #B2D9E3   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 3  3     3 0.298 #98D6C7   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 4  4     4 0.238 #7ED2AC   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 5  5     5 0.368 #99CAA9   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 6  6     6 0.294 #C2C0AD   dot   &lt;NA&gt;</span>
+
+## make an igraph object
+<span class="kw">library</span>(igraph)
+
+net_null &lt;-<span class="st"> </span><span class="kw">graph.data.frame</span>(temp$x$edges,
+                             <span class="dt">vertices =</span> temp$x$nodes[<span class="dv">1</span>:<span class="dv">4</span>])
+                 
+<span class="kw">plot</span>(net_null, <span class="dt">layout =</span> layout.circle,
+     <span class="dt">main =</span> <span class="st">"Null model, posterior trees"</span>)</code></pre></div>
+<p><img src="figs-customisation/null_net-1.png" width="768"></p>
+<p>We can derive similar diagnostics for the number of generations betweens cases (<code>kappa</code>), only constrained by default settings to be between 1 and 5, and for the infection dates (<em>t_inf</em>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">plot</span>(res_null, <span class="dt">type =</span> <span class="st">"kappa"</span>)
+<span class="co">#&gt; Warning: Removed 500 rows containing missing values (geom_point).</span></code></pre></div>
+<p><img src="figs-customisation/res_null_diag-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_null, <span class="dt">type =</span> <span class="st">"t_inf"</span>)</code></pre></div>
+<p><img src="figs-customisation/res_null_diag-2.png" width="768"></p>
+<p>Finally, we can verify that the distributions of <code>mu</code> and <code>pi</code> match their priors, respectively an exponential distribution with rate 1000 and a beta with parameters 10 and 1. Here, we get a qualitative assessment by comparing the observed distribution (histograms) to the densities of similar sized random samples from the priors:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">par</span>(<span class="dt">xpd=</span><span class="ot">TRUE</span>)
+<span class="kw">hist</span>(res_null$mu, <span class="dt">prob =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">"grey"</span>,
+     <span class="dt">border =</span> <span class="st">"white"</span>,
+     <span class="dt">main =</span> <span class="st">"Distribution of mu"</span>)
+
+<span class="kw">invisible</span>(<span class="kw">replicate</span>(<span class="dv">30</span>,
+     <span class="kw">points</span>(<span class="kw">density</span>(<span class="kw">rexp</span>(<span class="dv">500</span>, <span class="dv">1000</span>)), <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)))</code></pre></div>
+<p><img src="figs-customisation/res_null_priors-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+
+<span class="kw">hist</span>(res_null$pi, <span class="dt">prob =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">"grey"</span>,
+     <span class="dt">border =</span> <span class="st">"white"</span>, <span class="dt">main =</span> <span class="st">"Distribution of pi"</span>)
+
+<span class="kw">invisible</span>(<span class="kw">replicate</span>(<span class="dv">30</span>,
+     <span class="kw">points</span>(<span class="kw">density</span>(<span class="kw">rbeta</span>(<span class="dv">500</span>, <span class="dv">10</span>, <span class="dv">1</span>)), <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)))</code></pre></div>
+<p><img src="figs-customisation/res_null_priors-2.png" width="768"></p>
+<p><br></p>
+</div>
+<div id="a-model-using-symptom-onset-only" class="section level2">
+<h2 class="hasAnchor">
+<html><body><a href="#a-model-using-symptom-onset-only" class="anchor"> </a></body></html>A model using symptom onset only</h2>
+<p>We can use data and likelihood customisation to change the default <em>outbreaker2</em> model into a <a href="http://dx.doi.org/10.1093/aje/kwh255">Wallinga &amp; Teunis (1994)</a> model. To do so, we need to:</p>
+<ul>
+<li><p>Remove the DNA sequences from the data; alternatively we could also specify a ‘null’ function (i.e. returning a finite constant, as above) for the genetic likelihood.</p></li>
+<li><p>Disable all likelihood components other than <code>timing_infections</code> using <code>custom_likelihoods</code>. This means that the dates provided will be treated as dates of symptom onset, and the timing distribution <code>w</code> will be taken as the serial interval.</p></li>
+<li>Disable the detection of imported cases, and forcing all <code>kappa</code> values to be</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>
+</ol>
+<p>While these are fairly major changes, they are straightforward to implement. We first create the dataset and custom likelihood functions:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+onset_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker_data.html">outbreaker_data</a></span>(<span class="dt">dates =</span> fake_outbreak$onset,
+                          <span class="dt">w_dens =</span> fake_outbreak$w)
+
+wt_model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/custom_likelihoods.html">custom_likelihoods</a></span>(<span class="dt">timing_sampling =</span> f_null,
+                               <span class="dt">reporting =</span> f_null)</code></pre></div>
+<p>To fix parameters or augmented data (here, fix all <code>kappa</code> values to 1), we set the initial states to the desired values and disable the corresponding moves:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+wt_config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_config.html">create_config</a></span>(<span class="dt">init_kappa =</span> <span class="dv">1</span>, <span class="dt">move_kappa =</span> <span class="ot">FALSE</span>,
+                           <span class="dt">init_pi =</span> <span class="dv">1</span>, <span class="dt">move_pi =</span> <span class="ot">FALSE</span>,
+               <span class="dt">move_mu =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>We can now run the analyses for this new model:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+
+res_wt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker.html">outbreaker</a></span>(<span class="dt">data =</span> onset_data,
+                   <span class="dt">config =</span> wt_config,
+                   <span class="dt">likelihoods =</span> wt_model)
+<span class="co">#&gt; Can't use seqTrack initialization with missing DNA sequences; using a star-like tree</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">plot</span>(res_wt)</code></pre></div>
+<p><img src="figs-customisation/res_wt-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_wt, <span class="dt">burnin =</span> <span class="dv">500</span>)</code></pre></div>
+<p><img src="figs-customisation/res_wt-2.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_wt, <span class="dt">burnin =</span> <span class="dv">500</span>, <span class="dt">type =</span> <span class="st">"alpha"</span>)
+<span class="co">#&gt; Warning: Removed 190 rows containing missing values (geom_point).</span></code></pre></div>
+<p><img src="figs-customisation/res_wt-3.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res_wt)
+<span class="co">#&gt; $step</span>
+<span class="co">#&gt;    first     last interval  n_steps </span>
+<span class="co">#&gt;        1    10000       50      201 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $post</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt; -348.10  -29.16  -26.11  -28.60  -24.83  -20.74 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $like</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt; -357.20  -38.27  -35.22  -37.71  -33.94  -29.85 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $prior</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;    9.11    9.11    9.11    9.11    9.11    9.11 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mu</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;   1e-04   1e-04   1e-04   1e-04   1e-04   1e-04 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;       1       1       1       1       1       1 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $tree</span>
+<span class="co">#&gt;    from to time    support generations</span>
+<span class="co">#&gt; 1    NA  1   -7         NA          NA</span>
+<span class="co">#&gt; 2     7  2   14 0.07462687           1</span>
+<span class="co">#&gt; 3     9  3   11 0.07462687           1</span>
+<span class="co">#&gt; 4    18  4   11 0.06467662           1</span>
+<span class="co">#&gt; 5    11  5   11 0.06467662           1</span>
+<span class="co">#&gt; 6    11  6   12 0.07462687           1</span>
+<span class="co">#&gt; 7    12  7   13 0.07462687           1</span>
+<span class="co">#&gt; 8    15  8   13 0.12437811           1</span>
+<span class="co">#&gt; 9    11  9   12 0.06965174           1</span>
+<span class="co">#&gt; 10   22 10    9 0.08955224           1</span>
+<span class="co">#&gt; 11   17 11   10 0.07960199           1</span>
+<span class="co">#&gt; 12   18 12   10 0.08457711           1</span>
+<span class="co">#&gt; 13   17 13    9 0.09452736           1</span>
+<span class="co">#&gt; 14   17 14    9 0.10447761           1</span>
+<span class="co">#&gt; 15   22 15   10 0.09452736           1</span>
+<span class="co">#&gt; 16   23 16    7 0.08457711           1</span>
+<span class="co">#&gt; 17   27 17    7 0.07462687           1</span>
+<span class="co">#&gt; 18   25 18    7 0.11940299           1</span>
+<span class="co">#&gt; 19   24 19    7 0.08457711           1</span>
+<span class="co">#&gt; 20   25 20    6 0.12935323           1</span>
+<span class="co">#&gt; 21   29 21    5 0.09950249           1</span>
+<span class="co">#&gt; 22   29 22    4 0.11442786           1</span>
+<span class="co">#&gt; 23   28 23    4 0.12437811           1</span>
+<span class="co">#&gt; 24   30 24    3 0.13930348           1</span>
+<span class="co">#&gt; 25   28 25    4 0.13432836           1</span>
+<span class="co">#&gt; 26   30 26    1 0.18905473           1</span>
+<span class="co">#&gt; 27   29 27    2 0.16417910           1</span>
+<span class="co">#&gt; 28    1 28    0 0.24875622           1</span>
+<span class="co">#&gt; 29    1 29   -1 0.37313433           1</span>
+<span class="co">#&gt; 30    1 30   -2 0.59203980           1</span></code></pre></div>
+<p>As before for the ‘null’ model, the transmission tree is very poorly resolved in this case. We use the same approach to visualise it: extract nodes and edges from the <code>visNetork</code> object, use this information to create an <code>igraph</code> object, and visualise the result using a circular layout:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+## extract nodes and edges from the visNetwork object
+temp &lt;-<span class="st"> </span><span class="kw">plot</span>(res_wt, <span class="dt">type =</span> <span class="st">"network"</span>, <span class="dt">min_support =</span> <span class="fl">0.05</span>)
+<span class="kw">class</span>(temp)
+<span class="co">#&gt; [1] "visNetwork" "htmlwidget"</span>
+<span class="kw">head</span>(temp$x$edges)
+<span class="co">#&gt;    from to      value arrows   color</span>
+<span class="co">#&gt; 22    1 23 0.05472637     to #CCDDFF</span>
+<span class="co">#&gt; 23    1 24 0.06467662     to #CCDDFF</span>
+<span class="co">#&gt; 24    1 25 0.09452736     to #CCDDFF</span>
+<span class="co">#&gt; 25    1 26 0.16417910     to #CCDDFF</span>
+<span class="co">#&gt; 26    1 27 0.12437811     to #CCDDFF</span>
+<span class="co">#&gt; 27    1 28 0.24875622     to #CCDDFF</span>
+<span class="kw">head</span>(temp$x$nodes)
+<span class="co">#&gt;   id label     value   color shape shaped</span>
+<span class="co">#&gt; 1  1     1 2.1990050 #CCDDFF   dot   star</span>
+<span class="co">#&gt; 2  2     2 0.2288557 #B2D9E3   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 3  3     3 0.2985075 #98D6C7   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 4  4     4 0.3084577 #7ED2AC   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 5  5     5 0.4129353 #99CAA9   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 6  6     6 0.4328358 #C2C0AD   dot   &lt;NA&gt;</span>
+
+## make an igraph object
+
+net_wt &lt;-<span class="st"> </span><span class="kw">graph.data.frame</span>(temp$x$edges,
+                             <span class="dt">vertices =</span> temp$x$nodes[<span class="dv">1</span>:<span class="dv">4</span>])
+                 
+<span class="kw">plot</span>(net_wt, <span class="dt">layout =</span> layout.circle,
+     <span class="dt">main =</span> <span class="st">"WT model, posterior trees"</span>)</code></pre></div>
+<p><img src="figs-customisation/wt_net-1.png" width="768"></p>
+<p><br></p>
+</div>
+</div>
+<div id="customising-movements" class="section level1">
+<h1 class="hasAnchor">
+<html><body><a href="#customising-movements" class="anchor"> </a></body></html>Customising movements</h1>
+<p>Customising movements works in similar ways to priors and likelihoods. In practice, this type of customisation is more complex as it most likely will require evaluation of likelihoods and priors, and therefore require the user to know which functions to all, and how. These are documented in the <a href="Rcpp_API.html">API vignette</a>. In the following, we provide two examples:</p>
+<ul>
+<li><p>a (fake) Gibbs sampler for the movement of the mutation rate <code>mu</code></p></li>
+<li><p>a new ‘naive’ movement of ancestries in which infectors are picked at random from all cases</p></li>
+</ul>
+<p>But before getting into these, we need to explicit how movements are happening in <em>outbreaker2</em>.</p>
+<div id="movements-in-outbreaker2" class="section level2">
+<h2 class="hasAnchor">
+<html><body><a href="#movements-in-outbreaker2" class="anchor"> </a></body></html>Movements in <em>outbreaker2</em>
+</h2>
+<p>At the core of the <code>outbreaker</code> function, movements are implemented as a list of functions, which are all evaluated in turn during every iteration of the MCMC. All movement functions must obey two rules:</p>
+<ul>
+<li><p>The first argument must be an <code>outbreaker_param</code> object (typically called <code>param</code> in the original code); see <code><a href="../reference/create_param.html">?create_param</a></code> for details.</p></li>
+<li><p>All movement functions must return a valid, <code>outbreaker_param</code> object.</p></li>
+</ul>
+<p>However, a new difficulty compared to prior or likelihood customisation is that different movements may require different components of the model, and a different set of arguments after <code>param</code>. In fact, this can be seen by examining the arguments of all the default movement functions:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">lapply</span>(<span class="kw"><a href="../reference/custom_moves.html">custom_moves</a></span>(),  args)
+<span class="co">#&gt; $mu</span>
+<span class="co">#&gt; function (param, data, config, custom_ll = NULL, custom_prior = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt; function (param, data, config, custom_ll = NULL, custom_prior = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $eps</span>
+<span class="co">#&gt; function (param, data, config, custom_ll = NULL, custom_prior = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $lambda</span>
+<span class="co">#&gt; function (param, data, config, custom_ll = NULL, custom_prior = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $alpha</span>
+<span class="co">#&gt; function (param, data, list_custom_ll = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $swap_cases</span>
+<span class="co">#&gt; function (param, data, list_custom_ll = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $t_inf</span>
+<span class="co">#&gt; function (param, data, list_custom_ll = NULL) </span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $kappa</span>
+<span class="co">#&gt; function (param, data, config, list_custom_ll = NULL) </span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+<p>To handle this difficulty, <em>outbreaker2</em> transforms every movement function before running the MCMC into a new function with a single parameter <code>param</code>, attaching all other required argument to the function’s environment. The function achieving this transformation is called <code>bind_moves</code>. This function ‘knows’ what these components are for known moves listed aboves. For new, unknown moves, it attaches the following components, provided they are used as arguments of the new function:</p>
+<ul>
+<li><p><code>data</code>: the processed data; see <code><a href="../reference/outbreaker_data.html">?outbreaker_data</a></code></p></li>
+<li><p><code>config</code>: the configuration list; see <code>create_config</code></p></li>
+<li><p><code>likelihoods</code>: a list of custom likelihood functions; see <code><a href="../reference/custom_likelihoods.html">?custom_likelihoods</a></code></p></li>
+<li><p><code>priors</code>: a list of custom prior functions; see <code><a href="../reference/custom_priors.html">?custom_priors</a></code></p></li>
+</ul>
+<p>See examples in <code>?bind_moves</code> for details of how this process works.</p>
+</div>
+<div id="a-fake-gibbs-sampler-for-mu" class="section level2">
+<h2 class="hasAnchor">
+<html><body><a href="#a-fake-gibbs-sampler-for-mu" class="anchor"> </a></body></html>A (fake) Gibbs sampler for <code>mu</code>
+</h2>
+<p>A Gibbs sampler supposes that the conditional distribution of a parameter is known and can directly be sampled from. Here, we use this principle to provide a toy example of custom movement for <code>mu</code>, assuming that this conditional distribution is always an Exponential distribution with a rate of 1000 (which is also the prior used by default for <code>mu</code>). In short, we sample from the prior directly. This is easy to implement; to make sure that the function is actually used, we set a global variable changed when the function is called.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+move_mu &lt;-<span class="st"> </span>function(param, config) {
+
+  NEW_MOVE_HAS_BEEN_USED &lt;&lt;-<span class="st"> </span><span class="ot">TRUE</span>
+  param$mu &lt;-<span class="st"> </span><span class="kw">rexp</span>(<span class="dv">1</span>, config$prior_mu)  
+  <span class="kw">return</span>(param)
+  
+}
+
+moves &lt;-<span class="st"> </span><span class="kw"><a href="../reference/custom_moves.html">custom_moves</a></span>(<span class="dt">mu =</span> move_mu)
+
+quick_config &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n_iter =</span> <span class="dv">500</span>, <span class="dt">sample_every =</span> <span class="dv">1</span>, <span class="dt">find_import =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>Note that the new movement function <code>move_mu</code> has two arguments, and that we do not specify <code>config</code>. Internally, what happens is:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+## bind quick_config to function
+move_mu_intern &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bind_to_function.html">bind_to_function</a></span>(move_mu, <span class="dt">config =</span> quick_config)
+
+## new function has just one argument
+move_mu_intern
+<span class="co">#&gt; function (param) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     NEW_MOVE_HAS_BEEN_USED &lt;&lt;- TRUE</span>
+<span class="co">#&gt;     param$mu &lt;- rexp(1, config$prior_mu)</span>
+<span class="co">#&gt;     return(param)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;environment: 0x5610054f6630&gt;</span>
+
+## 'config' is in the function's environment
+<span class="kw">names</span>(<span class="kw">environment</span>(move_mu_intern))
+<span class="co">#&gt; [1] "config"</span>
+
+## 'config' is actually 'quick_config'
+<span class="kw">identical</span>(<span class="kw">environment</span>(move_mu_intern)$config, quick_config)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<p>We perform a quick run using this new movement:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+NEW_MOVE_HAS_BEEN_USED &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+res_move_mu &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker.html">outbreaker</a></span>(data, quick_config, <span class="dt">moves =</span> moves)
+NEW_MOVE_HAS_BEEN_USED
+<span class="co">#&gt; [1] TRUE</span>
+
+<span class="kw">plot</span>(res_move_mu)</code></pre></div>
+<p><img src="figs-customisation/run_custom_move_mu-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_move_mu, <span class="st">"pi"</span>)</code></pre></div>
+<p><img src="figs-customisation/run_custom_move_mu-2.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_move_mu, <span class="st">"mu"</span>)</code></pre></div>
+<p><img src="figs-customisation/run_custom_move_mu-3.png" width="768"></p>
+<p>This short, full trace, clearly hasn’t mixed well (as is to be expected). But while we see the effect of accept/reject sampling (Metropolis algorithm) for <code>pi</code> with a lot of autocorrelation, the trace of <code>mu</code> shows complete independence between successive values. While the Gibbs sampler used here is not correct, this result is: a Gibbs sampler will be more efficient than the classical Metropolis(-Hasting) algorithm for a given number a iterations.</p>
+<p><br></p>
+</div>
+<div id="a-new-movement-of-ancestries" class="section level2">
+<h2 class="hasAnchor">
+<html><body><a href="#a-new-movement-of-ancestries" class="anchor"> </a></body></html>A new movement of ancestries</h2>
+<p>Moves of ancestries are done in two ways in outbreaker: by picking ancestors at random from any prior case, and by swapping cases from a transmission link. Here, we implement a new move, which will propose infectors which have been infected on the same day of the current infector. As before, we will use global variables to keep track of the resulting movements (see <code>N_ACCEPT</code> and <code>N_REJECT</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+new_move_ances &lt;-<span class="st"> </span>function(param, data, <span class="dt">custom_likelihoods =</span> <span class="ot">NULL</span>) {
+<span class="co">#browser()</span>
+for (i in <span class="dv">1</span>:data$N) {
+    current_ances &lt;-<span class="st"> </span>param$alpha[i]
+    if (!<span class="kw">is.na</span>(current_ances)) {
+      ## find cases infected on the same days
+      current_t_inf &lt;-<span class="st"> </span>param$t_inf[current_ances]
+      pool &lt;-<span class="st"> </span><span class="kw">which</span>(param$t_inf ==<span class="st"> </span>current_t_inf)
+      pool &lt;-<span class="st"> </span><span class="kw">setdiff</span>(pool, i)
+      
+      if (<span class="kw">length</span>(pool) &gt;<span class="st"> </span><span class="dv">0</span>) {
+        ## propose new ancestor
+        current_ll &lt;-<span class="st"> </span><span class="kw">cpp_ll_all</span>(data, param, <span class="dt">i =</span> i, custom_likelihoods)
+        param$alpha[i] &lt;-<span class="st"> </span><span class="kw">sample</span>(pool, <span class="dv">1</span>)
+        new_ll &lt;-<span class="st"> </span><span class="kw">cpp_ll_all</span>(data, param, <span class="dt">i =</span> i, custom_likelihoods)
+
+        ## likelihood ratio - no correction, move is symmetric
+        ratio &lt;-<span class="st"> </span><span class="kw">exp</span>(new_ll -<span class="st"> </span>current_ll)
+
+        ## accept / reject
+        if (<span class="kw">runif</span>(<span class="dv">1</span>) &lt;=<span class="st"> </span>ratio) { <span class="co"># accept</span>
+          N_ACCEPT &lt;&lt;-<span class="st"> </span>N_ACCEPT +<span class="st"> </span><span class="dv">1</span>
+        } else { <span class="co"># reject</span>
+          N_REJECT &lt;&lt;-<span class="st"> </span>N_REJECT +<span class="st"> </span><span class="dv">1</span>
+          param$alpha[i] &lt;-<span class="st"> </span>current_ances
+        }
+      }
+    }
+  }
+  <span class="kw">return</span>(param)
+}
+
+moves &lt;-<span class="st"> </span><span class="kw"><a href="../reference/custom_moves.html">custom_moves</a></span>(<span class="dt">new_move =</span> new_move_ances)</code></pre></div>
+<p>We can now use this new move in our transmission tree reconstruction. We will use a shorter chain than the defaults as this new move is likely to be computer intensive.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+N_ACCEPT &lt;-<span class="st"> </span><span class="dv">0</span>
+N_REJECT &lt;-<span class="st"> </span><span class="dv">0</span>
+
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+res_new_move &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outbreaker.html">outbreaker</a></span>(data, <span class="kw">list</span>(<span class="dt">move_kappa =</span> <span class="ot">FALSE</span>), <span class="dt">moves =</span> moves)
+
+N_ACCEPT
+<span class="co">#&gt; [1] 148800</span>
+N_REJECT
+<span class="co">#&gt; [1] 266144</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">plot</span>(res_new_move)</code></pre></div>
+<p><img src="figs-customisation/res_new_move-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res_new_move, <span class="dt">type =</span> <span class="st">"alpha"</span>)
+<span class="co">#&gt; Warning: Removed 603 rows containing missing values (geom_point).</span></code></pre></div>
+<p><img src="figs-customisation/res_new_move-2.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res_new_move)
+<span class="co">#&gt; $step</span>
+<span class="co">#&gt;    first     last interval  n_steps </span>
+<span class="co">#&gt;        1    10000       50      201 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $post</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt; -1101.0  -454.9  -439.3  -445.3  -428.1  -421.8 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $like</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt; -1109.0  -463.8  -448.0  -454.1  -437.1  -430.8 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $prior</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;   6.776   8.756   8.879   8.822   8.996   9.072 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mu</span>
+<span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
+<span class="co">#&gt; 9.658e-05 1.276e-04 1.422e-04 1.426e-04 1.583e-04 1.914e-04 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  0.7747  0.9648  0.9793  0.9734  0.9925  0.9997 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $tree</span>
+<span class="co">#&gt;    from to time   support generations</span>
+<span class="co">#&gt; 1    NA  1   -1        NA          NA</span>
+<span class="co">#&gt; 2     1  2    1 0.9950249           1</span>
+<span class="co">#&gt; 3     2  3    3 0.9950249           1</span>
+<span class="co">#&gt; 4    NA  4    3        NA          NA</span>
+<span class="co">#&gt; 5     3  5    4 0.9800995           1</span>
+<span class="co">#&gt; 6     4  6    5 0.5074627           1</span>
+<span class="co">#&gt; 7     4  7    5 1.0000000           1</span>
+<span class="co">#&gt; 8     5  8    6 0.9651741           1</span>
+<span class="co">#&gt; 9     6  9    6 0.5074627           1</span>
+<span class="co">#&gt; 10    6 10    7 0.9950249           1</span>
+<span class="co">#&gt; 11    7 11    7 0.6517413           1</span>
+<span class="co">#&gt; 12    5 12    7 0.8855721           1</span>
+<span class="co">#&gt; 13    9 13    7 1.0000000           1</span>
+<span class="co">#&gt; 14    5 14    7 0.7562189           1</span>
+<span class="co">#&gt; 15    5 15    7 0.7562189           1</span>
+<span class="co">#&gt; 16    7 16    8 0.7860697           1</span>
+<span class="co">#&gt; 17    7 17    7 0.5870647           1</span>
+<span class="co">#&gt; 18    8 18    9 0.4527363           1</span>
+<span class="co">#&gt; 19    9 19    8 1.0000000           1</span>
+<span class="co">#&gt; 20   10 20   10 0.9950249           1</span>
+<span class="co">#&gt; 21   11 21   10 0.9601990           1</span>
+<span class="co">#&gt; 22   11 22   10 1.0000000           1</span>
+<span class="co">#&gt; 23   13 23    9 1.0000000           1</span>
+<span class="co">#&gt; 24   13 24    9 1.0000000           1</span>
+<span class="co">#&gt; 25   13 25    9 1.0000000           1</span>
+<span class="co">#&gt; 26   17 26    9 0.9452736           1</span>
+<span class="co">#&gt; 27   17 27   10 1.0000000           1</span>
+<span class="co">#&gt; 28   NA 28    9        NA          NA</span>
+<span class="co">#&gt; 29   10 29   11 1.0000000           1</span>
+<span class="co">#&gt; 30   13 30   10 1.0000000           1</span></code></pre></div>
+<p>Results show a switch to a new mode at about 5000 iterations. Let us compare the consensus tree to the actual one (store in <code>fake_outbreak$ances</code>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">summary</span>(res_new_move, <span class="dt">burnin =</span> <span class="dv">5000</span>)
+<span class="co">#&gt; $step</span>
+<span class="co">#&gt;    first     last interval  n_steps </span>
+<span class="co">#&gt;     5050    10000       50      100 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $post</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  -439.7  -430.4  -428.1  -428.5  -426.1  -421.8 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $like</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  -448.5  -439.2  -437.1  -437.4  -435.0  -430.8 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $prior</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;   7.553   8.800   8.899   8.854   9.014   9.070 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mu</span>
+<span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
+<span class="co">#&gt; 9.658e-05 1.231e-04 1.366e-04 1.377e-04 1.506e-04 1.820e-04 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;  0.8447  0.9701  0.9811  0.9763  0.9937  0.9997 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $tree</span>
+<span class="co">#&gt;    from to time support generations</span>
+<span class="co">#&gt; 1    NA  1   -1      NA          NA</span>
+<span class="co">#&gt; 2     1  2    1    1.00           1</span>
+<span class="co">#&gt; 3     2  3    3    1.00           1</span>
+<span class="co">#&gt; 4    NA  4    3      NA          NA</span>
+<span class="co">#&gt; 5     3  5    4    0.97           1</span>
+<span class="co">#&gt; 6     4  6    5    0.99           1</span>
+<span class="co">#&gt; 7     4  7    5    1.00           1</span>
+<span class="co">#&gt; 8     5  8    6    0.95           1</span>
+<span class="co">#&gt; 9     6  9    6    1.00           1</span>
+<span class="co">#&gt; 10    6 10    7    1.00           1</span>
+<span class="co">#&gt; 11    7 11    7    0.56           1</span>
+<span class="co">#&gt; 12    5 12    7    0.87           1</span>
+<span class="co">#&gt; 13    9 13    7    1.00           1</span>
+<span class="co">#&gt; 14    5 14    7    0.71           1</span>
+<span class="co">#&gt; 15    5 15    7    0.75           1</span>
+<span class="co">#&gt; 16    7 16    8    0.77           1</span>
+<span class="co">#&gt; 17    7 17    7    0.57           1</span>
+<span class="co">#&gt; 18    8 18    9    0.49           1</span>
+<span class="co">#&gt; 19    9 19    8    1.00           1</span>
+<span class="co">#&gt; 20   10 20   10    1.00           1</span>
+<span class="co">#&gt; 21   11 21   10    0.96           1</span>
+<span class="co">#&gt; 22   11 22   10    1.00           1</span>
+<span class="co">#&gt; 23   13 23    9    1.00           1</span>
+<span class="co">#&gt; 24   13 24    9    1.00           1</span>
+<span class="co">#&gt; 25   13 25    9    1.00           1</span>
+<span class="co">#&gt; 26   17 26    9    1.00           1</span>
+<span class="co">#&gt; 27   17 27   10    1.00           1</span>
+<span class="co">#&gt; 28   NA 28    9      NA          NA</span>
+<span class="co">#&gt; 29   10 29   11    1.00           1</span>
+<span class="co">#&gt; 30   13 30   11    1.00           1</span>
+tree2 &lt;-<span class="st"> </span><span class="kw">summary</span>(res_new_move, <span class="dt">burnin =</span> <span class="dv">5000</span>)$tree
+
+comparison &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">case =</span> <span class="dv">1</span>:<span class="dv">30</span>,
+                         <span class="dt">inferred =</span> <span class="kw">paste</span>(tree2$from),
+             <span class="dt">true =</span> <span class="kw">paste</span>(fake_outbreak$ances),
+             <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+             
+comparison$correct &lt;-<span class="st"> </span>comparison$inferred ==<span class="st"> </span>comparison$true
+comparison
+<span class="co">#&gt;    case inferred true correct</span>
+<span class="co">#&gt; 1     1       NA   NA    TRUE</span>
+<span class="co">#&gt; 2     2        1    1    TRUE</span>
+<span class="co">#&gt; 3     3        2    2    TRUE</span>
+<span class="co">#&gt; 4     4       NA   NA    TRUE</span>
+<span class="co">#&gt; 5     5        3    3    TRUE</span>
+<span class="co">#&gt; 6     6        4    4    TRUE</span>
+<span class="co">#&gt; 7     7        4    4    TRUE</span>
+<span class="co">#&gt; 8     8        5    5    TRUE</span>
+<span class="co">#&gt; 9     9        6    6    TRUE</span>
+<span class="co">#&gt; 10   10        6    6    TRUE</span>
+<span class="co">#&gt; 11   11        7    7    TRUE</span>
+<span class="co">#&gt; 12   12        5    8   FALSE</span>
+<span class="co">#&gt; 13   13        9    9    TRUE</span>
+<span class="co">#&gt; 14   14        5    5    TRUE</span>
+<span class="co">#&gt; 15   15        5    5    TRUE</span>
+<span class="co">#&gt; 16   16        7    7    TRUE</span>
+<span class="co">#&gt; 17   17        7    7    TRUE</span>
+<span class="co">#&gt; 18   18        8    8    TRUE</span>
+<span class="co">#&gt; 19   19        9    9    TRUE</span>
+<span class="co">#&gt; 20   20       10   10    TRUE</span>
+<span class="co">#&gt; 21   21       11   11    TRUE</span>
+<span class="co">#&gt; 22   22       11   11    TRUE</span>
+<span class="co">#&gt; 23   23       13   13    TRUE</span>
+<span class="co">#&gt; 24   24       13   13    TRUE</span>
+<span class="co">#&gt; 25   25       13   13    TRUE</span>
+<span class="co">#&gt; 26   26       17   17    TRUE</span>
+<span class="co">#&gt; 27   27       17   17    TRUE</span>
+<span class="co">#&gt; 28   28       NA   NA    TRUE</span>
+<span class="co">#&gt; 29   29       10   10    TRUE</span>
+<span class="co">#&gt; 30   30       13   13    TRUE</span>
+<span class="kw">mean</span>(comparison$correct)
+<span class="co">#&gt; [1] 0.9666667</span></code></pre></div>
+</div>
 </div>
 </div>
   </div>
@@ -129,6 +925,19 @@ priors
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#customising-priors">Customising priors</a></li>
+      <li>
+<a href="#customizing-likelihood">Customizing likelihood</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#a-null-model">A null model</a></li>
+      <li><a href="#a-model-using-symptom-onset-only">A model using symptom onset only</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#customising-movements">Customising movements</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#movements-in-outbreaker2">Movements in <em>outbreaker2</em></a></li>
+      <li><a href="#a-fake-gibbs-sampler-for-mu">A (fake) Gibbs sampler for <code>mu</code></a></li>
+      <li><a href="#a-new-movement-of-ancestries">A new movement of ancestries</a></li>
+      </ul>
+</li>
       </ul>
 </div>
       </div>

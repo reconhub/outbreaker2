@@ -70,7 +70,7 @@ test_that("results ok: DNA + time", {
 
     ## mu within reasonable ranges
     expect_true(out_smry$mu[2] > 1e-4 &&
-                out_smry$mu[5] < 3e-4)
+                out_smry$mu[5] < 4e-4)
 
 })
 

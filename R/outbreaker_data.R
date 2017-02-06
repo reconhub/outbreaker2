@@ -46,10 +46,11 @@
 outbreaker_data <- function(..., data = list(...)) {
 
     ## SET DEFAULTS ##
-    defaults <- list(dates = NULL, w_dens = NULL, f_dens = NULL, dna = NULL, ctd = NULL,
-                     N = 0L, L = 0L, D = NULL, max_range = NA, can_be_ances = NULL,
-                     log_w_dens = NULL, log_f_dens = NULL, C = NULL, C_combn = NULL,
-                     C_nrow = NULL)
+    defaults <- list(dates = NULL, w_dens = NULL, f_dens = NULL,
+                     dna = NULL, ctd = NULL, N = 0L, L = 0L, D = NULL,
+                     max_range = NA, can_be_ances = NULL,
+                     log_w_dens = NULL, log_f_dens = NULL,
+                     C = NULL, C_combn = NULL, C_nrow = NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
     data <- modify_defaults(defaults, data)
@@ -58,39 +59,53 @@ outbreaker_data <- function(..., data = list(...)) {
     ## CHECK DATA ##
     ## CHECK DATES
     if (!is.null(data$dates)) {
-        if (inherits(data$dates, "Date")) data$dates <- data$dates-min(data$dates)
-        if (inherits(data$dates, "POSIXct")) data$dates <- difftime(data$dates, min(data$dates), units="days")
+        if (inherits(data$dates, "Date")) {
+            data$dates <- data$dates-min(data$dates)
+        }
+        if (inherits(data$dates, "POSIXct")) {
+            data$dates <- difftime(data$dates, min(data$dates), units="days")
+        }
         data$dates <- as.integer(round(data$dates))
         data$N <- length(data$dates)
         data$max_range <- diff(range(data$dates))
         ## get temporal ordering constraint:
         ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
-        data$can_be_ances <- outer(data$dates,data$dates,FUN="<") # strict < is needed as we impose w(0)=0
+        data$can_be_ances <- outer(data$dates,
+                                   data$dates,
+                                   FUN="<") # strict < is needed as we impose w(0)=0
         diag(data$can_be_ances) <- FALSE
     }
 
     ## CHECK W_DENS
     if (!is.null(data$w_dens)) {
-        if (any(data$w_dens<0))
-        {
+        if (any(data$w_dens<0)) {
             stop("w_dens has negative entries (these should be probabilities!)")
         }
+        
+        if (any(!is.finite(data$w_dens))) {
+            stop("non-finite values detected in w_dens")
+        }
+        
+        
         ## Remove trailing zeroes to prevent starting with -Inf temporal loglike
         if(data$w_dens[length(data$w_dens)] < 1e-15) {
             final_index <- max(which(data$w_dens > 1e-15))
             data$w_dens <- data$w_dens[1:final_index]
             warning("Removed trailing zeroes found in w_dens")
         }
+
         ## add an exponential tail summing to 1e-4 to 'w'
         ## to cover the span of the outbreak
         ## (avoids starting with -Inf temporal loglike)
-        if (length(data$w_dens)<data$max_range) {
+        if (length(data$w_dens) < data$max_range) {
             length_to_add <- (data$max_range-length(data$w_dens)) + 10 # +10 to be on the safe side
             val_to_add <- stats::dexp(seq_len(length_to_add), 1)
             val_to_add <- 1e-4*(val_to_add/sum(val_to_add))
             data$w_dens <- c(data$w_dens, val_to_add)
-            data$w_dens <- data$w_dens/sum(data$w_dens)
         }
+
+        ## standardize the mass function
+        data$w_dens <- data$w_dens / sum(data$w_dens)
         data$log_w_dens <- matrix(log(data$w_dens), nrow = 1)
     }
 
@@ -99,10 +114,15 @@ outbreaker_data <- function(..., data = list(...)) {
         data$f_dens <- data$w_dens
     }
     if (!is.null(data$f_dens)) {
-        if (any(data$f_dens<0))
-        {
+        if (any(data$f_dens<0)) {
             stop("f_dens has negative entries (these should be probabilities!)")
         }
+
+        if (any(!is.finite(data$f_dens))) {
+            stop("non-finite values detected in f_dens")
+        }
+
+        data$f_dens <- data$f_dens / sum(data$f_dens)
         data$log_f_dens <- log(data$f_dens)
     }
 

@@ -50,7 +50,7 @@ outbreaker_data <- function(..., data = list(...)) {
                      dna = NULL, ctd = NULL, N = 0L, L = 0L, D = NULL,
                      max_range = NA, can_be_ances = NULL,
                      log_w_dens = NULL, log_f_dens = NULL,
-                     C = NULL, C_combn = NULL, C_nrow = NULL)
+                     contacts = NULL, C_combn = NULL, C_nrow = NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
     data <- modify_defaults(defaults, data)
@@ -81,12 +81,12 @@ outbreaker_data <- function(..., data = list(...)) {
         if (any(data$w_dens<0)) {
             stop("w_dens has negative entries (these should be probabilities!)")
         }
-        
+
         if (any(!is.finite(data$w_dens))) {
             stop("non-finite values detected in w_dens")
         }
-        
-        
+
+
         ## Remove trailing zeroes to prevent starting with -Inf temporal loglike
         if(data$w_dens[length(data$w_dens)] < 1e-15) {
             final_index <- max(which(data$w_dens > 1e-15))
@@ -151,16 +151,16 @@ outbreaker_data <- function(..., data = list(...)) {
                        "are unknown cases (idx < 1 or > N")
                  )
         }
-        C <- matrix(0, data$N, data$N)
+        contacts <- matrix(0, data$N, data$N)
         for(i in seq_len(nrow(data$ctd))) {
             pair <- data$ctd[i,]
-            C[pair[[1]], pair[[2]]] <- C[pair[[2]], pair[[1]]] <- 1
+            contacts[pair[[1]], pair[[2]]] <- contacts[pair[[2]], pair[[1]]] <- 1
         }
-        data$C <- C
+        data$contacts <- contacts
         data$C_combn <- data$N*(data$N - 1)/2
         data$C_nrow <- nrow(data$ctd)
     } else {
-        data$C <- matrix(integer(0), ncol = 0, nrow = 0)
+        data$contacts <- matrix(integer(0), ncol = 0, nrow = 0)
     }
 
     ## output is a list of checked data

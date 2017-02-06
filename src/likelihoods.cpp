@@ -364,8 +364,8 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		       Rcpp::RObject custom_function = R_NilValue) {
-  Rcpp::NumericMatrix C = data["C"];
-  if (C.ncol() < 1) return 0.0;
+  Rcpp::NumericMatrix contacts = data["contacts"];
+  if (contacts.ncol() < 1) return 0.0;
 
   size_t C_combn = static_cast<size_t>(data["C_combn"]);
   size_t C_nrow = static_cast<size_t>(data["C_nrow"]);
@@ -378,12 +378,14 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     double eps = Rcpp::as<double>(param["eps"]);
     double lambda = Rcpp::as<double>(param["lambda"]);
     Rcpp::IntegerVector alpha = param["alpha"];
+    Rcpp::IntegerVector kappa = param["kappa"];
 
     size_t true_pos = 0;
     size_t false_pos = 0;
     size_t false_neg = 0;
     size_t true_neg = 0;
     size_t imports = 0;
+    size_t unobsv_case = 0;
 
     // p(eps < 0 || lambda < 0) = 0
     if (eps < 0.0 || lambda < 0.0) {
@@ -394,13 +396,15 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     for (size_t j = 0; j < N; j++) {
       if (alpha[j] == NA_INTEGER) {
 	imports += 1;
+      } else if (kappa[j] > 1) {
+	unobsv_case += 1;
       } else {
-	true_pos += C(j, alpha[j] - 1); // offset
+	true_pos += contacts(j, alpha[j] - 1); // offset
       }
     }
 
     false_pos = C_nrow - true_pos;
-    false_neg = N - imports - true_pos;
+    false_neg = N - imports - unobsv_case - true_pos;
     true_neg = C_combn - true_pos - false_pos - false_neg;
 
     return log(eps) * (double) true_pos +

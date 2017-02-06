@@ -21,7 +21,8 @@ Suggests:
     microbenchmark,
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    igraph
 Depends:
     R (>= 3.0.0)
 Imports:

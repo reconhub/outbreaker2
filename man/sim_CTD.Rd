@@ -21,4 +21,3 @@ This function takes a simOutbreak object and returns a dataframe of contact pair
 \author{
 Finlay Campbell (\email{f.campbell15@imperial.ac.uk})
 }
-

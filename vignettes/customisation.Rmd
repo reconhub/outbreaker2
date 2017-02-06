@@ -80,6 +80,8 @@ While `f` is a useful function to visualise the prior, `f_pi` is the function
 which will be passed to `outbreaker`. To do so, we pass it to `custom_priors`:
 
 ```{r, custom_prior}
+library(outbreaker2)
+
 f_mu <- function(param) {
   if (param$mu < 0 || param$mu > 1) {
     return(-Inf)
@@ -438,3 +440,9 @@ plot(net_wt, layout = layout.circle,
      main = "WT model, posterior trees")
 
 ```
+
+
+
+
+
+

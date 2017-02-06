@@ -52,4 +52,3 @@ outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
-

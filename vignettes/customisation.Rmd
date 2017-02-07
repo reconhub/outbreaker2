@@ -600,8 +600,10 @@ global variables to keep track of the resulting movements (see `N_ACCEPT` and
 
 ```{r, new_move_ances}
 
+api <- get_cpp_api()
+
 new_move_ances <- function(param, data, custom_likelihoods = NULL) {
-#browser()
+
 for (i in 1:data$N) {
     current_ances <- param$alpha[i]
     if (!is.na(current_ances)) {
@@ -612,9 +614,9 @@ for (i in 1:data$N) {
       
       if (length(pool) > 0) {
         ## propose new ancestor
-        current_ll <- cpp_ll_all(data, param, i = i, custom_likelihoods)
+        current_ll <- api$cpp_ll_all(data, param, i = i, custom_likelihoods)
         param$alpha[i] <- sample(pool, 1)
-        new_ll <- cpp_ll_all(data, param, i = i, custom_likelihoods)
+        new_ll <- api$cpp_ll_all(data, param, i = i, custom_likelihoods)
 
         ## likelihood ratio - no correction, move is symmetric
         ratio <- exp(new_ll - current_ll)

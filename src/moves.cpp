@@ -23,6 +23,7 @@
 
 
 
+
 // ---------------------------
 
 // Movement of the mutation rate 'mu' is done using a dumb normal proposal. This
@@ -153,6 +154,9 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
 
 
+
+
+
 // ---------------------------
 
 // movement of the contact reporting coverage 'eps' is done using a dumb normal
@@ -217,6 +221,9 @@ Rcpp::List cpp_move_eps(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
 
 
+
+
+
 // ---------------------------
 
 // movement of the non-transmission contact rate 'eps' is done using a dumb
@@ -278,6 +285,9 @@ Rcpp::List cpp_move_lambda(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
   return new_param;
 }
+
+
+
 
 
 
@@ -425,6 +435,7 @@ Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data,
 
 
 
+
 // ---------------------------
 
 // The basic movement of ancestries (picking an ancestor at random amongst in
@@ -504,7 +515,6 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
 
   return param;
 }
-
 
 
 

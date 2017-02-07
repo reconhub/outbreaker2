@@ -128,7 +128,6 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i,
 
 
 
-
 // ---------------------------
 
 // This likelihood corresponds to the probability of observing infection dates
@@ -199,6 +198,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i,
 				Rcpp::RObject custom_function = R_NilValue) {
   return cpp_ll_timing_infections(data, param, Rcpp::wrap(i), custom_function);
 }
+
 
 
 
@@ -424,14 +424,6 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, size_t i,
 		      Rcpp::RObject custom_function = R_NilValue) {
   return cpp_ll_contact(data, param, Rcpp::wrap(i), custom_function);
 }
-
-
-
-
-
-
-
-
 
 
 

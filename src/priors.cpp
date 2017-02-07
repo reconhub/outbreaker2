@@ -56,6 +56,7 @@ double cpp_prior_mu(Rcpp::List param, Rcpp::List config,
 
 
 
+
 // The prior for the reporting probability 'pi' is a beta distribution
 
 // [[Rcpp::export(rng = false)]]
@@ -76,6 +77,10 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
   }
 
 }
+
+
+
+
 
 
 // The prior for the contact reporting coverage 'eps' is a beta distribution
@@ -100,6 +105,10 @@ double cpp_prior_eps(Rcpp::List param, Rcpp::List config,
 }
 
 
+
+
+
+
 // The prior for the non-transmision contact rate 'lambda' is a beta distribution
 
 // [[Rcpp::export(rng = false)]]
@@ -120,6 +129,10 @@ double cpp_prior_lambda(Rcpp::List param, Rcpp::List config,
   }
 
 }
+
+
+
+
 
 
 // [[Rcpp::export(rng = false)]]

@@ -21,6 +21,7 @@ likelihoods and movements are not visible to the user, as they are not exported
 by the package. However, advanced users can access these functions using `get_cpp_api()`, which returns an environment with all relevant functions:
 
 ```{r}
+library(outbreaker2) 
 
 ## get all functions in an environment
 x <- get_cpp_api()
@@ -41,7 +42,7 @@ x$cpp_ll_all
 These functions take the following arguments:
 ```{r, arguments}
 
-list_args <- sort(lapply(x, args))
+list_args <- lapply(x, args)[ls(x)]
 list_args
 
 ```
@@ -77,8 +78,7 @@ args
 
 ```{r, echo = FALSE} 
 
-temp <- sub("cpp_prior_", "", 
-            ls(envir = env, pattern = "^cpp_prior")) 
+temp <- sub("cpp_prior_", "", ls(x, pattern = "cpp_prior.*"))
 setdiff(temp, "all") 
 
 ```
@@ -96,8 +96,7 @@ setdiff(temp, "all")
     named according to the computed likelihood component; available names are:
 
 ```{r, echo = FALSE}
-temp <- sub("cpp_ll_", "",
-     	    ls(envir = env, pattern = "^cpp_ll"))
+temp <- sub("cpp_ll_", "", ls(x, pattern = "cpp_ll.*"))
 setdiff(temp, c("timing", "all"))	    
 ```
 

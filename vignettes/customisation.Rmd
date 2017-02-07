@@ -235,10 +235,10 @@ f_null <- function(data, param) {
 }
 
 null_model <- custom_likelihoods(genetic = f_null,
-	      	                 timing_sampling = f_null,
-				 timing_infections = f_null,
-				 reporting = f_null,
-				 contact = f_null)
+                                 timing_sampling = f_null,
+                                 timing_infections = f_null,
+                                 reporting = f_null,
+                                 contact = f_null)
 
 null_model
 
@@ -251,14 +251,15 @@ cases, reduce the number of iterations and sampling each of them:
 ```{r, run_null_model, cache = TRUE}
 
 null_config <- list(find_import = FALSE,
-	            n_iter = 500,
-		    sample_every = 1)
+n_iter = 500,
+sample_every = 1)
 
 set.seed(1)
 
 res_null <- outbreaker(data = data,
-                             config = null_config,
-			     likelihoods = null_model)
+config = null_config,
+likelihoods = null_model)
+
 ```
 
 
@@ -304,7 +305,7 @@ library(igraph)
 
 net_null <- graph.data.frame(temp$x$edges,
                              vertices = temp$x$nodes[1:4])
-			     
+
 plot(net_null, layout = layout.circle,
      main = "Null model, posterior trees")
 
@@ -393,7 +394,7 @@ the initial states to the desired values and disable the corresponding moves:
 
 wt_config <- create_config(init_kappa = 1, move_kappa = FALSE,
                            init_pi = 1, move_pi = FALSE,
-			   move_mu = FALSE)
+                           move_mu = FALSE)
 
 ```
 
@@ -401,10 +402,9 @@ We can now run the analyses for this new model:
 ```{r, run_wt, cache = TRUE}
 
 set.seed(1)
-
 res_wt <- outbreaker(data = onset_data,
-	               config = wt_config,
-	               likelihoods = wt_model)
+                     config = wt_config,
+                     likelihoods = wt_model)
 		       
 ```
 

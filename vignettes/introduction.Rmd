@@ -238,10 +238,10 @@ In the following, we make the following changes to the defaults:
 ```{r, config2, cache = TRUE}
 
 config2 <- create_config(n_iter = 2e4,
-                        sample_every = 20,
-			init_tree ="star",
-			move_kappa = FALSE,
-			prior_mu = 10)
+                         sample_every = 20,
+		         init_tree ="star",
+			 move_kappa = FALSE,
+			 prior_mu = 10)
 
 set.seed(1)
 

@@ -1,6 +1,8 @@
-[![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.png?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/reconhub/outbreaker2?branch=master&svg=true)](https://ci.appveyor.com/project/reconhub/outbreaker2)
-[![codecov.io](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
+
+[![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.svg?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
+[![Coverage Status](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
+
 
 
 *outbreaker2: a framework for reconstructing disease outbreaks*
@@ -62,9 +64,6 @@ Documentation
 It also comes with the following vignettes:
 
 
-```
-## Loading required package: printr
-```
 
 
 ```r

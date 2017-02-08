@@ -60,8 +60,8 @@ Documentation
 
 It also comes with the following vignettes:
 
-```{r, echo = FALSE}
-require(printr)
+```{r, echo = FALSE, message = FALSE}
+invisible(require(printr))
 ```
 
 ```{r, list_vignettes}

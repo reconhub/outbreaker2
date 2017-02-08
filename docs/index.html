@@ -16,7 +16,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-vignette">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -35,6 +35,9 @@
 <li>
   <a href="articles/index.html">Articles</a>
 </li>
+<li>
+  <a href="news/index.html">News</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -46,28 +49,84 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9">
     
 
-<div id="outbreaker2" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#outbreaker2" class="anchor"> </a>outbreaker2</h1></div>
-<p><em>Disease outbreak reconstruction from epidemiological and genetic data</em></p>
-<p>This project is currently under development.</p>
-<div id="installing-outbreaker2" class="section level2">
+    
+    
+<div class="contents">
+
+<div id="outbreaker2-a-framework-for-reconstructing-disease-outbreaks" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installing-outbreaker2" class="anchor"> </a>Installing <em>outbreaker2</em>
+<a href="#outbreaker2-a-framework-for-reconstructing-disease-outbreaks" class="anchor"> </a>
+<em>outbreaker2: a framework for reconstructing disease outbreaks</em>
 </h2>
+<p><em>outbreaker2</em> provides a Bayesian framework for integrating epidemiological and genetic data to reconstruct transmission trees of densely sampled outbreaks. It re-implements, generalises and replaces the model of <a href="https://github.com/thibautjombart/outbreaker"><em>outbreaker</em></a>. It uses a modular approach which enables fine customisation of priors, likelihoods and parameter movements (see <a href="http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html">customisation vignette</a>).</p>
+<p><br></p>
+<p>This project is currently in testing stage. Please contact <a href="mailto:thibautjombart@gmail.com">the authors</a> if you plan on using it.</p>
+<p><br></p>
+</div>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"> </a>Installation</h2>
 <p>To install the development version from github (requires Rtools on windows and GSL headers on all platforms):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"thibautjombart/outbreaker2"</span>)</code></pre></div>
+<p>To add local copies of the vignettes, you will need to specify:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"thibautjombart/outbreaker2"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>Then, to load the package, use:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"outbreaker2"</span>)</code></pre></div>
+<p><br></p>
+</div>
+<div id="documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation" class="anchor"> </a>Documentation</h2>
+<p><em>outbreaker2</em> is fully documented on a <a href="http://www.repidemicsconsortium.org/outbreaker2/">dedicated website</a>.</p>
+<p>It also comes with the following vignettes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vignette</span>(<span class="dt">package =</span> <span class="st">"outbreaker2"</span>)</code></pre></div>
+<table class="table">
+<caption>Vignettes in outbreaker2</caption>
+<thead><tr class="header">
+<th align="left">Item</th>
+<th align="left">Title</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">customisation</td>
+<td align="left">Customisation (source, html)</td>
+</tr>
+<tr class="even">
+<td align="left">introduction</td>
+<td align="left">Introduction (source, html)</td>
+</tr>
+<tr class="odd">
+<td align="left">overview</td>
+<td align="left">Overview (source, html)</td>
+</tr>
+<tr class="even">
+<td align="left">Rcpp_API</td>
+<td align="left">Rcpp API (source, html)</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="contributors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#contributors" class="anchor"> </a>Contributors</h2>
+<ul>
+<li><a href="https://github.com/thibautjombart">Thibaut Jombart</a></li>
+<li><a href="https://github.com/finlaycampbell">Finlay Campbell</a></li>
+<li><a href="https://github.com/richfitz">Rich Fitzjohn</a></li>
+</ul>
+<p>See details of contributions on: <br><a href="https://github.com/reconhub/outbreaker2/graphs/contributors" class="uri">https://github.com/reconhub/outbreaker2/graphs/contributors</a></p>
+<p>Contributions are welcome via <strong>pull requests</strong>.</p>
+<p>Please note that this project is released with a <a href="CONDUCT.md">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
+<p><strong>Maintainer:</strong> Thibaut Jombart (<a href="mailto:thibautjombart@gmail.com">thibautjombart@gmail.com</a>)</p>
 </div>
 </div>
-
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>License</h2>
 <p>GPL (&gt;=2)</p>
 <h2>Developers</h2>
@@ -79,12 +138,13 @@
 <html><body>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/thibautjombart/outbreaker2"><img src="https://travis-ci.org/thibautjombart/outbreaker2.png?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/thibautjombart/outbreaker2"><img src="https://ci.appveyor.com/api/projects/status/github/thibautjombart/outbreaker2?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://codecov.io/github/thibautjombart/outbreaker2?branch=master"><img src="https://codecov.io/github/thibautjombart/outbreaker2/coverage.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://travis-ci.org/reconhub/outbreaker2"><img src="https://travis-ci.org/reconhub/outbreaker2.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://codecov.io/github/reconhub/outbreaker2?branch=master"><img src="https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master" alt="Coverage Status"></a></li>
+<li><a href="https://cran.r-project.org/package=outbreaker2"><img src="http://www.r-pkg.org/badges/version/outbreaker2" alt="CRAN_Status_Badge"></a></li>
 </ul>
 </body></html>
 </div>
+
 </div>
 
 

@@ -1,6 +1,8 @@
-[![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.png?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/reconhub/outbreaker2?branch=master&svg=true)](https://ci.appveyor.com/project/reconhub/outbreaker2)
-[![codecov.io](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
+
+[![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.svg?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
+[![Coverage Status](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
+
 
 
 *outbreaker2: a framework for reconstructing disease outbreaks*
@@ -31,21 +33,18 @@ Installation
 To install the development version from github (requires Rtools on windows and
 GSL headers on all platforms):
 
-
-```r
+```{r, eval = FALSE}
 devtools::install_github("thibautjombart/outbreaker2")
 ```
 
 To add local copies of the vignettes, you will need to specify:
-
-```r
+```{r, eval = FALSE}
 devtools::install_github("thibautjombart/outbreaker2", build_vignettes = TRUE)
 ```
 
 Then, to load the package, use:
 
-
-```r
+```{r, eval = FALSE}
 library("outbreaker2")
 ```
 
@@ -61,24 +60,13 @@ Documentation
 
 It also comes with the following vignettes:
 
-
+```{r, echo = FALSE}
+require(printr)
 ```
-## Loading required package: printr
-```
 
-
-```r
+```{r, list_vignettes}
 vignette(package = "outbreaker2")
 ```
-
-
-
-|Item          |Title                        |
-|:-------------|:----------------------------|
-|customisation |Customisation (source, html) |
-|introduction  |Introduction (source, html)  |
-|overview      |Overview (source, html)      |
-|Rcpp_API      |Rcpp API (source, html)      |
 
 
 

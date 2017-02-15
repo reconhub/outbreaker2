@@ -116,9 +116,9 @@ Each row of `res` contains a sample from the MCMC. For each, informations about
 the step (iteration of the MCMC), log-values of posterior, likelihood and
 priors, and all parameters and augmented data are returned. Ancestries
 (i.e. indices of the most recent ancestral case for a given case), are indicated
-by `alpha.[index of the case]`, dates of infections by `t_inf.[index of the
+by `alpha_[index of the case]`, dates of infections by `t_inf_[index of the
 case]`, and number of generations between cases and their infector / ancestor by
-`kappa.[index of the case]`:
+`kappa_[index of the case]`:
 
 ```{r}
 
@@ -153,7 +153,7 @@ other column in `res`:
 plot(res, "prior")
 plot(res, "mu")
 plot(res, "mu")
-plot(res, "t_inf.15")
+plot(res, "t_inf_15")
 
 ```
 

@@ -49,9 +49,9 @@ test_that("results ok: DNA + time", {
     set.seed(1)
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
     config <- list(n_iter = 5000, sample_every = 50,
-                   init_tree = "star", find_import = FALSE,
+                   init_tree = "star", find_import = TRUE,
                    move_pi = FALSE)
-    
+
     out <- outbreaker(data = data, config = config)
 
     ## checks
@@ -69,8 +69,8 @@ test_that("results ok: DNA + time", {
     expect_true(temp < 3.5)
 
     ## mu within reasonable ranges
-    expect_true(out_smry$mu[2] > 1e-4 &&
-                out_smry$mu[5] < 4e-4)
+    expect_true(out_smry$mu[2] > 1e-5 &&
+                out_smry$mu[5] < 2e-4)
 
 })
 
@@ -100,9 +100,9 @@ test_that("results ok: time, no DNA", {
 
     ## checks
     out_no_dna.smry <- summary(out_no_dna, burnin = 1000)
-    
+
     ## approx log post values
-    expect_true(min(out_no_dna.smry$post) > -90) 
+    expect_true(min(out_no_dna.smry$post) > -90)
 
     ## infection datewithin 3 days on average
     temp <- mean(abs(out_no_dna.smry$tree$time - x$onset), na.rm = TRUE)
@@ -112,7 +112,7 @@ test_that("results ok: time, no DNA", {
     sup <- na.omit(out_no_dna.smry$tree$support)
     expect_lt(quantile(sup, .9), .5)
     expect_lt(mean(sup), .35)
-    
+
 })
 
 
@@ -130,7 +130,7 @@ test_that("results ok: easy run, no missing cases, no import", {
     ## outbreaker, no missing cases ##
     ## analysis
     set.seed(1)
-    config <-  list(n_iter = 5e3, sample_every = 50,
+    config <-  list(n_iter = 6e3, sample_every = 50,
                     init_tree = "star", move_kappa = FALSE,
                     move_pi = FALSE, init_pi = 1,
                     find_import = FALSE)
@@ -139,7 +139,7 @@ test_that("results ok: easy run, no missing cases, no import", {
     out_no_missing <- outbreaker(data = data, config = config)
 
     ## checks
-    out_no_missing_smry <- summary(out_no_missing, burnin = 2000)
+    out_no_missing_smry <- summary(out_no_missing, burnin = 3500)
 
     ## approx log post values
     expect_true(min(out_no_missing_smry$post) > -935)
@@ -151,7 +151,7 @@ test_that("results ok: easy run, no missing cases, no import", {
     ## infection datewithin 3 days on average
     temp <- mean(abs(out_no_missing_smry$tree$time - x$onset), na.rm = TRUE)
     expect_true(temp < 3.5)
-    
+
 })
 
 
@@ -160,12 +160,12 @@ test_that("results ok: no missing cases, detect imported cases",
 {
     ## skip on CRAN
     skip_on_cran()
-    
-    
+
+
     ## get data
     data(fake_outbreak)
     x <- fake_outbreak
-    
+
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis
     set.seed(1)
@@ -176,7 +176,7 @@ test_that("results ok: no missing cases, detect imported cases",
                                                 move_kappa = FALSE, move_pi = FALSE,
                                                 init_pi = 1, find_import = TRUE)
                                   )
-    
+
     ## checks
     out_with_import_smry <- summary(out_with_import, burnin = 500)
     out_with_import_smry$tree$from[is.na(out_with_import_smry$tree$from)] <- 0
@@ -191,8 +191,8 @@ test_that("results ok: no missing cases, detect imported cases",
 
     ## infection datewithin 3 days on average
     temp <- mean(abs(out_with_import_smry$tree$time - x$onset), na.rm = TRUE)
-    expect_true(temp < 3.5) 
-    
+    expect_true(temp < 3.5)
+
 })
 
 
@@ -208,7 +208,7 @@ test_that("results ok: kappa and pi", {
     ## get data
     onset <- c(0, 2, 6, 13)
     w <- c(.25, .5, .25)
-    
+
     ## outbreaker, no missing cases, detect imported cases ##
     ## analysis
     set.seed(1)
@@ -217,10 +217,10 @@ test_that("results ok: kappa and pi", {
     config <- list(n_iter = 5000, sample_every = 50, init_tree = "star",
                    move_kappa = TRUE, move_pi = TRUE, init_pi = 1,
                    find_import = FALSE, max_kappa = 10)
-    
-    
+
+
     out <- outbreaker(data, config)
-    
+
     smry <- summary(out, burnin = 500)
 
     ## checks
@@ -241,19 +241,19 @@ test_that("results ok: outbreaker with custom priors",
 {
     ## skip on CRAN
     skip_on_cran()
-    
-    
+
+
     ## get data
     data(fake_outbreak)
     x <- fake_outbreak
-   
+
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
 
     config <-  list(n_iter = 2e3, sample_every = 50,
                     init_tree = "star", move_kappa = TRUE,
                     move_pi = TRUE, init_pi = 1,
                     find_import = FALSE)
-    
+
 
     ## plot(function(x) dbeta(x, 100, 1)) # to see the distribution
 
@@ -261,16 +261,16 @@ test_that("results ok: outbreaker with custom priors",
     f_pi_2 <- function(x) 0.0 # flat prior
 
     set.seed(1)
-  
+
     out_1 <- outbreaker(data, config, priors = list(pi = f_pi_1))
     out_2 <- outbreaker(data, config, priors = list(pi = f_pi_2))
 
-    smry_1 <- summary(out_1)
-    smry_2 <- summary(out_2)
-    
+    smry_1 <- summary(out_1, burnin = 500)
+    smry_2 <- summary(out_2, burnin = 500)
+
     expect_true(smry_1$pi[2] > 0.9)
     expect_true(smry_2$pi[2] > 0.2 && smry_2$pi[5] < 0.6)
-    
+
 })
 
 
@@ -284,13 +284,13 @@ test_that("results ok: outbreaker with fixed number returning priors and likelih
 {
     ## skip on CRAN
     skip_on_cran()
-    
-    
+
+
     ## get data
-    
+
     data(fake_outbreak)
     x <- fake_outbreak
-   
+
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
 
     config <-  list(n_iter = 1000, sample_every = 10,
@@ -298,27 +298,27 @@ test_that("results ok: outbreaker with fixed number returning priors and likelih
                     move_pi = TRUE, init_pi = 1,
                     find_import = FALSE)
 
-    
+
     ## custom functions
 
     f1 <- function(x) return(0.0)
     f2 <- function(x, y) return(0.0)
     f3 <- function(x) return(1.123)
-    
+
     priors1 <- custom_priors(mu = f1, pi = f1)
     priors2 <- custom_priors(mu = f1, pi = f3)
-    
+
     ll <- custom_likelihoods(genetic = f2,
                              timing_infections = f2,
                              timing_sampling = f2,
                              reporting = f2)
 
-    
-    ## tests    
+
+    ## tests
     out1 <- outbreaker(data, config, priors1, ll)
     out2 <- outbreaker(data, config, priors2, ll)
 
     expect_true(all(out1$post == 0))
     expect_true(all(out2$post == 1.123))
-    
+
 })

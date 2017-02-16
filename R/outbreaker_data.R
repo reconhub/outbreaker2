@@ -1,7 +1,9 @@
 #' Process input data for outbreaker
 #'
-#' This function performs various checks on input data given to outbreaker.
-#' It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of data input. If no input is given, it returns the default settings.
+#' This function performs various checks on input data given to outbreaker.  It
+#' takes a list of named items as input, performs various checks, set defaults
+#' where arguments are missing, and return a correct list of data input. If no
+#' input is given, it returns the default settings.
 #'
 #' Acceptables arguments for ... are:
 #' \describe{
@@ -126,19 +128,44 @@ outbreaker_data <- function(..., data = list(...)) {
         data$log_f_dens <- log(data$f_dens)
     }
 
+    
     ## CHECK DNA
+
     if (!is.null(data$dna)) {
         if (!inherits(data$dna, "DNAbin")) stop("dna is not a DNAbin object.")
         if (!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
+
+        ## get matrix of distances
+        
         data$L <- ncol(data$dna) #  (genome length)
         data$D <- as.matrix(ape::dist.dna(data$dna, model="N")) # distance matrix
         storage.mode(data$D) <- "integer" # essential for C/C++ interface
+        
+        ## get matching between sequences and cases
+        
+        if (is.null(rownames(data$dna))) {
+            if (nrow(data$dna) != data$N) {
+                msg <- sprintf(paste("numbers of sequences and cases differ (%d vs %d):",
+                                     "please label sequences"),
+                               nrow(data$dna), data$N)
+                stop(msg)
+            }
+                
+            rownames(data$dna) <- rownames(D) <- colnames(D) <- seq_len(data$N)
+        }
+
+        data$id_in_dna <- match(seq_len(data$N), rownames(data$dna))
+        
     } else {
         data$L <- 0L
         data$D <- matrix(integer(0), ncol = 0, nrow = 0)
+        data$id_in_dna <- rep(NA_integer_, data$N)
     }
+    data$has_dna <- !is.na(data$id_in_dna)
+    
 
     ## CHECK CTD
+    
     if (!is.null(data$ctd)) {
         if (!inherits(data$ctd, c("matrix", "data.frame"))) {
             stop("ctd is not a matrix or data.frame")

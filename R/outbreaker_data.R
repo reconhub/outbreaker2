@@ -154,7 +154,7 @@ outbreaker_data <- function(..., data = list(...)) {
             rownames(data$dna) <- rownames(data$D) <- colnames(data$D) <- seq_len(data$N)
         }
 
-        data$id_in_dna <- match(seq_len(data$N), rownames(data$dna))
+        data$id_in_dna <- match(as.character(seq_len(data$N)), rownames(data$dna))
         
     } else {
         data$L <- 0L

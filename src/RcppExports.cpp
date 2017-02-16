@@ -76,6 +76,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_get_n_mutations
+size_t cpp_get_n_mutations(Rcpp::List data, size_t i, size_t j);
+RcppExport SEXP outbreaker2_cpp_get_n_mutations(SEXP dataSEXP, SEXP iSEXP, SEXP jSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< size_t >::type i(iSEXP);
+    Rcpp::traits::input_parameter< size_t >::type j(jSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_get_n_mutations(data, i, j));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_ll_genetic
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_function);
 RcppExport SEXP outbreaker2_cpp_ll_genetic(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionSEXP) {

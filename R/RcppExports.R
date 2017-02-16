@@ -25,6 +25,10 @@ cpp_swap_cases <- function(param, i) {
     .Call('outbreaker2_cpp_swap_cases', PACKAGE = 'outbreaker2', param, i)
 }
 
+cpp_get_n_mutations <- function(data, i, j) {
+    .Call('outbreaker2_cpp_get_n_mutations', PACKAGE = 'outbreaker2', data, i, j)
+}
+
 cpp_ll_genetic <- function(data, param, i = NULL, custom_function = NULL) {
     .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }

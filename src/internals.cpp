@@ -274,3 +274,36 @@ Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
 
 
 
+
+// ---------------------------
+
+// This function returns the number of mutations between two cases from a 'data'
+// object. It uses the indexing of cases in the DNA matrix to ensure
+// correspondance between cases and their sequences (not all cases may have a
+// sequence). 
+
+// i and j are indices of cases on the scale 1:N; note that the vectors and
+// matrices are indexed on 0:(N-1).
+
+// [[Rcpp::export()]]
+size_t cpp_get_n_mutations(Rcpp::List data, size_t i, size_t j) {
+  Rcpp::LogicalVector has_dna = data["has_dna"];
+  Rcpp::IntegerVector id_in_dna = data["id_in_dna"];
+  Rcpp::IntegerMatrix D = data["D"];
+
+  
+  // Ideally we should return NA_integer here, but then the type of the function
+  // should be a Rcpp::IntegerVector, which would complicate things. The second
+  // best thing we can do here really is to issue an error when trying to get
+  // number of mutations between cases with missing sequences.
+  
+  if (!(has_dna[i-1] && has_dna[j-1])) {
+    Rcpp::Rcerr << "Case " << i << " or " << j << " are missing sequences." << std::endl;
+    Rcpp::stop("Trying to get genetic distances between missing sequences.");
+  } 
+
+  size_t out = D(id_in_dna[i-1] - 1, id_in_dna[j-1] - 1);
+
+  return out;
+  
+}

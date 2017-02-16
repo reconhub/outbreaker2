@@ -49,7 +49,7 @@
 // [[Rcpp::export(rng = false)]]
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 		      Rcpp::RObject custom_function = R_NilValue) {
-  Rcpp::NumericMatrix D = data["D"];
+  Rcpp::IntegerMatrix D = data["D"];
   if (D.ncol() < 1) return 0.0;
 
   size_t N = static_cast<size_t>(data["N"]);

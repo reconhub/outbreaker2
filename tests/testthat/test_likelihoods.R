@@ -147,7 +147,7 @@ test_that("Test cpp_ll_genetic", {
     param_star$alpha <- c(NA, rep(1L, 29))
 
     expect_equal(which(data_miss$has_dna), 1:10)
-    expect_equal(cpp_ll_genetic(data, param_star, 1:10)
+    expect_equal(cpp_ll_genetic(data, param_star, 1:10),
                  cpp_ll_genetic(data_miss, param_star))
 
 

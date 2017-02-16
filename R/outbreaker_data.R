@@ -55,7 +55,7 @@ outbreaker_data <- function(..., data = list(...)) {
                      contacts = NULL, C_combn = NULL, C_nrow = NULL)
 
     ## MODIFY DATA WITH ARGUMENTS ##
-    data <- modify_defaults(defaults, data)
+    data <- modify_defaults(defaults, data, FALSE)
 
 
     ## CHECK DATA ##
@@ -151,7 +151,7 @@ outbreaker_data <- function(..., data = list(...)) {
                 stop(msg)
             }
                 
-            rownames(data$dna) <- rownames(D) <- colnames(D) <- seq_len(data$N)
+            rownames(data$dna) <- rownames(data$D) <- colnames(data$D) <- seq_len(data$N)
         }
 
         data$id_in_dna <- match(seq_len(data$N), rownames(data$dna))

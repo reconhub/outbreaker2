@@ -298,7 +298,6 @@ size_t cpp_get_n_mutations(Rcpp::List data, size_t i, size_t j) {
   // number of mutations between cases with missing sequences.
   
   if (!(has_dna[i-1] && has_dna[j-1])) {
-    Rcpp::Rcerr << "Case " << i << " or " << j << " are missing sequences." << std::endl;
     Rcpp::stop("Trying to get genetic distances between missing sequences.");
   } 
 

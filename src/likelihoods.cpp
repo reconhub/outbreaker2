@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <Rmath.h>
+#include "internals.h"
 
 
 // IMPORTANT: ON INDEXING VECTORS AND ANCESTRIES
@@ -64,6 +65,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     long int L = Rcpp::as<int>(data["L"]);
     Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
     Rcpp::IntegerVector kappa = param["kappa"];
+    Rcpp::LogicalVector has_dna = data["has_dna"];
 
     size_t n_mut = 0, sum_n_mut = 0;
     size_t sum_n_non_mut = 0;
@@ -72,6 +74,18 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
     if (mu < 0.0) {
       return R_NegInf;
     }
+
+    
+    // NOTE ON MISSING SEQUENCES
+
+    // Terms participating to the genetic likelihood correspond to pairs
+    // of ancestor-descendent which have a genetic sequence. The
+    // log-likelihood of other pairs is 0.0, and can therefore be
+    // ommitted. Note the possible source of confusion in indices here:
+
+    // 'has_dna' is a vector, thus indexed from 0:(N-1)
+	  
+    // 'cpp_get_n_mutations' is a function, and thus takes indices on 1:N
 
     // all cases are retained
     if (i == R_NilValue) {
@@ -82,9 +96,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 	    return R_NegInf;
 	  }
 
-	  n_mut = D(j, alpha[j] - 1); // offset
-	  sum_n_mut += n_mut;
-	  sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
+	  // missing sequences handled here
+	  
+	  if (has_dna[j] && has_dna[alpha[j] - 1]) { // remember the offset
+	    n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
+	    sum_n_mut += n_mut;
+	    sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
+	  }
 	}
       }
 
@@ -100,9 +118,13 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 	    return R_NegInf;
 	  }
 
-	  n_mut = D(j, alpha[j] - 1); // offset
-	  sum_n_mut += n_mut;
-	  sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
+	  // missing sequences handled here
+	  
+	  if (has_dna[j] && has_dna[alpha[j] - 1]) { // remember the offset
+	    n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
+	    sum_n_mut += n_mut;
+	    sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
+	  }
 	}
 
       }

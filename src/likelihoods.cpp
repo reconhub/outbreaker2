@@ -115,15 +115,14 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 	    
 	    while (!ances_has_dna && (alpha[current_case] != NA_INTEGER)) {
 	      current_case = alpha[current_case] - 1; // 1 step back up the transmission chain
-
-	      // CHECK THIS WORKS WHEN alpha[current_case] is NA_INTEGER
-	      ances_has_dna = (alpha[current_case] != NA_INTEGER) &&
+	      ances_has_dna = (alpha[current_case] != NA_INTEGER) && // need to test for NA *first*
 		has_dna[alpha[current_case] - 1]; // offset for indexing vectors
 	      n_generations = kappa[current_case];
   
 	    }
 
 	    // compute likelihood only if there is a sequenced ancestor
+
 	    if (ances_has_dna) {
 	      n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
 	      sum_n_mut += n_mut;
@@ -146,12 +145,31 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i = R_NilValue,
 	  }
 
 	  // missing sequences handled here
-	  
-	  if (has_dna[j] && has_dna[alpha[j] - 1]) { // remember the offset
-	    n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
-	    sum_n_mut += n_mut;
-	    sum_n_non_mut += (L - n_mut) + (kappa[j] - 1) * L;
+	  	  
+	  if (has_dna[j]) {
+	    current_case = j; // this one is indexed on 0:(N-1)
+	    ances_has_dna = has_dna[alpha[current_case] - 1]; // offset for indexing vectors
+	    n_generations = kappa[current_case];
+
+	    // look recursively for ancestor with sequence if needed
+	    
+	    while (!ances_has_dna && (alpha[current_case] != NA_INTEGER)) {
+	      current_case = alpha[current_case] - 1; // 1 step back up the transmission chain
+	      ances_has_dna = (alpha[current_case] != NA_INTEGER) && // need to test for NA *first*
+		has_dna[alpha[current_case] - 1]; // offset for indexing vectors
+	      n_generations = kappa[current_case];
+  
+	    }
+
+	    // compute likelihood only if there is a sequenced ancestor
+
+	    if (ances_has_dna) {
+	      n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
+	      sum_n_mut += n_mut;
+	      sum_n_non_mut += (L - n_mut) + (n_generations - 1) * L;
+	    }
 	  }
+	 
 	}
 
       }

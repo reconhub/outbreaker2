@@ -306,3 +306,108 @@ size_t cpp_get_n_mutations(Rcpp::List data, size_t i, size_t j) {
   return out;
   
 }
+
+
+
+
+
+
+// ---------------------------
+
+// This function looks up a transmission chain to find the most recent ancestor
+// with a sequence, for a given case 'i'. It stops at two conditions: i) it
+// finds a sequenced ancestor, or ii) the current ancestor is 'NA'. It returns a
+// List with three values: i) the index of the most recent ancestor (on the
+// scale 1:N), ii) the total number of generations between this case and 'i',
+// and iii) a logical 'found_sequenced_ancestor'. If the latter is FALSE, then
+// previous values are 'NA_INTEGER'.
+
+// This is the exported interface. It calls upon a non-exported function
+// (lookup_sequenced_ancestor) which does not make memory allocation for the
+// output, but instead modifies one of its arguments. This trade-off pays as it
+// allows for unit testing via the interface, but remains quite fast as the
+// non-exported function can be used internally. "i" is indexed on 1:N.
+
+// [[Rcpp::export()]]
+Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size_t i) {
+ 
+  Rcpp::List out;
+  Rcpp::IntegerVector ances(1, NA_INTEGER);
+  Rcpp::IntegerVector n_generations(1, NA_INTEGER);
+  Rcpp::LogicalVector found_sequenced_ancestor(1, FALSE);
+  Rcpp::IntegerVector alpha = param["alpha"];
+  Rcpp::IntegerVector kappa = param["kappa"];
+  Rcpp::LogicalVector has_dna = data["has_dna"];
+
+
+  // This function modifies its last argument
+  lookup_sequenced_ancestor(alpha, kappa, has_dna, i, // inputs
+			    ances, n_generations, // outputs
+			    found_sequenced_ancestor); // outputs
+
+
+  out["ances"] = ances;
+  out["n_generations"] = n_generations; 
+  out["found_sequenced_ancestor"] = found_sequenced_ancestor;
+
+  return out;
+}
+
+
+
+
+
+
+// ---------------------------
+
+// This function is the internal version of cpp_lookup_sequenced_ancestor. It is
+// not meant to be called by users, only by internal procedures, as it modifies
+// the content of its last argument rather than creating a new object, which is
+// obviously dangerous. Only use it carefully if you handled the creating of its
+// last argument 'out'. 'out_' are technically outputs with three components:
+// "ances" (IntegerVector of size 1), "n_generations" (same), and
+// "found_sequenced_ancestor" (LogicalVector of length 1). "i" is indexed on
+// 1:N.
+
+void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector kappa, 
+			       Rcpp::LogicalVector has_dna, size_t i, 
+			       Rcpp::IntegerVector out_ances, 
+			       Rcpp::IntegerVector out_n_generations, 
+			       Rcpp::LogicalVector found_sequenced_ancestor
+			       ) {
+
+  if (!has_dna[i]) {
+    return NULL;
+  }
+  
+  
+  size_t current_case = i; // this one is indexed on 1:N
+  size_t n_generations = kappa[current_case - 1];
+  bool ances_has_dna = has_dna[alpha[current_case - 1] - 1]; // offset for indexing vectors
+    
+
+  // look recursively for ancestor with sequence if needed
+	    
+  while (!ances_has_dna && (alpha[current_case - 1] != NA_INTEGER)) {
+    current_case = alpha[current_case - 1]; // 1 step back up the transmission chain
+    ances_has_dna = (alpha[current_case - 1] != NA_INTEGER) && // need to test for NA *first*
+      has_dna[alpha[current_case - 1] - 1]; // offset for indexing vectors
+    n_generations += kappa[current_case];
+  }
+
+
+  // change outputs as needed
+
+  if (ances_has_dna) {
+      out_ances[0] =  alpha[current_case - 1];
+      out_n_generations[0] = n_generations;
+      out_found_sequenced_ancestor[0] = TRUE;
+  } else {
+    out_ances[0] = NA_INTEGER;
+    out_n_generations[0] = NA_INTEGER;
+    out_found_sequenced_ancestor[0] = FALSE;
+  }
+  
+}
+
+

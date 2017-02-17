@@ -1,5 +1,5 @@
 
-#include <Rcpp.h>
+#include "internals.h"
 
 
 
@@ -331,18 +331,18 @@ size_t cpp_get_n_mutations(Rcpp::List data, size_t i, size_t j) {
 // [[Rcpp::export()]]
 Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size_t i) {
  
-  Rcpp::List out;
-  Rcpp::IntegerVector ances(1, NA_INTEGER);
-  Rcpp::IntegerVector n_generations(1, NA_INTEGER);
-  Rcpp::LogicalVector found_sequenced_ancestor(1, FALSE);
   Rcpp::IntegerVector alpha = param["alpha"];
   Rcpp::IntegerVector kappa = param["kappa"];
   Rcpp::LogicalVector has_dna = data["has_dna"];
 
+  Rcpp::List out;
+  Rcpp::IntegerVector ances(1, NA_INTEGER);
+  Rcpp::IntegerVector n_generations(1, NA_INTEGER);
+  Rcpp::LogicalVector found_sequenced_ancestor(1, FALSE);
 
   // This function modifies its last argument
   lookup_sequenced_ancestor(alpha, kappa, has_dna, i, // inputs
-			    ances, n_generations, // outputs
+			    ances, n_generations, 
 			    found_sequenced_ancestor); // outputs
 
 
@@ -373,14 +373,14 @@ void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector ka
 			       Rcpp::LogicalVector has_dna, size_t i, 
 			       Rcpp::IntegerVector out_ances, 
 			       Rcpp::IntegerVector out_n_generations, 
-			       Rcpp::LogicalVector found_sequenced_ancestor
+			       Rcpp::LogicalVector out_found_sequenced_ancestor
 			       ) {
 
   if (!has_dna[i]) {
-    return NULL;
+    return;
   }
   
-  
+ 
   size_t current_case = i; // this one is indexed on 1:N
   size_t n_generations = kappa[current_case - 1];
   bool ances_has_dna = has_dna[alpha[current_case - 1] - 1]; // offset for indexing vectors
@@ -398,6 +398,7 @@ void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector ka
 
   // change outputs as needed
 
+  
   if (ances_has_dna) {
       out_ances[0] =  alpha[current_case - 1];
       out_n_generations[0] = n_generations;

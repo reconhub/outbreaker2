@@ -29,6 +29,10 @@ cpp_get_n_mutations <- function(data, i, j) {
     .Call('outbreaker2_cpp_get_n_mutations', PACKAGE = 'outbreaker2', data, i, j)
 }
 
+cpp_lookup_sequenced_ancestor <- function(data, param, i) {
+    .Call('outbreaker2_cpp_lookup_sequenced_ancestor', PACKAGE = 'outbreaker2', data, param, i)
+}
+
 cpp_ll_genetic <- function(data, param, i = NULL, custom_function = NULL) {
     .Call('outbreaker2_cpp_ll_genetic', PACKAGE = 'outbreaker2', data, param, i, custom_function)
 }

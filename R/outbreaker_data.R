@@ -52,7 +52,8 @@ outbreaker_data <- function(..., data = list(...)) {
                      dna = NULL, ctd = NULL, N = 0L, L = 0L, D = NULL,
                      max_range = NA, can_be_ances = NULL,
                      log_w_dens = NULL, log_f_dens = NULL,
-                     contacts = NULL, C_combn = NULL, C_nrow = NULL)
+                     contacts = NULL, C_combn = NULL, C_nrow = NULL,
+                     has_dna = logical(0), id_in_dna = integer(0))
 
     ## MODIFY DATA WITH ARGUMENTS ##
     data <- modify_defaults(defaults, data, FALSE)
@@ -128,7 +129,7 @@ outbreaker_data <- function(..., data = list(...)) {
         data$log_f_dens <- log(data$f_dens)
     }
 
-    
+
     ## CHECK DNA
 
     if (!is.null(data$dna)) {
@@ -136,13 +137,13 @@ outbreaker_data <- function(..., data = list(...)) {
         if (!is.matrix(data$dna)) data$dna <- as.matrix(data$dna)
 
         ## get matrix of distances
-        
+
         data$L <- ncol(data$dna) #  (genome length)
         data$D <- as.matrix(ape::dist.dna(data$dna, model="N")) # distance matrix
         storage.mode(data$D) <- "integer" # essential for C/C++ interface
-        
+
         ## get matching between sequences and cases
-        
+
         if (is.null(rownames(data$dna))) {
             if (nrow(data$dna) != data$N) {
                 msg <- sprintf(paste("numbers of sequences and cases differ (%d vs %d):",
@@ -150,22 +151,22 @@ outbreaker_data <- function(..., data = list(...)) {
                                nrow(data$dna), data$N)
                 stop(msg)
             }
-                
+
             rownames(data$dna) <- rownames(data$D) <- colnames(data$D) <- seq_len(data$N)
         }
 
         data$id_in_dna <- match(as.character(seq_len(data$N)), rownames(data$dna))
-        
+
     } else {
         data$L <- 0L
         data$D <- matrix(integer(0), ncol = 0, nrow = 0)
         data$id_in_dna <- rep(NA_integer_, data$N)
     }
     data$has_dna <- !is.na(data$id_in_dna)
-    
+
 
     ## CHECK CTD
-    
+
     if (!is.null(data$ctd)) {
         if (!inherits(data$ctd, c("matrix", "data.frame"))) {
             stop("ctd is not a matrix or data.frame")

@@ -346,7 +346,7 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 			    found_sequenced_ancestor); // outputs
 
 
-  out["ances"] = ances;
+  out["alpha"] = ances;
   out["n_generations"] = n_generations; 
   out["found_sequenced_ancestor"] = found_sequenced_ancestor;
 
@@ -371,12 +371,12 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 
 void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector kappa, 
 			       Rcpp::LogicalVector has_dna, size_t i, 
-			       Rcpp::IntegerVector out_ances, 
+			       Rcpp::IntegerVector out_alpha, 
 			       Rcpp::IntegerVector out_n_generations, 
 			       Rcpp::LogicalVector out_found_sequenced_ancestor
 			       ) {
 
-  if (!has_dna[i]) {
+  if (!has_dna[i - 1] || alpha[i - 1] == NA_INTEGER) {
     return;
   }
   
@@ -392,7 +392,7 @@ void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector ka
     current_case = alpha[current_case - 1]; // 1 step back up the transmission chain
     ances_has_dna = (alpha[current_case - 1] != NA_INTEGER) && // need to test for NA *first*
       has_dna[alpha[current_case - 1] - 1]; // offset for indexing vectors
-    n_generations += kappa[current_case];
+    n_generations += kappa[current_case - 1];
   }
 
 
@@ -400,11 +400,11 @@ void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector ka
 
   
   if (ances_has_dna) {
-      out_ances[0] =  alpha[current_case - 1];
+      out_alpha[0] =  alpha[current_case - 1];
       out_n_generations[0] = n_generations;
       out_found_sequenced_ancestor[0] = TRUE;
   } else {
-    out_ances[0] = NA_INTEGER;
+    out_alpha[0] = NA_INTEGER;
     out_n_generations[0] = NA_INTEGER;
     out_found_sequenced_ancestor[0] = FALSE;
   }

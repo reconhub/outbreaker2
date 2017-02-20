@@ -229,3 +229,44 @@ test_that("Testing cpp_get_n_mutations", {
 
 
 })
+
+
+
+
+
+
+test_that("Look for sequenced ancestors", {
+
+  ## skip on CRAN
+  skip_on_cran()
+
+
+  ## make inputs
+  onset <- as.integer(c(0, 1, 2, 3, 2, 1, 2, 3))
+  data <- outbreaker_data(onset = onset)
+
+  has_dna <- as.logical(c(0, 1, 0, 1, 1, 0, 0, 1))
+  data$has_dna <- has_dna
+
+  alpha <- as.integer(c(NA, 1, 2, 3, 2, 1, 6, 7))
+  kappa <- as.integer(c(NA, 1, 1, 2, 1, 2, 1, 1))
+  param <- list(alpha = alpha,
+                kappa = kappa)
+
+
+  ## make tests
+  res <- lapply(as.integer(1:8),
+                function(i) cpp_lookup_sequenced_ancestor(data, param, i))
+
+  res <- Reduce(rbind, lapply(res, data.frame))
+  exp_alpha <- c(NA, NA, NA, 2L, 2L, NA, NA, NA)
+  exp_n_generations <- c(NA, NA, NA, 3L, 1L, NA, NA, NA)
+  exp_found <- c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE)
+
+  expect_equal(res$alpha, exp_alpha)
+  expect_equal(res$n_generations, exp_n_generations)
+  expect_equal(res$found_sequenced_ancestor, exp_found)
+
+})
+
+

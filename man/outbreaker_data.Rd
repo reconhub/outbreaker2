@@ -12,8 +12,10 @@ outbreaker_data(..., data = list(...))
 \item{data}{optionally, an existing list of data item as returned by \code{outbreaker_data}.}
 }
 \description{
-This function performs various checks on input data given to outbreaker.
-It takes a list of named items as input, performs various checks, set defaults where arguments are missing, and return a correct list of data input. If no input is given, it returns the default settings.
+This function performs various checks on input data given to outbreaker.  It
+takes a list of named items as input, performs various checks, set defaults
+where arguments are missing, and return a correct list of data input. If no
+input is given, it returns the default settings.
 }
 \details{
 Acceptables arguments for ... are:

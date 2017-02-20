@@ -17,9 +17,11 @@ Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i);
 
 size_t cpp_get_n_mutations(Rcpp::List data, size_t i, size_t j);
 
+Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size_t i);
+
 void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector kappa, 
 			       Rcpp::LogicalVector has_dna, size_t i, 
-			       Rcpp::IntegerVector out_ances, 
+			       Rcpp::IntegerVector out_alpha, 
 			       Rcpp::IntegerVector out_n_generations, 
 			       Rcpp::LogicalVector found_sequenced_ancestor
 			       );

@@ -34,7 +34,8 @@ Imports:
     ape,
     ggplot2,
     magrittr,
-    visNetwork,
+    visNetwork
+Remotes: RcppCore/Rcpp 
 LazyData: true
 LinkingTo: Rcpp
 RoxygenNote: 6.0.0

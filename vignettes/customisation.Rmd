@@ -114,7 +114,7 @@ custom_priors(pi = function(x, y){0.0})
 We can now use the new priors to run `outbreaker` on the `fake_outbreak` data
 (see [*introduction vignette*](introduction.html)):
 
-```{r, run_custom_priors, cache = TRUE}
+```{r, run_custom_priors}
 
 dna <- fake_outbreak$dna
 dates <- fake_outbreak$sample
@@ -518,10 +518,9 @@ See examples in `?bind_moves` for details of how this process works.
 A Gibbs sampler supposes that the conditional distribution of a parameter is
 known and can directly be sampled from. Here, we use this principle to provide a
 toy example of custom movement for `mu`, assuming that this conditional
-distribution is always an Exponential distribution with a rate of 1000 (which is
-also the prior used by default for `mu`). In short, we sample from the prior
-directly. This is easy to implement; to make sure that the function is actually
-used, we set a global variable changed when the function is called.
+distribution is always an Exponential distribution with a rate of 1000. This is
+easy to implement; to make sure that the function is actually used, we set a
+global variable changed when the function is called.
 
 
 ```{r, custom_move_mu}
@@ -529,7 +528,7 @@ used, we set a global variable changed when the function is called.
 move_mu <- function(param, config) {
 
   NEW_MOVE_HAS_BEEN_USED <<- TRUE
-  param$mu <- rexp(1, config$prior_mu)  
+  param$mu <- rexp(1, 1000)  
   return(param)
   
 }

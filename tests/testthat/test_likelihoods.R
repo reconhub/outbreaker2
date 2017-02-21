@@ -151,6 +151,12 @@ test_that("Test cpp_ll_genetic", {
                  cpp_ll_genetic(data_miss, param_star))
 
 
+    ## Test that mu values outside range [0,1] give -Inf
+    param$mu <- -.12
+    expect_equal(-Inf, cpp_ll_genetic(data, param))
+    param$mu <- 1.89
+    expect_equal(-Inf, cpp_ll_genetic(data, param))
+
 })
 
 

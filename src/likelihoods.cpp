@@ -79,8 +79,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
     n_generations[0] = NA_INTEGER;
 
   
-    // p(mu < 0) = 0
-    if (mu < 0.0) {
+    // Invalid values of mu
+    if (mu < 0.0 || mu > 1.0) {
       return R_NegInf;
     }
 

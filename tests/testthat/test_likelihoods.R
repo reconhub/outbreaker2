@@ -1,9 +1,7 @@
 context("Test likelihood functions")
 
 
-
-
-test_that("ll_timing_infections gives expected results", {
+test_that("Test ll_timing_infections", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -34,14 +32,15 @@ test_that("ll_timing_infections gives expected results", {
     expect_equal(out, ref)
     expect_equal(out_few_cases, ref_few_cases)
     expect_equal(out_rnd_cases, ref_rnd_cases)
-    
+
 })
 
 
 
 
-## test cpp_ll_timing_sampling ##
-test_that("cpp_ll_timing_sampling gives expected results", {
+
+
+test_that("Test cpp_ll_timing_sampling", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -82,12 +81,14 @@ test_that("cpp_ll_timing_sampling gives expected results", {
 
 
 
-## test cpp_ll_genetic ##
-test_that("cpp_ll_genetic gives expected results", {
+
+
+test_that("Test cpp_ll_genetic", {
     ## skip on CRAN ##
     skip_on_cran()
 
     ## generate data ##
+
     data(fake_outbreak)
     data <- with(fake_outbreak,
                  outbreaker_data(dates = sample,
@@ -98,8 +99,10 @@ test_that("cpp_ll_genetic gives expected results", {
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
 
+
     ## tests ##
     ## expected values
+
     out <- cpp_ll_genetic(data, param)
     out_few_cases <- cpp_ll_genetic(data, param, few_cases)
     out_rnd_cases <- cpp_ll_genetic(data, param, rnd_cases)
@@ -110,12 +113,43 @@ test_that("cpp_ll_genetic gives expected results", {
     expect_is(out, "numeric")
     expect_equal(out, -997.840630501522)
     expect_equal(out_few_cases, -266.251194283819)
-    
+
 
     ## test against R reference
+
     expect_equal(out, ref)
     expect_equal(out_few_cases, ref_few_cases)
     expect_equal(out_rnd_cases, ref_rnd_cases)
+
+
+    ## test with random sequence order
+
+    dna_resort <- fake_outbreak$dna
+    rownames(dna_resort) <- as.character(1:30)
+    dna_resort <- dna_resort[sample(1:30), ]
+    data_resort <- outbreaker_data(dates = fake_outbreak$sample,
+                                   w_dens = fake_outbreak$w,
+                                   dna = dna_resort)
+
+    expect_equal(cpp_ll_genetic(data, param),
+                 cpp_ll_genetic(data_resort, param))
+
+
+    ## randoms sequence order, missing sequences
+
+    dna_miss <- fake_outbreak$dna[1:10, ]
+    rownames(dna_miss) <- as.character(1:10)
+    dna_miss <- dna_miss[sample(1:10), ]
+    data_miss <- outbreaker_data(dates = fake_outbreak$sample,
+                                 w_dens = fake_outbreak$w,
+                                 dna = dna_miss)
+    param_star <- param
+    param_star$alpha <- c(NA, rep(1L, 29))
+
+    expect_equal(which(data_miss$has_dna), 1:10)
+    expect_equal(cpp_ll_genetic(data, param_star, 1:10),
+                 cpp_ll_genetic(data_miss, param_star))
+
 
 })
 
@@ -124,8 +158,49 @@ test_that("cpp_ll_genetic gives expected results", {
 
 
 
-## test cpp_ll_reporting ##
-test_that("cpp_ll_reporting gives expected results", {
+test_that("Test cpp_ll_genetic with some missing sequences", {
+
+    ## skip on CRAN
+
+    skip_on_cran()
+
+
+    ## create data
+
+    alpha <- as.integer(c(NA, 1, 2, 3, 2, 5))
+    kappa <- as.integer(c(NA, 1, 2, 1, 2 ,1))
+    onset <- as.integer(c(0, 1, 2, 3, 2, 3))
+    mu <- 0.001231
+    w <- c(0, 1, 2, 1, .5)
+    dna <- matrix("a", ncol = 50, nrow = 3)
+    rownames(dna) <- c("3", "6", "2")
+    dna["3", 1:4] <- "t"
+    dna["6", 9:10] <- "t"
+    dna <- ape::as.DNAbin(dna)
+    data <- outbreaker_data(dates = onset,
+                            dna = dna,
+                            w_dens = w)
+    data <- add_convolutions(data, create_config())
+    param <- list(alpha = alpha,
+                  kappa = kappa,
+                  mu = mu)
+
+    ## tests
+    n_mut <- 6
+    n_non_mut <- (50 * 2) - 4 + (50 * 3) - 2
+    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu)
+    expect_equal(cpp_ll_genetic(data, param),
+                 exp_ll)
+    
+})
+
+
+
+
+
+
+
+test_that("Test cpp_ll_reporting", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -164,8 +239,7 @@ test_that("cpp_ll_reporting gives expected results", {
 
 
 
-## test cpp_ll_timing ##
-test_that("cpp_ll_timing gives expected results", {
+test_that("Test cpp_ll_timing", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -193,8 +267,9 @@ test_that("cpp_ll_timing gives expected results", {
 
 
 
-## test cpp_ll_all ##
-test_that("cpp_ll_all gives expected results", {
+
+
+test_that("Test cpp_ll_all", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -227,8 +302,7 @@ test_that("cpp_ll_all gives expected results", {
 
 
 
-## test local likelihoods ##
-test_that("cpp_ll_all with i specified gives expected results", {
+test_that("Test cpp_ll_all", {
     ## skip on CRAN
     skip_on_cran()
 
@@ -243,20 +317,20 @@ test_that("cpp_ll_all with i specified gives expected results", {
     ## compute local likelihoods
     sum_local_timing_sampling <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_timing_sampling(data, param, i)))
-    
-    sum_local_timing_infections <- sum(sapply(seq_len(data$N), 
+
+    sum_local_timing_infections <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_timing_infections(data, param, i)))
-    
-    sum_local_timing <- sum(sapply(seq_len(data$N), 
+
+    sum_local_timing <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_timing(data, param, i)))
-    
-    sum_local_genetic <- sum(sapply(seq_len(data$N), 
+
+    sum_local_genetic <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_genetic(data, param, i)))
-    
-    sum_local_reporting <- sum(sapply(seq_len(data$N), 
+
+    sum_local_reporting <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_reporting(data, param, i)))
-    
-    sum_local_all <- sum(sapply(seq_len(data$N), 
+
+    sum_local_all <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_all(data, param, i)))
 
     out_timing <- cpp_ll_timing(data, param = param)
@@ -279,6 +353,7 @@ test_that("cpp_ll_all with i specified gives expected results", {
     expect_equal(sum_local_timing + sum_local_genetic + sum_local_reporting, sum_local_all)
 
 })
+
 
 
 
@@ -386,7 +461,7 @@ test_that("Customisation with identical functions works", {
     ## check custom_likelihoods
     expect_identical(custom_likelihoods(),
                      custom_likelihoods(custom_likelihoods()))
-    
+
     ## generate data
     data(fake_outbreak)
     data <- with(fake_outbreak,
@@ -398,13 +473,13 @@ test_that("Customisation with identical functions works", {
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
 
-  
+
     ## generate custom functions with 2 arguments
     f_genetic <- function(data, param) cpp_ll_genetic(data, param)
     f_timing_infections  <-  function(data, param) cpp_ll_timing_infections(data, param)
     f_timing_sampling  <-  function(data, param) cpp_ll_timing_sampling(data, param)
     f_reporting  <-  function(data, param) cpp_ll_reporting(data, param)
-    
+
     list_functions <- custom_likelihoods(genetic = f_genetic,
                        timing_infections = f_timing_infections,
                        timing_sampling = f_timing_sampling,
@@ -417,30 +492,24 @@ test_that("Customisation with identical functions works", {
 
     expect_equal(cpp_ll_timing_infections(data, param),
                  cpp_ll_timing_infections(data, param, , f_timing_infections))
-    
+
 
     expect_equal(cpp_ll_timing_sampling(data, param),
                  cpp_ll_timing_sampling(data, param, , f_timing_sampling))
-    
+
     expect_equal(cpp_ll_timing_sampling(data, param),
                  cpp_ll_timing_sampling(data, param, , f_timing_sampling))
-    
+
     expect_equal(cpp_ll_reporting(data, param),
                  cpp_ll_reporting(data, param, , f_reporting))
-    
+
     expect_equal(cpp_ll_timing(data, param),
                  cpp_ll_timing(data, param, , list_functions))
 
     expect_equal(cpp_ll_all(data, param),
                  cpp_ll_all(data, param, , list_functions))
-    
+
 })
-
-
-
-
-
-
 
 
 
@@ -463,10 +532,10 @@ test_that("Customisation with pi-returning functions works", {
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
 
-  
+
     ## generate custom functions with 2 arguments
     f <- function(data, param) return(pi);
-    
+
     list_functions <- custom_likelihoods(genetic = f,
                        timing_infections = f,
                        timing_sampling = f,
@@ -477,22 +546,22 @@ test_that("Customisation with pi-returning functions works", {
     expect_equal(pi,
                  cpp_ll_genetic(data, param, , f))
 
-    expect_equal(pi, 
+    expect_equal(pi,
                  cpp_ll_timing_infections(data, param, , f))
-    
+
     expect_equal(pi,
                  cpp_ll_timing_sampling(data, param, , f))
-    
+
     expect_equal(pi,
                  cpp_ll_timing_sampling(data, param, , f))
-    
+
     expect_equal(pi,
                  cpp_ll_reporting(data, param, , f))
-    
+
     expect_equal(2 * pi,
                  cpp_ll_timing(data, param, , list_functions))
 
     expect_equal(4 * pi,
                  cpp_ll_all(data, param, , list_functions))
-    
+
 })

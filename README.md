@@ -1,5 +1,6 @@
 
 [![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.svg?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
+[![Appveyor build status](https://ci.appveyor.com/api/projects/status/yj449x0yqhphvcrt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2/branch/master)
 [![Coverage Status](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
 
@@ -70,14 +71,9 @@ It also comes with the following vignettes:
 vignette(package = "outbreaker2")
 ```
 
-
-
-|Item          |Title                        |
-|:-------------|:----------------------------|
-|customisation |Customisation (source, html) |
-|introduction  |Introduction (source, html)  |
-|overview      |Overview (source, html)      |
-|Rcpp_API      |Rcpp API (source, html)      |
+```
+## Vignettes not found
+```
 
 
 

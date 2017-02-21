@@ -65,15 +65,16 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
     Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
     Rcpp::IntegerVector kappa = param["kappa"];
     Rcpp::LogicalVector has_dna = data["has_dna"];
+    Rcpp::List ancestor_lookup;
+
 
     size_t n_mut = 0, sum_n_mut = 0;
     size_t sum_n_non_mut = 0;
-    size_t n_generations = 0;
+    bool found = false;
     size_t ances = 0;
-    size_t current_case;
-    bool ances_has_dna = FALSE;
-    
+    size_t n_generations = 0;
 
+  
     // p(mu < 0) = 0
     if (mu < 0.0) {
       return R_NegInf;
@@ -96,7 +97,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
     // all cases are retained
     
     if (i == R_NilValue) {
-      for (size_t j = 0; j < N; j++) {
+      for (size_t j = 0; j < N; j++) { // 'j' on 0:(N-1)
 	if (alpha[j] != NA_INTEGER) {
 	  // kappa restriction
 	  if (kappa[j] < 1 || kappa[j] > K) {
@@ -106,24 +107,20 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	  // missing sequences handled here
 	  
 	  if (has_dna[j]) {
-	    current_case = j; // this one is indexed on 0:(N-1)
-	    ances_has_dna = has_dna[alpha[current_case] - 1]; // offset for indexing vectors
-	    n_generations = kappa[current_case];
+	    // This list will contain (see file internals.cpp):
+	    // "alpha": a NumericVector of length 1 - ancestor index (1:N)
+	    // "n_generations": a NumericVector of length 1  - nb of generations
+	    // "found_sequenced_ancestor": a LogicalVector of length 1
 
-	    // look recursively for ancestor with sequence if needed
-	    
-	    while (!ances_has_dna && (alpha[current_case] != NA_INTEGER)) {
-	      current_case = alpha[current_case] - 1; // 1 step back up the transmission chain
-	      ances_has_dna = (alpha[current_case] != NA_INTEGER) && // need to test for NA *first*
-		has_dna[alpha[current_case] - 1]; // offset for indexing vectors
-	      n_generations = kappa[current_case];
-  
-	    }
+	    ancestor_lookup = cpp_lookup_sequenced_ancestor(data, param, j + 1);
 
 	    // compute likelihood only if there is a sequenced ancestor
+	    found = static_cast<bool>(ancestor_lookup["found_sequenced_ancestor"]);
 
-	    if (ances_has_dna) {
-	      n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
+	    if (found) {
+	      ances = static_cast<size_t>(ancestor_lookup["alpha"]);
+	      n_generations = static_cast<size_t>(ancestor_lookup["n_generations"]);
+	      n_mut = cpp_get_n_mutations(data, j + 1, ances); // remember the offset
 	      sum_n_mut += n_mut;
 	      sum_n_non_mut += (L - n_mut) + (n_generations - 1) * L;
 	    }
@@ -146,24 +143,20 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	  // missing sequences handled here
 	  	  
 	  if (has_dna[j]) {
-	    current_case = j; // this one is indexed on 0:(N-1)
-	    ances_has_dna = has_dna[alpha[current_case] - 1]; // offset for indexing vectors
-	    n_generations = kappa[current_case];
+	    // This list will contain (see file internals.cpp):
+	    // "alpha": a NumericVector of length 1 - ancestor index (1:N)
+	    // "n_generations": a NumericVector of length 1  - nb of generations
+	    // "found_sequenced_ancestor": a LogicalVector of length 1
 
-	    // look recursively for ancestor with sequence if needed
-	    
-	    while (!ances_has_dna && (alpha[current_case] != NA_INTEGER)) {
-	      current_case = alpha[current_case] - 1; // 1 step back up the transmission chain
-	      ances_has_dna = (alpha[current_case] != NA_INTEGER) && // need to test for NA *first*
-		has_dna[alpha[current_case] - 1]; // offset for indexing vectors
-	      n_generations = kappa[current_case];
-  
-	    }
+	    ancestor_lookup = cpp_lookup_sequenced_ancestor(data, param, j + 1);
 
 	    // compute likelihood only if there is a sequenced ancestor
+	    found = static_cast<bool>(ancestor_lookup["found_sequenced_ancestor"]);
 
-	    if (ances_has_dna) {
-	      n_mut = cpp_get_n_mutations(data, j+1, alpha[j]); // remember the offset
+	    if (found) {
+	      ances = static_cast<size_t>(ancestor_lookup["alpha"]);
+	      n_generations = static_cast<size_t>(ancestor_lookup["n_generations"]);
+	      n_mut = cpp_get_n_mutations(data, j + 1, ances); // remember the offset
 	      sum_n_mut += n_mut;
 	      sum_n_non_mut += (L - n_mut) + (n_generations - 1) * L;
 	    }

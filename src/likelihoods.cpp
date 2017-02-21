@@ -1,4 +1,5 @@
 #include <Rmath.h>
+#include <Rcpp.h>
 #include "internals.h"
 #include "likelihoods.h"
 
@@ -57,22 +58,25 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
   if (custom_function == R_NilValue) {
 
+    // Variables from the data & param
     Rcpp::NumericMatrix w_dens = data["log_w_dens"];
     size_t K = w_dens.nrow();
-
     double mu = Rcpp::as<double>(param["mu"]);
     long int L = Rcpp::as<int>(data["L"]);
     Rcpp::IntegerVector alpha = param["alpha"]; // values are on 1:N
     Rcpp::IntegerVector kappa = param["kappa"];
     Rcpp::LogicalVector has_dna = data["has_dna"];
-    Rcpp::List ancestor_lookup;
 
 
+    // Local variables used for computatoins
     size_t n_mut = 0, sum_n_mut = 0;
     size_t sum_n_non_mut = 0;
-    bool found = false;
-    size_t ances = 0;
-    size_t n_generations = 0;
+    bool found[1];
+    size_t ances[1];
+    size_t n_generations[1];
+    found[0] = false;
+    ances[0] = NA_INTEGER;
+    n_generations[0] = NA_INTEGER;
 
   
     // p(mu < 0) = 0
@@ -107,22 +111,14 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	  // missing sequences handled here
 	  
 	  if (has_dna[j]) {
-	    // This list will contain (see file internals.cpp):
-	    // "alpha": a NumericVector of length 1 - ancestor index (1:N)
-	    // "n_generations": a NumericVector of length 1  - nb of generations
-	    // "found_sequenced_ancestor": a LogicalVector of length 1
+	 
+	    lookup_sequenced_ancestor(alpha, kappa, has_dna, j + 1,
+				      ances, n_generations, found);
 
-	    ancestor_lookup = cpp_lookup_sequenced_ancestor(data, param, j + 1);
-
-	    // compute likelihood only if there is a sequenced ancestor
-	    found = static_cast<bool>(ancestor_lookup["found_sequenced_ancestor"]);
-
-	    if (found) {
-	      ances = static_cast<size_t>(ancestor_lookup["alpha"]);
-	      n_generations = static_cast<size_t>(ancestor_lookup["n_generations"]);
-	      n_mut = cpp_get_n_mutations(data, j + 1, ances); // remember the offset
+	    if (found[0]) {
+	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      sum_n_mut += n_mut;
-	      sum_n_non_mut += (L - n_mut) + (n_generations - 1) * L;
+	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
 	    }
 	  }
 	}
@@ -143,25 +139,17 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	  // missing sequences handled here
 	  	  
 	  if (has_dna[j]) {
-	    // This list will contain (see file internals.cpp):
-	    // "alpha": a NumericVector of length 1 - ancestor index (1:N)
-	    // "n_generations": a NumericVector of length 1  - nb of generations
-	    // "found_sequenced_ancestor": a LogicalVector of length 1
+	 
+	    lookup_sequenced_ancestor(alpha, kappa, has_dna, j + 1, 
+				      ances, n_generations, found);
 
-	    ancestor_lookup = cpp_lookup_sequenced_ancestor(data, param, j + 1);
-
-	    // compute likelihood only if there is a sequenced ancestor
-	    found = static_cast<bool>(ancestor_lookup["found_sequenced_ancestor"]);
-
-	    if (found) {
-	      ances = static_cast<size_t>(ancestor_lookup["alpha"]);
-	      n_generations = static_cast<size_t>(ancestor_lookup["n_generations"]);
-	      n_mut = cpp_get_n_mutations(data, j + 1, ances); // remember the offset
+	    if (found[0]) {
+	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      sum_n_mut += n_mut;
-	      sum_n_non_mut += (L - n_mut) + (n_generations - 1) * L;
+	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
 	    }
 	  }
-	 
+	  
 	}
 
       }

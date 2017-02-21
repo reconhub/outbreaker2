@@ -343,8 +343,8 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
   out["n_generations"] = out_n_generations;
   out["found_sequenced_ancestor"] = out_found_sequenced_ancestor;
   
-  int ances[1];
-  int n_generations[1];
+  size_t ances[1];
+  size_t n_generations[1];
   bool found_sequenced_ancestor[1];
 
   ances[0] = NA_INTEGER;
@@ -357,8 +357,8 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 			    found_sequenced_ancestor); // outputs
 
 
-  out_ances[0] = ances[0];
-  out_n_generations[0] = n_generations[0]; 
+  out_ances[0] = static_cast<int>(ances[0]);
+  out_n_generations[0] =  static_cast<int>(n_generations[0]); 
   out_found_sequenced_ancestor[0] = found_sequenced_ancestor[0];
 
   return out;
@@ -382,8 +382,8 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 
 void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector kappa, 
 			       Rcpp::LogicalVector has_dna, size_t i, 
-			       int *out_alpha, 
-			       int *out_n_generations, 
+			       size_t *out_alpha, 
+			       size_t *out_n_generations, 
 			       bool *out_found_sequenced_ancestor
 			       ) {
 

@@ -103,7 +103,9 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
     if (i == R_NilValue) {
       for (size_t j = 0; j < N; j++) { // 'j' on 0:(N-1)
 	if (alpha[j] != NA_INTEGER) {
+
 	  // kappa restriction
+
 	  if (kappa[j] < 1 || kappa[j] > K) {
 	    return R_NegInf;
 	  }
@@ -116,9 +118,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 				      ances, n_generations, found);
 
 	    if (found[0]) {
+
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      sum_n_mut += n_mut;
 	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
+
 	    }
 	  }
 	}
@@ -144,9 +148,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 				      ances, n_generations, found);
 
 	    if (found[0]) {
+
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      sum_n_mut += n_mut;
 	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
+
 	    }
 	  }
 	  

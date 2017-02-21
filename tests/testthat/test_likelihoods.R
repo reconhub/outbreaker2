@@ -158,6 +158,48 @@ test_that("Test cpp_ll_genetic", {
 
 
 
+test_that("Test cpp_ll_genetic with some missing sequences", {
+
+    ## skip on CRAN
+
+    skip_on_cran()
+
+
+    ## create data
+
+    alpha <- as.integer(c(NA, 1, 2, 3, 2, 5))
+    kappa <- as.integer(c(NA, 1, 2, 1, 2 ,1))
+    onset <- as.integer(c(0, 1, 2, 3, 2, 3))
+    mu <- 0.001231
+    w <- c(0, 1, 2, 1, .5)
+    dna <- matrix("a", ncol = 50, nrow = 3)
+    rownames(dna) <- c("3", "6", "2")
+    dna["3", 1:4] <- "t"
+    dna["6", 9:10] <- "t"
+    dna <- ape::as.DNAbin(dna)
+    data <- outbreaker_data(dates = onset,
+                            dna = dna,
+                            w_dens = w)
+    data <- add_convolutions(data, create_config())
+    param <- list(alpha = alpha,
+                  kappa = kappa,
+                  mu = mu)
+
+    ## tests
+    n_mut <- 6
+    n_non_mut <- (50 * 2) - 4 + (50 * 3) - 2
+    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu)
+    expect_equal(cpp_ll_genetic(data, param),
+                 exp_ll)
+    
+})
+
+
+
+
+
+
+
 test_that("Test cpp_ll_reporting", {
     ## skip on CRAN
     skip_on_cran()

@@ -21,9 +21,9 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 
 void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector kappa, 
 			       Rcpp::LogicalVector has_dna, size_t i, 
-			       Rcpp::IntegerVector out_alpha, 
-			       Rcpp::IntegerVector out_n_generations, 
-			       Rcpp::LogicalVector found_sequenced_ancestor
+			       int *out_alpha, 
+			       int *out_n_generations, 
+			       bool *found_sequenced_ancestor
 			       );
 
 

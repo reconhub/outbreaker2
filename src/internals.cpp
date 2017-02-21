@@ -334,11 +334,22 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
   Rcpp::IntegerVector alpha = param["alpha"];
   Rcpp::IntegerVector kappa = param["kappa"];
   Rcpp::LogicalVector has_dna = data["has_dna"];
-
+  
   Rcpp::List out;
-  Rcpp::IntegerVector ances(1, NA_INTEGER);
-  Rcpp::IntegerVector n_generations(1, NA_INTEGER);
-  Rcpp::LogicalVector found_sequenced_ancestor(1, FALSE);
+  Rcpp::IntegerVector out_ances(1);
+  Rcpp::IntegerVector out_n_generations(1);
+  Rcpp::LogicalVector out_found_sequenced_ancestor(1);
+  out["alpha"] = out_ances;
+  out["n_generations"] = out_n_generations;
+  out["found_sequenced_ancestor"] = out_found_sequenced_ancestor;
+  
+  int ances[1];
+  int n_generations[1];
+  bool found_sequenced_ancestor[1];
+
+  ances[0] = NA_INTEGER;
+  n_generations[0] = NA_INTEGER;
+  found_sequenced_ancestor[0] = false;
 
   // This function modifies its last argument
   lookup_sequenced_ancestor(alpha, kappa, has_dna, i, // inputs
@@ -346,9 +357,9 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 			    found_sequenced_ancestor); // outputs
 
 
-  out["alpha"] = ances;
-  out["n_generations"] = n_generations; 
-  out["found_sequenced_ancestor"] = found_sequenced_ancestor;
+  out_ances[0] = ances[0];
+  out_n_generations[0] = n_generations[0]; 
+  out_found_sequenced_ancestor[0] = found_sequenced_ancestor[0];
 
   return out;
 }
@@ -371,9 +382,9 @@ Rcpp::List cpp_lookup_sequenced_ancestor(Rcpp::List data, Rcpp::List param, size
 
 void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector kappa, 
 			       Rcpp::LogicalVector has_dna, size_t i, 
-			       Rcpp::IntegerVector out_alpha, 
-			       Rcpp::IntegerVector out_n_generations, 
-			       Rcpp::LogicalVector out_found_sequenced_ancestor
+			       int *out_alpha, 
+			       int *out_n_generations, 
+			       bool *out_found_sequenced_ancestor
 			       ) {
 
   if (!has_dna[i - 1] || alpha[i - 1] == NA_INTEGER) {
@@ -402,11 +413,11 @@ void lookup_sequenced_ancestor(Rcpp::IntegerVector alpha, Rcpp::IntegerVector ka
   if (ances_has_dna) {
       out_alpha[0] =  alpha[current_case - 1];
       out_n_generations[0] = n_generations;
-      out_found_sequenced_ancestor[0] = TRUE;
+      out_found_sequenced_ancestor[0] = true;
   } else {
     out_alpha[0] = NA_INTEGER;
     out_n_generations[0] = NA_INTEGER;
-    out_found_sequenced_ancestor[0] = FALSE;
+    out_found_sequenced_ancestor[0] = false;
   }
   
 }

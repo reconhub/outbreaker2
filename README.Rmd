@@ -61,18 +61,10 @@ Documentation
 
 It also comes with the following vignettes:
 
-```{r, list_vignettes, eval = FALSE}
-vignette(package = "outbreaker2")
-```
-
-```
-Vignettes in package 'outbreaker2':
-
-customisation         Customisation (source, html)
-introduction          Introduction (source, html)
-overview              Overview (source, html)
-Rcpp_API              Rcpp API (source, html)
-```
+- **`introduction`**: general introduction using a worked example.
+- **`overview`**: brief overview of the package's content.
+- **`customisation`**: customisation of priors, likelihoods, and movement functions.
+- **`Rcpp_API`**: documentation for the Rcpp API.
 
 
 

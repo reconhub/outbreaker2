@@ -61,18 +61,17 @@ Documentation
 
 It also comes with the following vignettes:
 
-```{r, echo = FALSE, message = FALSE}
-invisible(require(printr))
-```
-
-```{r, list_vignettes}
+```{r, list_vignettes, eval = FALSE}
 vignette(package = "outbreaker2")
 ```
 
-```{r, echo = FALSE, message = FALSE}
-if (require(printr)) {
-  detach("package:printr")
-}
+```
+Vignettes in package 'outbreaker2':
+
+customisation         Customisation (source, html)
+introduction          Introduction (source, html)
+overview              Overview (source, html)
+Rcpp_API              Rcpp API (source, html)
 ```
 
 

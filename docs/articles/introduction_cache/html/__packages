@@ -1,7 +1,6 @@
 base
 devtools
 knitr
-printr
 outbreaker2
 igraph
 ape

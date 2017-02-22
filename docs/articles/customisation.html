@@ -124,14 +124,14 @@ priors
 <span class="co">#&gt;         return(0)</span>
 <span class="co">#&gt;     }</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $pi</span>
 <span class="co">#&gt; function (param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     log(f(param$pi))</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span></code></pre></div>
 <p>Note that <code>custom_priors</code> does more than just adding the custom function to a list. For instance, the following customisations are all wrong, and rightfully rejected:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 ## wrong: not a function
@@ -241,198 +241,39 @@ comparison &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<spa
              <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
              
 comparison$correct &lt;-<span class="st"> </span>comparison$inferred ==<span class="st"> </span>comparison$true
-comparison</code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="right">case</th>
-<th align="left">inferred</th>
-<th align="left">true</th>
-<th align="left">correct</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="left">1</td>
-<td align="left">1</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">2</td>
-<td align="left">2</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="left">3</td>
-<td align="left">3</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="left">4</td>
-<td align="left">4</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="left">4</td>
-<td align="left">4</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">8</td>
-<td align="left">5</td>
-<td align="left">5</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">9</td>
-<td align="left">6</td>
-<td align="left">6</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">10</td>
-<td align="left">6</td>
-<td align="left">6</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">11</td>
-<td align="left">7</td>
-<td align="left">7</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">12</td>
-<td align="left">5</td>
-<td align="left">8</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="odd">
-<td align="right">13</td>
-<td align="left">9</td>
-<td align="left">9</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">14</td>
-<td align="left">5</td>
-<td align="left">5</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">15</td>
-<td align="left">5</td>
-<td align="left">5</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">16</td>
-<td align="left">4</td>
-<td align="left">7</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="odd">
-<td align="right">17</td>
-<td align="left">4</td>
-<td align="left">7</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="even">
-<td align="right">18</td>
-<td align="left">5</td>
-<td align="left">8</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="odd">
-<td align="right">19</td>
-<td align="left">9</td>
-<td align="left">9</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">20</td>
-<td align="left">10</td>
-<td align="left">10</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">21</td>
-<td align="left">11</td>
-<td align="left">11</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">22</td>
-<td align="left">11</td>
-<td align="left">11</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">23</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">24</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">25</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">26</td>
-<td align="left">17</td>
-<td align="left">17</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">27</td>
-<td align="left">17</td>
-<td align="left">17</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">28</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">29</td>
-<td align="left">10</td>
-<td align="left">10</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">30</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(comparison$correct)
+comparison
+<span class="co">#&gt;    case inferred true correct</span>
+<span class="co">#&gt; 1     1       NA   NA    TRUE</span>
+<span class="co">#&gt; 2     2        1    1    TRUE</span>
+<span class="co">#&gt; 3     3        2    2    TRUE</span>
+<span class="co">#&gt; 4     4       NA   NA    TRUE</span>
+<span class="co">#&gt; 5     5        3    3    TRUE</span>
+<span class="co">#&gt; 6     6        4    4    TRUE</span>
+<span class="co">#&gt; 7     7        4    4    TRUE</span>
+<span class="co">#&gt; 8     8        5    5    TRUE</span>
+<span class="co">#&gt; 9     9        6    6    TRUE</span>
+<span class="co">#&gt; 10   10        6    6    TRUE</span>
+<span class="co">#&gt; 11   11        7    7    TRUE</span>
+<span class="co">#&gt; 12   12        5    8   FALSE</span>
+<span class="co">#&gt; 13   13        9    9    TRUE</span>
+<span class="co">#&gt; 14   14        5    5    TRUE</span>
+<span class="co">#&gt; 15   15        5    5    TRUE</span>
+<span class="co">#&gt; 16   16        4    7   FALSE</span>
+<span class="co">#&gt; 17   17        4    7   FALSE</span>
+<span class="co">#&gt; 18   18        5    8   FALSE</span>
+<span class="co">#&gt; 19   19        9    9    TRUE</span>
+<span class="co">#&gt; 20   20       10   10    TRUE</span>
+<span class="co">#&gt; 21   21       11   11    TRUE</span>
+<span class="co">#&gt; 22   22       11   11    TRUE</span>
+<span class="co">#&gt; 23   23       13   13    TRUE</span>
+<span class="co">#&gt; 24   24       13   13    TRUE</span>
+<span class="co">#&gt; 25   25       13   13    TRUE</span>
+<span class="co">#&gt; 26   26       17   17    TRUE</span>
+<span class="co">#&gt; 27   27       17   17    TRUE</span>
+<span class="co">#&gt; 28   28       NA   NA    TRUE</span>
+<span class="co">#&gt; 29   29       10   10    TRUE</span>
+<span class="co">#&gt; 30   30       13   13    TRUE</span>
+<span class="kw">mean</span>(comparison$correct)
 <span class="co">#&gt; [1] 0.8666667</span></code></pre></div>
 <p><br></p>
 </div>
@@ -502,35 +343,35 @@ null_model
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $reporting</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $timing_infections</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $timing_sampling</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $contact</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x9406878&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span></code></pre></div>
 <p>We also specify settings via the <code>config</code> argument to avoid detecting imported cases, reduce the number of iterations and sampling each of them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 null_config &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">find_import =</span> <span class="ot">FALSE</span>,
@@ -561,124 +402,33 @@ res_null &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ou
 temp &lt;-<span class="st"> </span><span class="kw">plot</span>(res_null, <span class="dt">type =</span> <span class="st">"network"</span>, <span class="dt">min_support =</span> <span class="dv">0</span>)
 <span class="kw">class</span>(temp)
 <span class="co">#&gt; [1] "visNetwork" "htmlwidget"</span>
-<span class="kw">head</span>(temp$x$edges)</code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="right">from</th>
-<th align="right">to</th>
-<th align="right">value</th>
-<th align="left">arrows</th>
-<th align="left">color</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0.022</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">3</td>
-<td align="right">0.012</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">0.018</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">5</td>
-<td align="right">0.014</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">6</td>
-<td align="right">0.002</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">7</td>
-<td align="right">0.018</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp$x$nodes)</code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="right">id</th>
-<th align="right">label</th>
-<th align="right">value</th>
-<th align="left">color</th>
-<th align="left">shape</th>
-<th align="left">shaped</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0.398</td>
-<td align="left">#CCDDFF</td>
-<td align="left">dot</td>
-<td align="left">star</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0.248</td>
-<td align="left">#B2D9E3</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="right">3</td>
-<td align="right">0.234</td>
-<td align="left">#98D6C7</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="right">4</td>
-<td align="right">0.282</td>
-<td align="left">#7ED2AC</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">5</td>
-<td align="right">0.418</td>
-<td align="left">#99CAA9</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="right">6</td>
-<td align="right">0.386</td>
-<td align="left">#C2C0AD</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">head</span>(temp$x$edges)
+<span class="co">#&gt;   from to value arrows   color</span>
+<span class="co">#&gt; 1    1  2 0.022     to #CCDDFF</span>
+<span class="co">#&gt; 2    1  3 0.012     to #CCDDFF</span>
+<span class="co">#&gt; 3    1  4 0.018     to #CCDDFF</span>
+<span class="co">#&gt; 4    1  5 0.014     to #CCDDFF</span>
+<span class="co">#&gt; 5    1  6 0.002     to #CCDDFF</span>
+<span class="co">#&gt; 6    1  7 0.018     to #CCDDFF</span>
+<span class="kw">head</span>(temp$x$nodes)
+<span class="co">#&gt;   id label value   color shape shaped</span>
+<span class="co">#&gt; 1  1     1 0.398 #CCDDFF   dot   star</span>
+<span class="co">#&gt; 2  2     2 0.248 #B2D9E3   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 3  3     3 0.234 #98D6C7   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 4  4     4 0.282 #7ED2AC   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 5  5     5 0.418 #99CAA9   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 6  6     6 0.386 #C2C0AD   dot   &lt;NA&gt;</span>
+
 ## make an igraph object
 <span class="kw">library</span>(igraph)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'igraph'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     decompose, spectrum</span>
+<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     union</span>
 
 net_null &lt;-<span class="st"> </span><span class="kw">graph.data.frame</span>(temp$x$edges,
                              <span class="dt">vertices =</span> temp$x$nodes[<span class="dv">1</span>:<span class="dv">4</span>])
@@ -815,129 +565,23 @@ res_wt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/outb
 temp &lt;-<span class="st"> </span><span class="kw">plot</span>(res_wt, <span class="dt">type =</span> <span class="st">"network"</span>, <span class="dt">min_support =</span> <span class="fl">0.05</span>)
 <span class="kw">class</span>(temp)
 <span class="co">#&gt; [1] "visNetwork" "htmlwidget"</span>
-<span class="kw">head</span>(temp$x$edges)</code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left"></th>
-<th align="right">from</th>
-<th align="right">to</th>
-<th align="right">value</th>
-<th align="left">arrows</th>
-<th align="left">color</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">22</td>
-<td align="right">1</td>
-<td align="right">23</td>
-<td align="right">0.0547264</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="even">
-<td align="left">23</td>
-<td align="right">1</td>
-<td align="right">24</td>
-<td align="right">0.0646766</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="odd">
-<td align="left">24</td>
-<td align="right">1</td>
-<td align="right">25</td>
-<td align="right">0.0945274</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="even">
-<td align="left">25</td>
-<td align="right">1</td>
-<td align="right">26</td>
-<td align="right">0.1641791</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="odd">
-<td align="left">26</td>
-<td align="right">1</td>
-<td align="right">27</td>
-<td align="right">0.1243781</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-<tr class="even">
-<td align="left">27</td>
-<td align="right">1</td>
-<td align="right">28</td>
-<td align="right">0.2487562</td>
-<td align="left">to</td>
-<td align="left">#CCDDFF</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp$x$nodes)</code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="right">id</th>
-<th align="right">label</th>
-<th align="right">value</th>
-<th align="left">color</th>
-<th align="left">shape</th>
-<th align="left">shaped</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">2.1990050</td>
-<td align="left">#CCDDFF</td>
-<td align="left">dot</td>
-<td align="left">star</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0.2288557</td>
-<td align="left">#B2D9E3</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="right">3</td>
-<td align="right">0.2985075</td>
-<td align="left">#98D6C7</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="right">4</td>
-<td align="right">0.3084577</td>
-<td align="left">#7ED2AC</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">5</td>
-<td align="right">0.4129353</td>
-<td align="left">#99CAA9</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="right">6</td>
-<td align="right">0.4328358</td>
-<td align="left">#C2C0AD</td>
-<td align="left">dot</td>
-<td align="left">NA</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">head</span>(temp$x$edges)
+<span class="co">#&gt;    from to      value arrows   color</span>
+<span class="co">#&gt; 22    1 23 0.05472637     to #CCDDFF</span>
+<span class="co">#&gt; 23    1 24 0.06467662     to #CCDDFF</span>
+<span class="co">#&gt; 24    1 25 0.09452736     to #CCDDFF</span>
+<span class="co">#&gt; 25    1 26 0.16417910     to #CCDDFF</span>
+<span class="co">#&gt; 26    1 27 0.12437811     to #CCDDFF</span>
+<span class="co">#&gt; 27    1 28 0.24875622     to #CCDDFF</span>
+<span class="kw">head</span>(temp$x$nodes)
+<span class="co">#&gt;   id label     value   color shape shaped</span>
+<span class="co">#&gt; 1  1     1 2.1990050 #CCDDFF   dot   star</span>
+<span class="co">#&gt; 2  2     2 0.2288557 #B2D9E3   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 3  3     3 0.2985075 #98D6C7   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 4  4     4 0.3084577 #7ED2AC   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 5  5     5 0.4129353 #99CAA9   dot   &lt;NA&gt;</span>
+<span class="co">#&gt; 6  6     6 0.4328358 #C2C0AD   dot   &lt;NA&gt;</span>
+
 ## make an igraph object
 
 net_wt &lt;-<span class="st"> </span><span class="kw">graph.data.frame</span>(temp$x$edges,
@@ -1040,7 +684,7 @@ move_mu_intern
 <span class="co">#&gt;     param$mu &lt;- rexp(1, 1000)</span>
 <span class="co">#&gt;     return(param)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x70d4e88&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x81a8f50&gt;</span>
 
 ## 'config' is in the function's environment
 <span class="kw">names</span>(<span class="kw">environment</span>(move_mu_intern))
@@ -1249,198 +893,39 @@ comparison &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<spa
              <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
              
 comparison$correct &lt;-<span class="st"> </span>comparison$inferred ==<span class="st"> </span>comparison$true
-comparison</code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="right">case</th>
-<th align="left">inferred</th>
-<th align="left">true</th>
-<th align="left">correct</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="left">1</td>
-<td align="left">1</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">2</td>
-<td align="left">2</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="left">3</td>
-<td align="left">3</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="left">4</td>
-<td align="left">4</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="left">4</td>
-<td align="left">4</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">8</td>
-<td align="left">5</td>
-<td align="left">5</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">9</td>
-<td align="left">6</td>
-<td align="left">6</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">10</td>
-<td align="left">6</td>
-<td align="left">6</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">11</td>
-<td align="left">7</td>
-<td align="left">7</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">12</td>
-<td align="left">5</td>
-<td align="left">8</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="odd">
-<td align="right">13</td>
-<td align="left">9</td>
-<td align="left">9</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">14</td>
-<td align="left">5</td>
-<td align="left">5</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">15</td>
-<td align="left">5</td>
-<td align="left">5</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">16</td>
-<td align="left">7</td>
-<td align="left">7</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">17</td>
-<td align="left">26</td>
-<td align="left">7</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="even">
-<td align="right">18</td>
-<td align="left">8</td>
-<td align="left">8</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">19</td>
-<td align="left">9</td>
-<td align="left">9</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">20</td>
-<td align="left">10</td>
-<td align="left">10</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">21</td>
-<td align="left">11</td>
-<td align="left">11</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">22</td>
-<td align="left">11</td>
-<td align="left">11</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">23</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">24</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">25</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">26</td>
-<td align="left">7</td>
-<td align="left">17</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="odd">
-<td align="right">27</td>
-<td align="left">17</td>
-<td align="left">17</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">28</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="right">29</td>
-<td align="left">10</td>
-<td align="left">10</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="right">30</td>
-<td align="left">13</td>
-<td align="left">13</td>
-<td align="left">TRUE</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(comparison$correct)
+comparison
+<span class="co">#&gt;    case inferred true correct</span>
+<span class="co">#&gt; 1     1       NA   NA    TRUE</span>
+<span class="co">#&gt; 2     2        1    1    TRUE</span>
+<span class="co">#&gt; 3     3        2    2    TRUE</span>
+<span class="co">#&gt; 4     4       NA   NA    TRUE</span>
+<span class="co">#&gt; 5     5        3    3    TRUE</span>
+<span class="co">#&gt; 6     6        4    4    TRUE</span>
+<span class="co">#&gt; 7     7        4    4    TRUE</span>
+<span class="co">#&gt; 8     8        5    5    TRUE</span>
+<span class="co">#&gt; 9     9        6    6    TRUE</span>
+<span class="co">#&gt; 10   10        6    6    TRUE</span>
+<span class="co">#&gt; 11   11        7    7    TRUE</span>
+<span class="co">#&gt; 12   12        5    8   FALSE</span>
+<span class="co">#&gt; 13   13        9    9    TRUE</span>
+<span class="co">#&gt; 14   14        5    5    TRUE</span>
+<span class="co">#&gt; 15   15        5    5    TRUE</span>
+<span class="co">#&gt; 16   16        7    7    TRUE</span>
+<span class="co">#&gt; 17   17       26    7   FALSE</span>
+<span class="co">#&gt; 18   18        8    8    TRUE</span>
+<span class="co">#&gt; 19   19        9    9    TRUE</span>
+<span class="co">#&gt; 20   20       10   10    TRUE</span>
+<span class="co">#&gt; 21   21       11   11    TRUE</span>
+<span class="co">#&gt; 22   22       11   11    TRUE</span>
+<span class="co">#&gt; 23   23       13   13    TRUE</span>
+<span class="co">#&gt; 24   24       13   13    TRUE</span>
+<span class="co">#&gt; 25   25       13   13    TRUE</span>
+<span class="co">#&gt; 26   26        7   17   FALSE</span>
+<span class="co">#&gt; 27   27       17   17    TRUE</span>
+<span class="co">#&gt; 28   28       NA   NA    TRUE</span>
+<span class="co">#&gt; 29   29       10   10    TRUE</span>
+<span class="co">#&gt; 30   30       13   13    TRUE</span>
+<span class="kw">mean</span>(comparison$correct)
 <span class="co">#&gt; [1] 0.9</span></code></pre></div>
 </div>
 </div>

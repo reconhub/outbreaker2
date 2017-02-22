@@ -208,7 +208,7 @@ prior functions should use <code>x$lambda</code> to refer to the current value o
 #&gt; {
 #&gt;     ifelse(x$pi &gt; 0.5, log(2), log(0))
 #&gt; }
-#&gt; &lt;environment: 0x6825658&gt;
+#&gt; &lt;environment: 0x5b7df90&gt;
 #&gt; </div><div class='input'>
 <span class='co'>## test the prior manually</span>
 <span class='no'>priors</span>$<span class='fu'>pi</span>(<span class='fu'>list</span>(<span class='kw'>pi</span><span class='kw'>=</span><span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] 0.6931472</div><div class='input'><span class='no'>priors</span>$<span class='fu'>pi</span>(<span class='fu'>list</span>(<span class='kw'>pi</span><span class='kw'>=</span><span class='fl'>.6</span>))</div><div class='output co'>#&gt; [1] 0.6931472</div><div class='input'><span class='no'>priors</span>$<span class='fu'>pi</span>(<span class='fu'>list</span>(<span class='kw'>pi</span><span class='kw'>=</span><span class='fl'>.2</span>))</div><div class='output co'>#&gt; [1] -Inf</div><div class='input'><span class='no'>priors</span>$<span class='fu'>pi</span>(<span class='fu'>list</span>(<span class='kw'>pi</span><span class='kw'>=</span><span class='fl'>.49</span>))</div><div class='output co'>#&gt; [1] -Inf</div><div class='input'>

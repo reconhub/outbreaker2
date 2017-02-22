@@ -152,7 +152,6 @@ other column in `res`:
 
 plot(res, "prior")
 plot(res, "mu")
-plot(res, "mu")
 plot(res, "t_inf_15")
 
 ```

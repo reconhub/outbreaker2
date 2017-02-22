@@ -69,6 +69,12 @@ invisible(require(printr))
 vignette(package = "outbreaker2")
 ```
 
+```{r, echo = FALSE, message = FALSE}
+if (require(printr)) {
+  detach("package:printr")
+}
+```
+
 
 
 <br>

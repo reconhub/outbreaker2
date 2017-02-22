@@ -35,9 +35,9 @@ Imports:
     ggplot2,
     magrittr,
     visNetwork
-Remotes: RcppCore/Rcpp 
+Remotes: RcppCore/Rcpp
 LazyData: true
 LinkingTo: Rcpp
-RoxygenNote: 6.0.0
+RoxygenNote: 5.0.1
 SystemRequirements: C++11
 VignetteBuilder: knitr

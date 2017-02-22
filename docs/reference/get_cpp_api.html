@@ -54,6 +54,9 @@
 <li>
   <a href="../articles/index.html">Articles</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -137,7 +140,7 @@ vignette (<code>vignette(&quot;Rcpp_API&quot;, package = &quot;outbreaker2&quot;
     <pre class="examples"><div class='input'>
 <span class='co'>## get functions in an environment</span>
 <span class='no'>api</span> <span class='kw'>&lt;-</span> <span class='fu'>get_cpp_api</span>()
-<span class='no'>api</span></div><div class='output co'>#&gt; &lt;environment: 0x7946650&gt;</div><div class='input'>
+<span class='no'>api</span></div><div class='output co'>#&gt; &lt;environment: 0x76bdc68&gt;</div><div class='input'>
 <span class='co'>## check content of the environment</span>
 <span class='fu'>ls</span>(<span class='no'>api</span>)</div><div class='output co'>#&gt;  [1] &quot;cpp_ll_all&quot;               &quot;cpp_ll_contact&quot;          
 #&gt;  [3] &quot;cpp_ll_genetic&quot;           &quot;cpp_ll_reporting&quot;        
@@ -154,8 +157,8 @@ vignette (<code>vignette(&quot;Rcpp_API&quot;, package = &quot;outbreaker2&quot;
 #&gt; NULL</div><div class='input'>
 <span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_config.html'>create_config</a></span>()
 
-<span class='no'>api</span>$<span class='fu'>cpp_prior_mu</span>(<span class='fu'>list</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>0.00123</span>), <span class='no'>config</span>)</div><div class='output co'>#&gt; [1] 5.677755</div><div class='input'>
-<span class='fu'>dexp</span>(<span class='fl'>0.00123</span>, <span class='kw'>rate</span> <span class='kw'>=</span> <span class='no'>config</span>$<span class='no'>prior_mu</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 5.677755</div><div class='input'>
+<span class='no'>api</span>$<span class='fu'>cpp_prior_mu</span>(<span class='fu'>list</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>0.00123</span>), <span class='no'>config</span>)</div><div class='output co'>#&gt; [1] -0.00123</div><div class='input'>
+<span class='fu'>dexp</span>(<span class='fl'>0.00123</span>, <span class='kw'>rate</span> <span class='kw'>=</span> <span class='no'>config</span>$<span class='no'>prior_mu</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] -0.00123</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

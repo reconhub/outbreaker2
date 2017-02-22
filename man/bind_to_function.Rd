@@ -18,11 +18,12 @@ returns a closure of \code{f} which will only rely on one single argument
 likelihood or movement functions. This functionality is used internally when
 creating closures of custom moves in \code{bind_moves}.
 }
-\references{
-Initial code comes from the \code{partially_apply} function in
-the 'rodeint' package (\url{/github.com/richfitz/rodeint/}).
-}
 \author{
 Initial code by Rich FitzJohn (see 'references') with some
 adaptations by Thibaut Jombart
 }
+\references{
+Initial code comes from the \code{partially_apply} function in
+the 'rodeint' package (\url{/github.com/richfitz/rodeint/}).
+}
+

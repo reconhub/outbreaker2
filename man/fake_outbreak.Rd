@@ -39,3 +39,4 @@ fake_outbreak
 Thibaut Jombart \email{thibautjombart@gmail.com}
 }
 \keyword{datasets}
+

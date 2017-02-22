@@ -1,12 +1,7 @@
 base
-methods
 devtools
 knitr
-testthat
-datasets
-utils
-grDevices
-graphics
-stats
-ape
+printr
 outbreaker2
+igraph
+ape

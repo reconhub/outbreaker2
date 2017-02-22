@@ -81,3 +81,4 @@ movements (i.e. none of the names specified above), the closure will contain:
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com}).
 }
+

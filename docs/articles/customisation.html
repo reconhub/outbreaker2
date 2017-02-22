@@ -124,14 +124,14 @@ priors
 <span class="co">#&gt;         return(0)</span>
 <span class="co">#&gt;     }</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $pi</span>
 <span class="co">#&gt; function (param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     log(f(param$pi))</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span></code></pre></div>
 <p>Note that <code>custom_priors</code> does more than just adding the custom function to a list. For instance, the following customisations are all wrong, and rightfully rejected:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 ## wrong: not a function
@@ -343,35 +343,35 @@ null_model
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $reporting</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $timing_infections</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $timing_sampling</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $contact</span>
 <span class="co">#&gt; function (data, param) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     return(0)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x62faa00&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x3129350&gt;</span></code></pre></div>
 <p>We also specify settings via the <code>config</code> argument to avoid detecting imported cases, reduce the number of iterations and sampling each of them:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 null_config &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">find_import =</span> <span class="ot">FALSE</span>,
@@ -684,7 +684,7 @@ move_mu_intern
 <span class="co">#&gt;     param$mu &lt;- rexp(1, 1000)</span>
 <span class="co">#&gt;     return(param)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;environment: 0x81a8f50&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x337a170&gt;</span>
 
 ## 'config' is in the function's environment
 <span class="kw">names</span>(<span class="kw">environment</span>(move_mu_intern))

@@ -64,16 +64,10 @@ Documentation
 
 It also comes with the following vignettes:
 
-
-
-
-```r
-vignette(package = "outbreaker2")
-```
-
-```
-## Vignettes not found
-```
+- **`introduction`**: general introduction using a worked example.
+- **`overview`**: brief overview of the package's content.
+- **`customisation`**: customisation of priors, likelihoods, and movement functions.
+- **`Rcpp_API`**: documentation for the Rcpp API.
 
 
 

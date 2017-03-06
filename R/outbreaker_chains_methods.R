@@ -1,10 +1,13 @@
 #' Basic methods for processing outbreaker results
 #'
-#' Several methods are defined for instances of the class \code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including: \code{print}, \code{plot}
+#' Several methods are defined for instances of the class
+#' \code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including:
+#' \code{print}, \code{plot}
 #'
 #' @rdname outbreaker_chains
 #'
-#' @aliases outbreaker_chains print.outbreaker_chains plot.outbreaker_chains summary.outbreaker_chains
+#' @aliases outbreaker_chains print.outbreaker_chains plot.outbreaker_chains
+#'   summary.outbreaker_chains
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
@@ -50,7 +53,7 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 
 
 #' @rdname outbreaker_chains
-#' 
+#'
 #' @param y a character string indicating which result to plot
 #'
 #' @param type a character string indicating the kind of plot to be used (see details)
@@ -164,8 +167,8 @@ plot.outbreaker_chains <- function(x, y = "post",
         edges$arrows <- "to"
         case_cols <- cases_pal(N)
         edges$color <- case_cols[edges$from]
-        
-        
+
+
         ## ## extract edge info: timing
         ## t_inf <- x[, grep("t_inf",names(x)), drop = FALSE]
         ## mean_time <- apply(t_inf, 2, mean)
@@ -188,7 +191,7 @@ plot.outbreaker_chains <- function(x, y = "post",
         smry <- summary(x, burnin = burnin)
         is_imported <- is.na(smry$tree$from)
         nodes$shaped[is_imported] <- "star"
-        
+
         ## generate graph
         out <- visNetwork::visNetwork(nodes = nodes, edges = edges, ...)
         out <- visNetwork::visNodes(out, shadow = list(enabled = TRUE, size = 10),

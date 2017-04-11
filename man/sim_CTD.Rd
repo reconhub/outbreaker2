@@ -4,10 +4,11 @@
 \alias{sim_CTD}
 \title{Simulate contact tracing data from a simOutbreak object}
 \usage{
-sim_CTD(outbreak, eps, lambda)
+sim_CTD(tTree, eps, lambda)
 }
 \arguments{
-\item{outbreak}{a \code{simOutbreak} object}
+\item{tTree}{a dataframe or matrix of two columns, with each row providing
+the ids (numerical or as characters) of a transmission pairs}
 
 \item{eps}{the contact reporting coverage, defined as the probability of
 reporting a contact between a transmission pair.}
@@ -16,9 +17,12 @@ reporting a contact between a transmission pair.}
 of contact between a non-transmisison pair.}
 }
 \description{
-This function takes a simOutbreak object and returns a dataframe of contact pairs. The probabilites of reporting infectious and non-infectious contacts are provided as parameters.
+This function simulates contact tracing data from a transmission tree. The
+probability of a contact occuring between a transmision pair is assumed to be
+1. The probability of contact occuring between a non-transmision pair is
+given by the parameter lambda. The probability of reporting a contact
+(transmission pair or not) is given by the parameters eps.
 }
 \author{
 Finlay Campbell (\email{f.campbell15@imperial.ac.uk})
 }
-

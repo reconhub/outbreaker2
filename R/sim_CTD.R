@@ -1,10 +1,15 @@
 #' Simulate contact tracing data from a simOutbreak object
 #'
-#' This function takes a simOutbreak object and returns a dataframe of contact pairs. The probabilites of reporting infectious and non-infectious contacts are provided as parameters.
+#' This function simulates contact tracing data from a transmission tree. The
+#' probability of a contact occuring between a transmision pair is assumed to be
+#' 1. The probability of contact occuring between a non-transmision pair is
+#' given by the parameter lambda. The probability of reporting a contact
+#' (transmission pair or not) is given by the parameters eps.
 #'
 #' @importFrom magrittr %>%
 #'
-#' @param outbreak a \code{simOutbreak} object
+#' @param tTree a dataframe or matrix of two columns, with each row providing
+#'     the ids (numerical or as characters) of a transmission pairs
 #'
 #' @param eps the contact reporting coverage, defined as the probability of
 #'     reporting a contact between a transmission pair.
@@ -16,40 +21,45 @@
 #'
 #' @export
 
-sim_CTD <- function(outbreak, eps, lambda) {
+sim_CTD <- function(tTree, eps, lambda) {
 
-    if(outbreak$n < 2) stop("No transmission observed")
+    ## Sort tTree by value or alphabetically, This ensures A:B and B:A are both
+    ## recognised when querying the contacts dataframe for transmission pairs
+    tTree <- tTree %>%
+        na.omit() %>%
+        apply(1, sort, FALSE) %>%
+        t() %>%
+        as.data.frame(stringsAsFactors = FALSE)
 
-    accept_reject <- function(pair, C) {
+    tTree <- tTree[order(tTree[1]),]
+    names(tTree) <- c('V1', 'V2')
+    if(nrow(tTree) == 0) stop("No transmission observed")
 
-        is_contact <- C[pair[1], pair[2]]
+    ## Create a dataframe of all potential contacts
+    id <- unique(c(tTree[,1], tTree[,2]))
+    contacts <- as.data.frame(t(utils::combn(id, 2)))
 
-        if(is_contact) {
-            return(stats::runif(1, 0, 1) < eps)
-        } else {
-            return(stats::runif(1, 0, 1) < lambda * eps)
-        }
+    ## Create a column of logicals indicating whether a pair represents a
+    ## transmission pair or not
+    tTree$tPair <- TRUE
+
+    ## Mark non-transmission pairs in the contacts dataframe. The merge function
+    ## will mark pairs found in contacts but not in tTree as 'NA'. These are
+    ## then converted to FALSE
+    contacts <- merge(contacts, tTree, by = c('V1', 'V2'), all.x = TRUE)
+    contacts$tPair[is.na(contacts$tPair)] <- FALSE
+
+    ## Sample a number of rows given by a binomial distribution
+    sampler <- function(x, prob) {
+        x[sample(1:nrow(x), rbinom(1, nrow(x), prob)), 1:3]
     }
 
-    ## Extract the transmission tree
-    tTree <- cbind(outbreak$ances, outbreak$id)
+    ## Sample transmission pairs with probability eps
+    ## Sample non-transmission pairs with probability eps*lambda
+    CTD <- rbind(sampler(contacts[contacts$tPair,], eps),
+                 sampler(contacts[!contacts$tPair,], eps*lambda))
 
-    ## Define a matrix of all potential contacts
-    C <- matrix(FALSE, outbreak$n, outbreak$n)
-
-    ## Mark transmission pairs
-    for(i in seq_len(nrow(tTree))) {
-        pair <- tTree[i,]
-        C[pair[[1]], pair[[2]]] <- C[pair[[2]], pair[[1]]] <- TRUE
-    }
-
-    ## Describe all potential contacts
-    potent_CTD <- t(utils::combn(outbreak$id, 2))
-
-    accept <- apply(potent_CTD, 1, accept_reject, C)
-
-    CTD <- potent_CTD[accept,]
-    colnames(CTD) <- c("i", "j")
+    rownames(CTD) <- NULL
 
     return(CTD)
 }

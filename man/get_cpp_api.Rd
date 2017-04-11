@@ -90,4 +90,3 @@ dexp(0.00123, rate = config$prior_mu, log = TRUE)
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})
 }
-

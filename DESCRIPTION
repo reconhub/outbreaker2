@@ -38,6 +38,6 @@ Imports:
 Remotes: RcppCore/Rcpp
 LazyData: true
 LinkingTo: Rcpp
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 SystemRequirements: C++11
 VignetteBuilder: knitr

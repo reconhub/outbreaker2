@@ -1,4 +1,4 @@
-#' Simulate contact tracing data from a simOutbreak object
+#' Simulate contact tracing data from a transmission tree.
 #'
 #' This function simulates contact tracing data from a transmission tree. The
 #' probability of a contact occuring between a transmision pair is assumed to be

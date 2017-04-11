@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_CTD.R
 \name{sim_CTD}
 \alias{sim_CTD}
-\title{Simulate contact tracing data from a simOutbreak object}
+\title{Simulate contact tracing data from a transmission tree.}
 \usage{
 sim_CTD(tTree, eps, lambda)
 }

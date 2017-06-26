@@ -39,19 +39,29 @@ seqTrack algorithm to generate the initial tree - see function
 selected from preceding cases), and "star" (all cases coalesce to the first
 case).  Note that for SeqTrack, all cases should have been sequenced.}
 
-\item{n_iter}{an integer indicating the number of iterations in the MCMC,
-including the burnin period}
-
-\item{init.mu}{initial value for the mutation rates}
+\item{init_alpha}{a vector of integers indicating the initial values of
+alpha, where the i-th value indicates the ancestor of case 'i'; defaults to
+\code{NULL}, in which ancestries are defined from \code{init_tree}.}
 
 \item{init_kappa}{a (recycled) vector of integers indicating the initial
 values of kappa; defaults to 1.}
+
+\item{init_t_inf}{a vector of integers indicating the initial values of
+\code{t_inf}, i.e. dates of infection; defaults to \code{NULL}, in which case
+the most likely \code{t_inf} will be determined from the delay to
+reporting/symptoms distribution, and the dates of reporting/symptoms,
+provided in \code{data}.}
+
+\item{init_mu}{initial value for the mutation rates}
 
 \item{init_pi}{initial value for the reporting probability}
 
 \item{init_eps}{initial value for the contact reporting coverage}
 
 \item{init_lambda}{initial value for the non-transmission contact rate}
+
+\item{n_iter}{an integer indicating the number of iterations in the MCMC,
+including the burnin period}
 
 \item{move_alpha}{a vector of logicals indicating, for each case, if the
 ancestry should be estimated ('moved' in the MCMC), or not, defaulting to

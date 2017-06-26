@@ -24,7 +24,8 @@ for storing 'current' states of the MCMC. \cr \cr
 \code{outbreaker_store} class content:
 \itemize{
 
- \item \code{size}: The length of the list, corresponding to the number of samples saved from the MCMC.
+ \item \code{size}: The length of the list, corresponding to the number of
+samples saved from the MCMC.
 
  \item \code{step}: A vector of integers of length \code{size}, storing the
 steps of the MCMC corresponding to the saved samples.

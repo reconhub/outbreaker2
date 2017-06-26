@@ -27,7 +27,8 @@
 #' \code{outbreaker_store} class content:
 #' \itemize{
 #' 
-#'  \item \code{size}: The length of the list, corresponding to the number of samples saved from the MCMC.
+#'  \item \code{size}: The length of the list, corresponding to the number of
+#' samples saved from the MCMC.
 #'
 #'  \item \code{step}: A vector of integers of length \code{size}, storing the
 #' steps of the MCMC corresponding to the saved samples.
@@ -113,7 +114,7 @@ create_param <- function(data = outbreaker_data(),
     if (is.null(config$init_t_inf)) {
         current_t_inf <- t_inf[[1]] <- data$dates - which.max(data$f_dens) + 1L
     } else {
-        current_t_inf <- config$init_t_inf
+        current_t_inf <- t_inf[[1]] <- config$init_t_inf
     }
     counter <- 1L
 

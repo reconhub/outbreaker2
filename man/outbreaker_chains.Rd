@@ -43,7 +43,8 @@ Several methods are defined for instances of the class
 \code{print}, \code{plot}
 }
 \details{
-'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
+'trace' for the MCMC trace, 'hist' for histograms, 'density' for a
+kernel density estimation
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})

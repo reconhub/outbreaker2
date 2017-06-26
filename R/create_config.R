@@ -9,7 +9,7 @@
 #'
 #' \describe{
 #'
-#' \item{init.tree}{the tree used to initialize the MCMC. Can be either a
+#' \item{init_tree}{the tree used to initialize the MCMC. Can be either a
 #' character string indicating how this tree should be computed, or a vector of
 #' integers corresponding to the tree itself, where the i-th value corresponds
 #' to the index of the ancestor of 'i' (i.e., \code{init.tree[i]} is the
@@ -19,32 +19,32 @@
 #' selected from preceding cases), and "star" (all cases coalesce to the first
 #' case).  Note that for SeqTrack, all cases should have been sequenced.}
 #'
-#' \item{n.iter}{an integer indicating the number of iterations in the MCMC,
+#' \item{n_iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
 #' \item{init.mu}{initial value for the mutation rates}
 #'
-#' \item{init.kappa}{a (recycled) vector of integers indicating the initial
+#' \item{init_kappa}{a (recycled) vector of integers indicating the initial
 #' values of kappa; defaults to 1.}
 #'
-#' \item{init.pi}{initial value for the reporting probability}
+#' \item{init_pi}{initial value for the reporting probability}
 #'
 #' \item{init_eps}{initial value for the contact reporting coverage}
 #'
 #' \item{init_lambda}{initial value for the non-transmission contact rate}
 #'
-#' \item{move.alpha}{a vector of logicals indicating, for each case, if the
+#' \item{move_alpha}{a vector of logicals indicating, for each case, if the
 #' ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
 #' TRUE; the vector is recycled if needed.}
 #'
-#' \item{move.t_inf}{a vector of logicals indicating, for each case, if the
+#' \item{move_t_inf}{a vector of logicals indicating, for each case, if the
 #' dates of infection should be estimated ('moved' in the MCMC), or not,
 #' defaulting to TRUE; the vector is recycled if needed.}
 #'
-#' \item{move.mu}{a logical indicating whether the mutation rates
+#' \item{move_mu}{a logical indicating whether the mutation rates
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
-#' \item{move.pi}{a logical indicating whether the reporting probability
+#' \item{move_pi}{a logical indicating whether the reporting probability
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
 #' \item{move_eps}{a logical indicating whether the contact reporting coverage
@@ -55,7 +55,7 @@
 #' rate should be estimated ('moved' in the MCMC), or not at all, defaulting to
 #' TRUE.}
 #'
-#' \item{move.kappa}{a logical indicating whether the number of generations
+#' \item{move_kappa}{a logical indicating whether the number of generations
 #' between two successive cases should be estimated ('moved' in the MCMC), or
 #' not, all defaulting to TRUE.}
 #'
@@ -156,10 +156,12 @@ create_config <- function(..., data = NULL) {
                      init_pi = 0.9,
                      init_eps = 0.5,
                      init_lambda = 0.05,
-                     move_alpha = TRUE, move_swap_cases = TRUE, move_t_inf = TRUE,
+                     move_alpha = TRUE, move_swap_cases = TRUE,
+                     move_t_inf = TRUE,
                      move_mu = TRUE, move_kappa = TRUE, move_pi = TRUE,
                      move_eps = TRUE, move_lambda = TRUE,
-                     n_iter = 1e4, sample_every = 50, sd_mu = 0.0001, sd_pi = 0.1,
+                     n_iter = 1e4, sample_every = 50,
+                     sd_mu = 0.0001, sd_pi = 0.1,
                      sd_eps = 0.1, sd_lambda = 0.05,
                      prop_alpha_move = 1/4,
                      prop_t_inf_move = 0.2,
@@ -194,7 +196,8 @@ create_config <- function(..., data = NULL) {
         }
         if (inherits(config$init_t_inf, "POSIXct")) {
             config$init_t_inf <- difftime(config$init_t_inf,
-                                          min(config$init_t_inf), units="days")
+                                          min(config$init_t_inf),
+                                          units = "days")
         }
         config$init_t_inf <- as.integer(round(config$init_t_inf))
     }
@@ -597,7 +600,9 @@ create_config <- function(..., data = NULL) {
         ## check initial t_inf
         if (!is.null(config$init_t_inf)) {
             if (any(config$init_t_inf >= data$dates, na.rm = TRUE)) {
-                stop("Initial dates of infection come after sampling dates / dates of onset.")
+                msg <- paste0("Initial dates of infection come after ",
+                              "sampling dates / dates of onset.")
+                stop(msg)
             }
         }
 

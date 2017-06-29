@@ -331,7 +331,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
 
 
   for (size_t i = 0; i < N; i++) {
-    // NOTE: local likelihood does not work here. Need to investigate why.
 
     local_cases = cpp_find_descendents(param["alpha"], i+1);
 

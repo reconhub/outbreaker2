@@ -92,7 +92,7 @@ outbreaker <- function(data = outbreaker_data(),
 
     ## CHECKS / PROCESS DATA ##
     data <- outbreaker_data(data = data)
-
+    
     ## CHECK / PROCESS CONFIG ##
     config <- create_config(config, data = data)
 

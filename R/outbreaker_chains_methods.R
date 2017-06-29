@@ -62,19 +62,23 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #'
 #' @param min_support a number between 0 and 1 indicating the minimum support of
 #' ancestries to be plotted; only used if 'type' is 'network'
-## #' @param dens_all a logical indicating if the overal density computed over all runs should be displayed; defaults to TRUE
-## #' @param col the colors to be used for different runs
+#' 
+## #' @param dens_all a logical indicating if the overal density computed over
+## all runs should be displayed; defaults to TRUE #' @param col the colors to be
+## used for different runs
 #'
 #' @export
 #'
-#' @details
-#'  'trace' for the MCMC trace, 'hist' for histograms, 'density' for a kernel density estimation
+#' @details 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a
+#' kernel density estimation
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
 #' geom_violin aes aes_string coord_flip labs guides
+#' 
 #' @importFrom grDevices xyTable
 plot.outbreaker_chains <- function(x, y = "post",
-                                   type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
+                                   type = c("trace", "hist", "density",
+                                       "alpha", "t_inf", "kappa", "network"),
                                    burnin = 0, min_support = 0.1, ...) {
 
     ## CHECKS ##
@@ -85,8 +89,8 @@ plot.outbreaker_chains <- function(x, y = "post",
 
     ## THIS IS JUST TO APPEASE R CMD check
 
-    ## hopefully cran will avoid spurious warnings along the lines of "no visible binding for global
-    ## variable" when using ggplot2::aes(...)
+    ## hopefully cran will avoid spurious warnings along the lines of "no
+    ## visible binding for global variable" when using ggplot2::aes(...)
     ##
     frequency <- NULL
 

@@ -366,3 +366,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"outbreaker2_cpp_are_possible_ancestors", (DL_FUNC) &outbreaker2_cpp_are_possible_ancestors, 2},
+    {"outbreaker2_cpp_sample1", (DL_FUNC) &outbreaker2_cpp_sample1, 1},
+    {"outbreaker2_cpp_pick_possible_ancestor", (DL_FUNC) &outbreaker2_cpp_pick_possible_ancestor, 2},
+    {"outbreaker2_cpp_find_descendents", (DL_FUNC) &outbreaker2_cpp_find_descendents, 2},
+    {"outbreaker2_cpp_find_local_cases", (DL_FUNC) &outbreaker2_cpp_find_local_cases, 2},
+    {"outbreaker2_cpp_swap_cases", (DL_FUNC) &outbreaker2_cpp_swap_cases, 2},
+    {"outbreaker2_cpp_get_n_mutations", (DL_FUNC) &outbreaker2_cpp_get_n_mutations, 3},
+    {"outbreaker2_cpp_lookup_sequenced_ancestor", (DL_FUNC) &outbreaker2_cpp_lookup_sequenced_ancestor, 3},
+    {"outbreaker2_cpp_ll_genetic", (DL_FUNC) &outbreaker2_cpp_ll_genetic, 4},
+    {"outbreaker2_cpp_ll_timing_infections", (DL_FUNC) &outbreaker2_cpp_ll_timing_infections, 4},
+    {"outbreaker2_cpp_ll_timing_sampling", (DL_FUNC) &outbreaker2_cpp_ll_timing_sampling, 4},
+    {"outbreaker2_cpp_ll_reporting", (DL_FUNC) &outbreaker2_cpp_ll_reporting, 4},
+    {"outbreaker2_cpp_ll_contact", (DL_FUNC) &outbreaker2_cpp_ll_contact, 4},
+    {"outbreaker2_cpp_ll_timing", (DL_FUNC) &outbreaker2_cpp_ll_timing, 4},
+    {"outbreaker2_cpp_ll_all", (DL_FUNC) &outbreaker2_cpp_ll_all, 4},
+    {"outbreaker2_cpp_move_mu", (DL_FUNC) &outbreaker2_cpp_move_mu, 5},
+    {"outbreaker2_cpp_move_pi", (DL_FUNC) &outbreaker2_cpp_move_pi, 5},
+    {"outbreaker2_cpp_move_eps", (DL_FUNC) &outbreaker2_cpp_move_eps, 5},
+    {"outbreaker2_cpp_move_lambda", (DL_FUNC) &outbreaker2_cpp_move_lambda, 5},
+    {"outbreaker2_cpp_move_t_inf", (DL_FUNC) &outbreaker2_cpp_move_t_inf, 3},
+    {"outbreaker2_cpp_move_alpha", (DL_FUNC) &outbreaker2_cpp_move_alpha, 3},
+    {"outbreaker2_cpp_move_swap_cases", (DL_FUNC) &outbreaker2_cpp_move_swap_cases, 3},
+    {"outbreaker2_cpp_move_kappa", (DL_FUNC) &outbreaker2_cpp_move_kappa, 4},
+    {"outbreaker2_cpp_prior_mu", (DL_FUNC) &outbreaker2_cpp_prior_mu, 3},
+    {"outbreaker2_cpp_prior_pi", (DL_FUNC) &outbreaker2_cpp_prior_pi, 3},
+    {"outbreaker2_cpp_prior_eps", (DL_FUNC) &outbreaker2_cpp_prior_eps, 3},
+    {"outbreaker2_cpp_prior_lambda", (DL_FUNC) &outbreaker2_cpp_prior_lambda, 3},
+    {"outbreaker2_cpp_prior_all", (DL_FUNC) &outbreaker2_cpp_prior_all, 3},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_outbreaker2(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

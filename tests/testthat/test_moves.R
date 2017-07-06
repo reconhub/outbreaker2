@@ -171,23 +171,24 @@ test_that("Customisation of moves works", {
 
 
 
-## test various movements  ##
+## test swapping and temporal ordering  ##
 test_that("Swap equally likely index cases", {
     ## skip on CRAN
     skip_on_cran()
 
 
     ## generate inputs
-    data <- outbreaker_data(dates = c(0, 1),
+    data <- outbreaker_data(dates = c(50, 51, 110),
                             w_dens = rep(1, 100))
-    config <- create_config(init_kappa = 1, move_kappa = FALSE,
-                            find_import = FALSE, # init_t_inf = c(-1, 0, 25),
+    config <- create_config(init_kappa = 1,
+                            move_kappa = FALSE,
+                            find_import = FALSE,
                             data = data)
 
     set.seed(1)
     res <- outbreaker(data, config)
     table(res$alpha_1)
     table(res$alpha_2)
-#    table(res$alpha_3)
+    table(res$alpha_3)
 
 })

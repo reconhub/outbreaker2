@@ -217,11 +217,14 @@ Rcpp::IntegerVector cpp_find_local_cases(Rcpp::IntegerVector alpha, size_t i) {
 Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
   Rcpp::IntegerVector alpha_in = param["alpha"];
   Rcpp::IntegerVector t_inf_in = param["t_inf"];
+  Rcpp::IntegerVector kappa_in = param["kappa"];
   Rcpp::IntegerVector alpha_out = clone(alpha_in);
   Rcpp::IntegerVector t_inf_out = clone(t_inf_in);
+  Rcpp::IntegerVector kappa_out = clone(kappa_in);
   Rcpp::List out;
   out["alpha"] = alpha_out;
   out["t_inf"] = t_inf_out;
+  out["kappa"] = kappa_out;
       
   size_t N = alpha_in.size();
   
@@ -235,9 +238,9 @@ Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
   // escape if ancestor of the case is imported, i.e. alpha[x-1] is NA
   
   size_t x = (size_t) alpha_in[i-1];
-  if (alpha_in[x-1] == NA_INTEGER) {
-    return out;
-  }
+  //if (alpha_in[x-1] == NA_INTEGER) {
+  // return out;
+  //}
   
  
   // replace ancestries:
@@ -265,6 +268,9 @@ Rcpp::List cpp_swap_cases(Rcpp::List param, size_t i) {
   // swap infections times of 'i' and 'x'
   t_inf_out[i-1] =   t_inf_in[x-1];
   t_inf_out[x-1] =   t_inf_in[i-1];
+
+  kappa_out[i-1] =   kappa_in[x-1];
+  kappa_out[x-1] =   kappa_in[i-1];
 
 
   return out;

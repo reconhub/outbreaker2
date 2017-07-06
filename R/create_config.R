@@ -22,7 +22,7 @@
 #' \item{init_alpha}{a vector of integers indicating the initial values of
 #' alpha, where the i-th value indicates the ancestor of case 'i'; defaults to
 #' \code{NULL}, in which ancestries are defined from \code{init_tree}.}
-#' 
+#'
 #' \item{init_kappa}{a (recycled) vector of integers indicating the initial
 #' values of kappa; defaults to 1.}
 #'
@@ -39,7 +39,7 @@
 #' \item{init_eps}{initial value for the contact reporting coverage}
 #'
 #' \item{init_lambda}{initial value for the non-transmission contact rate}
-#' 
+#'
 #' \item{n_iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
@@ -624,7 +624,7 @@ create_config <- function(..., data = NULL) {
             if (!is.finite(max_like_delay)) {
                 max_like_delay <- 1L
             }
-            config$init_t_inf <- as.integer(data$dates - max_like_delay + 1L)
+            config$init_t_inf <- as.integer(data$dates - max_like_delay)
         }
 
         ## recycle move_alpha

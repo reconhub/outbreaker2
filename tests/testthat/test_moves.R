@@ -14,12 +14,13 @@ test_that("Movements preserve param structure", {
                                  dna = dna))
     config <- create_config(data = data)
 
-    config_no_move <- create_config(move_alpha = FALSE,
-                                    move_t_inf = FALSE,
-                                    move_mu = FALSE, move_pi = FALSE,
-                                    move_eps = FALSE, move_lambda = FALSE,
-                                    move_kappa = FALSE,
-                                    move_swap_cases = FALSE, data = data)
+    config_no_move <- create_config(
+      move_alpha = FALSE,
+      move_t_inf = FALSE,
+      move_mu = FALSE, move_pi = FALSE,
+      move_eps = FALSE, move_lambda = FALSE,
+      move_kappa = FALSE,
+      move_swap_cases = FALSE, data = data)
 
     data <- add_convolutions(data = data, config = config)
     param <- create_param(data = data, config = config)$current
@@ -162,5 +163,31 @@ test_that("Customisation of moves works", {
     ## same check, run within outbreaker
     out <- outbreaker(data, config, moves = list(mu = f))
     expect_true(all(out$mu == 1e-4))
+
+})
+
+
+
+
+
+
+## test various movements  ##
+test_that("Swap equally likely index cases", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## generate inputs
+    data <- outbreaker_data(dates = c(0, 1),
+                            w_dens = rep(1, 100))
+    config <- create_config(init_kappa = 1, move_kappa = FALSE,
+                            find_import = FALSE, # init_t_inf = c(-1, 0, 25),
+                            data = data)
+
+    set.seed(1)
+    res <- outbreaker(data, config)
+    table(res$alpha_1)
+    table(res$alpha_2)
+#    table(res$alpha_3)
 
 })

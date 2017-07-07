@@ -71,15 +71,18 @@ test_that("Ancestries swapping in Rcpp works", {
 
   ## make dummy tree
   param_old <- list(alpha = c(NA, 1L, 2L, 3L, 2L),
-                    t_inf = c(1L, 2L, 3L, 4L, 3L))
+                    t_inf = c(1L, 2L, 3L, 4L, 3L),
+                    kappa = c(1L, 2L, 1L, 1L, 1L))
 
   ## no swapping exception: i is imported
   param_new <- cpp_swap_cases(param_old, 1L)
   expect_identical(param_old, param_new)
 
-  ## no swapping exception: i's ancestor is imported
+  ## swap even when ancestor is imported
   param_new <- cpp_swap_cases(param_old, 2L)
-  expect_identical(param_old, param_new)
+  expect_equal(param_new$alpha, c(2L, NA, 1L, 3L, 1L))
+  expect_equal(param_new$t_inf, c(2L, 1L, 3L, 4L, 3L))
+  expect_equal(param_new$kappa, c(2L, 1L, 1L, 1L, 1L))
 
   ## swap 3 and 2
   param_new <- cpp_swap_cases(param_old, 3L)

@@ -26,7 +26,7 @@ sim_CTD <- function(tTree, eps, lambda) {
     ## Sort tTree by value or alphabetically, This ensures A:B and B:A are both
     ## recognised when querying the contacts dataframe for transmission pairs
     tTree <- tTree %>%
-        na.omit() %>%
+        stats::na.omit() %>%
         apply(1, sort, FALSE) %>%
         t() %>%
         as.data.frame(stringsAsFactors = FALSE)
@@ -51,7 +51,7 @@ sim_CTD <- function(tTree, eps, lambda) {
 
     ## Sample a number of rows given by a binomial distribution
     sampler <- function(x, prob) {
-        x[sample(1:nrow(x), rbinom(1, nrow(x), prob)), 1:3]
+        x[sample(1:nrow(x), stats::rbinom(1, nrow(x), prob)), 1:3]
     }
 
     ## Sample transmission pairs with probability eps

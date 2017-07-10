@@ -491,6 +491,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
       swapinfo = cpp_swap_cases(param, i+1);
       new_param["alpha"] = swapinfo["alpha"];
       new_param["t_inf"] = swapinfo["t_inf"];
+      new_param["kappa"] = swapinfo["kappa"];
 
 
       // loglike with new parameters
@@ -508,6 +509,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
       if (p_accept >= unif_rand()) { // accept new parameters
 	param["alpha"] = new_param["alpha"];
 	param["t_inf"] = new_param["t_inf"];
+	param["kappa"] = new_param["kappa"];
       }
     }
   }

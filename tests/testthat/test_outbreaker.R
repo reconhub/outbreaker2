@@ -225,7 +225,7 @@ test_that("results ok: kappa and pi", {
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
-    expect_equal(smry$tree$generations, c(NA, 1, 2, 4))
+    expect_equal(smry$tree$generations, c(NA, 1, 2, 4.5))
     expect_true(min(smry$post) > -35)
     expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.8))
 
@@ -249,7 +249,7 @@ test_that("results ok: outbreaker with custom priors",
 
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
 
-    config <-  list(n_iter = 2e3, sample_every = 50,
+    config <-  list(n_iter = 5e3, sample_every = 50,
                     init_tree = "star", move_kappa = TRUE,
                     move_pi = TRUE, init_pi = 1,
                     find_import = FALSE)

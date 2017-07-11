@@ -104,7 +104,7 @@ test_that("results ok: time, no DNA", {
     ## approx log post values
     expect_true(min(out_no_dna.smry$post) > -90)
 
-    ## infection datewithin 3 days on average
+    ## infection date within 3 days on average
     temp <- mean(abs(out_no_dna.smry$tree$time - x$onset), na.rm = TRUE)
     expect_true(temp < 3.5)
 
@@ -112,6 +112,55 @@ test_that("results ok: time, no DNA", {
     sup <- na.omit(out_no_dna.smry$tree$support)
     expect_lt(quantile(sup, .9), .5)
     expect_lt(mean(sup), .35)
+
+})
+
+
+
+test_that("results ok: time, ctd, DNA", {
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## get data
+    data(fake_outbreak)
+    x <- fake_outbreak
+
+    ## outbreaker time, ctd, no DNA ##
+    ## analysis
+    set.seed(1)
+
+    tTree <- data.frame(i = x$ances,
+                        j = 1:length(x$ances))
+    
+    ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
+
+    data <- list(dates = x$onset, w_dens = x$w,
+                 ctd = ctd[,1:2], dna = x$dna)
+    config <- list(n_iter = 5000, sample_every = 50,
+                   init_tree="star", find_import = FALSE,
+                   move_kappa = FALSE)
+
+    out_ctd <- outbreaker(data = data, config = config)
+
+    ## checks
+    out_ctd.smry <- summary(out_ctd, burnin = 1000)
+
+    ## at least 90% ancestries correct
+    temp <- mean(out_ctd.smry$tree$from==x$ances, na.rm = TRUE)
+    expect_true(temp > .9)
+
+    ## eps and lambda parameter estimates within reasonable ranges
+    quant_eps <- quantile(out_ctd$eps, c(0.25, 0.75))
+    expect_true(quant_eps[[1]] > 0.7 &
+                quant_eps[[2]] < 0.95)
+
+    quant_lambda <- quantile(out_ctd$lambda, c(0.25, 0.75))
+    expect_true(quant_lambda[[1]] > 0.05 &
+                quant_lambda[[2]] < 0.35)
+        
+    ## approx log post values
+    expect_true(min(out_ctd.smry$post) > -1200)
 
 })
 

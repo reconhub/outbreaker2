@@ -49,7 +49,7 @@ test_that("results ok: DNA + time", {
     set.seed(1)
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
     config <- list(n_iter = 5000, sample_every = 50,
-                   init_tree = "star", find_import = TRUE,
+                   init_tree = "seqTrack", find_import = TRUE,
                    move_pi = FALSE)
 
     out <- outbreaker(data = data, config = config)
@@ -179,8 +179,8 @@ test_that("results ok: easy run, no missing cases, no import", {
     ## outbreaker, no missing cases ##
     ## analysis
     set.seed(1)
-    config <-  list(n_iter = 6e3, sample_every = 50,
-                    init_tree = "star", move_kappa = FALSE,
+    config <-  list(n_iter = 5e3, sample_every = 50,
+                    init_tree = "seqTrack", move_kappa = FALSE,
                     move_pi = FALSE, init_pi = 1,
                     find_import = FALSE)
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)

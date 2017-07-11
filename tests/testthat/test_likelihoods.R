@@ -197,7 +197,7 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
     exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu)
     expect_equal(cpp_ll_genetic(data, param),
                  exp_ll)
-    
+
 })
 
 
@@ -262,7 +262,7 @@ test_that("Test cpp_ll_timing", {
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -156.155925484468)
+    expect_equal(out, -135.36151006767)
 
     ## test that likelihoods add up
     expect_equal(out, cpp_ll_timing_sampling(data, param) +
@@ -295,7 +295,7 @@ test_that("Test cpp_ll_all", {
 
     ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -1109.2368672328)
+    expect_equal(out, -1088.442451816)
 
     ## test that likelihoods add up
     expect_equal(out_timing + out_genetic + out_reporting, out)

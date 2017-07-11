@@ -22,7 +22,7 @@ outbreaker_move <- function(moves, data, param_current,
                             likelihoods, priors) {
     ## get number of moves ##
     J <- length(moves)
-
+    
     ## RUN MCMC ##
     for (i in seq.int(2, config$n_iter, 1)) {
         ## move parameters / augmented data

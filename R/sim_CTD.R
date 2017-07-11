@@ -21,8 +21,15 @@
 #'
 #' @export
 
-sim_CTD <- function(tTree, eps, lambda) {
+sim_ctd <- function(tTree, eps, lambda) {
 
+    if(any(c(eps, lambda) < 0) | any(c(eps, lambda) > 1)) {
+        stop('eps and lambda must be probabilities')
+    }
+
+    id <- unique(c(tTree[,1], tTree[,2]))
+    id <- id[!is.na(id)]
+    
     ## Sort tTree by value or alphabetically, This ensures A:B and B:A are both
     ## recognised when querying the contacts dataframe for transmission pairs
     tTree <- tTree %>%
@@ -36,7 +43,6 @@ sim_CTD <- function(tTree, eps, lambda) {
     if(nrow(tTree) == 0) stop("No transmission observed")
 
     ## Create a dataframe of all potential contacts
-    id <- unique(c(tTree[,1], tTree[,2]))
     contacts <- as.data.frame(t(utils::combn(id, 2)))
 
     ## Create a column of logicals indicating whether a pair represents a
@@ -56,10 +62,10 @@ sim_CTD <- function(tTree, eps, lambda) {
 
     ## Sample transmission pairs with probability eps
     ## Sample non-transmission pairs with probability eps*lambda
-    CTD <- rbind(sampler(contacts[contacts$tPair,], eps),
+    ctd <- rbind(sampler(contacts[contacts$tPair,], eps),
                  sampler(contacts[!contacts$tPair,], eps*lambda))
 
-    rownames(CTD) <- NULL
+    rownames(ctd) <- NULL
 
-    return(CTD)
+    return(ctd)
 }

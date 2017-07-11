@@ -650,7 +650,7 @@ create_config <- function(..., data = NULL) {
         }
 
         ## disable moves for eps and lambda if no CTD is provided
-        if(is.null(data$C) || nrow(data$C) < 1) {
+        if(is.null(data$contacts) || nrow(data$contacts) < 1) {
             config$move_eps <- config$move_lambda <- FALSE
         }
     }

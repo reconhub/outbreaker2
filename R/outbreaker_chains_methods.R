@@ -132,12 +132,10 @@ plot.outbreaker_chains <- function(x, y = "post",
         out_dat[[3]][i]/sum(out_dat[[3]][ind])
     }
     out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
-    x.breaks <- 
     out <- ggplot(out_dat) +
-      geom_point(aes(x = factor(to), y = factor(from), size = frequency, color = factor(from))) +
+      geom_point(aes(x = factor(to), y = factor(from), size = frequency, color = from)) +
       scale_size_area() +
-      guides(colour = FALSE,
-        size = guide_legend(title = 'Frequency')) +
+      guides(colour = FALSE)
   }
 
   if (type=="t_inf") {
@@ -159,9 +157,12 @@ plot.outbreaker_chains <- function(x, y = "post",
     generations <- generations[to_keep]
     cases <- cases[to_keep]
     out_dat <- data.frame(xyTable(generations, cases))
-    out_dat[3] <- out_dat[3] / sum(out_dat[3])
+    get.prop <- function(i) {
+        ind <- which(out_dat$y == out_dat$y[i])
+        out_dat[[3]][i]/sum(out_dat[[3]][ind])
+    }
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
     names(out_dat) <- c("generations", "cases", "frequency")
-
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = cases, size = frequency, color = factor(cases))) +
       scale_size_area() +

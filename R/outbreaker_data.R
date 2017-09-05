@@ -157,7 +157,7 @@ outbreaker_data <- function(..., data = list(...)) {
 
         data$id_in_dna <- match(as.character(seq_len(data$N)), rownames(data$dna))
         if(all(is.na(data$id_in_dna))) {
-          warning("DNA sequence labels don't match case ids")
+          stop("DNA sequence labels don't match case ids")
         }
 
     } else {

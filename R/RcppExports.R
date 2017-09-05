@@ -2,114 +2,114 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 cpp_are_possible_ancestors <- function(t_inf, i) {
-    .Call(`_outbreaker2_cpp_are_possible_ancestors`, t_inf, i)
+    .Call(outbreaker2_cpp_are_possible_ancestors, t_inf, i)
 }
 
 cpp_sample1 <- function(x) {
-    .Call(`_outbreaker2_cpp_sample1`, x)
+    .Call(outbreaker2_cpp_sample1, x)
 }
 
 cpp_pick_possible_ancestor <- function(t_inf, i) {
-    .Call(`_outbreaker2_cpp_pick_possible_ancestor`, t_inf, i)
+    .Call(outbreaker2_cpp_pick_possible_ancestor, t_inf, i)
 }
 
 cpp_find_descendents <- function(alpha, i) {
-    .Call(`_outbreaker2_cpp_find_descendents`, alpha, i)
+    .Call(outbreaker2_cpp_find_descendents, alpha, i)
 }
 
 cpp_find_local_cases <- function(alpha, i) {
-    .Call(`_outbreaker2_cpp_find_local_cases`, alpha, i)
+    .Call(outbreaker2_cpp_find_local_cases, alpha, i)
 }
 
 cpp_swap_cases <- function(param, i) {
-    .Call(`_outbreaker2_cpp_swap_cases`, param, i)
+    .Call(outbreaker2_cpp_swap_cases, param, i)
 }
 
 cpp_get_n_mutations <- function(data, i, j) {
-    .Call(`_outbreaker2_cpp_get_n_mutations`, data, i, j)
+    .Call(outbreaker2_cpp_get_n_mutations, data, i, j)
 }
 
 cpp_lookup_sequenced_ancestor <- function(data, param, i) {
-    .Call(`_outbreaker2_cpp_lookup_sequenced_ancestor`, data, param, i)
+    .Call(outbreaker2_cpp_lookup_sequenced_ancestor, data, param, i)
 }
 
 cpp_ll_genetic <- function(data, param, i = NULL, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_ll_genetic`, data, param, i, custom_function)
+    .Call(outbreaker2_cpp_ll_genetic, data, param, i, custom_function)
 }
 
 cpp_ll_timing_infections <- function(data, param, i = NULL, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_ll_timing_infections`, data, param, i, custom_function)
+    .Call(outbreaker2_cpp_ll_timing_infections, data, param, i, custom_function)
 }
 
 cpp_ll_timing_sampling <- function(data, param, i = NULL, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_ll_timing_sampling`, data, param, i, custom_function)
+    .Call(outbreaker2_cpp_ll_timing_sampling, data, param, i, custom_function)
 }
 
 cpp_ll_reporting <- function(data, param, i = NULL, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_ll_reporting`, data, param, i, custom_function)
+    .Call(outbreaker2_cpp_ll_reporting, data, param, i, custom_function)
 }
 
 cpp_ll_contact <- function(data, param, i = NULL, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_ll_contact`, data, param, i, custom_function)
+    .Call(outbreaker2_cpp_ll_contact, data, param, i, custom_function)
 }
 
 cpp_ll_timing <- function(data, param, i = NULL, custom_functions = NULL) {
-    .Call(`_outbreaker2_cpp_ll_timing`, data, param, i, custom_functions)
+    .Call(outbreaker2_cpp_ll_timing, data, param, i, custom_functions)
 }
 
 cpp_ll_all <- function(data, param, i = NULL, custom_functions = NULL) {
-    .Call(`_outbreaker2_cpp_ll_all`, data, param, i, custom_functions)
+    .Call(outbreaker2_cpp_ll_all, data, param, i, custom_functions)
 }
 
 cpp_move_mu <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
-    .Call(`_outbreaker2_cpp_move_mu`, param, data, config, custom_ll, custom_prior)
+    .Call(outbreaker2_cpp_move_mu, param, data, config, custom_ll, custom_prior)
 }
 
 cpp_move_pi <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
-    .Call(`_outbreaker2_cpp_move_pi`, param, data, config, custom_ll, custom_prior)
+    .Call(outbreaker2_cpp_move_pi, param, data, config, custom_ll, custom_prior)
 }
 
 cpp_move_eps <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
-    .Call(`_outbreaker2_cpp_move_eps`, param, data, config, custom_ll, custom_prior)
+    .Call(outbreaker2_cpp_move_eps, param, data, config, custom_ll, custom_prior)
 }
 
 cpp_move_lambda <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
-    .Call(`_outbreaker2_cpp_move_lambda`, param, data, config, custom_ll, custom_prior)
+    .Call(outbreaker2_cpp_move_lambda, param, data, config, custom_ll, custom_prior)
 }
 
 cpp_move_t_inf <- function(param, data, list_custom_ll = NULL) {
-    .Call(`_outbreaker2_cpp_move_t_inf`, param, data, list_custom_ll)
+    .Call(outbreaker2_cpp_move_t_inf, param, data, list_custom_ll)
 }
 
 cpp_move_alpha <- function(param, data, list_custom_ll = NULL) {
-    .Call(`_outbreaker2_cpp_move_alpha`, param, data, list_custom_ll)
+    .Call(outbreaker2_cpp_move_alpha, param, data, list_custom_ll)
 }
 
 cpp_move_swap_cases <- function(param, data, list_custom_ll = NULL) {
-    .Call(`_outbreaker2_cpp_move_swap_cases`, param, data, list_custom_ll)
+    .Call(outbreaker2_cpp_move_swap_cases, param, data, list_custom_ll)
 }
 
 cpp_move_kappa <- function(param, data, config, list_custom_ll = NULL) {
-    .Call(`_outbreaker2_cpp_move_kappa`, param, data, config, list_custom_ll)
+    .Call(outbreaker2_cpp_move_kappa, param, data, config, list_custom_ll)
 }
 
 cpp_prior_mu <- function(param, config, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_prior_mu`, param, config, custom_function)
+    .Call(outbreaker2_cpp_prior_mu, param, config, custom_function)
 }
 
 cpp_prior_pi <- function(param, config, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_prior_pi`, param, config, custom_function)
+    .Call(outbreaker2_cpp_prior_pi, param, config, custom_function)
 }
 
 cpp_prior_eps <- function(param, config, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_prior_eps`, param, config, custom_function)
+    .Call(outbreaker2_cpp_prior_eps, param, config, custom_function)
 }
 
 cpp_prior_lambda <- function(param, config, custom_function = NULL) {
-    .Call(`_outbreaker2_cpp_prior_lambda`, param, config, custom_function)
+    .Call(outbreaker2_cpp_prior_lambda, param, config, custom_function)
 }
 
 cpp_prior_all <- function(param, config, custom_functions = NULL) {
-    .Call(`_outbreaker2_cpp_prior_all`, param, config, custom_functions)
+    .Call(outbreaker2_cpp_prior_all, param, config, custom_functions)
 }
 

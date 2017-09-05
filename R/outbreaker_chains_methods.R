@@ -133,7 +133,7 @@ plot.outbreaker_chains <- function(x, y = "post",
     }
     out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
     out <- ggplot(out_dat) +
-      geom_point(aes(x = factor(to), y = factor(from), size = frequency, color = from)) +
+      geom_point(aes(x = to, y = from, size = frequency, color = factor(from))) +
       scale_size_area() +
       guides(colour = FALSE)
   }

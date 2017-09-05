@@ -28,5 +28,11 @@ test_that("test: data are processed fine", {
     expect_error(outbreaker_data(dates = 1, w_dens = c(0,1), f_dens = c(0,-1)),
                  "f_dens has negative entries")
 
+    wrong_lab_dna <- x$dna
+    rownames(wrong_lab_dna) <- paste0("host_", seq_len(nrow(wrong_lab_dna)))
+    expect_error(outbreaker_data(dates = x$onset, dna = wrong_lab_dna, w_dens = x$w),
+                 "DNA sequence labels don't match case ids")
+
+
 })
 

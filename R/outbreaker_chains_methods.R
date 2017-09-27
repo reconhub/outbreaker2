@@ -123,18 +123,19 @@ plot.outbreaker_chains <- function(x, y = "post",
     colnames(alpha) <- seq_len(ncol(alpha))
     from <- as.vector(alpha)
     to <- as.vector(col(alpha))
-    to_keep <- !is.na(from)
-    from <- from[to_keep]
-    to <- to[to_keep]
+    from[is.na(from)] <- 0
     out_dat <- data.frame(xyTable(from,to))
-    out_dat[3] <- out_dat[3] / sum(out_dat[3])
     names(out_dat) <- c("from", "to", "frequency")
-
+    ## Calculate proportion among ancestries
+    get.prop <- function(i) {
+        ind <- which(out_dat$to == out_dat$to[i])
+        out_dat[[3]][i]/sum(out_dat[[3]][ind])
+    }
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
     out <- ggplot(out_dat) +
       geom_point(aes(x = to, y = from, size = frequency, color = factor(from))) +
       scale_size_area() +
-      guides(colour = FALSE) +
-      labs(title="ancestries")
+      guides(colour = FALSE)
   }
 
   if (type=="t_inf") {
@@ -156,9 +157,12 @@ plot.outbreaker_chains <- function(x, y = "post",
     generations <- generations[to_keep]
     cases <- cases[to_keep]
     out_dat <- data.frame(xyTable(generations, cases))
-    out_dat[3] <- out_dat[3] / sum(out_dat[3])
+    get.prop <- function(i) {
+        ind <- which(out_dat$y == out_dat$y[i])
+        out_dat[[3]][i]/sum(out_dat[[3]][ind])
+    }
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
     names(out_dat) <- c("generations", "cases", "frequency")
-
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = cases, size = frequency, color = factor(cases))) +
       scale_size_area() +

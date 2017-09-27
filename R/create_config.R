@@ -587,6 +587,16 @@ create_config <- function(..., data = NULL) {
                 config$init_tree <- "star"
             }
 
+            ## check initial tree
+            if (config$init_tree=="seqTrack" &&
+                nrow(data$dna) != data$N) {
+              msg <- sprintf(paste("Can't use seqTrack initialization when", 
+                                   "numbers of sequences and cases differ",
+                                   "(%d vs %d)"), nrow(data$dna), data$N)
+              message(msg)
+              config$init_tree <- "star"
+            }
+              
             ## seqTrack init
             if (config$init_tree=="seqTrack") {
                 D_temp <- data$D

@@ -1,5 +1,5 @@
 
-outbreaker2 1.0.0 (2017-02-15)
+outbreaker2 1.0.0 (2017-11-22)
 ==================
 
 ### First version of outbreaker2!

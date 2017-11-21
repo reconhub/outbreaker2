@@ -9,21 +9,13 @@
 *outbreaker2: a framework for reconstructing disease outbreaks*
 ---------------------------------------------------------------
 
-*outbreaker2* provides a Bayesian framework for integrating epidemiological and
- genetic data to reconstruct transmission trees of densely sampled outbreaks. It
- re-implements, generalises and replaces the model of
- [*outbreaker*](https://github.com/thibautjombart/outbreaker). It uses a modular
- approach which enables fine customisation of priors, likelihoods and parameter
- movements (see [customisation
+Welcome to the development page of *outbreaker2*, a Bayesian framework
+ for integrating epidemiological and genetic data to reconstruct transmission
+ trees of densely sampled outbreaks. It re-implements, generalises and replaces
+ the model of [*outbreaker*](https://github.com/thibautjombart/outbreaker), and uses
+ a modular approach which enables fine customisation of priors, likelihoods
+ and parameter movements (see [customisation
  vignette](http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html)).
-
-
-<br>
-
-This project is currently in testing stage. Please contact [the
-authors](mailto:thibautjombart@gmail.com) if you plan on using it.
-
-
 
 
 <br>

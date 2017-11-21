@@ -18,8 +18,6 @@
 #'     of contact between a non-transmisison pair.
 #'
 #' @author Finlay Campbell (\email{f.campbell15@@imperial.ac.uk})
-#'
-#' @export
 
 sim_ctd <- function(tTree, eps, lambda) {
 

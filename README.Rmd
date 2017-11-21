@@ -9,21 +9,13 @@
 *outbreaker2: a framework for reconstructing disease outbreaks*
 ---------------------------------------------------------------
 
-*outbreaker2* provides a Bayesian framework for integrating epidemiological and
- genetic data to reconstruct transmission trees of densely sampled outbreaks. It
- re-implements, generalises and replaces the model of
- [*outbreaker*](https://github.com/thibautjombart/outbreaker). It uses a modular
- approach which enables fine customisation of priors, likelihoods and parameter
- movements (see [customisation
+Welcome to the project page of *outbreaker2*, a Bayesian framework
+ for integrating epidemiological and genetic data to reconstruct transmission
+ trees of densely sampled outbreaks. It re-implements, generalises and replaces
+ the model of [*outbreaker*](https://github.com/thibautjombart/outbreaker), and uses
+ a modular approach which enables fine customisation of priors, likelihoods
+ and parameter movements (see [customisation
  vignette](http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html)).
-
-
-<br>
-
-This project is currently in testing stage. Please contact [the
-authors](mailto:thibautjombart@gmail.com) if you plan on using it.
-
-
 
 
 <br>
@@ -31,16 +23,21 @@ authors](mailto:thibautjombart@gmail.com) if you plan on using it.
 Installation
 -------------
 
+To install the stable version from CRAN:
+```{r, eval = FALSE}
+install.packages("outbreaker2")
+```
+
 To install the development version from github (requires Rtools on windows and
 GSL headers on all platforms):
 
 ```{r, eval = FALSE}
-devtools::install_github("thibautjombart/outbreaker2")
+devtools::install_github("reconhub/outbreaker2")
 ```
 
 To add local copies of the vignettes, you will need to specify:
 ```{r, eval = FALSE}
-devtools::install_github("thibautjombart/outbreaker2", build_vignettes = TRUE)
+devtools::install_github("reconhub/outbreaker2", build_vignettes = TRUE)
 ```
 
 Then, to load the package, use:

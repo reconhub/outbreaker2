@@ -9,7 +9,7 @@
 *outbreaker2: a framework for reconstructing disease outbreaks*
 ---------------------------------------------------------------
 
-Welcome to the development page of *outbreaker2*, a Bayesian framework
+Welcome to the project page of *outbreaker2*, a Bayesian framework
  for integrating epidemiological and genetic data to reconstruct transmission
  trees of densely sampled outbreaks. It re-implements, generalises and replaces
  the model of [*outbreaker*](https://github.com/thibautjombart/outbreaker), and uses
@@ -23,18 +23,24 @@ Welcome to the development page of *outbreaker2*, a Bayesian framework
 Installation
 -------------
 
+To install the stable version from CRAN:
+
+```r
+install.packages("outbreaker2")
+```
+
 To install the development version from github (requires Rtools on windows and
 GSL headers on all platforms):
 
 
 ```r
-devtools::install_github("thibautjombart/outbreaker2")
+devtools::install_github("reconhub/outbreaker2")
 ```
 
 To add local copies of the vignettes, you will need to specify:
 
 ```r
-devtools::install_github("thibautjombart/outbreaker2", build_vignettes = TRUE)
+devtools::install_github("reconhub/outbreaker2", build_vignettes = TRUE)
 ```
 
 Then, to load the package, use:

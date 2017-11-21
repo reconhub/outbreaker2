@@ -519,6 +519,7 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(collection dates): see function cpp_ll_timing_sampling
 // - p(genetic diversity): see function cpp_ll_genetic
 // - p(missing cases): see function cpp_ll_reporting
+// - p(contact): see function cpp_ll_contact 
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
 		  Rcpp::RObject custom_functions) {

@@ -423,6 +423,8 @@ Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data,
       // which case we restore the previous ('old') value
       if (p_accept < unif_rand()) { // reject new values
 	new_alpha[i] = alpha[i];
+      } else {
+	alpha[i] = new_alpha[i];
       }
     }
   }

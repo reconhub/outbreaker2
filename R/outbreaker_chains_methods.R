@@ -76,6 +76,8 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' geom_violin aes aes_string coord_flip labs guides scale_size_area
 #'
 #' @importFrom grDevices xyTable
+#' @importFrom graphics plot
+#'
 plot.outbreaker_chains <- function(x, y = "post",
                                    type = c("trace", "hist", "density",
                                             "alpha", "t_inf", "kappa", "network"),

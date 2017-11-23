@@ -41,7 +41,7 @@
 
 
 
-## We use a beta prior for the non-transmission contact rate (which contrains it
+## We use a beta prior for the non-infectious contact rate (which contrains it
 ## to lie between 0 and 1); the 2 shape parameters, which do not change in the
 ## MCMC, are enclosed in the returned function.
 

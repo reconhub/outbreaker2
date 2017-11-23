@@ -1,6 +1,6 @@
-#' Simulate contact tracing data from a transmission tree.
+#' Simulate contact data from a transmission tree
 #'
-#' This function simulates contact tracing data from a transmission tree. This
+#' This function simulates contact data from a transmission tree. The
 #' model assumes that all transmission pairs have experienced contact, and that
 #' there is no false-positive reporting of contacts. The probability of contact
 #' occuring between a non-transmision pair is given by the parameter lambda. The
@@ -10,12 +10,12 @@
 #' @importFrom magrittr %>%
 #'
 #' @param tTree a dataframe or matrix of two columns, with each row providing
-#'     the ids (numerical or as characters) of a transmission pairs
+#'     the ids (numerical or as characters) of a transmission pair
 #'
 #' @param eps the contact reporting coverage, defined as the probability of
-#'     reporting a contact between a transmission pair.
+#'     reporting a contact (transmission pair or not)
 #'
-#' @param lambda the non-transmission contact rate, defined as the probability
+#' @param lambda the non-infectious contact rate, defined as the probability
 #'     of contact between a non-transmission pair.
 #'
 #' @author Finlay Campbell (\email{f.campbell15@@imperial.ac.uk})

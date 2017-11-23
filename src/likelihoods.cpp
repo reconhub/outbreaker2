@@ -405,7 +405,7 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
 //
 // with:
 // 'eps' is the contact reporting coverage
-// 'lambda' is the non-transmission contact rate
+// 'lambda' is the non-infectious contact rate
 // 'true_pos' is the number of contacts between transmission pairs
 // 'false_pos' is the number of contact between non-transmission pairs
 // 'false_neg' is the number of transmission pairs without contact

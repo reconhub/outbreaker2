@@ -62,7 +62,7 @@ distribution implemented in \code{outbreaker:::cpp_prior_eps}. New prior
 functions should use \code{x$eps} to refer to the current value of \code{eps},
 assuming their argument is called \code{x}.
 
-\item \code{lambda} (non-transmission contact rate): default function is a
+\item \code{lambda} (non-infectious contact rate): default function is a
 beta distribution implemented in \code{outbreaker:::cpp_prior_lambda}. New
 prior functions should use \code{x$lambda} to refer to the current value of
 \code{lambda}, assuming their argument is called \code{x}.

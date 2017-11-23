@@ -37,7 +37,7 @@ movement they implement. Values currently available are:
 \item \code{eps}: movement of the contact reporting coverage; by default, the
 function \code{cpp_move_eps} is used.
 
-\item \code{lambda}: the movement of the non-transmission contact rate; the
+\item \code{lambda}: the movement of the non-infectious contact rate; the
 function \code{cpp_move_lambda} is used.
 
 \item \code{alpha}: movement of the transmission tree, by randomly proposing

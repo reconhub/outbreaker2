@@ -10,9 +10,7 @@
 #' the user. This the dedicated vignette on this topic
 #' \code{vignette("outbreaker2_custom")}.\cr
 #'
-#' This package is in testing state. Please email the authors if you plan on
-#' using it.
-#'
+#' 
 #'
 #' @export
 #'

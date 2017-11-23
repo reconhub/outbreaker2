@@ -38,7 +38,7 @@
 #'
 #' \item{init_eps}{initial value for the contact reporting coverage}
 #'
-#' \item{init_lambda}{initial value for the non-transmission contact rate}
+#' \item{init_lambda}{initial value for the non-infectious contact rate}
 #'
 #' \item{n_iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
@@ -62,7 +62,7 @@
 #' should be estimated ('moved' in the MCMC), or not at all, defaulting to
 #' TRUE.}
 #'
-#' \item{move_lambda}{a logical indicating wheter the non-transmission contact
+#' \item{move_lambda}{a logical indicating whether the non-infectious contact
 #' rate should be estimated ('moved' in the MCMC), or not at all, defaulting to
 #' TRUE.}
 #'
@@ -88,7 +88,7 @@
 #' contact reporting coverage}
 #'
 #' \item{sd_lambda}{the standard deviation for the Normal proposal for the
-#' non-transmission contact rate}
+#' non-infectious contact rate}
 #'
 #' \item{prop_alpha_move}{the proportion of ancestries to move at each iteration
 #' of the MCMC}
@@ -118,7 +118,7 @@
 #' parameter of the beta prior for the contact reporting coverage 'eps'}
 #'
 #' \item{prior_lambda}{a numeric vector of length 2 indicating the first and
-#' second parameter of the beta prior for the non-transmission contact rate
+#' second parameter of the beta prior for the non-infectious contact rate
 #' 'lambda'}
 #'
 #' }

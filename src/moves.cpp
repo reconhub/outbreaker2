@@ -226,7 +226,7 @@ Rcpp::List cpp_move_eps(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
 // ---------------------------
 
-// movement of the non-transmission contact rate 'eps' is done using a dumb
+// movement of the non-infectious contact rate 'eps' is done using a dumb
 // normal proposal. This is satisfying for now - we only reject a few
 // non-sensical values outside the range [0;1]. The SD of the proposal is
 // provided through 'config'; this seems fine as the range of real values will

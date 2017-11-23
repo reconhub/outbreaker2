@@ -34,9 +34,6 @@ The emphasis of 'outbreaker2' is on modularity, which enables customisation
 of priors, likelihoods and even movements of parameters and augmented data by
 the user. This the dedicated vignette on this topic
 \code{vignette("outbreaker2_custom")}.\cr
-
-This package is in testing state. Please email the authors if you plan on
-using it.
 }
 \examples{
 

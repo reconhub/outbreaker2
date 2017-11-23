@@ -29,9 +29,9 @@ And where 'component' can be:
 
 \item 'pi': (parameter) reporting probability
 
-\item 'lambda': (parameter) *Finlay to complete*
+\item 'lambda': (parameter) non-infectious contact rate
 
-\item 'eps': (parameter) *Finlay to complete*
+\item 'eps': (parameter) contact reporting coverage
 
 \item 'alpha': (augmented data) ancestries of the cases
 

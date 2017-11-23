@@ -1,10 +1,11 @@
 #' Simulate contact tracing data from a transmission tree.
 #'
-#' This function simulates contact tracing data from a transmission tree. The
-#' probability of a contact occuring between a transmision pair is assumed to be
-#' 1. The probability of contact occuring between a non-transmision pair is
-#' given by the parameter lambda. The probability of reporting a contact
-#' (transmission pair or not) is given by the parameters eps.
+#' This function simulates contact tracing data from a transmission tree. This
+#' model assumes that all transmission pairs have experienced contact, and that
+#' there is no false-positive reporting of contacts. The probability of contact
+#' occuring between a non-transmision pair is given by the parameter lambda. The
+#' probability of reporting a contact (transmission pair or not) is given by the
+#' parameters eps.
 #'
 #' @importFrom magrittr %>%
 #'
@@ -15,7 +16,7 @@
 #'     reporting a contact between a transmission pair.
 #'
 #' @param lambda the non-transmission contact rate, defined as the probability
-#'     of contact between a non-transmisison pair.
+#'     of contact between a non-transmission pair.
 #'
 #' @author Finlay Campbell (\email{f.campbell15@@imperial.ac.uk})
 

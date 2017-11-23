@@ -60,9 +60,11 @@
 #'  \item \code{pi}: A numeric vector of length \code{size}, storing values of
 #' the reporting probability.
 #'
-#'  \item \code{eps}: Finlay - complete
+#'  \item \code{eps}: A numeric vector of length \code{size}, storing values of
+#' the contact reporting coverage.
 #'
-#'  \item \code{lambda}: Finlay - complete
+#'  \item \code{lambda}: A numeric vector of length \code{size}, storing values of
+#' the non-infectious contact rate.
 #'
 #'  \item \code{counter}: A counter used to keep track of the current iteration
 #' of the MCMC (used internally).
@@ -86,9 +88,9 @@
 #'
 #'  \item \code{pi}: The value of the reporting probability.
 #'
-#'  \item \code{eps}: Finlay - complete
+#'  \item \code{eps}: The value of the contact reporting coverage.
 #'
-#'  \item \code{lambda}: Finlay - complete
+#'  \item \code{lambda}: The value of the non-infectious contact rate.
 #'
 #' }
 #'

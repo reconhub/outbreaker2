@@ -127,7 +127,7 @@
 #'     \code{outbreaker_data}; if provided, this allows for further checks of
 #'     the outbreaker setings.
 #'
-#' @seealso \code{\link{outbreaker_data}} a to check and process data for outbreaker
+#' @seealso \code{\link{outbreaker_data}} to check and process data for outbreaker
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'

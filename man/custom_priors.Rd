@@ -108,6 +108,9 @@ priors$pi(list(pi=.2))
 priors$pi(list(pi=.49))
 
 }
+\seealso{
+See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors}{customization vignette} for detailed examples on how to customize priors.
+}
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com}).
 }

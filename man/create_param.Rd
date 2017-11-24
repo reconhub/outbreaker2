@@ -3,7 +3,7 @@
 \name{create_param}
 \alias{create_param}
 \alias{outbreaker_store}
-\title{Initianilizes outputs for outbreaker}
+\title{Initializes outputs for outbreaker}
 \usage{
 create_param(data = outbreaker_data(), config = create_config())
 }
@@ -93,6 +93,19 @@ number of generations before the last sampled ancestor for each case.
 }
 \description{
 This function creates initial outputs and parameter states for outbreaker.
+}
+\examples{
+
+## load data
+x <- fake_outbreak
+data <- outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
+
+## modify config settings
+config <- create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+
+## create param object
+param <- create_param(data = data, config = config)
+
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com})

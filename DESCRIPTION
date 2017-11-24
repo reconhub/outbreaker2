@@ -1,6 +1,6 @@
 Package: outbreaker2
 Version: 1.0-0
-Date: 2029-09-11
+Date: 2017-11-24
 Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
 Authors@R: c(person("Thibaut", "Jombart",
@@ -14,7 +14,8 @@ Authors@R: c(person("Thibaut", "Jombart",
 		    role = c("aut")))
 Maintainer: Finlay Campbell <f.campbell15@imperial.ac.uk>
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
-    and genetic information.
+    and genetic information. Jombart T, Cori A, Didelot X, Cauchemez S, Fraser
+    C and Ferguson N. 2014. <doi:10.1371/journal.pcbi.1003457>.
 License: MIT + file LICENSE
 Suggests:
     coda,

@@ -35,9 +35,6 @@ functions
 functions
 
 }
-
-This package is in testing state. Please email the authors if you plan on
-using it.
 }
 \author{
 Thibaut Jombart \email{thibautjombart@gmail.com}

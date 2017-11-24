@@ -24,6 +24,19 @@ occuring between a non-transmision pair is given by the parameter lambda. The
 probability of reporting a contact (transmission pair or not) is given by the
 parameters eps.
 }
+\examples{
+
+## load data
+x <- fake_outbreak
+tTree <- data.frame(from = x$ances, to = seq_along(x$ances))
+
+## simulate contact data with coverage of 80\% and 10\% probability of
+## contact between non-transmission pairs
+ctd <- outbreaker2:::sim_ctd(tTree, eps = 0.8, lambda = 0.1)
+
+## inspect contact data
+head(ctd)
+}
 \author{
 Finlay Campbell (\email{f.campbell15@imperial.ac.uk})
 }

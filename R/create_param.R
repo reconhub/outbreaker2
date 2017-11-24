@@ -1,4 +1,4 @@
-#' Initianilizes outputs for outbreaker
+#' Initializes outputs for outbreaker
 #'
 #' This function creates initial outputs and parameter states for outbreaker.
 #'
@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @aliases outbreaker_store
-#' 
+#'
 #' @aliases outbreaker_param
 #'
 #' @return
@@ -26,7 +26,7 @@
 #'
 #' \code{outbreaker_store} class content:
 #' \itemize{
-#' 
+#'
 #'  \item \code{size}: The length of the list, corresponding to the number of
 #' samples saved from the MCMC.
 #'
@@ -49,7 +49,7 @@
 #'  \item \code{t_inf}: A list of length \code{size}. Each item of the list is
 #' an integer vector of length \code{data$N}, storing dates of infections for
 #' each case.
-#' 
+#'
 #'  \item \code{mu}: A numeric vector of length \code{size}, storing values of
 #' the mutation rate.
 #'
@@ -71,7 +71,7 @@
 #'
 #' }
 #'
-#' 
+#'
 #' \code{outbreaker_param} class content:
 #' \itemize{
 #'
@@ -94,7 +94,18 @@
 #'
 #' }
 #'
-#' 
+#' @examples
+#'
+#' ## load data
+#' x <- fake_outbreak
+#' data <- outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
+#'
+#' ## modify config settings
+#' config <- create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
+#'
+#' ## create param object
+#' param <- create_param(data = data, config = config)
+#'
 create_param <- function(data = outbreaker_data(),
                          config = create_config()) {
     ## CREATE EMPTY OUTPUT VECTORS ##
@@ -130,7 +141,7 @@ create_param <- function(data = outbreaker_data(),
                 )
     class(store) <- c("outbreaker_store", "list")
 
-    
+
     current  <- list(
         alpha = current_alpha, t_inf = current_t_inf, mu = current_mu,
         kappa = current_kappa, pi = current_pi, eps = current_eps,

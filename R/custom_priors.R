@@ -61,6 +61,8 @@
 #'     set to \code{NULL} will be ignored and default functions will be used
 #'     instead.
 #'
+#' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors}{customization vignette} for detailed examples on how to customize priors.
+#' 
 #' @examples
 #'
 #' ## BASIC CONFIGURATION

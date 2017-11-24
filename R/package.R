@@ -28,12 +28,8 @@
 #'
 #' \item \code{\link{custom_moves}}: function to create default and customise movement
 #' functions
-#' 
-#' }
 #'
-#' 
-#' This package is in testing state. Please email the authors if you plan on
-#' using it.
+#' }
 #'
 #'
 #' @author Thibaut Jombart \email{thibautjombart@@gmail.com}

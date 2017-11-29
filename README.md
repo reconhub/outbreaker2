@@ -5,7 +5,6 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
 
 
-
 *outbreaker2: a framework for reconstructing disease outbreaks*
 ---------------------------------------------------------------
 
@@ -58,7 +57,7 @@ Documentation
 -------------
 
 *outbreaker2* is fully documented on a [dedicated
- website](http://www.repidemicsconsortium.org/outbreaker2/). 
+ website](http://www.repidemicsconsortium.org/outbreaker2/).
 
 It also comes with the following vignettes:
 

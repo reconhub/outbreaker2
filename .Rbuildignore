@@ -6,3 +6,4 @@ vignettes/cache
 docs/
 README.Rmd
 CONDUCT.md
+^logo/*

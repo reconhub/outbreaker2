@@ -77,15 +77,15 @@ Contributors
 - [Rich Fitzjohn](https://github.com/richfitz)
 
 
-See details of contributions on: <br>
-https://github.com/reconhub/outbreaker2/graphs/contributors
+See details of contributions
+[here](https://github.com/reconhub/outbreaker2/graphs/contributors).
 
-
+<br>
 
 Contributions are welcome via **pull requests**.
 
 Please note that this project is released with a [Contributor Code of
-Conduct](CONDUCT.md). By participating in this project you agree to abide by its
-terms.
+Conduct](https://github.com/reconhub/outbreaker2/blob/master/CONDUCT.md). By
+participating in this project you agree to abide by its terms.
 
-**Maintainer:** Thibaut Jombart (thibautjombart@gmail.com)
+**Maintainer:** Finlay Campbell (f.campbell15@imperial.ac.uk)

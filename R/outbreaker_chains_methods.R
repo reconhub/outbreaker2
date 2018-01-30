@@ -186,7 +186,7 @@ plot.outbreaker_chains <- function(x, y = "post",
         ind <- which(out_dat$y == out_dat$y[i])
         out_dat[[3]][i]/sum(out_dat[[3]][ind])
     }
-    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
+    out_dat[[3]] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
     names(out_dat) <- c("generations", "cases", "frequency")
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = cases, size = frequency, color = factor(cases))) +

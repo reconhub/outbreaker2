@@ -11,7 +11,10 @@ Authors@R: c(person("Thibaut", "Jombart",
 		    role = c("aut", "cre")),
 	     person("Rich", "Fitzjohn",
 	            email = "r.fitzjohn@imperial.ac.uk",
-		    role = c("aut")))
+		    role = c("aut")),
+		   person("Gerry", "Tonkin-Hill",
+	            email = "gqt20@cam.ac.uk",
+		    role = c("ctb")))
 Maintainer: Finlay Campbell <f.campbell15@imperial.ac.uk>
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information. Jombart T, Cori A, Didelot X, Cauchemez S, Fraser

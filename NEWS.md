@@ -1,3 +1,15 @@
+outbreaker2 1.0.1 (2018-03-02)
+==================
+
+### Minor bug fixes
+
+* Fixed convolution operator to keep values in log space with high kappa (thanks to [@gtonkinhill](https://github.com/gtonkinhill/)
+* C++ garbage collection fix
+
+
+
+<br>
+<br>
 
 outbreaker2 1.0.0 (2017-11-24)
 ==================

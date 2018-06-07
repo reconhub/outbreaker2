@@ -464,11 +464,21 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
     false_neg = N - imports - unobsv_case - true_pos;
     true_neg = C_combn - true_pos - false_pos - false_neg;
 
-    return log(eps) * (double) true_pos +
-      log(eps*lambda) * (double) false_pos +
-      log(1 - eps) * (double) false_neg +
-      log(1 - eps*lambda) * (double) true_neg;
-
+    // deal with special case when lambda == 0, to avoid log(0)
+    if(lambda == 0.0) {
+      if(false_pos > 0) {
+	return R_NegInf;
+      } else {
+	log(eps) * (double) true_pos +
+	  log(1 - eps) * (double) false_neg +
+	  log(1 - eps*lambda) * (double) true_neg;
+      }
+    } else {
+      return log(eps) * (double) true_pos +
+	log(eps*lambda) * (double) false_pos +
+	log(1 - eps) * (double) false_neg +
+	log(1 - eps*lambda) * (double) true_neg;
+    }
   } else { //use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 

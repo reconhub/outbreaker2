@@ -152,18 +152,33 @@ plot.outbreaker_chains <- function(x, y = "post",
     out_dat <- data.frame(xyTable(from,to))
     names(out_dat) <- c("from", "to", "frequency")
     ## Calculate proportion among ancestries
-    get.prop <- function(i) {
+    get_prop <- function(i) {
         ind <- which(out_dat$to == out_dat$to[i])
         out_dat[[3]][i]/sum(out_dat[[3]][ind])
     }
-    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
+    ## Return labels, if provided
+    get_alpha_lab <- function(axis, labels = NULL) {
+      if(is.null(labels)) labels <- levels(out_dat$to)
+      if(axis == 'x') return(labels) else
+      if(axis == 'y') return(c("Import", labels))
+    }
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get_prop, 1)
+    out_dat$from <- factor(out_dat$from, levels = c(0, sort(unique(out_dat$to))))
+    out_dat$to <- factor(out_dat$to, levels = sort(unique(out_dat$to)))
     out <- ggplot(out_dat) +
-      geom_point(aes(x = to, y = from, size = frequency, color = factor(from))) +
+      geom_point(aes(x = to, y = from, size = frequency, color = from)) +
+      scale_x_discrete(drop = FALSE, labels = get_alpha_lab(axis = 'x', ...)) +
+      scale_y_discrete(drop = FALSE, labels = get_alpha_lab(axis = 'y', ...)) +
+      labs(x = 'To', y = 'From', size = 'Posterior\nfrequency') +
       scale_size_area() +
       guides(colour = FALSE)
   }
 
   if (type=="t_inf") {
+    get_t_inf_lab <- function(labels = NULL) {
+      if(is.null(labels)) labels <- 1:N
+      return(labels)
+    }
     t_inf <- as.matrix(x[,grep("t_inf", names(x))])
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
@@ -171,10 +186,15 @@ plot.outbreaker_chains <- function(x, y = "post",
     out <- ggplot(out_dat) +
       geom_violin(aes(x = cases, y = dates, fill = cases)) +
       coord_flip() + guides(fill = FALSE) +
-      labs(title="infection times")
+      labs(y = 'Infection time', x = NULL) +
+      scale_x_discrete(labels = get_t_inf_lab(...))
   }
 
   if (type=="kappa") {
+    get_kappa_lab <- function(labels = NULL) {
+      if(is.null(labels)) labels <- 1:N
+      return(labels)
+    }
     kappa <- as.matrix(x[,grep("kappa", names(x))])
     generations <- as.vector(kappa)
     cases <- as.vector(col(kappa))
@@ -182,17 +202,20 @@ plot.outbreaker_chains <- function(x, y = "post",
     generations <- generations[to_keep]
     cases <- cases[to_keep]
     out_dat <- data.frame(xyTable(generations, cases))
-    get.prop <- function(i) {
+    get_prop <- function(i) {
         ind <- which(out_dat$y == out_dat$y[i])
         out_dat[[3]][i]/sum(out_dat[[3]][ind])
     }
-    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get_prop, 1)
     names(out_dat) <- c("generations", "cases", "frequency")
     out <- ggplot(out_dat) +
-      geom_point(aes(x = generations, y = cases, size = frequency, color = factor(cases))) +
+      geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
+      scale_y_discrete(labels = get_t_inf_lab(...)) +
       guides(colour = FALSE) +
-      labs(title="number of generations between cases", x="number of generations to ancestor")
+      labs(title = "number of generations between cases",
+           x = "number of generations to ancestor",
+           y = NULL)
   }
 
   if (type=="network") {
@@ -221,6 +244,10 @@ plot.outbreaker_chains <- function(x, y = "post",
     find_nodes_size <- function(i) {
       sum(from==i, na.rm = TRUE) / nrow(alpha)
     }
+    get_node_lab <- function(labels = NULL) {
+      if(is.null(labels)) labels <- 1:N
+      return(labels)
+    }
     nodes <- data.frame(id = seq_len(ncol(alpha)),
                         label = seq_len(ncol(alpha)))
     nodes$value <- vapply(nodes$id,
@@ -228,6 +255,7 @@ plot.outbreaker_chains <- function(x, y = "post",
                           numeric(1))
     nodes$color <- case_cols
     nodes$shape <- rep("dot", N)
+    nodes$label <- get_node_lab(...)
 
     smry <- summary(x, burnin = burnin)
     is_imported <- is.na(smry$tree$from)

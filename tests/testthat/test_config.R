@@ -28,7 +28,7 @@ test_that("test: settings are processed fine", {
     expect_error(create_config(uknownarg = 123),
                  "Additional invalid options: uknownarg")
     expect_error(create_config(init_tree="wrongtreeinit"),
-                 "should be one of", all = FALSE)
+                 "should be one of")
     expect_error(create_config(init_mu=-5),
                  "init_mu is negative")
     expect_error(create_config(n_iter = 0),

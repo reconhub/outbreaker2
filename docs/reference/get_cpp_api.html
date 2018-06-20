@@ -23,14 +23,17 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -49,10 +52,34 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/customisation.html">Using custom priors, likelihood, or movements in outbreaker2</a>
+    </li>
+    <li>
+      <a href="../articles/introduction.html">Introduction to outbreaker2</a>
+    </li>
+    <li>
+      <a href="../articles/overview.html">outbreaker2: package overview</a>
+    </li>
+    <li>
+      <a href="../articles/Rcpp_API.html">outbreaker2: Rcpp API</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -81,77 +108,60 @@ using Rcpp) used for priors, likelihoods, and movements of parameters in
 outbreaker2.</p>
     
 
-    <pre><span class='fu'>get_cpp_api</span>()</pre>
+    <pre class="usage"><span class='fu'>get_cpp_api</span>()</pre>
         
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An environment containing Rcpp bindings to C++ functions used internally in
-outbreaker2. All functions are named as cpp_[type]_[component], where &#39;type&#39;
-can be:</p>
-    <p><ul>
-<li> &#39;prior&#39;: prior computation</p>
-    <p></li>
-<li> &#39;ll&#39;:  likelihood computation</p>
-    <p></li>
-<li> &#39;move&#39;: movement of parameters or augmented data</p>
-    <p></li>
-</ul></p>
-    <p>And where &#39;component&#39; can be:</p>
-    <p><ul>
-<li> &#39;mu&#39;: (parameter) mutation rate</p>
-    <p></li>
-<li> &#39;pi&#39;: (parameter) reporting probability</p>
-    <p></li>
-<li> &#39;lambda&#39;: (parameter) *Finlay to complete*</p>
-    <p></li>
-<li> &#39;eps&#39;: (parameter) *Finlay to complete*</p>
-    <p></li>
-<li> &#39;alpha&#39;: (augmented data) ancestries of the cases</p>
-    <p></li>
-<li> &#39;kappa&#39;: (augmented data) generation between cases on transmission
-chains</p>
-    <p></li>
-<li> &#39;t_inf&#39;: (augmented data) dates of infections</p>
-    <p></li>
-<li> &#39;timing_infections&#39;: (likelihood component) timing between infectors and
-infectees</p>
-    <p></li>
-<li> &#39;timing_sampling&#39;: (likelihood component) timing between infection and
-reporting / isolation</p>
-    <p></li>
-<li> &#39;timing&#39;: (likelihood component) sum of the two timing components</p>
-    <p></li>
-<li> &#39;genetic&#39;: (likelihood component) genetic diversity accumulated along
-transmission chains</p>
-    <p></li>
-<li> &#39;reporting&#39;: (likelihood component) reporting of cases</p>
-    <p></li>
-<li> &#39;all&#39;: (likelihood component) sum of all likelihood components</p>
-    <p></li>
-<li> &#39;swap_cases&#39;: (type of movement) swap infectors and infectees on a
-transmission tree</p>
-    <p></li>
-</ul></p>
-    <p>For a description of the arguments of these functions, see the Rcpp_API
-vignette (<code>vignette(&quot;Rcpp_API&quot;, package = &quot;outbreaker2&quot;)</code>).</p>
+outbreaker2. All functions are named as cpp_[type]_[component], where 'type'
+can be:</p><ul>
+<li><p>'prior': prior computation</p></li>
+<li><p>'ll':  likelihood computation</p></li>
+<li><p>'move': movement of parameters or augmented data</p></li>
+</ul>
+
+<p>And where 'component' can be:</p><ul>
+<li><p>'mu': (parameter) mutation rate</p></li>
+<li><p>'pi': (parameter) reporting probability</p></li>
+<li><p>'lambda': (parameter) non-infectious contact rate</p></li>
+<li><p>'eps': (parameter) contact reporting coverage</p></li>
+<li><p>'alpha': (augmented data) ancestries of the cases</p></li>
+<li><p>'kappa': (augmented data) generation between cases on transmission
+chains</p></li>
+<li><p>'t_inf': (augmented data) dates of infections</p></li>
+<li><p>'timing_infections': (likelihood component) timing between infectors and
+infectees</p></li>
+<li><p>'timing_sampling': (likelihood component) timing between infection and
+reporting / isolation</p></li>
+<li><p>'timing': (likelihood component) sum of the two timing components</p></li>
+<li><p>'genetic': (likelihood component) genetic diversity accumulated along
+transmission chains</p></li>
+<li><p>'reporting': (likelihood component) reporting of cases</p></li>
+<li><p>'all': (likelihood component) sum of all likelihood components</p></li>
+<li><p>'swap_cases': (type of movement) swap infectors and infectees on a
+transmission tree</p></li>
+</ul>
+
+<p>For a description of the arguments of these functions, see the Rcpp_API
+vignette (<code><a href='https://cran.rstudio.com/web/packages/outbreaker2/vignettes/Rcpp_API.html'>vignette("Rcpp_API", package = "outbreaker2")</a></code>).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'>## get functions in an environment</span>
 <span class='no'>api</span> <span class='kw'>&lt;-</span> <span class='fu'>get_cpp_api</span>()
-<span class='no'>api</span></div><div class='output co'>#&gt; &lt;environment: 0x2ef2fe8&gt;</div><div class='input'>
+<span class='no'>api</span></div><div class='output co'>#&gt; &lt;environment: 0x80b7c48&gt;</div><div class='input'>
 <span class='co'>## check content of the environment</span>
-<span class='fu'>ls</span>(<span class='no'>api</span>)</div><div class='output co'>#&gt;  [1] &quot;cpp_ll_all&quot;               &quot;cpp_ll_contact&quot;          
-#&gt;  [3] &quot;cpp_ll_genetic&quot;           &quot;cpp_ll_reporting&quot;        
-#&gt;  [5] &quot;cpp_ll_timing&quot;            &quot;cpp_ll_timing_infections&quot;
-#&gt;  [7] &quot;cpp_ll_timing_sampling&quot;   &quot;cpp_move_alpha&quot;          
-#&gt;  [9] &quot;cpp_move_eps&quot;             &quot;cpp_move_kappa&quot;          
-#&gt; [11] &quot;cpp_move_lambda&quot;          &quot;cpp_move_mu&quot;             
-#&gt; [13] &quot;cpp_move_pi&quot;              &quot;cpp_move_swap_cases&quot;     
-#&gt; [15] &quot;cpp_move_t_inf&quot;           &quot;cpp_prior_all&quot;           
-#&gt; [17] &quot;cpp_prior_eps&quot;            &quot;cpp_prior_lambda&quot;        
-#&gt; [19] &quot;cpp_prior_mu&quot;             &quot;cpp_prior_pi&quot;            </div><div class='input'>
+<span class='fu'>ls</span>(<span class='no'>api</span>)</div><div class='output co'>#&gt;  [1] "cpp_ll_all"               "cpp_ll_contact"          
+#&gt;  [3] "cpp_ll_genetic"           "cpp_ll_reporting"        
+#&gt;  [5] "cpp_ll_timing"            "cpp_ll_timing_infections"
+#&gt;  [7] "cpp_ll_timing_sampling"   "cpp_move_alpha"          
+#&gt;  [9] "cpp_move_eps"             "cpp_move_kappa"          
+#&gt; [11] "cpp_move_lambda"          "cpp_move_mu"             
+#&gt; [13] "cpp_move_pi"              "cpp_move_swap_cases"     
+#&gt; [15] "cpp_move_t_inf"           "cpp_prior_all"           
+#&gt; [17] "cpp_prior_eps"            "cpp_prior_lambda"        
+#&gt; [19] "cpp_prior_mu"             "cpp_prior_pi"            </div><div class='input'>
 <span class='co'>## test the prior for mu</span>
 <span class='fu'>args</span>(<span class='no'>api</span>$<span class='no'>cpp_prior_mu</span>)</div><div class='output co'>#&gt; function (param, config, custom_function = NULL) 
 #&gt; NULL</div><div class='input'>

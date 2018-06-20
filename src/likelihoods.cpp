@@ -172,10 +172,12 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
 double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, size_t i,
-		      Rcpp::RObject custom_function) {
-  return cpp_ll_genetic(data, param, Rcpp::wrap(i), custom_function);
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_genetic(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
 }
-
 
 
 
@@ -247,10 +249,12 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
 double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, size_t i,
-				Rcpp::RObject custom_function) {
-  return cpp_ll_timing_infections(data, param, Rcpp::wrap(i), custom_function);
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_timing_infections(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
 }
-
 
 
 
@@ -307,10 +311,12 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
 double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i,
-			      Rcpp::RObject custom_function) {
-  return cpp_ll_timing_sampling(data, param, Rcpp::wrap(i), custom_function);
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_timing_sampling(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
 }
-
 
 
 
@@ -382,10 +388,12 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
 double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, size_t i,
-			Rcpp::RObject custom_function) {
-  return cpp_ll_reporting(data, param, Rcpp::wrap(i), custom_function);
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_reporting(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
 }
-
 
 
 
@@ -470,10 +478,12 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
 double cpp_ll_contact(Rcpp::List data, Rcpp::List param, size_t i,
-		      Rcpp::RObject custom_function) {
-  return cpp_ll_contact(data, param, Rcpp::wrap(i), custom_function);
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_contact(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
 }
-
 
 
 
@@ -501,11 +511,14 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, SEXP i,
   }
 }
 
-double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
-		     Rcpp::RObject custom_functions) {
-  return cpp_ll_timing(data, param, Rcpp::wrap(i), custom_functions);
-}
 
+double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_timing(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
+}
 
 
 
@@ -546,6 +559,9 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, size_t i,
-		  Rcpp::RObject custom_functions) {
-  return cpp_ll_all(data, param, Rcpp::wrap(i), custom_functions);
+              Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_all(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
 }

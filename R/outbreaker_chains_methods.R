@@ -54,7 +54,8 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 
 #' @rdname outbreaker_chains
 #'
-#' @param y a character string indicating which result to plot
+#' @param y a character string indicating which element of an
+#'   \code{outbreaker_chains} object to plot
 #'
 #' @param type a character string indicating the kind of plot to be used (see details)
 #'
@@ -69,8 +70,30 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #'
 #' @export
 #'
-#' @details 'trace' for the MCMC trace, 'hist' for histograms, 'density' for a
-#' kernel density estimation
+#' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette} for detailed examples on how to visualise \code{outbreaker_chains} objects.
+#'
+#' @details \code{type} indicates the type of graphic to plot:
+#' 
+#' \itemize{
+#' 
+#' \item \code{trace} to visualise MCMC traces for parameters or augmented data (plots the
+#' log-likelihood by default)
+#'
+#' \item \code{hist} to plot histograms of quantitative values
+#'
+#' \item \code{density} to plot kernel density estimations of quantitative values
+#'
+#' \item \code{alpha} to visualise the posterior frequency of ancestries
+#'
+#' \item \code{network} to visualise the transmission tree; note that
+#'  this opens up an interactive plot and requires a web browser with
+#'  Javascript enabled; the argument `min_support` is useful to select only the
+#'  most supported ancestries and avoid displaying too many links
+#'
+#' \item \code{kappa} to visualise the distributions generations between cases and their
+#' ancestor/infector
+#'
+#' }
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
 #' geom_violin aes aes_string coord_flip labs guides scale_size_area

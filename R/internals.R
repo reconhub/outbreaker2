@@ -237,30 +237,56 @@ find_descendents <- function(param, i) {
 ## add convolutions to data$log_w_dens
 ## rows = kapp avalue
 ## columns = time interval
+log_sum <- function(u, v)
+{
+  return(max(u, v) + log(exp(u - max(u, v)) + exp(v - max(u, v))))
+}
+
+log_sum_vec <- function(w)
+{
+  total=w[1]
+  if (length(w)<2) return(total)
+  
+  for (i in 2:length(w)){
+    total <- log_sum(total, w[i]);
+  }
+  return(total)
+}
+
+convolve_log <- function(x, y) {
+  n <- length(x)
+  m <- length(y)
+  
+  r <- lapply(1:(n+m-1), function(k){
+    i <- 1:max(m,n)
+    i <- i[((i<=m) & ((k-m+i) <= n)) & ((k-m+i) > 0)]
+    log_sum_vec(x[k-m+i]+y[i])
+  })
+  return(unlist(r))
+}
+
+## add convolutions to data$log_w_dens
+## rows = kapp avalue
+## columns = time interval
 add_convolutions <- function(data, config) {
-    ## COMPUTE CONVOLUTIONS IF NEEDED ##
-    if (config$max_kappa>1) {
-        ## de-log the first line
-        data$log_w_dens[1,] <- data$w_dens
-
-        ## first compute convolutions on natural scale
-        for (i in 2:config$max_kappa) {
-            data$log_w_dens <- rbind(data$log_w_dens,
-                                     stats::convolve(data$log_w_dens[i-1,],
-                                                     rev(data$w_dens),
-                                                     type="open")[seq_len(ncol(data$log_w_dens))]
-                                     )
-        }
-
-        ## then log all densities
-        data$log_w_dens <- log(data$log_w_dens)
-        }
-
-    ## name rows/columns (useful if internal debugging needed)
-    rownames(data$log_w_dens) <- paste("kappa", seq_len(nrow(data$log_w_dens)), sep="=")
-    colnames(data$log_w_dens) <- seq_len(ncol(data$log_w_dens))
-
-    return(data)
+  ## COMPUTE CONVOLUTIONS IF NEEDED ##
+  if (config$max_kappa>1) {
+    
+    ## first compute convolutions on natural scale
+    for (i in 2:config$max_kappa) {
+      data$log_w_dens <- rbind(data$log_w_dens,
+                               convolve_log(data$log_w_dens[i-1,],
+                                            log(rev(data$w_dens))
+                               )[seq_len(ncol(data$log_w_dens))]
+      )
+    }
+  }
+  
+  ## name rows/columns (useful if internal debugging needed)
+  rownames(data$log_w_dens) <- paste("kappa", seq_len(nrow(data$log_w_dens)), sep="=")
+  colnames(data$log_w_dens) <- seq_len(ncol(data$log_w_dens))
+  
+  return(data)
 }
 
 

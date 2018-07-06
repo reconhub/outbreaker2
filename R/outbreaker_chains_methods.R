@@ -162,14 +162,30 @@ plot.outbreaker_chains <- function(x, y = "post",
       if(axis == 'x') return(labels) else
       if(axis == 'y') return(c("Import", labels))
     }
+    ## Return custom colors if provided
+    get_alpha_color <- function(color = NULL) {
+      if(is.null(color)) return(NULL)
+      else return(scale_color_manual(values = color))
+    }
+    ## This joining function is needed so that the '...' argument can be passed
+    ## to two functions with different arguments
+    get_lab_color <- function(labels = NULL, color = NULL) {
+      list(alpha_lab_x = get_alpha_lab('x', labels),
+           alpha_lab_y = get_alpha_lab('y', labels),
+           alpha_color = get_alpha_color(color))
+    }
+
+    tmp <- get_lab_color(...)
+    
     out_dat[3] <- vapply(seq_along(out_dat[[3]]), get_prop, 1)
     out_dat$from <- factor(out_dat$from, levels = c(0, sort(unique(out_dat$to))))
     out_dat$to <- factor(out_dat$to, levels = sort(unique(out_dat$to)))
     out <- ggplot(out_dat) +
-      geom_point(aes(x = to, y = from, size = frequency, color = from)) +
-      scale_x_discrete(drop = FALSE, labels = get_alpha_lab(axis = 'x', ...)) +
-      scale_y_discrete(drop = FALSE, labels = get_alpha_lab(axis = 'y', ...)) +
+      geom_point(aes(x = to, y = from, size = frequency, color = to)) +
+      scale_x_discrete(drop = FALSE, labels = tmp$alpha_lab_x) +
+      scale_y_discrete(drop = FALSE, labels = tmp$alpha_lab_y) +
       labs(x = 'To', y = 'From', size = 'Posterior\nfrequency') +
+      tmp$alpha_color +
       scale_size_area() +
       guides(colour = FALSE)
   }
@@ -179,7 +195,22 @@ plot.outbreaker_chains <- function(x, y = "post",
       if(is.null(labels)) labels <- 1:N
       return(labels)
     }
+    ## Return custom colors if provided
+    get_t_inf_color <- function(color = NULL) {
+      if(is.null(color)) return(NULL)
+      else return(scale_fill_manual(values = color))
+    }
+    ## This joining function is needed so that the '...' argument can be passed
+    ## to two functions with different arguments
+    get_lab_color <- function(labels = NULL, color = NULL) {
+      list(t_inf_lab_x = get_t_inf_lab(labels),
+           t_inf_color = get_t_inf_color(color))
+    }
+
+    tmp <- get_lab_color(...)
+    
     t_inf <- as.matrix(x[,grep("t_inf", names(x))])
+    N <- ncol(t_inf)
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
     out_dat <- data.frame(cases = factor(cases), dates = dates)
@@ -187,7 +218,8 @@ plot.outbreaker_chains <- function(x, y = "post",
       geom_violin(aes(x = cases, y = dates, fill = cases)) +
       coord_flip() + guides(fill = FALSE) +
       labs(y = 'Infection time', x = NULL) +
-      scale_x_discrete(labels = get_t_inf_lab(...))
+      tmp$t_inf_color +
+      scale_x_discrete(labels = tmp$t_inf_lab)
   }
 
   if (type=="kappa") {
@@ -196,6 +228,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       return(labels)
     }
     kappa <- as.matrix(x[,grep("kappa", names(x))])
+    N <- ncol(kappa)
     generations <- as.vector(kappa)
     cases <- as.vector(col(kappa))
     to_keep <- !is.na(generations)
@@ -211,7 +244,7 @@ plot.outbreaker_chains <- function(x, y = "post",
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
-      scale_y_discrete(labels = get_t_inf_lab(...)) +
+      scale_y_discrete(labels = get_kappa_lab(...)) +
       guides(colour = FALSE) +
       labs(title = "number of generations between cases",
            x = "number of generations to ancestor",

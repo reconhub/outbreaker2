@@ -19,6 +19,10 @@ outbreaker_init_mcmc <- function(data, param_current, param_store, loglike, prio
     param_store$prior[1] <- cpp_prior_all(param_current, config, priors)
     param_store$post[1] <- param_store$like[1] + param_store$prior[1]
 
+    if(is.infinite(param_store$post[1])) {
+        stop("Likelihood of initial parameter state is -Inf")
+    }
+
     return(param_store)
 }
 

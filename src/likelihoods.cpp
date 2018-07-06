@@ -464,13 +464,21 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
     false_neg = N - imports - unobsv_case - true_pos;
     true_neg = C_combn - true_pos - false_pos - false_neg;
 
-    // deal with special case when lambda == 0, to avoid log(0)
+    // deal with special case when lambda == 0 and eps == 1, to avoid log(0)
     if(lambda == 0.0) {
       if(false_pos > 0) {
 	return R_NegInf;
       } else {
 	log(eps) * (double) true_pos +
 	  log(1 - eps) * (double) false_neg +
+	  log(1 - eps*lambda) * (double) true_neg;
+      }
+    } else if(eps == 1.0) {
+      if(false_neg > 0) {
+	return R_NegInf;
+      } else {
+	return log(eps) * (double) true_pos +
+	  log(eps*lambda) * (double) false_pos +
 	  log(1 - eps*lambda) * (double) true_neg;
       }
     } else {

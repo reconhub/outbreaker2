@@ -54,6 +54,8 @@ outbreaker_move <- function(moves, data, param_current,
 
   } # end of the chain
 
+  cat("\n")
+  
   ## output is a list of saved chain states
   return(param_store)
 }

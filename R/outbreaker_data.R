@@ -72,6 +72,12 @@ outbreaker_data <- function(..., data = list(...)) {
     data$dates <- as.integer(round(data$dates))
     data$N <- length(data$dates)
     data$max_range <- diff(range(data$dates))
+    ## get temporal ordering constraint:
+    ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
+    data$can_be_ances <- outer(data$dates,
+                               data$dates,
+                               FUN="<") # strict < is needed as we impose w(0)=0
+    diag(data$can_be_ances) <- FALSE
   }
 
   ## CHECK W_DENS
@@ -122,32 +128,6 @@ outbreaker_data <- function(..., data = list(...)) {
 
     data$f_dens <- data$f_dens / sum(data$f_dens)
     data$log_f_dens <- log(data$f_dens)
-  }
-
-  ## IDENTIFY POTENTIAL ANCESTORS
-  if(!is.null(data$dates)) {
-    ## get temporal ordering constraint:
-    ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
-    ## Calculate the serial interval from w_dens and f_dens
-    get_SI <- function(w_dens, f_dens) {
-      wf <- stats::convolve(w_dens, rev(f_dens), type = 'open')
-      conv <- stats::convolve(rev(f_dens), rev(wf), type = 'open')
-      lf <- length(f_dens)
-      lw <- length(w_dens)
-      return(data.frame(x = (-lf + 2):(lw + lf - 1), d = conv))
-    }
-    ## Check if difference in sampling dates falls within serial interval
-    can_be_ances <- function(date1, date2, SI) {
-      tdiff <- date2 - date1
-      out <- sapply(tdiff, function(i) if(i %in% SI$x) return(TRUE) else return(FALSE))
-      return(out)
-    }
-    SI <- get_SI(data$w_dens, data$f_dens)
-    data$can_be_ances <- outer(data$dates,
-                               data$dates,
-                               FUN=can_be_ances,
-                               SI = SI) # strict < is needed as we impose w(0)=0
-    diag(data$can_be_ances) <- FALSE
   }
   
   ## CHECK DNA

@@ -50,7 +50,7 @@ test_that("Test cpp_ll_timing_sampling", {
     alpha <- c(NA,rep(1,4))
     samp_times <- times + c(1, 1, 2, 3, 4)
     f <- c(.1, .2, .5, .2, .1)
-    data <- outbreaker_data(dates = samp_times, f_dens = f)
+    data <- outbreaker_data(dates = samp_times, w_dens = w, f_dens = f)
     config <- create_config(data = data,
                             init_t_inf = times,
                             init_tree = alpha)
@@ -95,6 +95,7 @@ test_that("Test cpp_ll_genetic", {
                                  w_dens = w,
                                  dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
+    data <- add_convolutions(data, config)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
@@ -130,7 +131,7 @@ test_that("Test cpp_ll_genetic", {
     data_resort <- outbreaker_data(dates = fake_outbreak$sample,
                                    w_dens = fake_outbreak$w,
                                    dna = dna_resort)
-
+    data_resort <- add_convolutions(data_resort, config)
     expect_equal(cpp_ll_genetic(data, param),
                  cpp_ll_genetic(data_resort, param))
 
@@ -143,6 +144,7 @@ test_that("Test cpp_ll_genetic", {
     data_miss <- outbreaker_data(dates = fake_outbreak$sample,
                                  w_dens = fake_outbreak$w,
                                  dna = dna_miss)
+    data_miss <- add_convolutions(data_miss, config)
     param_star <- param
     param_star$alpha <- c(NA, rep(1L, 29))
 
@@ -174,7 +176,7 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
     ## create data
 
     alpha <- as.integer(c(NA, 1, 2, 3, 2, 5))
-    kappa <- as.integer(c(NA, 1, 2, 1, 2 ,1))
+    kappa <- as.integer(c(NA, 1, 2, 1, 2, 1))
     onset <- as.integer(c(0, 1, 2, 3, 2, 3))
     mu <- 0.001231
     w <- c(0, 1, 2, 1, .5)
@@ -192,9 +194,15 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
                   mu = mu)
 
     ## tests
+    ##
+    n_mut_1 <- 4
+    n_mut_2 <- 2
+    kappa_1 <- 2
+    kappa_2 <- 3
     n_mut <- 6
     n_non_mut <- (50 * 2) - 4 + (50 * 3) - 2
-    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu)
+    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu) +
+      sum(data$kappa_combn[rbind(c(kappa_1, n_mut_1 + 1), c(kappa_2, n_mut_2 + 1))])
     expect_equal(cpp_ll_genetic(data, param),
                  exp_ll)
 
@@ -285,6 +293,7 @@ test_that("Test cpp_ll_all", {
     data <- with(fake_outbreak,
                  outbreaker_data(dates = sample, w_dens = w, dna = dna))
     config <- create_config(data = data)
+    data <- add_convolutions(data, config)
     param <- create_param(data = data, config = config)$current
 
     ## compute likelihoods
@@ -318,6 +327,7 @@ test_that("Test cpp_ll_all", {
     data <- with(fake_outbreak,
                  outbreaker_data(dates = sample, w_dens = w, dna = dna))
     config <- create_config(data = data)
+    data <- add_convolutions(data, config)
     param <- create_param(data = data, config = config)$current
 
     ## compute local likelihoods
@@ -375,6 +385,7 @@ test_that("likelihood functions return -Inf when needed", {
     w <- c(.1, .2, .5, .2, .1)
     data <- outbreaker_data(dates = times, w_dens = w)
     config <- create_config(data = data, init_tree = alpha)
+    data <- add_convolutions(data, config)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
@@ -475,6 +486,7 @@ test_that("Customisation with identical functions works", {
                                  w_dens = w,
                                  dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
+    data <- add_convolutions(data, config)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
@@ -534,6 +546,7 @@ test_that("Customisation with pi-returning functions works", {
                                  w_dens = w,
                                  dna = dna))
     config <- create_config(data = data, init_mu = 0.543e-4)
+    data <- add_convolutions(data, config)
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))

@@ -64,6 +64,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @param min_support a number between 0 and 1 indicating the minimum support of
 #' ancestries to be plotted; only used if 'type' is 'network'
 #'
+#' @param labels a vector of length N indicating the case labels (must be
+#'   provided in the same order as used for inference)
+#'
 ## #' @param dens_all a logical indicating if the overal density computed over
 ## all runs should be displayed; defaults to TRUE #' @param col the colors to be
 ## used for different runs
@@ -96,7 +99,8 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' }
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
-#' geom_violin aes aes_string coord_flip labs guides scale_size_area
+#'   geom_violin aes aes_string coord_flip labs guides scale_size_area
+#'   scale_x_discrete scale_y_discrete scale_color_manual scale_fill_manual
 #'
 #' @importFrom grDevices xyTable
 #' @importFrom graphics plot

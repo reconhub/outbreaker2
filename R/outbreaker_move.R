@@ -24,7 +24,7 @@ outbreaker_move <- function(moves, data, param_current,
   J <- length(moves)
 
   ## Set up progress bar
-  pb <- txtProgressBar(min = 1, max = config$n_iter, style = 3)
+  pb <- utils::txtProgressBar(min = 1, max = config$n_iter, style = 3)
   
   ## RUN MCMC ##
   for (i in seq.int(2, config$n_iter, 1)) {
@@ -47,7 +47,7 @@ outbreaker_move <- function(moves, data, param_current,
 
     ## store outputs if needed
     if ((i %% config$sample_every) == 0) {
-      setTxtProgressBar(pb, i)
+      utils::setTxtProgressBar(pb, i)
       param_store <- outbreaker_mcmc_store(param_current, param_store, data,
                                            config, likelihoods, priors, i)
     }

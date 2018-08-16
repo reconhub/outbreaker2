@@ -285,6 +285,13 @@ add_convolutions <- function(data, config) {
   ## name rows/columns (useful if internal debugging needed)
   rownames(data$log_w_dens) <- paste("kappa", seq_len(nrow(data$log_w_dens)), sep="=")
   colnames(data$log_w_dens) <- seq_len(ncol(data$log_w_dens))
+
+  ## get matrix of kappa combinations (in how many ways can d mutations
+  ## accumulate over kappa generations - this is given by the function
+  ## choose(d + kappa - 1, d))
+  get.combn <- function(d, k) log(choose(d + k - 1, d))
+  K <- config$max_kappa
+  data$kappa_combn <- get.combn(outer(rep(1, K), 0:max(data$D)), 1:K)
   
   return(data)
 }

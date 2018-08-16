@@ -37,6 +37,9 @@
 ancestries to be plotted; only used if 'type' is 'network'}
 
 \item{object}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
+
+\item{labels}{a vector of length N indicating the case labels (must be
+provided in the same order as used for inference)}
 }
 \description{
 Several methods are defined for instances of the class

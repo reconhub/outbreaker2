@@ -13,7 +13,7 @@
 
 \method{plot}{outbreaker_chains}(x, y = "post", type = c("trace", "hist",
   "density", "alpha", "t_inf", "kappa", "network"), burnin = 0,
-  min_support = 0.1, ...)
+  min_support = 0.1, labels = NULL, ...)
 
 \method{summary}{outbreaker_chains}(object, burnin = 0, ...)
 }
@@ -36,10 +36,10 @@
 \item{min_support}{a number between 0 and 1 indicating the minimum support of
 ancestries to be plotted; only used if 'type' is 'network'}
 
-\item{object}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
-
 \item{labels}{a vector of length N indicating the case labels (must be
 provided in the same order as used for inference)}
+
+\item{object}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
 }
 \description{
 Several methods are defined for instances of the class

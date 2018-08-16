@@ -108,7 +108,7 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 plot.outbreaker_chains <- function(x, y = "post",
                                    type = c("trace", "hist", "density",
                                             "alpha", "t_inf", "kappa", "network"),
-                                   burnin = 0, min_support = 0.1, ...) {
+                                   burnin = 0, min_support = 0.1, labels = NULL, ...) {
 
   ## CHECKS ##
   type <- match.arg(type)
@@ -196,6 +196,7 @@ plot.outbreaker_chains <- function(x, y = "post",
 
   if (type=="t_inf") {
     get_t_inf_lab <- function(labels = NULL) {
+      N <- ncol(t_inf)
       if(is.null(labels)) labels <- 1:N
       return(labels)
     }
@@ -211,10 +212,8 @@ plot.outbreaker_chains <- function(x, y = "post",
            t_inf_color = get_t_inf_color(color))
     }
 
-    tmp <- get_lab_color(...)
-    
     t_inf <- as.matrix(x[,grep("t_inf", names(x))])
-    N <- ncol(t_inf)
+    tmp <- get_lab_color(...)
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
     out_dat <- data.frame(cases = factor(cases), dates = dates)
@@ -228,11 +227,11 @@ plot.outbreaker_chains <- function(x, y = "post",
 
   if (type=="kappa") {
     get_kappa_lab <- function(labels = NULL) {
+      N <- ncol(kappa)
       if(is.null(labels)) labels <- 1:N
       return(labels)
     }
     kappa <- as.matrix(x[,grep("kappa", names(x))])
-    N <- ncol(kappa)
     generations <- as.vector(kappa)
     cases <- as.vector(col(kappa))
     to_keep <- !is.na(generations)

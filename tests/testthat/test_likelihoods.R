@@ -50,7 +50,7 @@ test_that("Test cpp_ll_timing_sampling", {
     alpha <- c(NA,rep(1,4))
     samp_times <- times + c(1, 1, 2, 3, 4)
     f <- c(.1, .2, .5, .2, .1)
-    data <- outbreaker_data(dates = samp_times, w_dens = w, f_dens = f)
+    data <- outbreaker_data(dates = samp_times, w_dens = f, f_dens = f)
     config <- create_config(data = data,
                             init_t_inf = times,
                             init_tree = alpha)

@@ -53,7 +53,7 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
   Rcpp::IntegerMatrix D = data["D"];
   if (D.ncol() < 1) return 0.0;
 
-  Rcpp::NumericMatrix kappa_combn = data["kappa_combn"];
+  //Rcpp::NumericMatrix kappa_combn = data["kappa_combn"];
   
   size_t N = static_cast<size_t>(data["N"]);
   if (N < 2) return 0.0;
@@ -125,7 +125,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      sum_n_mut += n_mut;
 	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
-	      sum_kappa_combn += kappa_combn(n_generations[0] - 1, n_mut);
+	      sum_kappa_combn += n_mut * log(n_generations[0]);
+	      //sum_kappa_combn += kappa_combn(n_generations[0] - 1, n_mut);
 	    }
 	  }
 	}
@@ -155,7 +156,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      sum_n_mut += n_mut;
 	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
-	      sum_kappa_combn += kappa_combn(n_generations[0] - 1, n_mut);
+	      sum_kappa_combn += n_mut * log(n_generations[0]);
+	      //sum_kappa_combn += kappa_combn(n_generations[0] - 1, n_mut);
 
 	    }
 	  }

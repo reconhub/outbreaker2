@@ -289,11 +289,11 @@ add_convolutions <- function(data, config) {
   ## get matrix of kappa combinations (in how many ways can d mutations
   ## accumulate over kappa generations - this is given by the function
   ## choose(d + kappa - 1, d))
-  if(!is.null(data$dna)) {
-    get.combn <- function(d, k) log(choose(d + k - 1, d))
-    K <- config$max_kappa
-    data$kappa_combn <- get.combn(outer(rep(1, K), 0:max(data$D)), 1:K)
-  }
+  ##if(!is.null(data$dna)) {
+  ##  get_kappa_combn <- function(d, k) d*log(k)
+  ##  K <- config$max_kappa
+  ##  data$kappa_combn <- get_kappa_combn(outer(rep(1, K), 0:max(data$D)), 1:K)
+  ##}
   return(data)
 }
 

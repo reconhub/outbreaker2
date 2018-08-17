@@ -202,7 +202,8 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
     n_mut <- 6
     n_non_mut <- (50 * 2) - 4 + (50 * 3) - 2
     exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu) +
-      sum(data$kappa_combn[rbind(c(kappa_1, n_mut_1 + 1), c(kappa_2, n_mut_2 + 1))])
+      n_mut_1*log(kappa_1) + n_mut_2*log(kappa_2)
+
     expect_equal(cpp_ll_genetic(data, param),
                  exp_ll)
 

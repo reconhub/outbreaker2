@@ -306,7 +306,7 @@ test_that("results ok: outbreaker with custom priors",
 
     ## plot(function(x) dbeta(x, 50, 25)) # to see the distribution
 
-    f_pi_1 <- function(x) dbeta(x$pi, 50, 25, log = TRUE) # stronger prior
+    f_pi_1 <- function(x) dbeta(x$pi, 100, 1, log = TRUE) # stronger prior
     f_pi_2 <- function(x) 0.0 # flat prior
 
     set.seed(1)
@@ -317,8 +317,8 @@ test_that("results ok: outbreaker with custom priors",
     smry_1 <- summary(out_1, burnin = 500)
     smry_2 <- summary(out_2, burnin = 500)
 
-    expect_true(smry_1$pi[2] > 0.5 && smry_1$pi[5] < 0.8)
-    expect_true(smry_2$pi[2] > 0.8)
+    expect_true(smry_1$pi[2] > 0.9)
+    expect_true(smry_2$pi[2] > 0.6 && smry_2$pi[5] < 0.9)
   
 })
 

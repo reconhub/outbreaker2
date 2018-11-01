@@ -582,7 +582,7 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 	if (p_accept >= unif_rand()) { // accept new parameters
 	  // Rprintf("\naccepting kappa:%d  (p: %f  old ll:  %f  new ll: %f",
 	  // 		new_kappa[i], p_accept, old_loglike, new_loglike);
-	  param["kappa"] = new_kappa;
+	  kappa[i] = new_kappa[i];
 	} else {
 	  new_kappa[i] = kappa[i];
 	}

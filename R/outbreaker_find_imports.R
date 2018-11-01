@@ -27,7 +27,7 @@ outbreaker_find_imports <- function(moves, data, param_current,
     J <- length(moves)
 
     ## create matrix of individual influences ##
-    n_measures <- floor(config$n_iter_import - (1000 / config$sample_every_import))
+    n_measures <- floor((config$n_iter_import - 1000) / config$sample_every_import)
     influences <- matrix(0, ncol = data$N, nrow = n_measures)
     counter <- 1L
 

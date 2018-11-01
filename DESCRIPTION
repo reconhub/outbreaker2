@@ -14,6 +14,9 @@ Authors@R: c(person("Thibaut", "Jombart",
 		    role = c("aut")),
 	     person("Gerry", "Tonkin-Hill",
 	            email = "gqt20@cam.ac.uk",
+		    role = c("ctb")),
+	     person("Alexis", "Robert",
+	            email = "alexis.robert@lshtm.ac.uk",
 		    role = c("ctb")))
 Maintainer: Finlay Campbell <f.campbell15@imperial.ac.uk>
 Description: Bayesian reconstruction of disease outbreaks using epidemiological

@@ -28,11 +28,11 @@ changes to the CRAN version.
 
 The original genetic likelihood was:
 
-$\mu^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}$
+<img src="https://latex.codecogs.com/svg.latex?\mu^{d(s_i,s_{\alpha_i})}(1&space;-&space;\mu)^{(\kappa_i\times&space;l(s_i,&space;s_{\alpha_i}))&space;-&space;d(s_i,s_{\alpha_i})}" title="\mu^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
 
 The corrected genetic likelihood is:
 
-$(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}$
+<img src="https://latex.codecogs.com/svg.latex?(\kappa_i&space;\mu)^{d(s_i,s_{\alpha_i})}(1&space;-&space;\mu)^{(\kappa_i\times&space;l(s_i,&space;s_{\alpha_i}))&space;-&space;d(s_i,s_{\alpha_i})}" title="(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
 
 A complete derivation of the correct likelihood can be found 
 [here](https://imperiallondon-my.sharepoint.com/personal/fc1915_ic_ac_uk/Documents/genll_derivation.pdf?download=1).

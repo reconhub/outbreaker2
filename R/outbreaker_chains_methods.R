@@ -65,7 +65,7 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' ancestries to be plotted; only used if 'type' is 'network'
 #'
 #' @param labels a vector of length N indicating the case labels (must be
-#'   provided in the same order as used for inference)
+#'   provided in the same order used for dates of symptom onset)
 #'
 ## #' @param dens_all a logical indicating if the overal density computed over
 ## all runs should be displayed; defaults to TRUE #' @param col the colors to be

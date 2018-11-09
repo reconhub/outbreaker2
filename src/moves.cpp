@@ -583,7 +583,6 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 	  //	   Rprintf("\naccepting kappa:%d  (p: %f  old ll:  %f  new ll: %f",
 	  // 		new_kappa[i], p_accept, old_loglike, new_loglike);
 	  kappa[i] = new_kappa[i];
-	    //	  param["kappa"] = new_kappa;
 	} else {
 	  new_kappa[i] = kappa[i];
 	}

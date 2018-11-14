@@ -192,3 +192,44 @@ test_that("Swap equally likely index cases", {
     table(res$alpha_3)
 
 })
+
+
+
+
+
+
+## test kappa estimates
+test_that("Kappa estimates are correct", {
+    ## skip on CRAN
+    skip_on_cran()
+
+    ## sequence and onset data that supports kappa = c(3, 1, 1)
+    dna <- matrix(c("t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t",
+                    "g", "g", "g", "g", "g", "g", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t",
+                    "g", "g", "g", "g", "g", "g", "c", "c", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t",
+                    "g", "g", "g", "g", "g", "g", "c", "c", "a", "a", "t", "t", "t", "t", "t", "t", "t", "t"),
+                  byrow = TRUE, nrow = 4)
+    dna <- ape::as.DNAbin(dna)
+
+    dates <- c(10, 40, 50, 60)
+
+    ## strong suport for generation time = 10 days
+    w <- dgamma(1:20, shape = 25, scale = 0.4)
+
+    data <- outbreaker_data(dates = dates, dna = dna, w_dens = w)
+    config <- create_config(prior_pi = c(1, 1), prior_mu = c(0.1),
+                            init_mu = 2/18, sd_mu = 0.1, n_iter = 5e4)
+
+    set.seed(1)
+    res <- outbreaker(data, config)
+
+    ## function to get most frequent item
+    get_mode <- function(x) {
+      as.integer(names(sort(table(x, exclude = NULL), decreasing = TRUE)[1]))
+    }
+
+    kappa <- as.matrix(res[,grep("kappa", names(res))])
+    kappa <- as.vector(apply(kappa, 2, get_mode))
+    expect_equal(c(NA, 3, 1, 1), kappa)
+
+})

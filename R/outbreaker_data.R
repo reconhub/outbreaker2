@@ -95,7 +95,6 @@ outbreaker_data <- function(..., data = list(...)) {
     if(data$w_dens[length(data$w_dens)] < 1e-15) {
       final_index <- max(which(data$w_dens > 1e-15))
       data$w_dens <- data$w_dens[1:final_index]
-      warning("Removed trailing zeroes found in w_dens")
     }
 
     ## add an exponential tail summing to 1e-4 to 'w'

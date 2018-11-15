@@ -53,8 +53,7 @@ outbreaker_data <- function(..., data = list(...)) {
                    max_range = NA, can_be_ances = NULL,
                    log_w_dens = NULL, log_f_dens = NULL,
                    contacts = NULL, C_combn = NULL, C_nrow = NULL,
-                   has_dna = logical(0), id_in_dna = integer(0),
-                   kappa_combn = NULL)
+                   has_dna = logical(0), id_in_dna = integer(0))
 
   ## MODIFY DATA WITH ARGUMENTS ##
   data <- modify_defaults(defaults, data, FALSE)

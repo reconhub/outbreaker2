@@ -285,7 +285,7 @@ add_convolutions <- function(data, config) {
   ## name rows/columns (useful if internal debugging needed)
   rownames(data$log_w_dens) <- paste("kappa", seq_len(nrow(data$log_w_dens)), sep="=")
   colnames(data$log_w_dens) <- seq_len(ncol(data$log_w_dens))
-  
+
   return(data)
 }
 

@@ -566,10 +566,11 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 	new_kappa[i] = kappa[i];
       } else {
 
+
 	// loglike with current parameters
 	old_loglike = cpp_ll_all(data, param, i+1, list_custom_ll);
 
-
+	
 	// loglike with new parameters
 	new_loglike = cpp_ll_all(data, new_param, i+1, list_custom_ll);
 
@@ -577,10 +578,9 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 	// acceptance term
 	p_accept = exp(new_loglike - old_loglike);
 
-
 	// acceptance: change param only if new values is accepted
 	if (p_accept >= unif_rand()) { // accept new parameters
-	  // Rprintf("\naccepting kappa:%d  (p: %f  old ll:  %f  new ll: %f",
+	  //	   Rprintf("\naccepting kappa:%d  (p: %f  old ll:  %f  new ll: %f",
 	  // 		new_kappa[i], p_accept, old_loglike, new_loglike);
 	  kappa[i] = new_kappa[i];
 	} else {

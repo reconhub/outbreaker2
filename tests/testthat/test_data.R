@@ -20,8 +20,6 @@ test_that("test: data are processed fine", {
     expect_equal(out$L, 1e4)
     expect_equal(out$w_dens, out$f_dens)
     expect_equal(out$log_w_dens[1,], out$log_f_dens)
-    expect_warning(outbreaker_data(dates = 1, w_dens = c(0, 0.5, 0.1, 0, 0)),
-                   "Removed trailing zeroes found in w_dens")
     expect_error(outbreaker_data(dates = 1, w_dens = c(0,-1)),
                  "w_dens has negative entries")
 

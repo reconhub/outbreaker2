@@ -64,6 +64,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @param min_support a number between 0 and 1 indicating the minimum support of
 #' ancestries to be plotted; only used if 'type' is 'network'
 #'
+#' @param labels a vector of length N indicating the case labels (must be
+#'   provided in the same order used for dates of symptom onset)
+#'
 ## #' @param dens_all a logical indicating if the overal density computed over
 ## all runs should be displayed; defaults to TRUE #' @param col the colors to be
 ## used for different runs
@@ -96,7 +99,8 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' }
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
-#' geom_violin aes aes_string coord_flip labs guides scale_size_area
+#'   geom_violin aes aes_string coord_flip labs guides scale_size_area
+#'   scale_x_discrete scale_y_discrete scale_color_manual scale_fill_manual
 #'
 #' @importFrom grDevices xyTable
 #' @importFrom graphics plot
@@ -104,7 +108,7 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 plot.outbreaker_chains <- function(x, y = "post",
                                    type = c("trace", "hist", "density",
                                             "alpha", "t_inf", "kappa", "network"),
-                                   burnin = 0, min_support = 0.1, ...) {
+                                   burnin = 0, min_support = 0.1, labels = NULL, ...) {
 
   ## CHECKS ##
   type <- match.arg(type)
@@ -152,29 +156,81 @@ plot.outbreaker_chains <- function(x, y = "post",
     out_dat <- data.frame(xyTable(from,to))
     names(out_dat) <- c("from", "to", "frequency")
     ## Calculate proportion among ancestries
-    get.prop <- function(i) {
+    get_prop <- function(i) {
         ind <- which(out_dat$to == out_dat$to[i])
         out_dat[[3]][i]/sum(out_dat[[3]][ind])
     }
-    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
+    ## Return labels, if provided
+    get_alpha_lab <- function(axis, labels = NULL) {
+      if(is.null(labels)) labels <- levels(out_dat$to)
+      if(axis == 'x') return(labels) else
+      if(axis == 'y') return(c("Import", labels))
+    }
+    ## Return custom colors if provided
+    get_alpha_color <- function(color = NULL) {
+      if(is.null(color)) return(NULL)
+      else return(scale_color_manual(values = color))
+    }
+    ## This joining function is needed so that the '...' argument can be passed
+    ## to two functions with different arguments
+    get_lab_color <- function(labels = NULL, color = NULL) {
+      list(alpha_lab_x = get_alpha_lab('x', labels),
+           alpha_lab_y = get_alpha_lab('y', labels),
+           alpha_color = get_alpha_color(color))
+    }
+
+    tmp <- get_lab_color(...)
+    
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get_prop, 1)
+    out_dat$from <- factor(out_dat$from, levels = c(0, sort(unique(out_dat$to))))
+    out_dat$to <- factor(out_dat$to, levels = sort(unique(out_dat$to)))
     out <- ggplot(out_dat) +
-      geom_point(aes(x = to, y = from, size = frequency, color = factor(from))) +
+      geom_point(aes(x = to, y = from, size = frequency, color = to)) +
+      scale_x_discrete(drop = FALSE, labels = tmp$alpha_lab_x) +
+      scale_y_discrete(drop = FALSE, labels = tmp$alpha_lab_y) +
+      labs(x = 'To', y = 'From', size = 'Posterior\nfrequency') +
+      tmp$alpha_color +
       scale_size_area() +
       guides(colour = FALSE)
   }
 
   if (type=="t_inf") {
+    get_t_inf_lab <- function(labels = NULL) {
+      N <- ncol(t_inf)
+      if(is.null(labels)) labels <- 1:N
+      return(labels)
+    }
+    ## Return custom colors if provided
+    get_t_inf_color <- function(color = NULL) {
+      if(is.null(color)) return(NULL)
+      else return(scale_fill_manual(values = color))
+    }
+    ## This joining function is needed so that the '...' argument can be passed
+    ## to two functions with different arguments
+    get_lab_color <- function(labels = NULL, color = NULL) {
+      list(t_inf_lab_x = get_t_inf_lab(labels),
+           t_inf_color = get_t_inf_color(color))
+    }
+
     t_inf <- as.matrix(x[,grep("t_inf", names(x))])
+    tmp <- get_lab_color(...)
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
     out_dat <- data.frame(cases = factor(cases), dates = dates)
     out <- ggplot(out_dat) +
       geom_violin(aes(x = cases, y = dates, fill = cases)) +
       coord_flip() + guides(fill = FALSE) +
-      labs(title="infection times")
+      labs(y = 'Infection time', x = NULL) +
+      tmp$t_inf_color +
+      scale_x_discrete(labels = tmp$t_inf_lab)
   }
 
   if (type=="kappa") {
+    get_kappa_lab <- function(labels = NULL) {
+      N <- ncol(kappa)
+      if(is.null(labels)) labels <- 1:N
+      return(labels)
+    }
     kappa <- as.matrix(x[,grep("kappa", names(x))])
     generations <- as.vector(kappa)
     cases <- as.vector(col(kappa))
@@ -182,17 +238,20 @@ plot.outbreaker_chains <- function(x, y = "post",
     generations <- generations[to_keep]
     cases <- cases[to_keep]
     out_dat <- data.frame(xyTable(generations, cases))
-    get.prop <- function(i) {
+    get_prop <- function(i) {
         ind <- which(out_dat$y == out_dat$y[i])
         out_dat[[3]][i]/sum(out_dat[[3]][ind])
     }
-    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get.prop, 1)
+    out_dat[3] <- vapply(seq_along(out_dat[[3]]), get_prop, 1)
     names(out_dat) <- c("generations", "cases", "frequency")
     out <- ggplot(out_dat) +
-      geom_point(aes(x = generations, y = cases, size = frequency, color = factor(cases))) +
+      geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
+      scale_y_discrete(labels = get_kappa_lab(...)) +
       guides(colour = FALSE) +
-      labs(title="number of generations between cases", x="number of generations to ancestor")
+      labs(title = "number of generations between cases",
+           x = "number of generations to ancestor",
+           y = NULL)
   }
 
   if (type=="network") {
@@ -221,6 +280,10 @@ plot.outbreaker_chains <- function(x, y = "post",
     find_nodes_size <- function(i) {
       sum(from==i, na.rm = TRUE) / nrow(alpha)
     }
+    get_node_lab <- function(labels = NULL) {
+      if(is.null(labels)) labels <- 1:N
+      return(labels)
+    }
     nodes <- data.frame(id = seq_len(ncol(alpha)),
                         label = seq_len(ncol(alpha)))
     nodes$value <- vapply(nodes$id,
@@ -228,6 +291,7 @@ plot.outbreaker_chains <- function(x, y = "post",
                           numeric(1))
     nodes$color <- case_cols
     nodes$shape <- rep("dot", N)
+    nodes$label <- get_node_lab(...)
 
     smry <- summary(x, burnin = burnin)
     is_imported <- is.na(smry$tree$from)

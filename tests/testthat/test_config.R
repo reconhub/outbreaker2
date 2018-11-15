@@ -42,6 +42,9 @@ test_that("test: settings are processed fine", {
     expect_warning(create_config(init_tree = rep(-1,dat$N), data = dat),
                    "some initial ancestries refer to unknown cases")
     expect_false(create_config(data = dat_nodna, move_mu = TRUE)$move_mu)
+    expect_error(create_config(pb = 'TRUE'),
+                 "pb must be a logical")
+
 
 })
 

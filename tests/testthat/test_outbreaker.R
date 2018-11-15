@@ -274,7 +274,7 @@ test_that("results ok: kappa and pi", {
 
     ## checks
     expect_equal(smry$tree$from, c(NA, 1, 2, 3))
-    expect_equal(smry$tree$generations, c(NA, 1, 2, 4.5))
+    expect_equal(smry$tree$generations, c(NA, 1, 2, 4))
     expect_true(min(smry$post) > -35)
     expect_true(all(smry$pi[3:4] > 0.5 & smry$pi[3:4] < 0.8))
 
@@ -300,11 +300,11 @@ test_that("results ok: outbreaker with custom priors",
 
     config <-  list(n_iter = 5e3, sample_every = 50,
                     init_tree = "star", move_kappa = TRUE,
-                    move_pi = TRUE, init_pi = 1,
+                    move_pi = TRUE, init_pi = 0.9,
                     find_import = FALSE)
 
 
-    ## plot(function(x) dbeta(x, 100, 1)) # to see the distribution
+    ## plot(function(x) dbeta(x, 50, 25)) # to see the distribution
 
     f_pi_1 <- function(x) dbeta(x$pi, 100, 1, log = TRUE) # stronger prior
     f_pi_2 <- function(x) 0.0 # flat prior
@@ -318,8 +318,8 @@ test_that("results ok: outbreaker with custom priors",
     smry_2 <- summary(out_2, burnin = 500)
 
     expect_true(smry_1$pi[2] > 0.9)
-    expect_true(smry_2$pi[2] > 0.2 && smry_2$pi[5] < 0.6)
-
+    expect_true(smry_2$pi[2] > 0.6 && smry_2$pi[5] < 0.9)
+  
 })
 
 

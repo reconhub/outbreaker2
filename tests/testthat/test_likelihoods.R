@@ -50,7 +50,7 @@ test_that("Test cpp_ll_timing_sampling", {
     alpha <- c(NA,rep(1,4))
     samp_times <- times + c(1, 1, 2, 3, 4)
     f <- c(.1, .2, .5, .2, .1)
-    data <- outbreaker_data(dates = samp_times, f_dens = f)
+    data <- outbreaker_data(dates = samp_times, w_dens = f, f_dens = f)
     config <- create_config(data = data,
                             init_t_inf = times,
                             init_tree = alpha)
@@ -130,7 +130,6 @@ test_that("Test cpp_ll_genetic", {
     data_resort <- outbreaker_data(dates = fake_outbreak$sample,
                                    w_dens = fake_outbreak$w,
                                    dna = dna_resort)
-
     expect_equal(cpp_ll_genetic(data, param),
                  cpp_ll_genetic(data_resort, param))
 
@@ -174,7 +173,7 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
     ## create data
 
     alpha <- as.integer(c(NA, 1, 2, 3, 2, 5))
-    kappa <- as.integer(c(NA, 1, 2, 1, 2 ,1))
+    kappa <- as.integer(c(NA, 1, 2, 1, 2, 1))
     onset <- as.integer(c(0, 1, 2, 3, 2, 3))
     mu <- 0.001231
     w <- c(0, 1, 2, 1, .5)
@@ -186,15 +185,24 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
     data <- outbreaker_data(dates = onset,
                             dna = dna,
                             w_dens = w)
-    data <- add_convolutions(data, create_config())
     param <- list(alpha = alpha,
                   kappa = kappa,
                   mu = mu)
 
     ## tests
+    ##
+    n_mut_1 <- 4
+    n_mut_2 <- 2
+    kappa_1 <- 2
+    kappa_2 <- 3
     n_mut <- 6
     n_non_mut <- (50 * 2) - 4 + (50 * 3) - 2
-    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu)
+    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu) +
+      n_mut_1*log(kappa_1) + n_mut_2*log(kappa_2)
+
+    ## Need to add_convolutions so that cpp_ll_genetic can extract max_kappa
+    ## from nrow(w_dens) - otherwise w_dens is a vector
+    data <- add_convolutions(data, create_config())
     expect_equal(cpp_ll_genetic(data, param),
                  exp_ll)
 

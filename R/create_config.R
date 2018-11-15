@@ -121,6 +121,8 @@
 #' second parameter of the beta prior for the non-infectious contact rate
 #' 'lambda'}
 #'
+#' \item{pb}{a logical indicating if a progress bar should be displayed}
+#' 
 #' }
 #'
 #' @param data an optional list of data items as returned by
@@ -186,7 +188,8 @@ create_config <- function(..., data = NULL) {
                      prior_mu = 1,
                      prior_pi = c(10,1),
                      prior_eps = c(1,1),
-                     prior_lambda = c(1,1))
+                     prior_lambda = c(1,1),
+                     pb = FALSE)
 
     ## MODIFY CONFIG WITH ARGUMENTS ##
     config <- modify_defaults(defaults, config)
@@ -574,7 +577,11 @@ create_config <- function(..., data = NULL) {
         stop("prior_lambda is has values which are infinite or NA")
     }
 
-
+  
+    if (!is.logical(config$pb)) {
+        stop("pb must be a logical")
+    }
+  
     ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
     if (!is.null(data)) {
         ## check initial tree

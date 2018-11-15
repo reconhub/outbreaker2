@@ -1,6 +1,6 @@
 Package: outbreaker2
-Version: 1.0.2
-Date: 2018-08-16
+Version: 1.1.0
+Date: 2018-11-15
 Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
 Authors@R: c(person("Thibaut", "Jombart",

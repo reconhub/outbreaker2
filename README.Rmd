@@ -21,7 +21,7 @@ The genetic likelihood of
 the
 [original *outbreaker* paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003457) was
 found to contain a minor mistake in accounting for unobserved generations of
-infection. As of November 9th 2018, the development version of *outbreaker2*
+infection. As of November 15th 2018, the development version of *outbreaker2*
 hosted on GitHub will use the correct genetic likelihood. When the new
 likelihood passes through peer-review and is published, we will push these
 changes to the CRAN version. 

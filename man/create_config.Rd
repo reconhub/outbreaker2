@@ -139,6 +139,8 @@ parameter of the beta prior for the contact reporting coverage 'eps'}
 second parameter of the beta prior for the non-infectious contact rate
 'lambda'}
 
+\item{pb}{a logical indicating if a progress bar should be displayed}
+
 }
 }
 \examples{

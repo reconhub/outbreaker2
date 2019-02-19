@@ -162,7 +162,7 @@ plot.outbreaker_chains <- function(x, y = "post",
     }
     ## Return labels, if provided
     get_alpha_lab <- function(axis, labels = NULL) {
-      if(is.null(labels)) labels <- levels(out_dat$to)
+      if(is.null(labels)) labels <- seq_len(ncol(alpha))
       if(axis == 'x') return(labels) else
       if(axis == 'y') return(c("Import", labels))
     }
@@ -179,8 +179,7 @@ plot.outbreaker_chains <- function(x, y = "post",
            alpha_color = get_alpha_color(color))
     }
 
-    tmp <- get_lab_color(...)
-    
+    tmp <- get_lab_color(labels, ...)
     out_dat[3] <- vapply(seq_along(out_dat[[3]]), get_prop, 1)
     out_dat$from <- factor(out_dat$from, levels = c(0, sort(unique(out_dat$to))))
     out_dat$to <- factor(out_dat$to, levels = sort(unique(out_dat$to)))
@@ -306,7 +305,6 @@ plot.outbreaker_chains <- function(x, y = "post",
       color = list(highlight = "red"))
 
   }
-
 
   return(out)
 }

@@ -69,9 +69,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
     // Local variables used for computatoins
-    size_t n_mut = 0, sum_n_mut = 0;
-    size_t n_non_mut = 0, sum_n_non_mut = 0;
-    double sum_kappa_combn = 0;
+    size_t n_mut = 0;
+    size_t n_non_mut = 0;
     double out = 0;
     bool found[1];
     size_t ances[1];
@@ -121,10 +120,6 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
 	    if (found[0]) {
 
-	      // n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
-	      // sum_n_mut += n_mut;
-	      // sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
-	      // sum_kappa_combn += n_mut * log(n_generations[0]);
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
 	      n_non_mut = L - n_mut;
 
@@ -170,10 +165,6 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
       }
     }
-    
-    //    return log(mu) * (double) sum_n_mut +
-    //      log(1.0 - mu) * (double) sum_n_non_mut +
-    //      sum_kappa_combn;
 
     return(out);
     

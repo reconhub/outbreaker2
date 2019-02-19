@@ -37,7 +37,7 @@ The corrected genetic likelihood is:
 <img src="https://latex.codecogs.com/svg.latex?(\kappa_i&space;\mu)^{d(s_i,s_{\alpha_i})}(1&space;-&space;\kappa_i&space;\mu)^{l(s_i,&space;s_{\alpha_i})&space;-&space;d(s_i,s_{\alpha_i})}" title="(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
 
 A complete derivation of the correct likelihood can be found 
-[here](https://www.scribd.com/document/399998504/Genetic-likelihood).
+[here](https://www.scribd.com/document/400001938/S1-Text-pdf).
 
 <br>
 

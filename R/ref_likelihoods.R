@@ -35,13 +35,15 @@
     ## for computer efficiency, we re-factorise it as:
     ##  log(mu) * sum(n_mut) + log(1 - mu) * (L-n_mut + (kappa-1)*L)
     ##
-
+    
     n_mut <- data$D[cbind(i, param$alpha[i], deparse.level = 0)]
     
-    n_non_mut <- (data$L - n_mut) + (param$kappa[i]-1) * data$L
+    n_non_mut <- (data$L - n_mut)
 
-    out <- log(param$mu) * sum(n_mut, na.rm = TRUE) + # mutated sites
-        log(1 - param$mu) * sum(n_non_mut, na.rm = TRUE) # non mutated sites
+    out <- sum(n_mut*log(param$kappa[i]*param$mu) +
+               n_non_mut*log(1 - param$kappa[i]*param$mu),
+               na.rm = TRUE)
+    
     return(out)
 }
 

@@ -190,16 +190,17 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
                   mu = mu)
 
     ## tests
-    ##
+    
     n_mut_1 <- 4
     n_mut_2 <- 2
     kappa_1 <- 2
     kappa_2 <- 3
-    n_mut <- 6
-    n_non_mut <- (50 * 2) - 4 + (50 * 3) - 2
-    exp_ll <- n_mut * log(mu) + n_non_mut * log(1-mu) +
-      n_mut_1*log(kappa_1) + n_mut_2*log(kappa_2)
 
+    exp_ll <- n_mut_1*log(mu*kappa_1) +
+      (50 - n_mut_1)*log(1 - kappa_1*mu) +
+      n_mut_2*log(mu*kappa_2) +
+      (50 - n_mut_2)*log(1 - kappa_2*mu)
+    
     ## Need to add_convolutions so that cpp_ll_genetic can extract max_kappa
     ## from nrow(w_dens) - otherwise w_dens is a vector
     data <- add_convolutions(data, create_config())

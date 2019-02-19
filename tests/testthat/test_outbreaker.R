@@ -285,6 +285,35 @@ test_that("results ok: kappa and pi", {
 
 
 
+test_that("results ok: kappa from genetic data", {
+  
+    ## skip on CRAN
+    skip_on_cran()
+
+    dates <- c(0, 5, 15, 20, 30)
+    w <- dnorm(1:10, 5, 1)
+    dna <- matrix(c("A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A",
+                    "T", "T", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A",
+                    "T", "T", "G", "G", "G", "G", "A", "A", "A", "A", "A", "A",
+                    "T", "T", "G", "G", "G", "G", "T", "T", "A", "A", "A", "A",
+                    "T", "T", "G", "G", "G", "G", "T", "T", "G", "G", "G", "G"),
+                  byrow = TRUE, nrow = 5)
+    dna <- ape::as.DNAbin(dna)
+    data <- outbreaker_data(dates = dates, dna = dna, w_dens = w)
+    config <- create_config(init_mu = 2/12, move_mu = FALSE)
+    res <- outbreaker(data, config)
+    expect_equal(summary(res)$tree$generations,
+                 c(NA, 1L, 2L, 1L, 2L))
+
+})
+
+
+
+
+
+
+
+
 
 test_that("results ok: outbreaker with custom priors",
 {

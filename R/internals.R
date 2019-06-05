@@ -328,6 +328,110 @@ add_convolutions <- function(data, config) {
 
 
 
+## Remove the weakest if a cycle is detected ('weak' defined by variable
+## described by 'rank_contact')
+
+.clean_cycles <- function(i, leaf, alpha, cycle_elements) {
+
+  incoming_edge <- alpha[which(alpha$to == i),]
+
+  if(nrow(incoming_edge) == 0) {
+    return(alpha)
+  } else if(nrow(incoming_edge) > 1) {
+    to_keep <- incoming_edge[which.max(incoming_edge$support),]
+  } else {
+    to_keep <- incoming_edge
+  }
+
+  if(is.na(to_keep$from) || to_keep$from == 0) {
+    return(alpha)
+  }
+
+  ## Does this new infector exist in our cycle?  If yes, we have found a cycle
+  ## and we need to remove the weakest link. We then need to restart the loop to
+  ## make sure no other cycles exist, using the modified alpha
+  if(to_keep$from %in% cycle_elements$to) {
+    cycle_elements <- rbind(cycle_elements, to_keep)
+    edge_remove <- cycle_elements[which.min(cycle_elements$support),]
+    ind_remove <- which(alpha$from == edge_remove$from &
+                        alpha$to == edge_remove$to)
+    alpha <- alpha[-ind_remove,]
+
+    ## Restart loop from leaf with updated alpha
+    alpha <- .clean_cycles(leaf, leaf, alpha, NULL)
+    
+    ## If no loop, move onwards
+  } else {
+    
+    cycle_elements <- rbind(cycle_elements, to_keep)
+    alpha <- .clean_cycles(to_keep$from, leaf, alpha, cycle_elements)
+    
+  }
+
+  return(alpha)
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+## Returns the maximum posterior ancestor for each, except when cycles are
+## detected, in which case the weakest link in the cycle is removed and the
+## maximum tree is re-calculated (once again removing the weakest link if
+## another cycle is found). n specifies the top n ancestries included in the
+## ancestries (can be reduced if the functions takes too long to run).
+.decycle_tree <- function(x, n = 100) {
+
+  get_top <- function(x, n) {
+    stats::na.omit(x[order(x[,3], decreasing = TRUE),][1:n,])
+  }
+
+  ## Keep only the top n ancestors for each case
+  alpha_mat <- as.matrix(x[,grep("alpha", names(x))])
+  N <- ncol(alpha_mat)
+  colnames(alpha_mat) <- seq_len(ncol(alpha_mat))
+  from <- as.vector(alpha_mat)
+  to <- as.vector(col(alpha_mat))
+  from[is.na(from)] <- 0
+  
+  alpha <- matrix(apply(data.frame(xyTable(from,to)), 2, as.numeric), ncol = 3)
+  alpha[,3] <- alpha[,3]/nrow(alpha_mat)
+  alpha <- by(alpha, alpha[,2], get_top, n = n)
+  alpha <- data.frame(do.call(rbind, alpha))
+  names(alpha) <- c("from", "to", "support")
+  rownames(alpha) <- NULL
+  alpha$from[alpha$from == 0] <- NA
+  
+  for(i in 1:N) {
+    alpha <- .clean_cycles(i,
+                          leaf = i,
+                          alpha = alpha,
+                          cycle_elements = NULL)
+  }
+
+  consensus <- by(alpha, alpha$to, function(x) x[which.max(x$support),])
+  consensus <- do.call(rbind, consensus)
+
+  return(consensus)
+  
+}
+
+
+
+
+
+
+
+
+
 
 
 ## ## swaps ancestries in the tree

@@ -314,9 +314,17 @@ plot.outbreaker_chains <- function(x, y = "post",
 
 #' @rdname outbreaker_chains
 #' @param object an \code{outbreaker_chains} object as returned by \code{outbreaker}.
+#'
+#' @param method the method used to determine consensus ancestries. 'mpa'
+#'   (maximum posterior ancestry) simply returns the posterior ancestry with the
+#'   highest posterior support for each case, even if this includes
+#'   cycles. 'decycle' will return the maximum posterior ancestry, except when
+#'   cycles are detected, in which case the link in the cycle with the lowest
+#'   support is pruned and the tree recalculated.
+#' 
 #' @export
 #' @importFrom stats median
-summary.outbreaker_chains <- function(object, burnin = 0, ...) {
+summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "decycle"), ...) {
   ## check burnin ##
   x <- object
   if (burnin > max(x$step)) {
@@ -356,27 +364,43 @@ summary.outbreaker_chains <- function(object, burnin = 0, ...) {
 
   ## summary of alpha ##
   alpha <- as.matrix(x[,grep("alpha", names(x))])
+  
+  method <- match.arg(method)
 
-  ## function to get most frequent item
-  f1 <- function(x) {
-    as.integer(names(sort(table(x, exclude = NULL), decreasing = TRUE)[1]))
+  if(method == 'mpa') {
+
+    ## function to get most frequent item
+    f1 <- function(x) {
+      as.integer(names(sort(table(x, exclude = NULL), decreasing = TRUE)[1]))
+    }
+    out$tree$from <- apply(alpha, 2, f1)
+    out$tree$to <- seq_len(ncol(alpha))
+
+    ## function to get frequency of most frequent item
+    f2 <- function(x) {
+      (sort(table(x), decreasing = TRUE)/length(x))[1]
+    }
+    support <- apply(alpha, 2, f2)
+
+  } else if(method == 'decycle') {
+
+    cons <- .decycle_tree(x)
+    out$tree$from <- cons$from
+    out$tree$to <- cons$to
+    support <- cons$support
+    
   }
-  out$tree$from <- apply(alpha, 2, f1)
-  out$tree$to <- seq_len(ncol(alpha))
 
   ## summary of t_inf ##
   t_inf <- as.matrix(x[,grep("t_inf", names(x))])
   out$tree$time <- apply(t_inf, 2, median)
 
-  ## function to get frequency of most frequent item
-  f2 <- function(x) {
-    (sort(table(x), decreasing = TRUE)/length(x))[1]
-  }
-  out$tree$support <- apply(alpha, 2, f2)
-
+  out$tree$support <- support
+  
   ## summary of kappa ##
   kappa <- as.matrix(x[,grep("kappa", names(x))])
-  out$tree$generations <- apply(kappa, 2, median)
+  out$tree$generations <- apply(kappa, 2, median, na.rm = TRUE)
+  out$tree$generations[is.na(out$tree$from)] <- NA
 
   ## shape tree as a data.frame
   out$tree <- as.data.frame(out$tree)

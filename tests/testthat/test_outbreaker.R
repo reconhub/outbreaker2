@@ -400,3 +400,38 @@ test_that("results ok: outbreaker with fixed number returning priors and likelih
     expect_true(all(out2$post == 1.123))
 
 })
+
+
+
+
+
+## test consensus tree
+test_that("test consensus trees", {
+  
+    ## skip on CRAN
+    skip_on_cran()
+
+
+    ## get data
+    data(fake_outbreak)
+    x <- fake_outbreak
+
+    ## outbreaker DNA + time ##
+    ## analysis
+    set.seed(1)
+    data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
+    config <- list(n_iter = 5000, sample_every = 50,
+                   init_tree = "seqTrack", find_import = TRUE,
+                   move_pi = FALSE)
+
+    out <- outbreaker(data = data, config = config)
+
+    ## checks
+    out_smry_mpa <- summary(out, burnin = 1000, method = 'mpa')
+    out_smry_dec <- summary(out, burnin = 1000, method = 'decycle')
+
+    ## as there are no cycles, these should be the same
+    testthat::expect_equal(out_smry_mpa$tree$from,
+                           out_smry_dec$tree$from)
+
+})

@@ -62,9 +62,9 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     tTree <- data.frame(i = ids[x$ances],
                         j = ids[1:length(x$ances)])
     ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
-    epi_c <- make_epicontacts(linelist = data.frame(id = ids),
-                              contacts = ctd,
-                              directed = TRUE)
+    epi_c <- epicontacts::make_epicontacts(linelist = data.frame(id = ids),
+                                           contacts = ctd,
+                                           directed = TRUE)
 
     data <- outbreaker_data(dates = x$onset,
                             dna = x$dna,

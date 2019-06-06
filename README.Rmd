@@ -19,14 +19,7 @@ Welcome to the project page of *outbreaker2*, a Bayesian framework
 
 ### NOTE: Correction to genetic likelihood
 
-The genetic likelihood of
-the
-[original *outbreaker* paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003457) was
-found to contain a minor mistake in accounting for unobserved generations of
-infection. As of November 15th 2018, the development version of *outbreaker2*
-hosted on GitHub will use the correct genetic likelihood. When the new
-likelihood passes through peer-review and is published, we will push these
-changes to the CRAN version. 
+The genetic likelihood of the [original *outbreaker* paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003457) was found to contain a minor mistake in accounting for unobserved generations of infection. As of June 7th 2019, *outbreaker2* will use the correct genetic likelihood published [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006930).
 
 The original genetic likelihood was:
 
@@ -35,9 +28,6 @@ The original genetic likelihood was:
 The corrected genetic likelihood is:
 
 <img src="https://latex.codecogs.com/svg.latex?(\kappa_i&space;\mu)^{d(s_i,s_{\alpha_i})}(1&space;-&space;\kappa_i&space;\mu)^{l(s_i,&space;s_{\alpha_i})&space;-&space;d(s_i,s_{\alpha_i})}" title="(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
-
-A complete derivation of the correct likelihood can be found 
-[here](https://www.scribd.com/document/400001938/S1-Text-pdf).
 
 <br>
 

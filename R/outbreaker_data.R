@@ -9,16 +9,20 @@
 #' \describe{
 #' \item{dates}{dates a vector indicating the collection dates, provided either as
 #' integer numbers or in a usual date format such as \code{Date} or
-#' \code{POSIXct} format. By convention, zero will indicate the oldest date.}
-#'
+#' \code{POSIXct} format. By convention, zero will indicate the oldest date. If
+#' the vector is named, the vector names will be used for matching cases to
+#' contact tracing data and labelled DNA sequences.
+#' 
 #' \item{dna}{the DNA sequences in \code{DNAbin} format (see
 #' \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
 #' \link[adegenet]{fasta2DNAbin}.}
 #'
-#' \item{ctd}{the contact tracing data provided as a matrix or dataframe of two
+#' \item{ctd}{the contact tracing data provided as a matrix/dataframe of two
 #' columns, indicating a reported contact between the two individuals whose ids
-#' are provided in a given row of the data.}
+#' are provided in a given row of the data, or an epicontacts object. In the case
+#' of the latter, linelist IDs will be used for matching dates and DNA
+#' sequences}
 #'
 #' \item{w_dens}{a vector of numeric values indicating the generation time
 #' distribution, reflecting the infectious potential of a case t = 1, 2, ...

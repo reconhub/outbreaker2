@@ -29,7 +29,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    igraph
+    igraph,
+    epicontacts
 Depends:
     R (>= 3.0.0)
 Imports:

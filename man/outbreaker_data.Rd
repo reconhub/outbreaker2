@@ -43,7 +43,9 @@ standardized, this distribution is rescaled to sum to 1.}
 of the colonization time, i_e. time interval during which the pathogen can
 be sampled from the patient.}
 
-}
+\item{ctd_directed}{a boolean indicating if the contact tracing data is
+directed or not. If yes, the first column represents the infector and the
+second column the infectee.} }
 }
 \examples{
 

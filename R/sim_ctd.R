@@ -35,6 +35,8 @@
 
 sim_ctd <- function(tTree, eps, lambda) {
 
+  tTree <- apply(tTree, 2, as.character)
+  
   if(any(c(eps, lambda) < 0) | any(c(eps, lambda) > 1)) {
     stop('eps and lambda must be probabilities')
   }
@@ -46,7 +48,7 @@ sim_ctd <- function(tTree, eps, lambda) {
   ## recognised when querying the contacts dataframe for transmission pairs
   tTree <- tTree %>%
     stats::na.omit() %>%
-    apply(1, sort, FALSE) %>%
+    apply(1, sort, decreasing = FALSE) %>%
     t() %>%
     as.data.frame(stringsAsFactors = FALSE)
 
@@ -55,7 +57,7 @@ sim_ctd <- function(tTree, eps, lambda) {
   if(nrow(tTree) == 0) stop("No transmission observed")
 
   ## Create a dataframe of all potential contacts
-  contacts <- as.data.frame(t(utils::combn(id, 2)))
+  contacts <- as.data.frame(t(utils::combn(sort(id), 2)))
 
   ## Create a column of logicals indicating whether a pair represents a
   ## transmission pair or not
@@ -83,4 +85,5 @@ sim_ctd <- function(tTree, eps, lambda) {
   rownames(ctd) <- NULL
 
   return(ctd)
+  
 }

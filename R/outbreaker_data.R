@@ -30,7 +30,9 @@
 #' of the colonization time, i_e. time interval during which the pathogen can
 #' be sampled from the patient.}
 #'
-#'}
+#' \item{ctd_directed}{a boolean indicating if the contact tracing data is
+#' directed or not. If yes, the first column represents the infector and the
+#' second column the infectee.} }
 #'
 #' @param ... a list of data items to be processed (see description)
 #'
@@ -48,16 +50,39 @@
 outbreaker_data <- function(..., data = list(...)) {
 
   ## SET DEFAULTS ##
-  defaults <- list(dates = NULL, w_dens = NULL, f_dens = NULL,
-                   dna = NULL, ctd = NULL, N = 0L, L = 0L, D = NULL,
-                   max_range = NA, can_be_ances = NULL,
-                   log_w_dens = NULL, log_f_dens = NULL,
-                   contacts = NULL, C_combn = NULL, C_nrow = NULL,
-                   has_dna = logical(0), id_in_dna = integer(0))
+  defaults <- list(dates = NULL,
+                   w_dens = NULL,
+                   f_dens = NULL,
+                   dna = NULL,
+                   ctd = NULL,
+                   ctd_directed = FALSE,
+                   N = 0L,
+                   L = 0L,
+                   D = NULL,
+                   max_range = NA,
+                   can_be_ances = NULL,
+                   log_w_dens = NULL,
+                   log_f_dens = NULL,
+                   contacts = NULL,
+                   C_combn = NULL,
+                   C_nrow = NULL,
+                   ids = NULL,
+                   has_dna = logical(0),
+                   id_in_dna = integer(0))
 
   ## MODIFY DATA WITH ARGUMENTS ##
   data <- modify_defaults(defaults, data, FALSE)
 
+  ## Set up case ids
+  if(is.null(data$ids)) {
+    if(!is.null(names(data$dates))) {
+      data$ids <- names(data$dates)
+    } else if(!is.null(data$ctd) & inherits(data$ctd, "epicontacts")){
+      data$ids <- as.character(data$ctd$linelist$id)
+    } else {
+      data$ids <- as.character(seq_along(data$dates))
+    }
+  }
 
   ## CHECK DATA ##
   ## CHECK DATES
@@ -150,10 +175,14 @@ outbreaker_data <- function(..., data = list(...)) {
         stop(msg)
       }
 
-      rownames(data$dna) <- rownames(data$D) <- colnames(data$D) <- seq_len(data$N)
+      ## These need to be indices
+      rownames(data$D) <- colnames(data$D) <- seq_len(data$N)
+
+      ## These need to match dates/ctd ids
+      rownames(data$dna) <- data$ids
     }
 
-    data$id_in_dna <- match(as.character(seq_len(data$N)), rownames(data$dna))
+    data$id_in_dna <- match(data$ids, rownames(data$dna))
     if(all(is.na(data$id_in_dna))) {
       stop("DNA sequence labels don't match case ids")
     }
@@ -169,25 +198,44 @@ outbreaker_data <- function(..., data = list(...)) {
   ## CHECK CTD
 
   if (!is.null(data$ctd)) {
-    if (!inherits(data$ctd, c("matrix", "data.frame"))) {
-      stop("ctd is not a matrix or data.frame")
+    ctd <- data$ctd
+    if (inherits(ctd, c("matrix", "data.frame"))) {
+      if (!is.matrix(ctd)) {
+        ctd <- as.matrix(ctd)
+      }
+      if(ncol(ctd) != 2) {
+        stop("ctd must contain two columns")
+      }
+    } else if(inherits(ctd, "epicontacts")) {
+      data$ctd_directed <- ctd$directed
+      ctd <- matrix(c(ctd$contacts$from, ctd$contacts$to),
+                    byrow = FALSE, ncol = 2)
+    } else {
+      stop("ctd is not a matrix, data.frame or epicontacts object")
     }
-    if (!is.matrix(data$ctd)) data$ctd <- as.matrix(data$ctd)
-    not.found <- data$ctd[any(!data$ctd %in% 1:data$N)]
-    if (length(not.found) != 0) {
-      not.found <- sort(unique(not.found))
-      stop(paste("Individual(s)", paste(not.found, collapse = ", "),
-                 "are unknown cases (idx < 1 or > N")
+
+    ctd <- apply(ctd, 2, as.character)
+
+    unq <- unique(as.vector(ctd[,1:2]))
+    not_found <- unq[!unq %in% data$ids]
+    if (length(not_found) != 0) {
+      not_found <- sort(unique(not_found))
+      stop(paste("Individual(s)", paste(not_found, collapse = ", "),
+                 "in ctd are unknown cases (idx < 1 or > N")
            )
     }
     contacts <- matrix(0, data$N, data$N)
-    for(i in seq_len(nrow(data$ctd))) {
-      pair <- data$ctd[i,]
-      contacts[pair[[1]], pair[[2]]] <- contacts[pair[[2]], pair[[1]]] <- 1
-    }
+    mtch_1 <- match(ctd[,1], data$ids)
+    mtch_2 <- match(ctd[,2], data$ids)
+    contacts[cbind(mtch_2, mtch_1)] <- 1
+    if(!data$ctd_directed) contacts[cbind(mtch_1, mtch_2)] <- 1
+    
     data$contacts <- contacts
-    data$C_combn <- data$N*(data$N - 1)/2
-    data$C_nrow <- nrow(data$ctd)
+    data$C_combn <- data$N*(data$N - 1)
+    if(!data$ctd_directed) {
+      data$C_combn <- data$C_combn/2
+    }
+    data$C_nrow <- nrow(ctd)
   } else {
     data$contacts <- matrix(integer(0), ncol = 0, nrow = 0)
   }
@@ -196,4 +244,3 @@ outbreaker_data <- function(..., data = list(...)) {
   return(data)
 
 }
-

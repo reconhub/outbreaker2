@@ -1,4 +1,5 @@
 context("Test outbreaker")
+current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string) 
 
 ## test output format ##
 test_that("outbreaker's output have expected format", {
@@ -128,6 +129,8 @@ test_that("results ok: time, ctd, DNA", {
 
     ## outbreaker time, ctd, no DNA ##
     ## analysis
+    ## set the random number generator kind to old R
+    RNGversion("3.5.2")
     set.seed(1)
 
     tTree <- data.frame(i = x$ances,
@@ -161,6 +164,9 @@ test_that("results ok: time, ctd, DNA", {
         
     ## approx log post values
     expect_true(min(out_ctd.smry$post) > -1200)
+
+    ## reset the Random number generator kind
+    RNGversion(current_R_version)
 
 })
 

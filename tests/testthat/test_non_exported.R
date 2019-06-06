@@ -1,5 +1,5 @@
 context("Test non-exported functions")
-
+current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string) 
 
 ## test .choose_possible_alpha ##
 test_that("test: .choose_possible_alpha", {
@@ -52,11 +52,13 @@ test_that("Auxiliary functions for ancestries are working", {
   expect_equal(can_move_alpha(param, config2), c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE))
 
   ## test ancestor selection
+  RNGversion("3.5.2")
   set.seed(1)
   to_move <- replicate(10, select_alpha_to_move(param,config))
   expect_equal(to_move, c(3,3,4,6,3,6,6,5,5,1))
   to_move2 <- replicate(10, select_alpha_to_move(param,config2))
   expect_equal(to_move2, c(1,1,4,3,6,3,4,6,3,6))
+  RNGversion(current_R_version)
 
 })
 

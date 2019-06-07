@@ -33,11 +33,7 @@
 #' \item{f_dens}{similar to \code{w_dens}, except that this is the distribution
 #' of the colonization time, i_e. time interval during which the pathogen can
 #' be sampled from the patient.}
-#'
-#' \item{ctd_directed}{a boolean indicating if the contact tracing data is
-#' directed or not. If yes, the first column represents the infector and the
-#' second column the infectee.} }
-#'
+#' 
 #' @param ... a list of data items to be processed (see description)
 #'
 #' @param data optionally, an existing list of data item as returned by \code{outbreaker_data}.
@@ -59,7 +55,6 @@ outbreaker_data <- function(..., data = list(...)) {
                    f_dens = NULL,
                    dna = NULL,
                    ctd = NULL,
-                   ctd_directed = FALSE,
                    N = 0L,
                    L = 0L,
                    D = NULL,
@@ -211,7 +206,6 @@ outbreaker_data <- function(..., data = list(...)) {
         stop("ctd must contain two columns")
       }
     } else if(inherits(ctd, "epicontacts")) {
-      data$ctd_directed <- ctd$directed
       ctd <- matrix(c(ctd$contacts$from, ctd$contacts$to),
                     byrow = FALSE, ncol = 2)
     } else {
@@ -232,13 +226,9 @@ outbreaker_data <- function(..., data = list(...)) {
     mtch_1 <- match(ctd[,1], data$ids)
     mtch_2 <- match(ctd[,2], data$ids)
     contacts[cbind(mtch_2, mtch_1)] <- 1
-    if(!data$ctd_directed) contacts[cbind(mtch_1, mtch_2)] <- 1
     
     data$contacts <- contacts
     data$C_combn <- data$N*(data$N - 1)
-    if(!data$ctd_directed) {
-      data$C_combn <- data$C_combn/2
-    }
     data$C_nrow <- nrow(ctd)
   } else {
     data$contacts <- matrix(integer(0), ncol = 0, nrow = 0)

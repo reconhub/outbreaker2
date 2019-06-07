@@ -8,6 +8,7 @@ outbreaker2 1.1.0 (2019-06-06)
 ### New features
 
 * *outbreaker2* now accepts `epicontacts` objects for contact data
+* Contact tracing data can be directed or not by toggling `ctd_directed`
 * Cyclical consensus trees can now be avoided by using `method = 'decyle'` in `summary.outbreaker_chains`
 * Added support for case-labelling in `plot.outbreaker_chains`
 * Added progress bar

@@ -283,9 +283,17 @@ add_convolutions <- function(data, config) {
   }
   
   ## name rows/columns (useful if internal debugging needed)
-  rownames(data$log_w_dens) <- paste("kappa", seq_len(nrow(data$log_w_dens)), sep="=")
+  rownames(data$log_w_dens) <- paste("kappa",
+                                     seq_len(nrow(data$log_w_dens)),
+                                     sep = "=")
   colnames(data$log_w_dens) <- seq_len(ncol(data$log_w_dens))
 
+  if(!config$ctd_directed) {
+    data$contacts[] <- as.integer(data$contacts == 1 |
+                                  t(data$contacts) == 1)
+    data$C_combn <- data$C_combn/2
+  }
+  
   return(data)
 }
 

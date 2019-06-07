@@ -74,11 +74,14 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     ## test recursiveness
     data <- outbreaker_data(data = data)
 
+    ## check directionality is being passed
+    config <- create_config(data = data)
+
     ## check ids are carried through
     expect_equal(data$ids, epi_c$linelist$id)
     
     ## make sure directionality is carried through
-    expect_true(data$ctd_directed)
+    expect_true(config$ctd_directed)
 
 
     ## case labelling via dates
@@ -88,38 +91,44 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     data <- outbreaker_data(dates = dates,
                             dna = x$dna,
                             ctd = ctd,
-                            w_dens = x$w,
-                            ctd_directed = TRUE)
+                            w_dens = x$w)
 
     ## test recursiveness
     data <- outbreaker_data(data = data)
+
+    ## check direcionality working
+    config <- create_config(ctd_directed = TRUE,
+                            data = data)
+
+    ## check contact numbers are being updated
+    data <- add_convolutions(data, config)
 
     ## check ids are carried through
     expect_equal(data$ids, ids)
     
     ## make sure directionality is carried through
-    expect_true(data$ctd_directed)
+    expect_true(config$ctd_directed)
 
     ## check the number of contacts are correct
     expect_equal(nrow(ctd), sum(data$contacts))
-
 
     ## toggle directionality
     data <- outbreaker_data(dates = dates,
                             dna = x$dna,
                             ctd = ctd,
-                            w_dens = x$w,
-                            ctd_directed = FALSE)
+                            w_dens = x$w)
 
     data <- outbreaker_data(data = data)
+
+    config <- create_config(ctd_directed = FALSE)
+
+    data <- add_convolutions(data, config)
     
     ## check the number of contacts are correct
     expect_equal(2*nrow(ctd), sum(data$contacts))
 
     ## make sure directionality is carried through
-    expect_false(data$ctd_directed)
-
-    
+    expect_false(config$ctd_directed)
 
     ## identify non-matching labels
     wrong_dna <- x$dna

@@ -33,8 +33,8 @@ vignette("Overview", package = "outbreaker2")
 ```
 
 We will be analysing a small simulated outbreak distributed with the package,
-`fake_outbreak`. This dataset contains simulated dates of onsets and pathogen
-genome sequences for 30 cases:
+`fake_outbreak`. This dataset contains simulated dates of onsets, partial
+contact tracing data and pathogen genome sequences for 30 cases:
 
 
 ```{r, data}
@@ -45,7 +45,7 @@ col <- "#6666cc"
 fake_outbreak
 ```
 
-Here, we will use the dates of case isolation `$sample`, DNA sequences `$dna`, and the empirical distribution of the generation time `$w`, which can be visualised as:
+Here, we will use the dates of case isolation `$sample`, DNA sequences `$dna`, contact tracing data `$ctd` and the empirical distribution of the generation time `$w`, which can be visualised as:
 ```{r, w}
 
 plot(fake_outbreak$w, type = "h", xlim = c(0, 5), 
@@ -84,12 +84,12 @@ Let us run the analysis with default settings:
 
 dna <- fake_outbreak$dna
 dates <- fake_outbreak$sample
+ctd <- fake_outbreak$ctd
 w <- fake_outbreak$w
-data <- outbreaker_data(dna = dna, dates = dates, w_dens = w)
+data <- outbreaker_data(dna = dna, dates = dates, ctd = ctd, w_dens = w)
 
 ## we set the seed to ensure results won't change
 set.seed(1)
-
 
 res <- outbreaker(data = data)
 
@@ -222,7 +222,7 @@ summary(res)
 As said before, most customisation can be achieved via `create_config`.
 In the following, we make the following changes to the defaults:
 
-- increase the number of iterations to 20,000
+- increase the number of iterations to 30,000
 
 - set the sampling rate to 20
 
@@ -236,7 +236,7 @@ In the following, we make the following changes to the defaults:
 
 ```{r, config2, cache = TRUE}
 
-config2 <- create_config(n_iter = 2e4,
+config2 <- create_config(n_iter = 3e4,
                          sample_every = 20,
 		         init_tree ="star",
 			 move_kappa = FALSE,
@@ -250,14 +250,14 @@ plot(res2, burnin = 2000)
 
 ```
 
-We can see that the burnin is around 3,000 iterations (i.e. after the initial
+We can see that the burnin is around 12,500 iterations (i.e. after the initial
 step corresponding to a local optimum).  We get the consensus tree from the new
 results, and compare the inferred tree to the actual ancestries stored in the
 dataset (`fake_outbreak$ances`):
 ```{r, res2}
 
-summary(res2, burnin = 4000)
-tree2 <- summary(res2, burnin = 4000)$tree
+summary(res2, burnin = 12500)
+tree2 <- summary(res2, burnin = 12500)$tree
 
 comparison <- data.frame(case = 1:30,
                        	 inferred = paste(tree2$from),

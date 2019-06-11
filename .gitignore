@@ -13,3 +13,5 @@ CTD.outbreaker2.Rproj
 vignettes/*html
 vignettes/*cache*
 docs/articles/*cache*
+doc
+Meta

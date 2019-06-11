@@ -180,9 +180,8 @@ outbreaker_data <- function(..., data = list(...)) {
       ## These need to match dates/ctd ids
       rownames(data$dna) <- data$ids
     }
-
     data$id_in_dna <- match(data$ids, rownames(data$dna))
-    if(any(is.na(data$id_in_dna))) {
+    if(any(is.na(match(rownames(data$dna), data$ids)))) {
       stop("DNA sequence labels don't match case ids")
     }
 

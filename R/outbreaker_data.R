@@ -11,7 +11,7 @@
 #' integer numbers or in a usual date format such as \code{Date} or
 #' \code{POSIXct} format. By convention, zero will indicate the oldest date. If
 #' the vector is named, the vector names will be used for matching cases to
-#' contact tracing data and labelled DNA sequences.
+#' contact tracing data and labelled DNA sequences.}
 #' 
 #' \item{dna}{the DNA sequences in \code{DNAbin} format (see
 #' \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
@@ -32,7 +32,7 @@
 #'
 #' \item{f_dens}{similar to \code{w_dens}, except that this is the distribution
 #' of the colonization time, i_e. time interval during which the pathogen can
-#' be sampled from the patient.}
+#' be sampled from the patient.}}
 #' 
 #' @param ... a list of data items to be processed (see description)
 #'

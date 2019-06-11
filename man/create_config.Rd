@@ -139,6 +139,11 @@ parameter of the beta prior for the contact reporting coverage 'eps'}
 second parameter of the beta prior for the non-infectious contact rate
 'lambda'}
 
+\item{ctd_directed}{a logical indicating if the contact tracing data is
+directed or not. If yes, the first column represents the infector and the
+second column the infectee. If ctd is provided as an epicontacts objects,
+directionality will be taken from there.}
+
 \item{pb}{a logical indicating if a progress bar should be displayed}
 
 }

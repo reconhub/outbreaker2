@@ -182,7 +182,7 @@ outbreaker_data <- function(..., data = list(...)) {
     }
 
     data$id_in_dna <- match(data$ids, rownames(data$dna))
-    if(all(is.na(data$id_in_dna))) {
+    if(any(is.na(data$id_in_dna))) {
       stop("DNA sequence labels don't match case ids")
     }
 
@@ -199,6 +199,8 @@ outbreaker_data <- function(..., data = list(...)) {
   if (!is.null(data$ctd)) {
     ctd <- data$ctd
     if (inherits(ctd, c("matrix", "data.frame"))) {
+      ## prevent factor -> integer conversion
+      ctd <- apply(ctd, 2, as.character)
       if (!is.matrix(ctd)) {
         ctd <- as.matrix(ctd)
       }
@@ -206,13 +208,11 @@ outbreaker_data <- function(..., data = list(...)) {
         stop("ctd must contain two columns")
       }
     } else if(inherits(ctd, "epicontacts")) {
-      ctd <- matrix(c(ctd$contacts$from, ctd$contacts$to),
-                    byrow = FALSE, ncol = 2)
+      ## prevent factor -> integer conversion
+      ctd <- apply(ctd$contacts[c("from", "to")], 2, as.character)
     } else {
       stop("ctd is not a matrix, data.frame or epicontacts object")
     }
-
-    ctd <- apply(ctd, 2, as.character)
 
     unq <- unique(as.vector(ctd[,1:2]))
     not_found <- unq[!unq %in% data$ids]

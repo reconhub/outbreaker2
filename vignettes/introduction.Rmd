@@ -250,14 +250,14 @@ plot(res2, burnin = 2000)
 
 ```
 
-We can see that the burnin is around 12,500 iterations (i.e. after the initial
+We can see that the burnin is around 2,500 iterations (i.e. after the initial
 step corresponding to a local optimum).  We get the consensus tree from the new
 results, and compare the inferred tree to the actual ancestries stored in the
 dataset (`fake_outbreak$ances`):
 ```{r, res2}
 
-summary(res2, burnin = 12500)
-tree2 <- summary(res2, burnin = 12500)$tree
+summary(res2, burnin = 3000)
+tree2 <- summary(res2, burnin = 3000)$tree
 
 comparison <- data.frame(case = 1:30,
                        	 inferred = paste(tree2$from),
@@ -274,6 +274,6 @@ Let's visualise the posterior trees:
 
 ```{r, net2}
 
-plot(res2, type = "network", burnin = 4000, min_support = 0.01)
+plot(res2, type = "network", burnin = 3000, min_support = 0.01)
 
 ```

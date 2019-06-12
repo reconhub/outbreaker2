@@ -11,6 +11,7 @@ test_that("Test detection of imported cases", {
     data <- with(fake_outbreak,
                  outbreaker_data(dates = onset,
                                  w_dens = w,
+                                 ctd = ctd,
                                  dna = dna))
     config <- create_config(data = data)
     data <- add_convolutions(data = data, config = config)

@@ -153,6 +153,68 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 }
 
 
+// movement of the transfer probability 'sigma' is done using a dumb normal
+// proposal. This is satisfying for now - we only reject a few non-sensical
+// values outside the range [0;1]. The SD of the proposal (implicitely contained
+// in rand$sigma.rnorm1, but really provided through 'config', seems fine as the
+// range of real values will never change much. Probably not much point in using
+// auto-tuning here.
+
+// [[Rcpp::export(rng = true)]]
+Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
+                       Rcpp::RObject custom_ll = R_NilValue,
+                       Rcpp::RObject custom_prior = R_NilValue) {
+    
+    // deep copy here for now, ultimately should be an arg.
+    
+    Rcpp::List new_param = clone(param);
+    Rcpp::NumericVector sigma = param["sigma"]; // these are just pointers
+    Rcpp::NumericVector new_sigma = new_param["sigma"]; // these are just pointers
+    
+    double sd_sigma = static_cast<double>(config["sd_sigma"]);
+    
+    double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
+    
+    
+    // proposal (normal distribution with SD: config$sd_pi)
+    
+    new_sigma[0] += R::rnorm(0.0, sd_sigma); // new proposed value
+    
+    
+    // automatic rejection of sigma outside [0;1]
+    
+    if (new_sigma[0] < 0.0 || new_sigma[0] > 1.0) {
+        return param;
+    }
+    
+    
+    // compute likelihoods
+    old_logpost = cpp_ll_reporting(data, param, R_NilValue, custom_ll);
+    new_logpost = cpp_ll_reporting(data, new_param, R_NilValue, custom_ll);
+    
+    
+    // compute priors
+    
+    old_logpost += cpp_prior_sigma(param, config, custom_prior);
+    new_logpost += cpp_prior_sigma(new_param, config, custom_prior);
+    
+    
+    // acceptance term
+    
+    p_accept = exp(new_logpost - old_logpost);
+    
+    
+    // acceptance: the new value is already in sigma, so we only act if the move is
+    // rejected, in which case we restore the previous ('old') value
+    
+    if (p_accept < unif_rand()) { // reject new values
+        return param;
+    }
+    
+    return new_param;
+}
+
+
 
 
 

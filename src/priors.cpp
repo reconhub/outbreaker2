@@ -80,6 +80,26 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 
 
 
+// The prior for the trasfer probability 'sigma' is a beta distribution
+
+// [[Rcpp::export(rng = false)]]
+double cpp_prior_sigma(Rcpp::List param, Rcpp::List config,
+                       Rcpp::RObject custom_function = R_NilValue) {
+    
+    if (custom_function == R_NilValue) {
+        Rcpp::NumericVector shape = config["prior_sigma"];
+        
+        return R::dbeta(Rcpp::as<double>(param["sigma"]),
+                        (double) shape[0],
+                        (double) shape[1],
+                        true);
+    } else {
+        Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+        
+        return Rcpp::as<double>(f(param));
+    }
+    
+}
 
 
 

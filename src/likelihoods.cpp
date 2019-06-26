@@ -541,10 +541,10 @@ double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
 }
 
 
-double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i,
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, size_t i,
                               Rcpp::RObject custom_function) {
     SEXP si = PROTECT(Rcpp::wrap(i));
-    double ret = cpp_ll_timing_sampling(data, param, si, custom_function);
+    double ret = cpp_ll_potential_colonised(data, param, si, custom_function);
     UNPROTECT(1);
     return ret;
 }
@@ -662,7 +662,9 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(genetic diversity): see function cpp_ll_genetic
 // - p(potential colonised): see function cpp_ll_potential_colonised
 // - p(missing cases): see function cpp_ll_reporting
-// - p(contact): see function cpp_ll_contact
+// - p(contact): see function cpp_ll_contact 
+// - p(transferred colonised): see function cpp_ll_patient_transfer 
+
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
 		  Rcpp::RObject custom_functions) {

@@ -161,7 +161,7 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 // auto-tuning here.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
+Rcpp::List cpp_move_sigma(Rcpp::List param, Rcpp::List data, Rcpp::List config,
                        Rcpp::RObject custom_ll = R_NilValue,
                        Rcpp::RObject custom_prior = R_NilValue) {
     
@@ -189,8 +189,8 @@ Rcpp::List cpp_move_pi(Rcpp::List param, Rcpp::List data, Rcpp::List config,
     
     
     // compute likelihoods
-    old_logpost = cpp_ll_reporting(data, param, R_NilValue, custom_ll);
-    new_logpost = cpp_ll_reporting(data, new_param, R_NilValue, custom_ll);
+    old_logpost = cpp_ll_patient_transfer(data, param, R_NilValue, custom_ll);
+    new_logpost = cpp_ll_patient_transfer(data, new_param, R_NilValue, custom_ll);
     
     
     // compute priors

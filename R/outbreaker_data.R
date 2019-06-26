@@ -67,7 +67,9 @@ outbreaker_data <- function(..., data = list(...)) {
                    C_nrow = NULL,
                    ids = NULL,
                    has_dna = logical(0),
-                   id_in_dna = integer(0))
+                   id_in_dna = integer(0),
+                   hosp_matrix = NULL,
+                   n_cases = NULL)
 
   ## MODIFY DATA WITH ARGUMENTS ##
   data <- modify_defaults(defaults, data, FALSE)
@@ -233,6 +235,54 @@ outbreaker_data <- function(..., data = list(...)) {
     data$contacts <- matrix(integer(0), ncol = 0, nrow = 0)
   }
 
+
+    ## CHECK HOSP_MATRIX
+    if (!is.null(data$hosp_matrix)) {
+        if (!inherits(data$hosp_matrix, c("data.frame", "matrix"))) {
+            stop("hosp_matrix is not a matrix or a data.frame")
+        }
+        if (!is.matrix(data$hosp_matrix)) {
+            data$hosp_matrix <- as.matrix(data$hosp_matrix)
+        }
+        dims <- dim(data$hosp_matrix)
+        if (!dims[1] == dims[2]) {
+            stop("hosp_matrix must be a square matrix")
+        }
+        ## Check if colnames and rownames are identical
+        namesCols = colnames(data$hosp_matrix)
+        namesRows = rownames(data$hosp_matrix)
+        if (is.null(namesCols) | is.null(namesRows)) {
+            stop("hosp_matrix has no column of row names")
+        }
+        extraCols = setdiff(namesCols, namesRows)
+        extraRows = setdiff(namesRows, namesCols)
+        if (length(extraCols)) {
+            msgCols = paste0("Column names ",
+                             paste0(extraCols, collapse = ', '),
+                             " are missing in row names. ")
+        } else {
+            msgCols = character(0)
+        }
+        if (length(extraRows)) {
+            msgRows = paste0("Row names ",
+                             paste0(extraRows, collapse = ', '),
+                             " are missing in column names.")
+        } else {
+            msgRows = character(0)
+        }
+        if (length(msgCols) | length(msgRows)) {
+            stop(msgCols, msgRows)
+        }
+        ## Check for negative values
+        if (any(data$hosp_matrix) < 0) {
+            stop("hosp_matrix should only contain non negative values")
+        }
+        if (any(is.na(data$hosp_matrix))) {
+            stop("hosp_matrix has missing values")
+        }
+    }
+
+            
   ## output is a list of checked data
   return(data)
 

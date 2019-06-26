@@ -180,6 +180,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_ll_patient_transfer
+double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_function);
+RcppExport SEXP _outbreaker2_cpp_ll_patient_transfer(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_ll_patient_transfer(data, param, i, custom_function));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_ll_potential_colonised
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_function);
+RcppExport SEXP _outbreaker2_cpp_ll_potential_colonised(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_ll_potential_colonised(data, param, i, custom_function));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_ll_all
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i, Rcpp::RObject custom_functions);
 RcppExport SEXP _outbreaker2_cpp_ll_all(SEXP dataSEXP, SEXP paramSEXP, SEXP iSEXP, SEXP custom_functionsSEXP) {
@@ -220,6 +246,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
     Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_move_pi(param, data, config, custom_ll, custom_prior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_move_sigma
+Rcpp::List cpp_move_sigma(Rcpp::List param, Rcpp::List data, Rcpp::List config, Rcpp::RObject custom_ll, Rcpp::RObject custom_prior);
+RcppExport SEXP _outbreaker2_cpp_move_sigma(SEXP paramSEXP, SEXP dataSEXP, SEXP configSEXP, SEXP custom_llSEXP, SEXP custom_priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_ll(custom_llSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_prior(custom_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_move_sigma(param, data, config, custom_ll, custom_prior));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -330,6 +371,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_prior_sigma
+double cpp_prior_sigma(Rcpp::List param, Rcpp::List config, Rcpp::RObject custom_function);
+RcppExport SEXP _outbreaker2_cpp_prior_sigma(SEXP paramSEXP, SEXP configSEXP, SEXP custom_functionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type custom_function(custom_functionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_prior_sigma(param, config, custom_function));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_prior_eps
 double cpp_prior_eps(Rcpp::List param, Rcpp::List config, Rcpp::RObject custom_function);
 RcppExport SEXP _outbreaker2_cpp_prior_eps(SEXP paramSEXP, SEXP configSEXP, SEXP custom_functionSEXP) {
@@ -382,9 +435,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_outbreaker2_cpp_ll_reporting", (DL_FUNC) &_outbreaker2_cpp_ll_reporting, 4},
     {"_outbreaker2_cpp_ll_contact", (DL_FUNC) &_outbreaker2_cpp_ll_contact, 4},
     {"_outbreaker2_cpp_ll_timing", (DL_FUNC) &_outbreaker2_cpp_ll_timing, 4},
+    {"_outbreaker2_cpp_ll_patient_transfer", (DL_FUNC) &_outbreaker2_cpp_ll_patient_transfer, 4},
+    {"_outbreaker2_cpp_ll_potential_colonised", (DL_FUNC) &_outbreaker2_cpp_ll_potential_colonised, 4},
     {"_outbreaker2_cpp_ll_all", (DL_FUNC) &_outbreaker2_cpp_ll_all, 4},
     {"_outbreaker2_cpp_move_mu", (DL_FUNC) &_outbreaker2_cpp_move_mu, 5},
     {"_outbreaker2_cpp_move_pi", (DL_FUNC) &_outbreaker2_cpp_move_pi, 5},
+    {"_outbreaker2_cpp_move_sigma", (DL_FUNC) &_outbreaker2_cpp_move_sigma, 5},
     {"_outbreaker2_cpp_move_eps", (DL_FUNC) &_outbreaker2_cpp_move_eps, 5},
     {"_outbreaker2_cpp_move_lambda", (DL_FUNC) &_outbreaker2_cpp_move_lambda, 5},
     {"_outbreaker2_cpp_move_t_inf", (DL_FUNC) &_outbreaker2_cpp_move_t_inf, 3},
@@ -393,6 +449,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_outbreaker2_cpp_move_kappa", (DL_FUNC) &_outbreaker2_cpp_move_kappa, 4},
     {"_outbreaker2_cpp_prior_mu", (DL_FUNC) &_outbreaker2_cpp_prior_mu, 3},
     {"_outbreaker2_cpp_prior_pi", (DL_FUNC) &_outbreaker2_cpp_prior_pi, 3},
+    {"_outbreaker2_cpp_prior_sigma", (DL_FUNC) &_outbreaker2_cpp_prior_sigma, 3},
     {"_outbreaker2_cpp_prior_eps", (DL_FUNC) &_outbreaker2_cpp_prior_eps, 3},
     {"_outbreaker2_cpp_prior_lambda", (DL_FUNC) &_outbreaker2_cpp_prior_lambda, 3},
     {"_outbreaker2_cpp_prior_all", (DL_FUNC) &_outbreaker2_cpp_prior_all, 3},

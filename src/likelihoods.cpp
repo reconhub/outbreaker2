@@ -513,7 +513,41 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, size_t i,
 }
 
 
+// ---------------------------
 
+// This likelihood corresponds to the probability of a number of unobserved cases
+// for a given number of observed cases under the assumption of a Poisson distribution
+// with mean scale_poisson
+
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
+                              Rcpp::RObject custom_function) {
+    
+    if (custom_function == R_NilValue) {
+        
+        double out = 0.0;
+        
+        Rcpp::IntegerVector observed_cases = data["cases"]
+        Rcpp::IntegerVector unobserved_cases = param["potential_colonised"]
+        double scale_poisson = param["scale_poisson"]
+        
+        out = Rcpp::dpois(unobserved_cases,scale_poisson*observed_cases, log =true)
+        
+        return out;
+    }  else { // use of a customized likelihood function
+        Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+        
+        return Rcpp::as<double>(f(data, param));
+    }
+}
+
+
+double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i,
+                              Rcpp::RObject custom_function) {
+    SEXP si = PROTECT(Rcpp::wrap(i));
+    double ret = cpp_ll_timing_sampling(data, param, si, custom_function);
+    UNPROTECT(1);
+    return ret;
+}
 
 
 // ---------------------------
@@ -548,6 +582,74 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
 }
 
 
+// ---------------------------
+
+// This likelihood corresponds to the probability of observing a reported
+// contact between cases and their ancestors. See
+// src/likelihoods.cpp for details of the Rcpp implmentation.
+
+// The likelihood is based on the contact status between a case and its
+// ancestor; this is extracted from a pairwise contact matrix (data$C), the
+// log-likelihood is computed as:
+// true_pos*eps + false_pos*eps*xi +
+// false_neg*(1- eps) + true_neg*(1 - eps*xi)
+//
+// with:
+// 'eps' is the contact reporting coverage
+// 'lambda' is the non-infectious contact rate
+// 'true_pos' is the number of contacts between transmission pairs
+// 'false_pos' is the number of contact between non-transmission pairs
+// 'false_neg' is the number of transmission pairs without contact
+// 'true_neg' is the number of non-transmission pairs without contact
+
+// The likelihood is based on the patient transfer matrix and the probability
+// that an unobserved colonized patients will be moved from hospital A to 
+// hospital B. This probability is given by : 
+// p(A->B) = 1 - (1 - p_trans * q_ab)^N_unobs
+//
+// with:
+// p_trans being the parameter controling the probability of being transfered
+// q_ab being the probability of being transfered to b when you're leaving a
+// N_unobs
+
+double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, SEXP i,
+                      Rcpp::RObject custom_function) {
+  Rcpp::NumericMatrix hosp_matrix = data["hosp_matrix"];
+  if (hosp_matrix.ncol() < 1) return 0.0;
+  
+  if (custom_function == R_NilValue) {
+    
+    double out = 0;
+    double p_trans = Rcpp::as<double>(param["p_trans"]);
+    Rcpp::IntegerVector potential_colonised = param["potential_colonised"];
+    Rcpp::IntegerVector alpha = param["alpha"];
+    
+    for(int j = 0; j < alpha.size(); j++ ){
+      out += log(1 - (1 - p_trans * hosp_matrix(alpha[j]-1,j))^potential_colonised[j])
+    }
+    
+    
+    if (p_trans < 0.0 || potential_colonised < 0.0) {
+      return R_NegInf;
+    }
+    
+    return out;
+    
+  } else { //use of a customized likelihood function
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+    
+    return Rcpp::as<double>(f(data, param));
+  }
+}
+
+
+double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, size_t i,
+                      Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_patient_transfer(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
+}
 
 
 // ---------------------------
@@ -570,7 +672,8 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
       cpp_ll_timing_sampling(data, param, i) +
       cpp_ll_genetic(data, param, i) +
       cpp_ll_reporting(data, param, i) +
-      cpp_ll_contact(data, param, i);
+      cpp_ll_contact(data, param, i) +
+      cpp_ll_patient_transfer(data, param, i);
 
   }  else { // use of a customized likelihood functions
     Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
@@ -579,7 +682,8 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
       cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]) +
       cpp_ll_genetic(data, param, i, list_functions["genetic"]) +
       cpp_ll_reporting(data, param, i, list_functions["reporting"]) +
-      cpp_ll_contact(data, param, i, list_functions["contact"]);
+      cpp_ll_contact(data, param, i, list_functions["contact"]) + 
+      cpp_ll_patient_transfer(data, param, i, list_functions("patient_transfer"));
 
   }
 }

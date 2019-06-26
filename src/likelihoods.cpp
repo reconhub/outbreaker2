@@ -628,6 +628,7 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(genetic diversity): see function cpp_ll_genetic
 // - p(missing cases): see function cpp_ll_reporting
 // - p(contact): see function cpp_ll_contact 
+// - p(transferred colonised): see function cpp_ll_patient_transfer 
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
 		  Rcpp::RObject custom_functions) {

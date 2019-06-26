@@ -513,7 +513,41 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, size_t i,
 }
 
 
+// ---------------------------
 
+// This likelihood corresponds to the probability of a number of unobserved cases
+// for a given number of observed cases under the assumption of a Poisson distribution
+// with mean scale_poisson
+
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
+                              Rcpp::RObject custom_function) {
+    
+    if (custom_function == R_NilValue) {
+        
+        double out = 0.0;
+        
+        Rcpp::IntegerVector observed_cases = data["cases"]
+        Rcpp::IntegerVector unobserved_cases = param["potential_colonised"]
+        double scale_poisson = param["scale_poisson"]
+        
+        out = Rcpp::dpois(unobserved_cases,scale_poisson*observed_cases, log =true)
+        
+        return out;
+    }  else { // use of a customized likelihood function
+        Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+        
+        return Rcpp::as<double>(f(data, param));
+    }
+}
+
+
+double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i,
+                              Rcpp::RObject custom_function) {
+    SEXP si = PROTECT(Rcpp::wrap(i));
+    double ret = cpp_ll_timing_sampling(data, param, si, custom_function);
+    UNPROTECT(1);
+    return ret;
+}
 
 
 // ---------------------------

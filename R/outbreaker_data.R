@@ -282,7 +282,13 @@ outbreaker_data <- function(..., data = list(...)) {
         }
     }
 
-            
+    ## CHECK N_CASES
+    if (!is.null(data$n_cases)) {
+        if (!is.numeric(data$n_cases)) {
+            stop("n_cases must be an integer vector")
+        }
+    }
+                
   ## output is a list of checked data
   return(data)
 

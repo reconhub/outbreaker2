@@ -22,7 +22,9 @@
 #'
 #' \item \code{contact}: the likelihood of the contact tracing data; by default,
 #' the function \code{cpp_ll_contact} is used.
-#' }
+#'
+#' \item \code{patient_transfer}: the likelihood of at least one patient being
+#' transferred from hospital alpha to i}
 #'
 #' All log-likelihood functions should have the following arguments, in this
 #' order:
@@ -108,7 +110,8 @@ custom_likelihoods <- function(...) {
                      reporting = NULL,
                      timing_infections = NULL,
                      timing_sampling = NULL,
-                     contact = NULL
+                     contact = NULL,
+                     patient_transfer = NULL
                      )
 
     likelihoods <-  modify_defaults(defaults, ll_functions, FALSE)

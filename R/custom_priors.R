@@ -47,6 +47,10 @@
 #' prior functions should use \code{x$lambda} to refer to the current value of
 #' \code{lambda}, assuming their argument is called \code{x}.
 #'
+#' \item \code{sigma} (hospital transfer probability): default function is a beta
+#' distribution implemented in \code{outbreaker:::cpp_prior_sigma}. New prior
+#' functions should use \code{x$sigma} to refer to the current value of \code{sigma},
+#' assuming their argument is called \code{x}.
 #' }
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
@@ -132,7 +136,8 @@ custom_priors <- function(...) {
     defaults <- list(mu = NULL, # mutation rate
                      pi = NULL, # reporting probability
                      eps = NULL, # contact reporting coverage
-                     lambda = NULL # non-infectious contact rate
+                     lambda = NULL, # non-infectious contact rate
+                     sigma = NULL # hospital transfer probability
                      )
 
     priors <- modify_defaults(defaults, priors, FALSE)

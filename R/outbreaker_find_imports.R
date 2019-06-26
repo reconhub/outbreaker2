@@ -35,6 +35,9 @@ outbreaker_find_imports <- function(moves, data, param_current,
   tmp_likelihoods <- likelihoods
   tmp_likelihoods$contact <- function(data, param) return(0)
 
+  ## remove the hospital transfer likelihood from outlier detection
+  tmp_likelihoods$patient_transfer <- function(data, param) return(0)
+
   ## RUN MCMC ##
   for (i in seq.int(2, config$n_iter_import, 1)) {
     ## move parameters / augmented data

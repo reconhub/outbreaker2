@@ -513,7 +513,41 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, size_t i,
 }
 
 
+// ---------------------------
 
+// This likelihood corresponds to the probability of a number of unobserved cases
+// for a given number of observed cases under the assumption of a Poisson distribution
+// with mean scale_poisson
+
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
+                              Rcpp::RObject custom_function) {
+    
+    if (custom_function == R_NilValue) {
+        
+        double out = 0.0;
+        
+        Rcpp::IntegerVector observed_cases = data["cases"]
+        Rcpp::IntegerVector unobserved_cases = param["potential_colonised"]
+        double scale_poisson = param["scale_poisson"]
+        
+        out = Rcpp::dpois(unobserved_cases,scale_poisson*observed_cases, log =true)
+        
+        return out;
+    }  else { // use of a customized likelihood function
+        Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+        
+        return Rcpp::as<double>(f(data, param));
+    }
+}
+
+
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, size_t i,
+                              Rcpp::RObject custom_function) {
+    SEXP si = PROTECT(Rcpp::wrap(i));
+    double ret = cpp_ll_potential_colonised(data, param, si, custom_function);
+    UNPROTECT(1);
+    return ret;
+}
 
 
 // ---------------------------
@@ -626,9 +660,11 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(infection dates): see function cpp_ll_timing_infections
 // - p(collection dates): see function cpp_ll_timing_sampling
 // - p(genetic diversity): see function cpp_ll_genetic
+// - p(potential colonised): see function cpp_ll_potential_colonised
 // - p(missing cases): see function cpp_ll_reporting
 // - p(contact): see function cpp_ll_contact 
 // - p(transferred colonised): see function cpp_ll_patient_transfer 
+
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
 		  Rcpp::RObject custom_functions) {
@@ -638,6 +674,7 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
     return cpp_ll_timing_infections(data, param, i) +
       cpp_ll_timing_sampling(data, param, i) +
       cpp_ll_genetic(data, param, i) +
+      cpp_ll_potential_colonised(data, param, i) +
       cpp_ll_reporting(data, param, i) +
       cpp_ll_contact(data, param, i) +
       cpp_ll_patient_transfer(data, param, i);
@@ -648,6 +685,7 @@ double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
     return cpp_ll_timing_infections(data, param, i, list_functions["timing_infections"]) +
       cpp_ll_timing_sampling(data, param, i, list_functions["timing_sampling"]) +
       cpp_ll_genetic(data, param, i, list_functions["genetic"]) +
+      cpp_ll_potential_colonised(data, param, i, list_functions["potential_colonised"]) +
       cpp_ll_reporting(data, param, i, list_functions["reporting"]) +
       cpp_ll_contact(data, param, i, list_functions["contact"]) + 
       cpp_ll_patient_transfer(data, param, i, list_functions("patient_transfer"));

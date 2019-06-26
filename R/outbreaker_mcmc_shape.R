@@ -36,7 +36,8 @@ outbreaker_mcmc_shape <- function(param, data) {
   param <- data.frame(step = param$step,
                       post = param$post, like = param$like, prior = param$prior,
                       mu = param$mu, pi = param$pi, eps = param$eps,
-                      lambda = param$lambda, param$alpha, param$t_inf, param$kappa)
+                      lambda = param$lambda, sigma = param$sigma,
+                      param$alpha, param$t_inf, param$kappa)
   names(param) <- gsub("[.]", "_", names(param))
 
   ## output is a data.frame containing all parameters and augmented data, with a dedicated

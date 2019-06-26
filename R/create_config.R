@@ -174,13 +174,14 @@ create_config <- function(..., data = NULL) {
                    init_pi = 0.9,
                    init_eps = 0.5,
                    init_lambda = 0.05,
+                   init_sigma = 0.05,
                    move_alpha = TRUE, move_swap_cases = TRUE,
                    move_t_inf = TRUE,
                    move_mu = TRUE, move_kappa = TRUE, move_pi = TRUE,
-                   move_eps = TRUE, move_lambda = TRUE,
+                   move_eps = TRUE, move_lambda = TRUE, move_sigma = TRUE,
                    n_iter = 1e4, sample_every = 50,
                    sd_mu = 0.0001, sd_pi = 0.1,
-                   sd_eps = 0.1, sd_lambda = 0.05,
+                   sd_eps = 0.1, sd_lambda = 0.05, sd_sigma = 0.05,
                    prop_alpha_move = 1/4,
                    prop_t_inf_move = 0.2,
                    paranoid = FALSE,
@@ -192,6 +193,7 @@ create_config <- function(..., data = NULL) {
                    sample_every_import = 50,
                    prior_mu = 1,
                    prior_pi = c(10,1),
+                   prior_eps = c(1,1),
                    prior_eps = c(1,1),
                    prior_lambda = c(1,1),
                    ctd_directed = FALSE,
@@ -300,6 +302,21 @@ create_config <- function(..., data = NULL) {
   }
 
 
+  ## check init_sigma
+  if (!is.numeric(config$init_sigma)) {
+    stop("init_sigma is not a numeric value")
+  }
+  if (config$init_sigma < 0) {
+    stop("init_sigma is negative")
+  }
+  if (config$init_sigma > 1) {
+    stop("init_sigma is greater than 1")
+  }
+  if (!is.finite(config$init_sigma)) {
+    stop("init_sigma is infinite or NA")
+  }
+
+
   ## check move_alpha
   if (!all(is.logical(config$move_alpha))) {
     stop("move_alpha is not a logical")
@@ -362,6 +379,14 @@ create_config <- function(..., data = NULL) {
   }
   if (is.na(config$move_lambda)) {
     stop("move_lambda is NA")
+  }
+
+  ## check move_sigma
+  if (!is.logical(config$move_sigma)) {
+    stop("move_sigma is not a logical")
+  }
+  if (is.na(config$move_sigma)) {
+    stop("move_sigma is NA")
   }
 
   ## check n_iter
@@ -430,6 +455,17 @@ create_config <- function(..., data = NULL) {
   }
   if (!is.finite(config$sd_lambda)) {
     stop("sd_lambda is infinite or NA")
+  }
+
+  ## check sd_sigma
+  if (!is.numeric(config$sd_sigma)) {
+    stop("sd_sigma is not a numeric value")
+  }
+  if (config$sd_sigma < 1e-10) {
+    stop("sd_sigma is close to zero or negative")
+  }
+  if (!is.finite(config$sd_sigma)) {
+    stop("sd_sigma is infinite or NA")
   }
 
   ## check prop_alpha_move
@@ -568,7 +604,6 @@ create_config <- function(..., data = NULL) {
     stop("prior_eps is has values which are infinite or NA")
   }
 
-
   ## check prior value for lambda
   if (!all(is.numeric(config$prior_lambda))) {
     stop("prior_lambda has non-numeric values")
@@ -581,6 +616,20 @@ create_config <- function(..., data = NULL) {
   }
   if (!all(is.finite(config$prior_lambda))) {
     stop("prior_lambda is has values which are infinite or NA")
+  }
+
+  ## check prior value for sigma
+  if (!all(is.numeric(config$prior_sigma))) {
+    stop("prior_sigma has non-numeric values")
+  }
+  if (any(config$prior_sigma < 0)) {
+    stop("prior_sigma has negative values")
+  }
+  if (length(config$prior_sigma)!=2L) {
+    stop("prior_sigma should be a vector of length 2")
+  }
+  if (!all(is.finite(config$prior_sigma))) {
+    stop("prior_sigma is has values which are infinite or NA")
   }
 
   
@@ -680,6 +729,12 @@ create_config <- function(..., data = NULL) {
         config$ctd_directed <- data$ctd$directed
       }
     }
+    
+    ## disable moves for sigma if now  is provided
+    if(is.null(data$hosp_matrix)) {
+      config$move_sigma <- FALSE
+    }
+
     
   }
 

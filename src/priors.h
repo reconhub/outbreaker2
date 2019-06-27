@@ -12,8 +12,14 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 double cpp_prior_eps(Rcpp::List param, Rcpp::List config,
 		     Rcpp::RObject custom_function);
 
+double cpp_prior_sigma(Rcpp::List param, Rcpp::List config,
+                       Rcpp::RObject custom_function);
+
 double cpp_prior_lambda(Rcpp::List param, Rcpp::List config,
 			Rcpp::RObject custom_function);
+
+double cpp_prior_poisson_scale(Rcpp::List param, Rcpp::List config,
+                        Rcpp::RObject custom_function);
 
 double cpp_prior_all(Rcpp::List param, Rcpp::List config,
 		     Rcpp::RObject custom_functions = R_NilValue);

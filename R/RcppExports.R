@@ -57,6 +57,14 @@ cpp_ll_timing <- function(data, param, i = NULL, custom_functions = NULL) {
     .Call(`_outbreaker2_cpp_ll_timing`, data, param, i, custom_functions)
 }
 
+cpp_ll_patient_transfer <- function(data, param, i = NULL, custom_function = NULL) {
+    .Call(`_outbreaker2_cpp_ll_patient_transfer`, data, param, i, custom_function)
+}
+
+cpp_ll_potential_colonised <- function(data, param, i = NULL, custom_function = NULL) {
+    .Call(`_outbreaker2_cpp_ll_potential_colonised`, data, param, i, custom_function)
+}
+
 cpp_ll_all <- function(data, param, i = NULL, custom_functions = NULL) {
     .Call(`_outbreaker2_cpp_ll_all`, data, param, i, custom_functions)
 }
@@ -67,6 +75,10 @@ cpp_move_mu <- function(param, data, config, custom_ll = NULL, custom_prior = NU
 
 cpp_move_pi <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
     .Call(`_outbreaker2_cpp_move_pi`, param, data, config, custom_ll, custom_prior)
+}
+
+cpp_move_sigma <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
+    .Call(`_outbreaker2_cpp_move_sigma`, param, data, config, custom_ll, custom_prior)
 }
 
 cpp_move_eps <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
@@ -99,6 +111,10 @@ cpp_prior_mu <- function(param, config, custom_function = NULL) {
 
 cpp_prior_pi <- function(param, config, custom_function = NULL) {
     .Call(`_outbreaker2_cpp_prior_pi`, param, config, custom_function)
+}
+
+cpp_prior_sigma <- function(param, config, custom_function = NULL) {
+    .Call(`_outbreaker2_cpp_prior_sigma`, param, config, custom_function)
 }
 
 cpp_prior_eps <- function(param, config, custom_function = NULL) {

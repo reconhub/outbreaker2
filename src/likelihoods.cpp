@@ -1,5 +1,6 @@
 #include <Rmath.h>
 #include <Rcpp.h>
+#include <cmath>
 #include "internals.h"
 #include "likelihoods.h"
 
@@ -473,19 +474,19 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
     // deal with special case when lambda == 0 and eps == 1, to avoid log(0)
     if(lambda == 0.0) {
       if(false_pos > 0) {
-	out = R_NegInf;
+        out = R_NegInf;
       } else {
-	log(eps) * (double) true_pos +
-	  log(1 - eps) * (double) false_neg +
-	  log(1 - eps*lambda) * (double) true_neg;
+        out = log(eps) * (double) true_pos +
+          log(1 - eps) * (double) false_neg +
+          log(1 - eps*lambda) * (double) true_neg;
       }
     } else if(eps == 1.0) {
       if(false_neg > 0) {
-	out = R_NegInf;
+        out = R_NegInf;
       } else {
-	out = log(eps) * (double) true_pos +
-	  log(eps*lambda) * (double) false_pos +
-	  log(1 - eps*lambda) * (double) true_neg;
+        out = log(eps) * (double) true_pos +
+          log(eps*lambda) * (double) false_pos +
+          log(1 - eps*lambda) * (double) true_neg;
       }
     } else {
       out = log(eps) * (double) true_pos +
@@ -526,11 +527,25 @@ double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
         
         double out = 0.0;
         
-        Rcpp::IntegerVector observed_cases = data["cases"]
-        Rcpp::IntegerVector unobserved_cases = param["potential_colonised"]
-        double scale_poisson = param["scale_poisson"]
+        Rcpp::IntegerVector observed_cases = data["cases"] ;
+        Rcpp::IntegerVector unobserved_cases = param["potential_colonised"] ;
+        double poisson_scale = param["poisson_scale"] ;
+        double sumFact = 0;
+        double lambda = 0;
         
-        out = Rcpp::dpois(unobserved_cases,scale_poisson*observed_cases, log =true)
+        //loop on each unobserved cases
+        for(int j = 0; j < unobserved_cases.size(); j++ ){
+          //out = R::dpois(unobserved_cases,scale_poisson*observed_cases, log = true) ;
+          //sorry quicker with the log dpois formula :-)
+          
+          lambda = poisson_scale * observed_cases[j] ; 
+          sumFact = 0;
+          
+          for(int ii=1; ii<=unobserved_cases[j]; ii++) sumFact += log(ii) ;
+          
+          //ln p = -lambda + x*ln(lambda) - Sum_1tox (ln(x))
+          out += -lambda + unobserved_cases[j]*log(lambda) - sumFact ; 
+        }
         
         return out;
     }  else { // use of a customized likelihood function
@@ -540,11 +555,10 @@ double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
     }
 }
 
-
-double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, size_t i,
+double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, size_t i,
                               Rcpp::RObject custom_function) {
     SEXP si = PROTECT(Rcpp::wrap(i));
-    double ret = cpp_ll_timing_sampling(data, param, si, custom_function);
+    double ret = cpp_ll_potential_colonised(data, param, si, custom_function);
     UNPROTECT(1);
     return ret;
 }
@@ -625,11 +639,13 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, SEXP i,
     Rcpp::IntegerVector alpha = param["alpha"];
     
     for(int j = 0; j < alpha.size(); j++ ){
-      out += log(1 - (1 - p_trans * hosp_matrix(alpha[j]-1,j))^potential_colonised[j])
+      out += log(1 - pow((1 - p_trans * hosp_matrix(alpha[j] - 1 , j )),
+                         potential_colonised[j])
+                   ) ;
     }
     
     
-    if (p_trans < 0.0 || potential_colonised < 0.0) {
+    if (p_trans < 0.0) {
       return R_NegInf;
     }
     
@@ -662,7 +678,9 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, size_t i,
 // - p(genetic diversity): see function cpp_ll_genetic
 // - p(potential colonised): see function cpp_ll_potential_colonised
 // - p(missing cases): see function cpp_ll_reporting
-// - p(contact): see function cpp_ll_contact
+// - p(contact): see function cpp_ll_contact 
+// - p(transferred colonised): see function cpp_ll_patient_transfer 
+
 
 double cpp_ll_all(Rcpp::List data, Rcpp::List param, SEXP i,
 		  Rcpp::RObject custom_functions) {

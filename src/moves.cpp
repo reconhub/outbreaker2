@@ -20,7 +20,61 @@
 // the 1:N scale.
 
 
+// ---------------------------
 
+// Movement of the scaling factor between observed and unobserved colonised 'poisson_scale'
+// is done using a dumb normal proposal. 
+
+// [[Rcpp::export(rng = true)]]
+Rcpp::List cpp_move_poisson_scale(Rcpp::List param, Rcpp::List data, Rcpp::List config,
+                       Rcpp::RObject custom_ll = R_NilValue,
+                       Rcpp::RObject custom_prior = R_NilValue) {
+  
+  // deep copy here for now, ultimately should be an arg.
+  Rcpp::List new_param = clone(param);
+  Rcpp::NumericVector poisson_scale = param["poisson_scale"];
+  Rcpp::NumericVector new_poisson_scale = new_param["poisson_scale"];
+  
+  double sd_poisson_scale = static_cast<double>(config["sd_poisson_scale"]);
+  
+  double old_logpost = 0.0, new_logpost = 0.0, p_accept = 0.0;
+  
+  // proposal (normal distribution with SD: config$sd_poisson_scale)
+  
+  new_poisson_scale[0] += R::rnorm(0.0, sd_poisson_scale); // new proposed value
+  
+  
+  // automatic rejection of negative mu
+  
+  if (new_poisson_scale[0] < 0.0) {
+    return param;
+  }
+  
+  // compute likelihoods
+  old_logpost = cpp_ll_potential_colonised(data, param, R_NilValue, custom_ll);
+  new_logpost = cpp_ll_potential_colonised(data, new_param, R_NilValue, custom_ll);
+  
+  
+  // compute priors
+  
+  old_logpost += cpp_prior_poisson_scale(param, config, custom_prior);
+  new_logpost += cpp_prior_poisson_scale(new_param, config, custom_prior);
+  
+  
+  // acceptance term
+  
+  p_accept = exp(new_logpost - old_logpost);
+  
+  
+  // acceptance: the new value is already in mu, so we only act if the move is
+  // rejected, in which case we restore the previous ('old') value
+  
+  if (p_accept < unif_rand()) { // reject new values
+    return param;
+  }
+  
+  return new_param;
+}
 
 
 

@@ -80,7 +80,7 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 
 
 
-// The prior for the trasfer probability 'sigma' is a beta distribution
+// The prior for the transfer probability 'sigma' is a beta distribution
 
 // [[Rcpp::export(rng = false)]]
 double cpp_prior_sigma(Rcpp::List param, Rcpp::List config,
@@ -125,10 +125,6 @@ double cpp_prior_eps(Rcpp::List param, Rcpp::List config,
 }
 
 
-
-
-
-
 // The prior for the non-transmision contact rate 'lambda' is a beta distribution
 
 // [[Rcpp::export(rng = false)]]
@@ -150,8 +146,25 @@ double cpp_prior_lambda(Rcpp::List param, Rcpp::List config,
 
 }
 
-
-
+// The prior for the non-transmision contact rate 'poisson_scale' is a gamma distribution
+// [[Rcpp::export(rng = false)]]
+double cpp_prior_poisson_scale(Rcpp::List param, Rcpp::List config,
+                        Rcpp::RObject custom_function = R_NilValue) {
+  
+  if (custom_function == R_NilValue) {
+    // first value is shape, second is scale
+    Rcpp::NumericVector shape = config["prior_poisson_scale"];
+    
+    return R::dgamma(Rcpp::as<double>(param["poisson_scale"]),
+                     (double) shape[0], 
+                                   (double) shape[1],
+                                                 true);
+  } else {
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
+    
+    return Rcpp::as<double>(f(param));
+  }
+}
 
 
 
@@ -163,9 +176,10 @@ double cpp_prior_all(Rcpp::List param, Rcpp::List config,
 
     return cpp_prior_mu(param, config) +
       cpp_prior_pi(param, config) +
+      cpp_prior_sigma(param, config) +
       cpp_prior_eps(param, config) +
       cpp_prior_lambda(param, config) +
-      cpp_prior_sigma(param, config);
+      cpp_prior_poisson_scale(param, config);
 
   } else {
 
@@ -173,8 +187,10 @@ double cpp_prior_all(Rcpp::List param, Rcpp::List config,
 
     return cpp_prior_mu(param, config, list_functions["mu"]) +
       cpp_prior_pi(param, config, list_functions["pi"]) +
+      cpp_prior_sigma(param, config, list_functions["sigma"]) +
       cpp_prior_eps(param, config, list_functions["eps"]) +
       cpp_prior_lambda(param, config, list_functions["lambda"]) +
-      cpp_prior_sigma(param, config, list_functions["sigma"]);
+      cpp_prior_poisson_scale(param, config, list_functions["poisson_scale"]);
+
   }
 }

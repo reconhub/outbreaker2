@@ -157,8 +157,8 @@ double cpp_prior_poisson_scale(Rcpp::List param, Rcpp::List config,
     
     return R::dgamma(Rcpp::as<double>(param["poisson_scale"]),
                      (double) shape[0], 
-                                   (double) shape[1],
-                                                 true);
+		     (double) shape[1],
+		     true);
   } else {
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
     

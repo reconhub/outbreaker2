@@ -85,10 +85,12 @@ custom_moves <- function(...) {
                      pi = cpp_move_pi,
                      eps = cpp_move_eps,
                      lambda = cpp_move_lambda,
+                     sigma = cpp_move_sigma,
                      alpha = cpp_move_alpha,
                      swap_cases = cpp_move_swap_cases,
                      t_inf = cpp_move_t_inf,
-                     kappa = cpp_move_kappa
+                     kappa = cpp_move_kappa,
+                     potential_colonised = cpp_move_potential_colonised
                      )
 
 

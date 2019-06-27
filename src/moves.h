@@ -36,3 +36,7 @@ Rcpp::List cpp_move_kappa(Rcpp::List param, Rcpp::List data,
 			  Rcpp::List config,
 			  Rcpp::RObject list_custom_ll = R_NilValue);
 
+Rcpp::List cpp_move_potential_colonised(Rcpp::List param,
+					Rcpp::List data,
+					Rcpp::List config,
+					Rcpp::RObject list_custom_ll = R_NilValue) {

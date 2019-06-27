@@ -285,15 +285,17 @@ outbreaker_data <- function(..., data = list(...)) {
     if(any(is.na(data$id_in_hosp_matrix))) {
       stop("Hospital ids missing in hosp_matrix")
     }
+  } else {
+    data$hosp_matrix <- matrix(integer(0), ncol = 0, nrow = 0)    
   }
 
-    ## CHECK N_CASES
-    if (!is.null(data$n_cases)) {
-        if (!is.numeric(data$n_cases)) {
-            stop("n_cases must be an integer vector")
-        }
+  ## CHECK N_CASES
+  if (!is.null(data$n_cases)) {
+    if (!is.numeric(data$n_cases)) {
+      stop("n_cases must be an integer vector")
     }
-                
+  }
+  
   ## output is a list of checked data
   return(data)
 

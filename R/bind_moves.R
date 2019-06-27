@@ -124,6 +124,17 @@ bind_moves <- function(moves = custom_moves(), config, data,
                                   )
   }
 
+  ## remove move$sigma if disabled
+  if (!any(config$move_potential_colonised)) {
+    out$potential_colonised <- NULL
+  } else {
+    out$potential_colonised <- bind_to_function(out$potential_colonised,
+                                                data = data,
+                                                config = config,
+                                                list_custom_ll = likelihoods
+                                                )
+  }
+
 
   ## perform binding for new unknown movements
   known_moves <- names(custom_moves())

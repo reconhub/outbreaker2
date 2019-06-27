@@ -57,6 +57,10 @@ cpp_ll_timing <- function(data, param, i = NULL, custom_functions = NULL) {
     .Call(`_outbreaker2_cpp_ll_timing`, data, param, i, custom_functions)
 }
 
+cpp_ll_hosp_joint <- function(data, param, i = NULL, custom_functions = NULL) {
+    .Call(`_outbreaker2_cpp_ll_hosp_joint`, data, param, i, custom_functions)
+}
+
 cpp_ll_patient_transfer <- function(data, param, i = NULL, custom_function = NULL) {
     .Call(`_outbreaker2_cpp_ll_patient_transfer`, data, param, i, custom_function)
 }
@@ -107,6 +111,10 @@ cpp_move_swap_cases <- function(param, data, list_custom_ll = NULL) {
 
 cpp_move_kappa <- function(param, data, config, list_custom_ll = NULL) {
     .Call(`_outbreaker2_cpp_move_kappa`, param, data, config, list_custom_ll)
+}
+
+cpp_move_potential_colonised <- function(param, data, config, list_custom_ll = NULL) {
+    .Call(`_outbreaker2_cpp_move_potential_colonised`, param, data, config, list_custom_ll)
 }
 
 cpp_prior_mu <- function(param, config, custom_function = NULL) {

@@ -111,7 +111,8 @@ custom_likelihoods <- function(...) {
                      timing_infections = NULL,
                      timing_sampling = NULL,
                      contact = NULL,
-                     patient_transfer = NULL
+                     patient_transfer = NULL,
+                     potential_colonised = NULL
                      )
 
     likelihoods <-  modify_defaults(defaults, ll_functions, FALSE)

@@ -643,10 +643,10 @@ double cpp_ll_timing(Rcpp::List data, Rcpp::List param, size_t i,
 // The likelihood is based on the patient transfer matrix and the probability
 // that an unobserved colonized patients will be moved from hospital A to 
 // hospital B. This probability is given by : 
-// p(A->B) = 1 - (1 - p_trans * q_ab)^N_unobs
+// p(A->B) = 1 - (1 - sigma * q_ab)^N_unobs
 //
 // with:
-// p_trans being the parameter controling the probability of being transfered
+// sigma being the parameter controling the probability of being transfered
 // q_ab being the probability of being transfered to b when you're leaving a
 // N_unobs
 
@@ -663,21 +663,21 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, SEXP i,
     
     double out = 0;
     double q_ab = 0;
-    double p_trans = Rcpp::as<double>(param["p_trans"]);
+    double sigma = Rcpp::as<double>(param["sigma"]);
     Rcpp::IntegerVector potential_colonised = param["potential_colonised"];
     Rcpp::IntegerVector alpha = param["alpha"];
     Rcpp::IntegerVector id_in_hosp_matrix = data["id_in_hosp_matrix"];
 
-    if (p_trans < 0.0) {
+    if (sigma < 0.0) {
       return R_NegInf;
     }
     
     if (i == R_NilValue) {
       for (size_t j = 0; j < N; j++) { // 'j' on 0:(N-1)
 	if (alpha[j] != NA_INTEGER) {
-	  q_ab = hosp_matrix(id_in_hosp_matrix[alpha[j]-1],
-			     id_in_hosp_matrix[j]);
-	  out += log(1 - pow((1 - p_trans * q_ab), potential_colonised[j]));
+	  q_ab = hosp_matrix(id_in_hosp_matrix[alpha[j]-1]-1,
+			     id_in_hosp_matrix[j]-1);
+	  out += log(1 - pow((1 - sigma * q_ab), potential_colonised[j]));
 	}
       }
     } else {
@@ -687,9 +687,9 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, SEXP i,
       for (size_t k = 0; k < length_i; k++) {
 	size_t j = vec_i[k] - 1; // offset
 	if (alpha[j] != NA_INTEGER) {
-	  q_ab = hosp_matrix(id_in_hosp_matrix[alpha[j]-1],
-			     id_in_hosp_matrix[j]);
-	  out += log(1 - pow((1 - p_trans * q_ab), potential_colonised[j]));
+	  q_ab = hosp_matrix(id_in_hosp_matrix[alpha[j]-1]-1,
+			     id_in_hosp_matrix[j]-1);
+	  out += log(1 - pow((1 - sigma * q_ab), potential_colonised[j]));
 	}
       }
     }
@@ -708,6 +708,37 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, size_t i,
                       Rcpp::RObject custom_function) {
   SEXP si = PROTECT(Rcpp::wrap(i));
   double ret = cpp_ll_patient_transfer(data, param, si, custom_function);
+  UNPROTECT(1);
+  return ret;
+}
+
+
+// ---------------------------
+
+// This likelihood corresponds to the sums of the two hospital transfer
+// likelihods, which include
+
+// - p(potential_colonised): see function cpp_ll_potential_colonised
+// - p(patient_transfer): see function cpp_ll_patient_transfer
+
+double cpp_ll_hosp_joint(Rcpp::List data, Rcpp::List param, SEXP i,
+		      Rcpp::RObject custom_functions) {
+
+  if (custom_functions == R_NilValue) {
+    return cpp_ll_potential_colonised(data, param, i) +
+      cpp_ll_patient_transfer(data, param, i);
+  } else { // use of a customized likelihood functions
+    Rcpp::List list_functions = Rcpp::as<Rcpp::List>(custom_functions);
+    return cpp_ll_potential_colonised(data, param, i, list_functions["potential_colonised"]) +
+      cpp_ll_patient_transfer(data, param, i, list_functions["patient_transfer"]);
+  }
+}
+
+
+double cpp_ll_hosp_joint(Rcpp::List data, Rcpp::List param, size_t i,
+			 Rcpp::RObject custom_function) {
+  SEXP si = PROTECT(Rcpp::wrap(i));
+  double ret = cpp_ll_hosp_joint(data, param, si, custom_function);
   UNPROTECT(1);
   return ret;
 }

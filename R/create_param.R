@@ -116,7 +116,8 @@ create_param <- function(data = outbreaker_data(),
   ## CREATE EMPTY OUTPUT VECTORS ##
   size <- round(config$n_iter/config$sample_every)
   step <- integer(size)
-  post <- prior <- like <- mu <- pi <- eps <- lambda <- sigma <- double(size)
+  post <- prior <- like <- mu <- pi <- eps <-
+    lambda <- sigma <- poisson_scale <- double(size)
   alpha <- as.list(integer(size))
   t_inf <- as.list(integer(size))
   kappa <- as.list(integer(size))

@@ -29,11 +29,14 @@ outbreaker_mcmc_store <- function(param_current, param_store, data, config,
   param_store$mu[counter] <- param_current$mu
   param_store$pi[counter] <- param_current$pi
   param_store$eps[counter] <- param_current$eps
-  param_store$sigma[counter] <- param_current$sigma
   param_store$lambda[counter] <- param_current$lambda
+  param_store$sigma[counter] <- param_current$sigma
+  param_store$poisson_scale[counter] <- param_current$poisson_scale
+  
   param_store$alpha[[counter]] <- param_current$alpha
   param_store$t_inf[[counter]] <- param_current$t_inf
   param_store$kappa[[counter]] <- param_current$kappa
+  param_store$potential_colonised[[counter]] <- param_current$potential_colonised
 
   return(param_store)
 }

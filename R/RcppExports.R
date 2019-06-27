@@ -69,6 +69,10 @@ cpp_ll_all <- function(data, param, i = NULL, custom_functions = NULL) {
     .Call(`_outbreaker2_cpp_ll_all`, data, param, i, custom_functions)
 }
 
+cpp_move_poisson_scale <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
+    .Call(`_outbreaker2_cpp_move_poisson_scale`, param, data, config, custom_ll, custom_prior)
+}
+
 cpp_move_mu <- function(param, data, config, custom_ll = NULL, custom_prior = NULL) {
     .Call(`_outbreaker2_cpp_move_mu`, param, data, config, custom_ll, custom_prior)
 }
@@ -123,6 +127,10 @@ cpp_prior_eps <- function(param, config, custom_function = NULL) {
 
 cpp_prior_lambda <- function(param, config, custom_function = NULL) {
     .Call(`_outbreaker2_cpp_prior_lambda`, param, config, custom_function)
+}
+
+cpp_prior_poisson_scale <- function(param, config, custom_function = NULL) {
+    .Call(`_outbreaker2_cpp_prior_poisson_scale`, param, config, custom_function)
 }
 
 cpp_prior_all <- function(param, config, custom_functions = NULL) {

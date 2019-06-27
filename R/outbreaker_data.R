@@ -68,6 +68,7 @@ outbreaker_data <- function(..., data = list(...)) {
                    ids = NULL,
                    has_dna = logical(0),
                    id_in_dna = integer(0),
+                   id_in_hosp_matrix = integer(0),
                    hosp_matrix = NULL,
                    n_cases = NULL)
 
@@ -236,51 +237,55 @@ outbreaker_data <- function(..., data = list(...)) {
   }
 
 
-    ## CHECK HOSP_MATRIX
-    if (!is.null(data$hosp_matrix)) {
-        if (!inherits(data$hosp_matrix, c("data.frame", "matrix"))) {
-            stop("hosp_matrix is not a matrix or a data.frame")
-        }
-        if (!is.matrix(data$hosp_matrix)) {
-            data$hosp_matrix <- as.matrix(data$hosp_matrix)
-        }
-        dims <- dim(data$hosp_matrix)
-        if (!dims[1] == dims[2]) {
-            stop("hosp_matrix must be a square matrix")
-        }
-        ## Check if colnames and rownames are identical
-        namesCols = colnames(data$hosp_matrix)
-        namesRows = rownames(data$hosp_matrix)
-        if (is.null(namesCols) | is.null(namesRows)) {
-            stop("hosp_matrix has no column of row names")
-        }
-        extraCols = setdiff(namesCols, namesRows)
-        extraRows = setdiff(namesRows, namesCols)
-        if (length(extraCols)) {
-            msgCols = paste0("Column names ",
-                             paste0(extraCols, collapse = ', '),
-                             " are missing in row names. ")
-        } else {
-            msgCols = character(0)
-        }
-        if (length(extraRows)) {
-            msgRows = paste0("Row names ",
-                             paste0(extraRows, collapse = ', '),
-                             " are missing in column names.")
-        } else {
-            msgRows = character(0)
-        }
-        if (length(msgCols) | length(msgRows)) {
-            stop(msgCols, msgRows)
-        }
-        ## Check for negative values
-        if (any(data$hosp_matrix) < 0) {
-            stop("hosp_matrix should only contain non negative values")
-        }
-        if (any(is.na(data$hosp_matrix))) {
-            stop("hosp_matrix has missing values")
-        }
+  ## CHECK HOSP_MATRIX
+  if (!is.null(data$hosp_matrix)) {
+    if (!inherits(data$hosp_matrix, c("data.frame", "matrix"))) {
+      stop("hosp_matrix is not a matrix or a data.frame")
     }
+    if (!is.matrix(data$hosp_matrix)) {
+      data$hosp_matrix <- as.matrix(data$hosp_matrix)
+    }
+    dims <- dim(data$hosp_matrix)
+    if (!dims[1] == dims[2]) {
+      stop("hosp_matrix must be a square matrix")
+    }
+    ## Check if colnames and rownames are identical
+    col_names = colnames(data$hosp_matrix)
+    row_names = rownames(data$hosp_matrix)
+    if (is.null(col_names) | is.null(row_names)) {
+      stop("hosp_matrix must have column and row names")
+    }
+    extra_cols = setdiff(col_names, row_names)
+    extra_rows = setdiff(row_names, col_names)
+    if (length(extra_cols)) {
+      msg_cols = paste0("Column names ",
+                        paste0(extra_cols, collapse = ', '),
+                        " are missing in row names. ")
+    } else {
+      msg_cols = character(0)
+    }
+    if (length(extra_rows)) {
+      msg_rows = paste0("Row names ",
+                        paste0(extra_rows, collapse = ', '),
+                        " are missing in column names.")
+    } else {
+      msg_rows = character(0)
+    }
+    if (length(msg_cols) | length(msg_rows)) {
+      stop(msg_cols, msg_rows)
+    }
+    ## Check for negative values
+    if (any(data$hosp_matrix < 0)) {
+      stop("hosp_matrix should only contain-non negative values")
+    }
+    if (any(is.na(data$hosp_matrix))) {
+      stop("hosp_matrix has missing values")
+    }
+    data$id_in_hosp_matrix <- match(data$ids, rownames(data$hosp_matrix))
+    if(any(is.na(data$id_in_hosp_matrix))) {
+      stop("Hospital ids missing in hosp_matrix")
+    }
+  }
 
     ## CHECK N_CASES
     if (!is.null(data$n_cases)) {

@@ -43,7 +43,6 @@
 #' \item{n_iter}{an integer indicating the number of iterations in the MCMC,
 #' including the burnin period}
 #'
-#'
 #' \item{move_alpha}{a vector of logicals indicating, for each case, if the
 #' ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
 #' TRUE; the vector is recycled if needed.}
@@ -175,6 +174,8 @@ create_config <- function(..., data = NULL) {
                    init_eps = 0.5,
                    init_lambda = 0.05,
                    init_sigma = 0.05,
+                   init_poisson_scale = 1,
+                   init_potential_colonised = NULL,
                    move_alpha = TRUE, move_swap_cases = TRUE,
                    move_t_inf = TRUE,
                    move_mu = TRUE, move_kappa = TRUE, move_pi = TRUE,
@@ -316,6 +317,28 @@ create_config <- function(..., data = NULL) {
     stop("init_sigma is infinite or NA")
   }
 
+  ## check init_poisson_scale
+  if (!is.numeric(config$init_poisson_scale)) {
+    stop("init_poisson_scale is not a numeric value")
+  }
+  if (config$init_poisson_scale < 0) {
+    stop("init_poisson_scale is negative")
+  }
+  if (!is.finite(config$init_poisson_scale)) {
+    stop("init_poisson_scale is infinite or NA")
+  }
+
+  ## check init_potential_colonised
+  if(!is.null(config$init_potential_colonised)) {
+    if (!is.numeric(config$init_potential_colonised)) {
+      stop("init_potential_colonised must be numeric")
+    }
+    if (any(config$init_potential_colonised %% 1 > 1e-10) |
+        any(config$init_potential_colonised < 0)) {
+      stop("init_potential_colonised must be integers")
+    }
+    config$init_potential_colonised <- as.integer(config$init_potential_colonised)
+  }
 
   ## check move_alpha
   if (!all(is.logical(config$move_alpha))) {
@@ -735,6 +758,12 @@ create_config <- function(..., data = NULL) {
       config$move_sigma <- FALSE
     }
 
+    ## check init_potential_colonised
+    if(!is.null(config$init_potential_colonised) &
+       length(config$init_potential_colonised) !=
+       length(config$init_alpha)) {
+      stop("init_potential_colonised must be of length N")
+    }
     
   }
 

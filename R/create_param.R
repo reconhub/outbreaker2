@@ -120,6 +120,7 @@ create_param <- function(data = outbreaker_data(),
   alpha <- as.list(integer(size))
   t_inf <- as.list(integer(size))
   kappa <- as.list(integer(size))
+  potential_colonised <- as.list(integer(size))
 
   ## SET CURRENT VALUES AND COUNTER ##
   step[1] <- 1L
@@ -128,34 +129,36 @@ create_param <- function(data = outbreaker_data(),
   current_kappa <- kappa[[1]] <- config$init_kappa
   current_pi <- pi[1] <- config$init_pi
   current_eps <- eps[1] <- config$init_eps
-  current_sigma <- sigma[1] <- config$init_sigma
   current_lambda <- lambda[1] <- config$init_lambda
+  current_sigma <- sigma[1] <- config$init_sigma
+  current_poisson_scale <- poisson_scale[1] <- config$init_poisson_scale
   if (is.null(config$init_t_inf)) {
     current_t_inf <- t_inf[[1]] <- data$dates - which.max(data$f_dens) + 1L
   } else {
     current_t_inf <- t_inf[[1]] <- config$init_t_inf
   }
+  if (is.null(config$init_potential_colonised)) {
+    config$init_potential_colonised <- rep(1L, data$N)
+  }
+  current_potential_colonised <-
+    potential_colonised[[1]] <-
+    config$init_potential_colonised
   counter <- 1L
-
-
-  store <- list(
-    size = size, step = step,
-    post = post, like = like, prior = prior,
-    alpha = alpha, t_inf = t_inf, mu = mu, kappa = kappa, pi = pi,
-    eps = eps, lambda = lambda, sigma = sigma,
-    counter = counter
-  )
+  
+  store <- list(size = size, step = step, post = post, like = like,
+                prior = prior, alpha = alpha, t_inf = t_inf, mu = mu,
+                kappa = kappa, pi = pi, eps = eps, lambda = lambda,
+                sigma = sigma, poisson_scale = poisson_scale,
+                potential_colonised = potential_colonised,
+                counter = counter)
   class(store) <- c("outbreaker_store", "list")
 
-
-  current  <- list(
-    alpha = current_alpha, t_inf = current_t_inf, mu = current_mu,
-    kappa = current_kappa, pi = current_pi, eps = current_eps,
-    lambda = current_lambda, sigma = current_sigma
-  )
+  current  <- list(alpha = current_alpha, t_inf = current_t_inf,
+                   mu = current_mu, kappa = current_kappa, pi = current_pi,
+                   eps = current_eps, lambda = current_lambda,
+                   sigma = current_sigma, poisson_scale = current_poisson_scale,
+                   potential_colonised = current_potential_colonised)
   class(current) <- c("outbreaker_param", "list")
-
-
 
   ## SHAPE CHAIN ##
   out <- list(store = store,

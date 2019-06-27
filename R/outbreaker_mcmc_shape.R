@@ -32,6 +32,13 @@ outbreaker_mcmc_shape <- function(param, data) {
   param$kappa <- matrix(unlist(param$kappa), ncol = data$N, byrow = TRUE)
   colnames(param$kappa) <- paste("kappa", seq_len(data$N), sep=".")
 
+  ## unfold infection dates ##
+  if (!all(vapply(param$t_inf, length, integer(1))==data$N)) {
+    stop("some infection dates are missing in the param")
+  }
+  param$t_inf <- matrix(unlist(param$t_inf), ncol = data$N, byrow = TRUE)
+  colnames(param$t_inf) <- paste("t_inf", seq_len(data$N), sep=".")
+  
   ## shape data.frame and convert ##
   param <- data.frame(step = param$step,
                       post = param$post, like = param$like, prior = param$prior,

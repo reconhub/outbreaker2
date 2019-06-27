@@ -529,7 +529,7 @@ double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
         
         Rcpp::IntegerVector observed_cases = data["cases"] ;
         Rcpp::IntegerVector unobserved_cases = param["potential_colonised"] ;
-        double scale_poisson = param["scale_poisson"] ;
+        double poisson_scale = param["poisson_scale"] ;
         double sumFact = 0;
         double lambda = 0;
         
@@ -538,7 +538,7 @@ double cpp_ll_potential_colonised(Rcpp::List data, Rcpp::List param, SEXP i,
           //out = R::dpois(unobserved_cases,scale_poisson*observed_cases, log = true) ;
           //sorry quicker with the log dpois formula :-)
           
-          lambda = scale_poisson*observed_cases[j] ; 
+          lambda = poisson_scale * observed_cases[j] ; 
           sumFact = 0;
           
           for(int ii=1; ii<=unobserved_cases[j]; ii++) sumFact += log(ii) ;

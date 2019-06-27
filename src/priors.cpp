@@ -80,7 +80,7 @@ double cpp_prior_pi(Rcpp::List param, Rcpp::List config,
 
 
 
-// The prior for the trasfer probability 'sigma' is a beta distribution
+// The prior for the transfer probability 'sigma' is a beta distribution
 
 // [[Rcpp::export(rng = false)]]
 double cpp_prior_sigma(Rcpp::List param, Rcpp::List config,

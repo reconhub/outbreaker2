@@ -179,7 +179,7 @@ double cpp_prior_all(Rcpp::List param, Rcpp::List config,
       cpp_prior_sigma(param, config) +
       cpp_prior_eps(param, config) +
       cpp_prior_lambda(param, config) +
-      cpp_prior_cpp_prior_poisson_scale(param, config);
+      cpp_prior_poisson_scale(param, config);
 
   } else {
 
@@ -187,9 +187,9 @@ double cpp_prior_all(Rcpp::List param, Rcpp::List config,
 
     return cpp_prior_mu(param, config, list_functions["mu"]) +
       cpp_prior_pi(param, config, list_functions["pi"]) +
-      cpp_prior_pi(param, config, list_functions["sigma"]) +
+      cpp_prior_sigma(param, config, list_functions["sigma"]) +
       cpp_prior_eps(param, config, list_functions["eps"]) +
-      cpp_prior_poisson_scale(param, config, list_functions["poisson_scale"]) +
-      cpp_prior_lambda(param, config, list_functions["lambda"]);
+      cpp_prior_lambda(param, config, list_functions["lambda"]) +
+      cpp_prior_poisson_scale(param, config, list_functions["poisson_scale"]);
   }
 }

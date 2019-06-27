@@ -135,6 +135,17 @@ bind_moves <- function(moves = custom_moves(), config, data,
                                                 )
   }
 
+  ## remove move$sigma if disabled
+  if (!any(config$move_poisson_scale)) {
+    out$poisson_scale <- NULL
+  } else {
+    out$poisson_scale <- bind_to_function(out$poisson_scale,
+                                          data = data,
+                                          config = config,
+                                          custom_ll = likelihoods$potential_colonised,
+                                          custom_prior = priors$poisson_scale
+                                          )
+  }
 
   ## perform binding for new unknown movements
   known_moves <- names(custom_moves())

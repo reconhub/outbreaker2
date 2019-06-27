@@ -180,10 +180,12 @@ create_config <- function(..., data = NULL) {
                    move_t_inf = TRUE,
                    move_mu = TRUE, move_kappa = TRUE, move_pi = TRUE,
                    move_eps = TRUE, move_lambda = TRUE, move_sigma = TRUE,
+                   move_poisson_scale = TRUE,
                    move_potential_colonised = TRUE,
                    n_iter = 1e4, sample_every = 50,
                    sd_mu = 0.0001, sd_pi = 0.1,
                    sd_eps = 0.1, sd_lambda = 0.05, sd_sigma = 0.05,
+                   sd_poisson_scale = 0.1,
                    sd_potential_colonised = 1,
                    prop_alpha_move = 1/4,
                    prop_t_inf_move = 0.2,
@@ -423,7 +425,15 @@ create_config <- function(..., data = NULL) {
     stop("move_potential_colonised is NA")
   }
 
+  ## check move_poisson_scale
+  if (!all(is.logical(config$move_poisson_scale))) {
+    stop("move_poisson_scale is not a logical")
+  }
+  if (any(is.na(config$move_poisson_scale))) {
+    stop("move_poisson_scale is NA")
+  }
 
+  
   ## check n_iter
   if (!is.numeric(config$n_iter)) {
     stop("n_iter is not a numeric value")
@@ -501,6 +511,17 @@ create_config <- function(..., data = NULL) {
   }
   if (!is.finite(config$sd_sigma)) {
     stop("sd_sigma is infinite or NA")
+  }
+
+  ## check sd_poisson_scale
+  if (!is.numeric(config$sd_poisson_scale)) {
+    stop("sd_poisson_scale is not a numeric value")
+  }
+  if (config$sd_poisson_scale < 1e-10) {
+    stop("sd_poisson_scale is close to zero or negative")
+  }
+  if (!is.finite(config$sd_poisson_scale)) {
+    stop("sd_poisson_scale is infinite or NA")
   }
 
   ## check sd_potential_colonised

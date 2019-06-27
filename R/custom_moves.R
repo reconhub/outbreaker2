@@ -90,7 +90,8 @@ custom_moves <- function(...) {
                      swap_cases = cpp_move_swap_cases,
                      t_inf = cpp_move_t_inf,
                      kappa = cpp_move_kappa,
-                     potential_colonised = cpp_move_potential_colonised
+                     potential_colonised = cpp_move_potential_colonised,
+                     poisson_scale = cpp_move_poisson_scale
                      )
 
 

@@ -236,9 +236,8 @@ outbreaker_data <- function(..., data = list(...)) {
     data$contacts <- matrix(integer(0), ncol = 0, nrow = 0)
   }
 
-
   ## CHECK HOSP_MATRIX
-  if (!is.null(data$hosp_matrix)) {
+  if (!is.null(data$hosp_matrix) && sum(dim(data$hosp_matrix))>0) {
     if (!inherits(data$hosp_matrix, c("data.frame", "matrix"))) {
       stop("hosp_matrix is not a matrix or a data.frame")
     }

@@ -677,7 +677,9 @@ double cpp_ll_patient_transfer(Rcpp::List data, Rcpp::List param, SEXP i,
 	if (alpha[j] != NA_INTEGER) {
 	  q_ab = hosp_matrix(id_in_hosp_matrix[alpha[j]-1]-1,
 			     id_in_hosp_matrix[j]-1);
-	  out += log(1 - pow((1 - sigma * q_ab), potential_colonised[j]));
+	  if (q_ab != 0){
+	    out += log(1 - pow((1 - sigma * q_ab), potential_colonised[j])); 
+	  }
 	}
       }
     } else {

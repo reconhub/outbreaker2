@@ -380,7 +380,7 @@ plot.outbreaker_chains <- function(x, y = "post",
                           numeric(1))
     nodes$color <- case_cols
     nodes$shape <- rep("dot", N)
-    nodes$label <- get_node_lab(...)
+    nodes$label <- get_node_lab(labels)
 
     smry <- summary(x, burnin = burnin)
     is_imported <- is.na(smry$tree$from)
@@ -411,10 +411,14 @@ plot.outbreaker_chains <- function(x, y = "post",
 #'   cycles. 'decycle' will return the maximum posterior ancestry, except when
 #'   cycles are detected, in which case the link in the cycle with the lowest
 #'   support is pruned and the tree recalculated.
-#' 
+#'   
+#' @param labels a vector of length N indicating the case labels (must be
+#'   provided in the same order used for dates of symptom onset)
+#'   
 #' @export
 #' @importFrom stats median
-summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "decycle"), ...) {
+summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "decycle"), 
+                                      labels = NULL, ...) {
   ## check burnin ##
   x <- object
   if (burnin > max(x$step)) {
@@ -480,6 +484,16 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
     support <- cons$support
     
   }
+  
+  get_labels <- function(x, labels = NULL) {
+    if(!is.na(x)) x <- labels[x]
+    return(x)
+  }
+  
+  if(!is.null(labels)){
+    out$tree$from <- sapply(out$tree$from, get_labels, labels=labels)
+    out$tree$to <- sapply(out$tree$to, get_labels, labels=labels)
+  }
 
   ## summary of t_inf ##
   t_inf <- as.matrix(x[,grep("t_inf", names(x))])
@@ -494,6 +508,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
 
   ## shape tree as a data.frame
   out$tree <- as.data.frame(out$tree)
+  out$tree <- out$tree[order(out$tree$time),]
   rownames(out$tree) <- NULL
 
   return(out)

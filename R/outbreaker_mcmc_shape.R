@@ -33,7 +33,7 @@ outbreaker_mcmc_shape <- function(param, data) {
   colnames(param$kappa) <- paste("kappa", seq_len(data$N), sep=".")
 
   ## unfold potential colonised ##
-  if(nrow(data$hosp_matrix) > 0) {
+  #if(nrow(data$hosp_matrix) > 0) {
     if (!all(vapply(param$potential_colonised, length, integer(1))==data$N)) {
       stop("some potential_colonised are missing in the param")
     }
@@ -41,7 +41,7 @@ outbreaker_mcmc_shape <- function(param, data) {
                                         ncol = data$N, byrow = TRUE)
     colnames(param$potential_colonised) <- paste("potential_colonised",
                                                  seq_len(data$N), sep=".")
-  }
+  #}
   
   ## shape data.frame and convert ##
   param <- data.frame(step = param$step,

@@ -1,13 +1,13 @@
 Package: outbreaker2
-Version: 1.1.0
-Date: 2019-06-12
+Version: 1.1.1
+Date: 2020-01-31
 Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
 Authors@R: c(person("Thibaut", "Jombart",
                     email = "thibautjombart@gmail.com",
 		    role = c("aut")),
 	     person("Finlay", "Campbell",
-	            email = "f.campbell15@imperial.ac.uk",
+	            email = "finlaycampbell93@gmail.com",
 		    role = c("aut", "cre")),
 	     person("Rich", "Fitzjohn",
 	            email = "r.fitzjohn@imperial.ac.uk",
@@ -18,7 +18,7 @@ Authors@R: c(person("Thibaut", "Jombart",
 	     person("Alexis", "Robert",
 	            email = "alexis.robert@lshtm.ac.uk",
 		    role = c("ctb")))
-Maintainer: Finlay Campbell <f.campbell15@imperial.ac.uk>
+Maintainer: Finlay Campbell <finlaycampbell93@gmail.com>
 Description: Bayesian reconstruction of disease outbreaks using epidemiological
     and genetic information. Jombart T, Cori A, Didelot X, Cauchemez S, Fraser
     C and Ferguson N. 2014. <doi:10.1371/journal.pcbi.1003457>. Campbell, F,

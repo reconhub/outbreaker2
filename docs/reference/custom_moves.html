@@ -52,6 +52,7 @@ movement they implement. Values currently available are:" />
 <![endif]-->
 
 
+
   </head>
 
   <body>
@@ -118,6 +119,7 @@ movement they implement. Values currently available are:" />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -163,7 +165,8 @@ implementing movements of parameters or augmented data.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <ul>
+    
+<ul>
 <li><p><code>mu</code>: movement of the mutation rate; by default, the function
 <code>cpp_move_mu</code> is used.</p></li>
 <li><p><code>pi</code>: movement of the reporting probability; by default, the function
@@ -183,7 +186,8 @@ function <code>cpp_move_t_inf</code> is used.</p></li>
 <li><p><code>kappa</code>: movement of the number generations between cases; by
 default, the function <code>cpp_move_kappa</code> is used.</p></li>
 </ul>
-    <p>Movement functions must have an argument <code>param</code>, which is a list of
+
+<p>Movement functions must have an argument <code>param</code>, which is a list of
 parameters and augmented data of the class <code><a href='create_param.html'>create_param</a></code>.
 Each movement function will be enclosed with its other arguments, so that the
 resulting function will have a single argument 'param'. For non-standard
@@ -198,6 +202,7 @@ movements (i.e. none of the names specified above), the closure will contain:</p
 <li><p><code>priors</code>: a list of named custom prior functions as returned by
 <code><a href='custom_priors.html'>custom_priors</a></code></p></li>
 </ul>
+
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -222,19 +227,23 @@ movements (i.e. none of the names specified above), the closure will contain:</p
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Thibaut Jombart, Finlay Campbell, Rich Fitzjohn.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

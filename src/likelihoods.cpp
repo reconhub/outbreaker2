@@ -475,7 +475,7 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
       if(false_pos > 0) {
 	out = R_NegInf;
       } else {
-	log(eps) * (double) true_pos +
+	out = log(eps) * (double) true_pos +
 	  log(1 - eps) * (double) false_neg +
 	  log(1 - eps*lambda) * (double) true_neg;
       }

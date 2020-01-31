@@ -1,3 +1,16 @@
+outbreaker2 1.1.1 (2020-01-31)
+==================
+
+### Bug fixes
+
+* Fixed uninitialized variable use
+* Updated email addresses
+
+
+
+<br>
+<br>
+
 outbreaker2 1.1.0 (2019-06-06)
 ==================
 

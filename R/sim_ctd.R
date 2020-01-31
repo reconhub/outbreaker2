@@ -18,7 +18,7 @@
 #' @param lambda the non-infectious contact rate, defined as the probability
 #'     of contact between a non-transmission pair.
 #'
-#' @author Finlay Campbell (\email{f.campbell15@@imperial.ac.uk})
+#' @author Finlay Campbell (\email{finlaycampbell93@@gmail.com})
 #'
 #' @examples
 #'

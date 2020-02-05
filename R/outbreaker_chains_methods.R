@@ -104,7 +104,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
 #'   geom_violin aes aes_string coord_flip labs guides scale_size_area
 #'   scale_x_discrete scale_y_discrete scale_color_manual scale_fill_manual
+#'   scale_x_continuous scale_y_continuous theme_bw facet_wrap
 #'
+#' @importFrom stats reshape
 #' @importFrom grDevices xyTable
 #' @importFrom graphics plot
 #'
@@ -124,7 +126,7 @@ plot.outbreaker_chains <- function(x, y = "post",
 
   ## hopefully cran will avoid spurious warnings along the lines of "no
   ## visible binding for global variable" when using ggplot2::aes(...)
-  ##
+
   frequency <- NULL
 
   ## GET DATA TO PLOT ##
@@ -133,111 +135,94 @@ plot.outbreaker_chains <- function(x, y = "post",
   }
   x <- x[x$step>burnin,,drop = FALSE]
 
+  ## check group
+  if(!is.null(group)) {
+    if(length(group) == 1L && group == "all") {
+      ##remove _[digit] vars
+      y_vars = names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
+    } else if(all(group %in% names(x))) {
+      y_vars = c("step", group)
+    } else {
+      stop("grouping variables not found in outbreaker object")
+    }
+    ## get only relevant data
+    x_sub = as.data.frame(x)[,y_vars]
+    ## switch it to long format to use in ggplot
+    x_long = reshape(x_sub, 
+                     idvar = "step", 
+                     ids = x_sub$step,
+                     direction = "long", 
+                     new.row.names = NULL,
+                     timevar = "Parameters", 
+                     v.names = "y",
+                     varying = list(names(x_sub)[2:ncol(x_sub)]), 
+                     times = names(x_sub)[2:ncol(x_sub)])
+  }
+
   ## MAKE PLOT ##
   if (type == "trace") {
     if (!is.null(group)) {
-      if (length(group) == 1 && group == "all") {
-        #remove and _[digit] vars
-        y_vars = names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
-        
-      } else if (length(group) > 1 && all(group %in% names(x))) {
-        y_vars = c("step",group)
-      }
-      
-      #get only relevant data
-      x_sub = as.data.frame(x)[,y_vars]
-      #switch it to long format to use in ggplot
-      x_long = reshape(x_sub, 
-              idvar = "step", 
-              ids = x_sub$step,
-              direction = "long", 
-              new.row.names = NULL,
-              timevar = "Parameters", 
-              v.names = "y",
-              varying = list(names(x_sub)[2:ncol(x_sub)]), 
-              times = names(x_sub)[2:ncol(x_sub)])
-      out <- ggplot(x_long) + geom_line(aes_string(x = "step", y = "y")) +
+      out <- ggplot(x_long) +
+        geom_line(aes_string(x = "step", y = "y")) +
         scale_x_continuous(name = "Iteration") + 
         scale_y_continuous(name = NULL) + 
-        theme_bw() +
-        facet_wrap(~Parameters, scales = "free") 
-    }else{
-      out <- ggplot(x) + geom_line(aes_string(x = "step", y = y)) +
-        labs(x = "Iteration", y = y, title = paste("trace:",y))
+        facet_wrap(~ Parameters, scales = "free") 
+    } else {
+      out <- ggplot(x) +
+        geom_line(aes_string(x = "step", y = y)) +
+        labs(x = "Iteration",
+             y = y,
+             title = paste("trace:",y))
     }
   }
 
   if (type == "hist") {
     if (!is.null(group)) {
-      if (length(group) == 1 && group == "all") {
-        #remove and _[digit] vars
-        y_vars = names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
-        
-      } else if (length(group) > 1 && all(group %in% names(x))) {
-        y_vars = c("step",group)
-      }
-      
-      #get only relevant data
-      x_sub = as.data.frame(x)[,y_vars]
-      #switch it to long format to use in ggplot
-      x_long = reshape(x_sub, 
-                       idvar = "step", 
-                       ids = x_sub$step,
-                       direction = "long", 
-                       new.row.names = NULL,
-                       timevar = "Parameters", 
-                       v.names = "y",
-                       varying = list(names(x_sub)[2:ncol(x_sub)]), 
-                       times = names(x_sub)[2:ncol(x_sub)])
-      out <- ggplot(x_long) + geom_histogram(aes_string(x = "y")) +
-        geom_point(aes_string(x = "y", y = 0), shape="|", alpha = 0.5, size = 3) +
+      out <- ggplot(x_long) +
+        geom_histogram(aes_string(x = "y")) +
+        geom_point(aes_string(x = "y", y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
         scale_x_continuous(name = NULL) + 
         scale_y_continuous(name = NULL) + 
-        theme_bw() +
         facet_wrap(~Parameters, scales = "free") 
-    }else{
-      out <- ggplot(x) + geom_histogram(aes_string(x = y)) +
-        geom_point(aes_string(x = y, y = 0), shape="|", alpha = 0.5, size = 3) +
-        labs(x = y, title = paste("histogram:",y))
+    } else {
+      out <- ggplot(x) +
+        geom_histogram(aes_string(x = y)) +
+        geom_point(aes_string(x = y, y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
+        labs(x = y,
+             title = paste("histogram:",y))
     }
   }
 
   if (type == "density") {
     if (!is.null(group)) {
-      if (length(group) == 1 && group == "all") {
-        #remove and _[digit] vars
-        y_vars = names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
-        
-      } else if (length(group) > 1 && all(group %in% names(x))) {
-        y_vars = c("step",group)
-      }
-      
-      #get only relevant data
-      x_sub = as.data.frame(x)[,y_vars]
-      #switch it to long format to use in ggplot
-      x_long = reshape(x_sub, 
-                       idvar = "step", 
-                       ids = x_sub$step,
-                       direction = "long", 
-                       new.row.names = NULL,
-                       timevar = "Parameters", 
-                       v.names = "y",
-                       varying = list(names(x_sub)[2:ncol(x_sub)]), 
-                       times = names(x_sub)[2:ncol(x_sub)])
-      out <- ggplot(x_long) + geom_density(aes_string(x = "y")) +
-        geom_point(aes_string(x = "y", y = 0), shape="|", alpha = 0.5, size = 3) +
+      out <- ggplot(x_long) +
+        geom_density(aes_string(x = "y")) +
+        geom_point(aes_string(x = "y", y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
         scale_x_continuous(name = NULL) + 
         scale_y_continuous(name = NULL) + 
-        theme_bw() +
         facet_wrap(~Parameters, scales = "free") 
-    }else{
-      out <- ggplot(x) + geom_density(aes_string(x = y)) +
-        geom_point(aes_string(x = y, y = 0), shape="|", alpha = 0.5, size = 3) +
-        labs(x = y, title = paste("density:",y))
+    } else {
+      out <- ggplot(x) +
+        geom_density(aes_string(x = y)) +
+        geom_point(aes_string(x = y, y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
+        labs(x = y,
+             title = paste("density:",y))
     }
   }
 
-  if (type=="alpha") {
+  if (type == "alpha") {
     alpha <- as.matrix(x[,grep("alpha", names(x))])
     colnames(alpha) <- seq_len(ncol(alpha))
     from <- as.vector(alpha)
@@ -283,7 +268,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       guides(colour = FALSE)
   }
 
-  if (type=="t_inf") {
+  if (type == "t_inf") {
     get_t_inf_lab <- function(labels = NULL) {
       N <- ncol(t_inf)
       if(is.null(labels)) labels <- 1:N
@@ -314,7 +299,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       scale_x_discrete(labels = tmp$t_inf_lab)
   }
 
-  if (type=="kappa") {
+  if (type == "kappa") {
     get_kappa_lab <- function(labels = NULL) {
       N <- ncol(kappa)
       if(is.null(labels)) labels <- 1:N
@@ -343,7 +328,7 @@ plot.outbreaker_chains <- function(x, y = "post",
            y = NULL)
   }
 
-  if (type=="network") {
+  if (type == "network") {
     ## extract edge info: ancestries
     alpha <- x[, grep("alpha",names(x)), drop = FALSE]
     from <- unlist(alpha)

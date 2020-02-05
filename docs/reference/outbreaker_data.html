@@ -52,6 +52,7 @@ input is given, it returns the default settings." />
 <![endif]-->
 
 
+
   </head>
 
   <body>
@@ -118,6 +119,7 @@ input is given, it returns the default settings." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -160,23 +162,29 @@ integer numbers or in a usual date format such as <code>Date</code> or
 <code>POSIXct</code> format. By convention, zero will indicate the oldest date. If
 the vector is named, the vector names will be used for matching cases to
 contact tracing data and labelled DNA sequences.</p></dd>
-    <dt>dna</dt><dd><p>the DNA sequences in <code>DNAbin</code> format (see
+
+<dt>dna</dt><dd><p>the DNA sequences in <code>DNAbin</code> format (see
 <code><a href='https://rdrr.io/pkg/ape/man/read.dna.html'>read.dna</a></code> in the ape package); this can be imported from a
 fasta file (extension .fa, .fas, or .fasta) using <code>adegenet</code>'s function
 <a href='https://rdrr.io/pkg/adegenet/man/fasta2DNAbin.html'>fasta2DNAbin</a>.</p></dd>
-    <dt>ctd</dt><dd><p>the contact tracing data provided as a matrix/dataframe of two
+
+<dt>ctd</dt><dd><p>the contact tracing data provided as a matrix/dataframe of two
 columns, indicating a reported contact between the two individuals whose ids
 are provided in a given row of the data, or an epicontacts object. In the case
 of the latter, linelist IDs will be used for matching dates and DNA
 sequences</p></dd>
-    <dt>w_dens</dt><dd><p>a vector of numeric values indicating the generation time
+
+<dt>w_dens</dt><dd><p>a vector of numeric values indicating the generation time
 distribution, reflecting the infectious potential of a case t = 1, 2, ...
 time steps after infection. By convention, it is assumed that
 newly infected patients cannot see new infections on the same time step. If not
 standardized, this distribution is rescaled to sum to 1.</p></dd>
-    <dt>f_dens</dt><dd><p>similar to <code>w_dens</code>, except that this is the distribution
+
+<dt>f_dens</dt><dd><p>similar to <code>w_dens</code>, except that this is the distribution
 of the colonization time, i_e. time interval during which the pathogen can
-be sampled from the patient.</p></dd></dl>
+be sampled from the patient.</p></dd>
+</dl>
+
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -442,19 +450,23 @@ be sampled from the patient.</p></dd></dl>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Thibaut Jombart, Finlay Campbell, Rich Fitzjohn.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

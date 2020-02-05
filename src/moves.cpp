@@ -326,7 +326,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
 
   size_t N = static_cast<size_t>(data["N"]);
 
-  double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
   double old_loc_loglike = 0.0, new_loc_loglike = 0.0, p_loc_accept = 0.0;
 
 
@@ -335,7 +334,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
     local_cases = cpp_find_descendents(param["alpha"], i+1);
 
     // loglike with current value
-    // old_loglike = cpp_ll_timing(data, param, R_NilValue);
     old_loc_loglike = cpp_ll_timing(data, param, i+1, list_custom_ll); // term for case 'i' with offset
 
     // term descendents of 'i'
@@ -347,7 +345,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
     new_t_inf[i] += unif_rand() > 0.5 ? 1 : -1; // new proposed value
 
     // loglike with new value
-    // new_loglike = cpp_ll_timing(data, new_param, R_NilValue);
     new_loc_loglike = cpp_ll_timing(data, new_param, i+1, list_custom_ll); // term for case 'i' with offset
 
     // term descendents of 'i'
@@ -357,7 +354,6 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data,
 
 
     // acceptance term
-    // p_accept = exp(new_loglike - old_loglike);
     p_loc_accept = exp(new_loc_loglike - old_loc_loglike);
 
 

@@ -20,7 +20,7 @@ creating closures of custom moves in \code{bind_moves}.
 }
 \references{
 Initial code comes from the \code{partially_apply} function in
-the 'rodeint' package (\url{/https://github.com/richfitz/rodeint/}).
+the 'rodeint' package \code{richfitz/rodeint}.
 }
 \author{
 Initial code by Rich FitzJohn (see 'references') with some

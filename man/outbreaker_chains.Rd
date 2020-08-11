@@ -35,6 +35,9 @@
 
 \item{type}{a character string indicating the kind of plot to be used (see details)}
 
+\item{group}{a vector of character strings indicating the parameters to display, 
+or "all" to display all global parameters (non node-specific parameters).}
+
 \item{burnin}{the number of iterations to be discarded as burnin}
 
 \item{min_support}{a number between 0 and 1 indicating the minimum support of
@@ -55,7 +58,7 @@ support is pruned and the tree recalculated.}
 \description{
 Several methods are defined for instances of the class
 \code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including:
-\code{print}, \code{plot}
+\code{print}, \code{plot}, \code{summary}
 }
 \details{
 \code{type} indicates the type of graphic to plot:

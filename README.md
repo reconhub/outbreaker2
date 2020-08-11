@@ -23,11 +23,11 @@ The genetic likelihood of the [original *outbreaker* paper](https://journals.plo
 
 The original genetic likelihood was:
 
-<img src="https://latex.codecogs.com/svg.latex?\mu^{d(s_i,s_{\alpha_i})}(1&space;-&space;\mu)^{(\kappa_i\times&space;l(s_i,&space;s_{\alpha_i}))&space;-&space;d(s_i,s_{\alpha_i})}" title="\mu^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
+![\mu^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}](https://render.githubusercontent.com/render/math?math=%5Cmu%5E%7Bd(s_i%2Cs_%7B%5Calpha_i%7D)%7D(1%20-%20%5Cmu)%5E%7B(%5Ckappa_i%5Ctimes%20l(s_i%2C%20s_%7B%5Calpha_i%7D))%20-%20d(s_i%2Cs_%7B%5Calpha_i%7D)%7D)
 
 The corrected genetic likelihood is:
 
-<img src="https://latex.codecogs.com/svg.latex?(\kappa_i&space;\mu)^{d(s_i,s_{\alpha_i})}(1&space;-&space;\kappa_i&space;\mu)^{l(s_i,&space;s_{\alpha_i})&space;-&space;d(s_i,s_{\alpha_i})}" title="(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
+![(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}](https://render.githubusercontent.com/render/math?math=(%5Ckappa_i%20%5Cmu)%5E%7Bd(s_i%2Cs_%7B%5Calpha_i%7D)%7D(1%20-%20%5Cmu)%5E%7B(%5Ckappa_i%5Ctimes%20l(s_i%2C%20s_%7B%5Calpha_i%7D))%20-%20d(s_i%2Cs_%7B%5Calpha_i%7D)%7D)
 
 <br>
 

@@ -13,6 +13,7 @@
   x,
   y = "post",
   type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
+  group = NULL,
   burnin = 0,
   min_support = 0.1,
   labels = NULL,

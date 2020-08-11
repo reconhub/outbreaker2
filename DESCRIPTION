@@ -1,5 +1,5 @@
 Package: outbreaker2
-Version: 1.1.1
+Version: 1.1.2
 Date: 2020-01-31
 Title: Bayesian Reconstruction of Disease Outbreaks by Combining Epidemiologic
     and Genomic Data
@@ -47,6 +47,6 @@ Imports:
 LazyData: true
 LinkingTo: Rcpp
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 SystemRequirements: C++11
 VignetteBuilder: knitr

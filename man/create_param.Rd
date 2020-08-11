@@ -3,6 +3,7 @@
 \name{create_param}
 \alias{create_param}
 \alias{outbreaker_store}
+\alias{outbreaker_param}
 \title{Initializes outputs for outbreaker}
 \usage{
 create_param(data = outbreaker_data(), config = create_config())

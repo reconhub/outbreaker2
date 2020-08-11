@@ -56,6 +56,7 @@ default, the function \code{cpp_move_kappa} is used.
 
 }
 
+
 Movement functions must have an argument \code{param}, which is a list of
 parameters and augmented data of the class \code{\link{create_param}}.
 Each movement function will be enclosed with its other arguments, so that the

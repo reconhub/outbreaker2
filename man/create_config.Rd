@@ -63,6 +63,7 @@ provided in \code{data}.}
 \item{n_iter}{an integer indicating the number of iterations in the MCMC,
 including the burnin period}
 
+
 \item{move_alpha}{a vector of logicals indicating, for each case, if the
 ancestry should be estimated ('moved' in the MCMC), or not, defaulting to
 TRUE; the vector is recycled if needed.}

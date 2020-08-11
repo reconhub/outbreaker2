@@ -4,9 +4,13 @@
 \alias{outbreaker}
 \title{outbreaker2: main function for reconstructing disease outbreaks}
 \usage{
-outbreaker(data = outbreaker_data(), config = create_config(),
-  priors = custom_priors(), likelihoods = custom_likelihoods(),
-  moves = custom_moves())
+outbreaker(
+  data = outbreaker_data(),
+  config = create_config(),
+  priors = custom_priors(),
+  likelihoods = custom_likelihoods(),
+  moves = custom_moves()
+)
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by

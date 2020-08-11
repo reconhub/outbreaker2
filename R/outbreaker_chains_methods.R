@@ -76,9 +76,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette} for detailed examples on how to visualise \code{outbreaker_chains} objects.
 #'
 #' @details \code{type} indicates the type of graphic to plot:
-#' 
+#'
 #' \itemize{
-#' 
+#'
 #' \item \code{trace} to visualise MCMC traces for parameters or augmented data (plots the
 #' log-likelihood by default)
 #'
@@ -212,7 +212,7 @@ plot.outbreaker_chains <- function(x, y = "post",
     }
 
     t_inf <- as.matrix(x[,grep("t_inf", names(x))])
-    tmp <- get_lab_color(...)
+    tmp <- get_lab_color(labels, ...)
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
     out_dat <- data.frame(cases = factor(cases), dates = dates)
@@ -246,7 +246,7 @@ plot.outbreaker_chains <- function(x, y = "post",
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
-      scale_y_discrete(labels = get_kappa_lab(...)) +
+      scale_y_discrete(labels = get_kappa_lab(labels)) +
       guides(colour = FALSE) +
       labs(title = "number of generations between cases",
            x = "number of generations to ancestor",
@@ -290,7 +290,7 @@ plot.outbreaker_chains <- function(x, y = "post",
                           numeric(1))
     nodes$color <- case_cols
     nodes$shape <- rep("dot", N)
-    nodes$label <- get_node_lab(...)
+    nodes$label <- get_node_lab(labels)
 
     smry <- summary(x, burnin = burnin)
     is_imported <- is.na(smry$tree$from)
@@ -321,7 +321,7 @@ plot.outbreaker_chains <- function(x, y = "post",
 #'   cycles. 'decycle' will return the maximum posterior ancestry, except when
 #'   cycles are detected, in which case the link in the cycle with the lowest
 #'   support is pruned and the tree recalculated.
-#' 
+#'
 #' @export
 #' @importFrom stats median
 summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "decycle"), ...) {
@@ -364,7 +364,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
 
   ## summary of alpha ##
   alpha <- as.matrix(x[,grep("alpha", names(x))])
-  
+
   method <- match.arg(method)
 
   if(method == 'mpa') {
@@ -388,7 +388,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
     out$tree$from <- cons$from
     out$tree$to <- cons$to
     support <- cons$support
-    
+
   }
 
   ## summary of t_inf ##
@@ -396,7 +396,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
   out$tree$time <- apply(t_inf, 2, median)
 
   out$tree$support <- support
-  
+
   ## summary of kappa ##
   kappa <- as.matrix(x[,grep("kappa", names(x))])
   out$tree$generations <- apply(kappa, 2, median, na.rm = TRUE)

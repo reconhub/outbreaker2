@@ -1,5 +1,5 @@
 context("Test non-exported functions")
-current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string) 
+current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string)
 
 ## test .choose_possible_alpha ##
 test_that("test: .choose_possible_alpha", {
@@ -120,7 +120,6 @@ test_that("Testing find_descendents", {
   expect_equal(cpp_find_descendents(c(1,NA,2,1), 1), c(1L, 4L))
   expect_equal(cpp_find_descendents(c(NA, 1,1,1,2,2,NA,1,1), 1),
                c(2L, 3L, 4L, 8L, 9L))
-  expect_equal(cpp_find_descendents(c(NA,1,NA,2), NA_integer_), integer(0))
 })
 
 

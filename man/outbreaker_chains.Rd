@@ -9,12 +9,17 @@
 \usage{
 \method{print}{outbreaker_chains}(x, n_row = 3, n_col = 8, ...)
 
-\method{plot}{outbreaker_chains}(x, y = "post", type = c("trace",
-  "hist", "density", "alpha", "t_inf", "kappa", "network"), burnin = 0,
-  min_support = 0.1, labels = NULL, ...)
+\method{plot}{outbreaker_chains}(
+  x,
+  y = "post",
+  type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
+  burnin = 0,
+  min_support = 0.1,
+  labels = NULL,
+  ...
+)
 
-\method{summary}{outbreaker_chains}(object, burnin = 0,
-  method = c("mpa", "decycle"), ...)
+\method{summary}{outbreaker_chains}(object, burnin = 0, method = c("mpa", "decycle"), ...)
 }
 \arguments{
 \item{x}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}

@@ -508,6 +508,9 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
 	param["alpha"] = new_param["alpha"];
 	param["t_inf"] = new_param["t_inf"];
 	param["kappa"] = new_param["kappa"];
+	Rprintf("ACCEPT | i = %i | old_ll = %f | new_ll = %f\n", i+1, old_loglike, new_loglike);
+      } else {
+	Rprintf("REJECT | i = %i | old_ll = %f | new_ll = %f\n", i+1, old_loglike, new_loglike);
       }
     }
   }

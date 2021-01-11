@@ -41,7 +41,7 @@ test_that("Auxiliary functions for ancestries are working", {
   ## generate data
   alpha <- c(2, NA, 1, 3, 3, 1)
   t_inf <- c(2, 1, 3, 4, 4, 3)
-  data <- outbreaker_data(dates = t_inf+1)
+  data <- outbreaker_data(dates = t_inf+1, w_dens = rep(1, 100))
   config <- create_config(init_tree = alpha, init_t_inf = t_inf, data = data)
   config2 <- config
   config2$move_alpha <- c(rep(TRUE,4),FALSE, TRUE)
@@ -193,7 +193,8 @@ test_that("Testing cpp_get_n_mutations", {
   ## sequences in natural order
 
   data <- outbreaker_data(dates = fake_outbreak$onset,
-                          dna = fake_outbreak$dna)
+                          dna = fake_outbreak$dna,
+                          w_dens = rep(1, 100))
   D <- data$D
 
   expect_equal(cpp_get_n_mutations(data, 1, 1), 0L)
@@ -207,7 +208,8 @@ test_that("Testing cpp_get_n_mutations", {
   rownames(dna.rev) <- as.character(30:1)
 
   data.rev <- outbreaker_data(dates = fake_outbreak$onset,
-                              dna = dna.rev)
+                              dna = dna.rev,
+                              w_dens = rep(1, 100))
   D.rev <- data.rev$D
 
   expect_equal(rownames(D.rev), rownames(dna.rev))

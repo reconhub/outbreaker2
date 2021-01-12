@@ -36,7 +36,7 @@
 sim_ctd <- function(tTree, eps, lambda) {
 
   tTree <- apply(tTree, 2, as.character)
-  
+
   if(any(c(eps, lambda) < 0) | any(c(eps, lambda) > 1)) {
     stop('eps and lambda must be probabilities')
   }
@@ -47,7 +47,7 @@ sim_ctd <- function(tTree, eps, lambda) {
 
   id <- unique(c(tTree[,1], tTree[,2]))
   id <- id[!is.na(id)]
-  
+
   ## Sort tTree by value or alphabetically, This ensures A:B and B:A are both
   ## recognised when querying the contacts dataframe for transmission pairs
   tTree <- tTree %>%
@@ -56,7 +56,7 @@ sim_ctd <- function(tTree, eps, lambda) {
     t() %>%
     as.data.frame(stringsAsFactors = FALSE)
 
-  tTree <- tTree[order(tTree[1]),]
+  tTree <- tTree[order(tTree[,1]),]
   names(tTree) <- c('V1', 'V2')
   if(nrow(tTree) == 0) stop("No transmission observed")
 
@@ -84,11 +84,11 @@ sim_ctd <- function(tTree, eps, lambda) {
   ctd <- rbind(sampler(contacts[contacts$tPair,], eps),
                sampler(contacts[!contacts$tPair,], eps*lambda))
 
-  ctd <- ctd[, c(1, 2)] 
-  
+  ctd <- ctd[, c(1, 2)]
+
   colnames(ctd) <- c('i', 'j')
   rownames(ctd) <- NULL
 
   return(ctd)
-  
+
 }

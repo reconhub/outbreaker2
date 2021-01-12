@@ -7,7 +7,7 @@ output:
      toc: true
      toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Overview}
+  %\VignetteIndexEntry{outbreaker2: package overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

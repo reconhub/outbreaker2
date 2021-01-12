@@ -12,7 +12,7 @@
 #' \code{POSIXct} format. By convention, zero will indicate the oldest date. If
 #' the vector is named, the vector names will be used for matching cases to
 #' contact tracing data and labelled DNA sequences.}
-#' 
+#'
 #' \item{dna}{the DNA sequences in \code{DNAbin} format (see
 #' \code{\link[ape]{read.dna}} in the ape package); this can be imported from a
 #' fasta file (extension .fa, .fas, or .fasta) using \code{adegenet}'s function
@@ -33,7 +33,7 @@
 #' \item{f_dens}{similar to \code{w_dens}, except that this is the distribution
 #' of the colonization time, i_e. time interval during which the pathogen can
 #' be sampled from the patient.}}
-#' 
+#'
 #' @param ... a list of data items to be processed (see description)
 #'
 #' @param data optionally, an existing list of data item as returned by \code{outbreaker_data}.
@@ -95,12 +95,6 @@ outbreaker_data <- function(..., data = list(...)) {
     data$dates <- as.integer(round(data$dates))
     data$N <- length(data$dates)
     data$max_range <- diff(range(data$dates))
-    ## get temporal ordering constraint:
-    ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
-    data$can_be_ances <- outer(data$dates,
-                               data$dates,
-                               FUN="<") # strict < is needed as we impose w(0)=0
-    diag(data$can_be_ances) <- FALSE
   }
 
   ## CHECK W_DENS
@@ -151,7 +145,34 @@ outbreaker_data <- function(..., data = list(...)) {
     data$f_dens <- data$f_dens / sum(data$f_dens)
     data$log_f_dens <- log(data$f_dens)
   }
-  
+
+  ## CHECK POTENTIAL ANCESTRIES
+  if(!is.null(data$dates)) {
+    ## get temporal ordering constraint:
+    ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
+    ## Calculate the serial interval from w_dens and f_dens
+    .get_SI <- function(w_dens, f_dens) {
+      wf <- stats::convolve(w_dens, rev(f_dens), type = 'open')
+      conv <- stats::convolve(rev(f_dens), rev(wf), type = 'open')
+      lf <- length(f_dens)
+      lw <- length(w_dens)
+      return(data.frame(x = (-lf + 2):(lw + lf - 1), d = conv))
+    }
+    ## Check if difference in sampling dates falls within serial interval
+    ## This allows for i to infect j even if it sampled after (SI < 0)
+    .can_be_ances <- function(date1, date2, SI) {
+      tdiff <- date2 - date1
+      out <- sapply(tdiff, function(i) return(i %in% SI$x))
+      return(out)
+    }
+    SI <- .get_SI(data$w_dens, data$f_dens)
+    data$can_be_ances <- outer(data$dates,
+                               data$dates,
+                               FUN=.can_be_ances,
+                               SI = SI) # strict < is needed as we impose w(0)=0
+    diag(data$can_be_ances) <- FALSE
+  }
+
   ## CHECK DNA
 
   if (!is.null(data$dna)) {
@@ -225,7 +246,7 @@ outbreaker_data <- function(..., data = list(...)) {
     mtch_1 <- match(ctd[,1], data$ids)
     mtch_2 <- match(ctd[,2], data$ids)
     contacts[cbind(mtch_2, mtch_1)] <- 1
-    
+
     data$contacts <- contacts
     data$C_combn <- data$N*(data$N - 1)
     data$C_nrow <- nrow(ctd)

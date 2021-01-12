@@ -583,11 +583,11 @@ create_config <- function(..., data = NULL) {
     stop("prior_lambda is has values which are infinite or NA")
   }
 
-  
+
   if (!is.logical(config$pb)) {
     stop("pb must be a logical")
   }
-  
+
   ## CHECKS POSSIBLE IF DATA IS PROVIDED ##
   if (!is.null(data)) {
     ## check initial tree
@@ -603,17 +603,20 @@ create_config <- function(..., data = NULL) {
       ## check initial tree
       if (config$init_tree=="seqTrack" &&
           nrow(data$dna) != data$N) {
-        msg <- sprintf(paste("Can't use seqTrack initialization when", 
+        msg <- sprintf(paste("Can't use seqTrack initialization when",
                              "numbers of sequences and cases differ",
                              "(%d vs %d)"), nrow(data$dna), data$N)
         message(msg)
         config$init_tree <- "star"
       }
-      
+
       ## seqTrack init
       if (config$init_tree=="seqTrack") {
         D_temp <- data$D
-        D_temp[!data$can_be_ances] <- 1e30
+        ## use strictly positive serial interval for starting tree
+        can_be_ances_tmp <- outer(data$dates, data$dates, FUN = "<")
+        diag(can_be_ances_tmp) <- FALSE
+        D_temp[!can_be_ances_tmp] <- 1e30
         config$init_alpha <- apply(D_temp,2,which.min)
         config$init_alpha[data$dates==min(data$dates)] <- NA
         config$init_alpha <- as.integer(config$init_alpha)
@@ -680,7 +683,7 @@ create_config <- function(..., data = NULL) {
         config$ctd_directed <- data$ctd$directed
       }
     }
-    
+
   }
 
   ## output is a list of checked settings with a dedicated class (for

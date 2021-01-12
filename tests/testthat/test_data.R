@@ -41,7 +41,7 @@ test_that("test: data are processed fine", {
 
 
 test_that("outbreaker_data accepts epicontacts and case labelling", {
-  
+
   ## skip on CRAN
   skip_on_cran()
 
@@ -64,9 +64,9 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     tTree <- data.frame(i = ids[x$ances],
                         j = ids[1:length(x$ances)])
     ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
-    epi_c <- epicontacts::make_epicontacts(linelist = data.frame(id = ids),
-                                           contacts = ctd,
-                                           directed = TRUE)
+    epi_c <- suppressWarnings(epicontacts::make_epicontacts(linelist = data.frame(id = ids),
+                                                            contacts = ctd,
+                                                            directed = TRUE))
 
     data <- outbreaker_data(dates = x$onset,
                             dna = x$dna,
@@ -80,13 +80,13 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     ctd_ind <- apply(ctd, 2, match, ids)
     expect_equal(rep(1, nrow(ctd)), data$contacts[ctd_ind[,c(2, 1)]])
     expect_equal(rep(0, nrow(ctd)), data$contacts[ctd_ind])
-    
+
     ## check directionality is being passed
     config <- create_config(data = data)
 
     ## check ids are carried through
     expect_equal(data$ids, epi_c$linelist$id)
-    
+
     ## make sure directionality is carried through
     expect_true(config$ctd_directed)
 
@@ -94,7 +94,7 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     ## case labelling via dates
     dates <- x$onset
     names(dates) <- ids
-    
+
     data <- outbreaker_data(dates = dates,
                             dna = x$dna,
                             ctd = ctd,
@@ -112,7 +112,7 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
 
     ## check ids are carried through
     expect_equal(data$ids, as.character(ids))
-    
+
     ## make sure directionality is carried through
     expect_true(config$ctd_directed)
 
@@ -130,7 +130,7 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     config <- create_config(ctd_directed = FALSE)
 
     data <- add_convolutions(data, config)
-    
+
     ## check the number of contacts are correct
     expect_equal(2*nrow(ctd), sum(data$contacts))
 

@@ -220,7 +220,7 @@ test_that("Kappa estimates are correct", {
     config <- create_config(prior_pi = c(1, 1), prior_mu = c(0.1),
                             init_mu = 2/18, sd_mu = 0.1, n_iter = 5e4)
 
-    set.seed(1)
+    set.seed(2)
     res <- outbreaker(data, config)
 
     ## function to get most frequent item

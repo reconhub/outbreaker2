@@ -1,5 +1,5 @@
 context("Test outbreaker")
-current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string) 
+current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string)
 
 ## test output format ##
 test_that("outbreaker's output have expected format", {
@@ -130,12 +130,12 @@ test_that("results ok: time, ctd, DNA", {
     ## outbreaker time, ctd, no DNA ##
     ## analysis
     ## set the random number generator kind to old R
-    RNGversion("3.5.2")
+    suppressWarnings(RNGversion("3.5.2"))
     set.seed(1)
 
     tTree <- data.frame(i = x$ances,
                         j = 1:length(x$ances))
-    
+
     ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
 
     data <- list(dates = x$onset, w_dens = x$w,
@@ -161,7 +161,7 @@ test_that("results ok: time, ctd, DNA", {
     quant_lambda <- quantile(out_ctd$lambda, c(0.25, 0.75))
     expect_true(quant_lambda[[1]] > 0.05 &
                 quant_lambda[[2]] < 0.35)
-        
+
     ## approx log post values
     expect_true(min(out_ctd.smry$post) > -1200)
 
@@ -292,7 +292,7 @@ test_that("results ok: kappa and pi", {
 
 
 test_that("results ok: kappa from genetic data", {
-  
+
     ## skip on CRAN
     skip_on_cran()
 
@@ -354,7 +354,7 @@ test_that("results ok: outbreaker with custom priors",
 
     expect_true(smry_1$pi[2] > 0.9)
     expect_true(smry_2$pi[2] > 0.6 && smry_2$pi[5] < 0.9)
-  
+
 })
 
 
@@ -413,7 +413,7 @@ test_that("results ok: outbreaker with fixed number returning priors and likelih
 
 ## test consensus tree
 test_that("test consensus trees", {
-  
+
     ## skip on CRAN
     skip_on_cran()
 

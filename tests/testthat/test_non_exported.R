@@ -52,7 +52,7 @@ test_that("Auxiliary functions for ancestries are working", {
   expect_equal(can_move_alpha(param, config2), c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE))
 
   ## test ancestor selection
-  RNGversion("3.5.2")
+  suppressWarnings(RNGversion("3.5.2"))
   set.seed(1)
   to_move <- replicate(10, select_alpha_to_move(param,config))
   expect_equal(to_move, c(3,3,4,6,3,6,6,5,5,1))
@@ -222,7 +222,8 @@ test_that("Testing cpp_get_n_mutations", {
   rownames(dna.miss) <- c("3", "4", "11")
 
   data.miss <- outbreaker_data(dates = fake_outbreak$onset,
-                               dna = dna.miss)
+                               dna = dna.miss,
+                               w_dens = rep(1, 100))
   D.miss <- data.miss$D
 
   expect_equal(rownames(D.miss), rownames(dna.miss))
@@ -249,7 +250,7 @@ test_that("Look for sequenced ancestors", {
 
   ## make inputs
   onset <- as.integer(c(0, 1, 2, 3, 2, 1, 2, 3))
-  data <- outbreaker_data(onset = onset)
+  data <- outbreaker_data(dates = onset, w_dens = rep(1, 100))
 
   has_dna <- as.logical(c(0, 1, 0, 1, 1, 0, 0, 1))
   data$has_dna <- has_dna

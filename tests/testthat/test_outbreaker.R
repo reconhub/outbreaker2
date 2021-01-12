@@ -13,8 +13,7 @@ test_that("outbreaker's output have expected format", {
 
     ## run outbreaker
     data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
-    config <- list(n_iter = 10, sample_every = 1, paranoid = TRUE,
-                   find_import = FALSE)
+    config <- list(n_iter = 10, sample_every = 1, find_import = FALSE)
     out <- outbreaker(data, config)
 
 

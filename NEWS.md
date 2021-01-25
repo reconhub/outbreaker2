@@ -1,3 +1,17 @@
+outbreaker2 1.1.2 (2021-01-25)
+==================
+
+### Bug fixes
+
+* Random index shuffling in cpp_move_swap_cases to ensure correct mixing
+* Negative serial intervals now allowed in can_be_ances
+* ID labels fix in plotting functions
+
+
+
+<br>
+<br>
+
 outbreaker2 1.1.1 (2020-01-31)
 ==================
 

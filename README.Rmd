@@ -85,6 +85,8 @@ Contributors
 - [Rich Fitzjohn](https://github.com/richfitz)
 - [Gerry Tonkin-Hill](https://github.com/gtonkinhill)
 - [Alexis Robert](https://github.com/alxsrobert)
+- [Kristjan Eldjarn](https://github.com/kreldjarn)
+
 
 See details of contributions
 [here](https://github.com/reconhub/outbreaker2/graphs/contributors).

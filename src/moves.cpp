@@ -1,6 +1,5 @@
 #include <Rcpp.h>
 #include <Rmath.h>
-#include <algorithm>		// std::random_shuffle
 #include "internals.h"
 #include "likelihoods.h"
 #include "priors.h"
@@ -460,12 +459,13 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data,
   Rcpp::IntegerVector local_cases;
 
   size_t N = static_cast<size_t>(data["N"]);
-
+  int N_int = data["N"];
+  
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
 
   // Shuffle indices to make equal cases equally likely
   Rcpp::IntegerVector idx = Rcpp::seq(0, N-1);
-  std::random_shuffle (idx.begin(), idx.end());
+  idx = Rcpp::sample(idx, N_int, false);
 
   for (size_t j = 0; j < N; ++j) {
     size_t i = (size_t)idx[j];

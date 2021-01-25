@@ -110,7 +110,7 @@ test_that("results ok: time, no DNA", {
 
     ## check that support for ancestries is weak
     sup <- na.omit(out_no_dna.smry$tree$support)
-    expect_lt(quantile(sup, .9), .5)
+    expect_lt(quantile(sup, .9), .55)
     expect_lt(mean(sup), .35)
 
 })

@@ -33,7 +33,7 @@ outbreaker_find_imports <- function(moves, data, param_current,
 
   ## remove the contact likelihood from outlier detection
   tmp_likelihoods <- likelihoods
-  tmp_likelihoods$contact <- function(data, param) return(0)
+  tmp_likelihoods$contact <- list(function(data, param) return(0), 0)
 
   ## RUN MCMC ##
   for (i in seq.int(2, config$n_iter_import, 1)) {

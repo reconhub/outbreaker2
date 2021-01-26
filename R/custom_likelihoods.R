@@ -42,7 +42,8 @@
 #' A named list of list(function, arity) pairs with the class
 #'     \code{custom_likelihood}, each function implementing a customised
 #'     log-likelihood component of outbreaker. Functions which are not
-#'     customised will result in a list(NULL, 0) component.
+#'     customised will result in a list(NULL, 0) component. Any function with
+#'     arity 3 must have the third parameter default to NULL
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'

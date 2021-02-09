@@ -493,30 +493,32 @@ test_that("Customisation with identical functions works", {
     f_genetic <- function(data, param) cpp_ll_genetic(data, param)
     f_timing_infections  <-  function(data, param) cpp_ll_timing_infections(data, param)
     f_timing_sampling  <-  function(data, param) cpp_ll_timing_sampling(data, param)
+    f_contact <- function(data, param) cpp_ll_contact(data, param)
     f_reporting  <-  function(data, param) cpp_ll_reporting(data, param)
 
     list_functions <- custom_likelihoods(genetic = f_genetic,
                        timing_infections = f_timing_infections,
                        timing_sampling = f_timing_sampling,
+                       contact = f_contact,
                        reporting = f_reporting)
 
 
     ## tests
     expect_equal(cpp_ll_genetic(data, param),
-                 cpp_ll_genetic(data, param, , f_genetic))
+                 cpp_ll_genetic(data, param, , list_functions[['genetic']]))
 
     expect_equal(cpp_ll_timing_infections(data, param),
-                 cpp_ll_timing_infections(data, param, , f_timing_infections))
+                 cpp_ll_timing_infections(data, param, , list_functions[['timing_infections']]))
 
 
     expect_equal(cpp_ll_timing_sampling(data, param),
-                 cpp_ll_timing_sampling(data, param, , f_timing_sampling))
+                 cpp_ll_timing_sampling(data, param, , list_functions[['timing_sampling']]))
 
-    expect_equal(cpp_ll_timing_sampling(data, param),
-                 cpp_ll_timing_sampling(data, param, , f_timing_sampling))
+    expect_equal(cpp_ll_contact(data, param),
+                 cpp_ll_contact(data, param, , list_functions[['contact']]))
 
     expect_equal(cpp_ll_reporting(data, param),
-                 cpp_ll_reporting(data, param, , f_reporting))
+                 cpp_ll_reporting(data, param, , list_functions[['reporting']]))
 
     expect_equal(cpp_ll_timing(data, param),
                  cpp_ll_timing(data, param, , list_functions))
@@ -559,24 +561,85 @@ test_that("Customisation with pi-returning functions works", {
 
     ## tests
     expect_equal(pi,
-                 cpp_ll_genetic(data, param, , f))
+                 cpp_ll_genetic(data, param, , list_functions[['genetic']]))
 
     expect_equal(pi,
-                 cpp_ll_timing_infections(data, param, , f))
+                 cpp_ll_timing_infections(data, param, , list_functions[['timing_infections']]))
 
     expect_equal(pi,
-                 cpp_ll_timing_sampling(data, param, , f))
+                 cpp_ll_timing_sampling(data, param, , list_functions[['timing_sampling']]))
 
     expect_equal(pi,
-                 cpp_ll_timing_sampling(data, param, , f))
-
-    expect_equal(pi,
-                 cpp_ll_reporting(data, param, , f))
+                 cpp_ll_reporting(data, param, , list_functions[['reporting']]))
 
     expect_equal(2 * pi,
                  cpp_ll_timing(data, param, , list_functions))
 
     expect_equal(4 * pi,
                  cpp_ll_all(data, param, , list_functions))
+
+})
+
+
+
+
+
+test_that("Arity of custom likelihood functions is passed, and they are called
+           with the correct number of parameters", {
+
+    ## Generate data ##
+    data(fake_outbreak)
+    data <- with(fake_outbreak,
+                 outbreaker_data(dates = sample,
+                                 w_dens = w,
+                                 dna = dna))
+    config <- create_config(data = data, init_mu = 0.543e-4)
+    param <- create_param(data = data, config = config)$current
+    few_cases <- as.integer(c(1,3,4))
+    rnd_cases <- sample(sample(seq_len(data$N), 5, replace = FALSE))
+
+
+    ## Generate custom functions with 2 arguments
+    f2 <- function(data, param) return(2);
+
+    arity_two <- custom_likelihoods(genetic = f2,
+                                    timing_infections = f2,
+                                    timing_sampling = f2,
+                                    reporting = f2)
+
+    ## Generate custom functions with 3 arguments. Make sure the i parameter
+    ## is passed to the custom function if arity is 3.
+    f3 <- function(data, param, i=-1) return(i);
+
+    arity_three <- custom_likelihoods(genetic = f3,
+                                      timing_infections = f3,
+                                      timing_sampling = f3,
+                                      reporting = f3)
+
+
+    ## Tests
+    expect_equal(2,
+                 cpp_ll_genetic(data, param, , arity_two[['genetic']]))
+
+    expect_equal(3,
+                 cpp_ll_genetic(data, param, 3, arity_three[['genetic']]))
+
+    expect_equal(2,
+                 cpp_ll_timing_infections(data, param, , arity_two[['timing_infections']]))
+
+    expect_equal(3,
+                 cpp_ll_timing_infections(data, param, 3, arity_three[['timing_infections']]))
+
+    expect_equal(2,
+                 cpp_ll_timing_sampling(data, param, , arity_two[['timing_sampling']]))
+
+    expect_equal(3,
+                 cpp_ll_timing_sampling(data, param, 3, arity_three[['timing_sampling']]))
+
+    expect_equal(2,
+                 cpp_ll_reporting(data, param, , arity_two[['reporting']]))
+
+    expect_equal(3,
+                 cpp_ll_reporting(data, param, 3, arity_three[['reporting']]))
 
 })

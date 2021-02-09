@@ -15,3 +15,5 @@ vignettes/*cache*
 docs/articles/*cache*
 doc
 Meta
+.*.swp
+.*.swo

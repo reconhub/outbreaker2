@@ -56,7 +56,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
   size_t N = static_cast<size_t>(data["N"]);
   if (N < 2) return 0.0;
 
-  if (custom_function == R_NilValue) {
+  Rcpp::List l;
+  if (custom_function != R_NilValue) {
+    l = Rcpp::as<Rcpp::List>(custom_function);
+  }
+  if (custom_function == R_NilValue || (l.size() > 0 && l[0] == R_NilValue)) {
 
     // Variables from the data & param
     Rcpp::NumericMatrix w_dens = data["log_w_dens"];
@@ -169,8 +173,9 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
     return(out);
     
   } else { // use of a customized likelihood function
-    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
-
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(l[0]);
+    int arity = l[1];
+    if (arity == 3) return Rcpp::as<double>(f(data, param, i));
     return Rcpp::as<double>(f(data, param));
   }
 }
@@ -198,7 +203,11 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
 
-  if (custom_function == R_NilValue) {
+  Rcpp::List l;
+  if (custom_function != R_NilValue) {
+    l = Rcpp::as<Rcpp::List>(custom_function);
+  }
+  if (custom_function == R_NilValue || (l.size() > 0 && l[0] == R_NilValue)) {
 
     Rcpp::IntegerVector alpha = param["alpha"];
     Rcpp::IntegerVector t_inf = param["t_inf"];
@@ -246,8 +255,9 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
 
     return out;
   } else { // use of a customized likelihood function
-    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
-
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(l[0]);
+    int arity = l[1];
+    if (arity == 3) return Rcpp::as<double>(f(data, param, i));
     return Rcpp::as<double>(f(data, param));
   }
 }
@@ -275,7 +285,11 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i,
   size_t N = static_cast<size_t>(data["N"]);
   if(N < 2) return 0.0;
 
-  if (custom_function == R_NilValue) {
+  Rcpp::List l;
+  if (custom_function != R_NilValue) {
+    l = Rcpp::as<Rcpp::List>(custom_function);
+  }
+  if (custom_function == R_NilValue || (l.size() > 0 && l[0] == R_NilValue)) {
 
     Rcpp::IntegerVector dates = data["dates"];
     Rcpp::IntegerVector t_inf = param["t_inf"];
@@ -308,8 +322,9 @@ double cpp_ll_timing_sampling(Rcpp::List data, Rcpp::List param, SEXP i,
 
     return out;
   }  else { // use of a customized likelihood function
-    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
-
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(l[0]);
+    int arity = l[1];
+    if (arity == 3) return Rcpp::as<double>(f(data, param, i));
     return Rcpp::as<double>(f(data, param));
   }
 }
@@ -354,7 +369,11 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i,
     return R_NegInf;
   }
 
-  if (custom_function == R_NilValue) {
+  Rcpp::List l;
+  if (custom_function != R_NilValue) {
+    l = Rcpp::as<Rcpp::List>(custom_function);
+  }
+  if (custom_function == R_NilValue || (l.size() > 0 && l[0] == R_NilValue)) {
 
     double out = 0.0;
 
@@ -385,8 +404,9 @@ double cpp_ll_reporting(Rcpp::List data, Rcpp::List param, SEXP i,
 
     return out;
   } else { // use of a customized likelihood function
-    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
-
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(l[0]);
+    int arity = l[1];
+    if (arity == 3) return Rcpp::as<double>(f(data, param, i));
     return Rcpp::as<double>(f(data, param));
   }
 }
@@ -435,7 +455,11 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
   size_t N = static_cast<size_t>(data["N"]);
   if (N < 2) return 0.0;
 
-  if (custom_function == R_NilValue) {
+  Rcpp::List l;
+  if (custom_function != R_NilValue) {
+    l = Rcpp::as<Rcpp::List>(custom_function);
+  }
+  if (custom_function == R_NilValue || (l.size() > 0 && l[0] == R_NilValue)) {
 
     double out;
     double eps = Rcpp::as<double>(param["eps"]);
@@ -497,8 +521,9 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
     return out;
     
   } else { //use of a customized likelihood function
-    Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
-
+    Rcpp::Function f = Rcpp::as<Rcpp::Function>(l[0]);
+    int arity = l[1];
+    if (arity == 3) return Rcpp::as<double>(f(data, param, i));
     return Rcpp::as<double>(f(data, param));
   }
 }

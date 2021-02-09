@@ -69,7 +69,7 @@
 #'                                 contact = f_null)
 #'
 #' null_config <- list(find_import = FALSE,
-#'                     n_iter = 200,
+#'                     n_iter = 100,
 #'                     sample_every = 1)
 #'
 #' ## load data

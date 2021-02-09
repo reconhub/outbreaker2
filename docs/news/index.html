@@ -8,23 +8,29 @@
 
 <title>Changelog • outbreaker2</title>
 
+
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,7 +38,9 @@
 
 
 
+
 <meta property="og:title" content="Changelog" />
+
 
 
 
@@ -49,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -63,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">outbreaker2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -71,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -86,9 +94,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Rcpp_API.html">outbreaker2: Rcpp API</a>
-    </li>
-    <li>
       <a href="../articles/customisation.html">Using custom priors, likelihood, or movements in outbreaker2</a>
     </li>
     <li>
@@ -97,13 +102,15 @@
     <li>
       <a href="../articles/overview.html">outbreaker2: package overview</a>
     </li>
+    <li>
+      <a href="../articles/Rcpp_API.html">outbreaker2: Rcpp API</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -119,24 +126,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       
     </div>
 
-    <div id="outbreaker2-1-1-0-2019-06-06" class="section level1">
-<h1 class="page-header">
-<a href="#outbreaker2-1-1-0-2019-06-06" class="anchor"></a>outbreaker2 1.1.0 (2019-06-06)<small> 2019-06-13 </small>
+    <div id="outbreaker2-112-2021-01-25" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.2">
+<a href="#outbreaker2-112-2021-01-25" class="anchor"></a>outbreaker2 1.1.2 (2021-01-25)<small> Unreleased </small>
 </h1>
+<div id="new-features" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h3>
+<ul>
+<li>Custom likelihoods now support local likelihood calculations via the optional <code>i</code> argument; this will speed up likelihood calculations by avoiding global calculations where these are unnecessary</li>
+</ul>
+</div>
 <div id="bug-fixes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h3>
 <ul>
+<li>Random index shuffling in cpp_move_swap_cases to ensure correct mixing</li>
+<li>Negative serial intervals now allowed in can_be_ances</li>
+<li>ID labels fix in plotting functions</li>
+</ul>
+<p><br><br></p>
+</div>
+</div>
+    <div id="outbreaker2-111-2020-01-31" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.1">
+<a href="#outbreaker2-111-2020-01-31" class="anchor"></a>outbreaker2 1.1.1 (2020-01-31)<small> 2020-02-07 </small>
+</h1>
+<div id="bug-fixes-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h3>
+<ul>
+<li>Fixed uninitialized variable use</li>
+<li>Updated email addresses</li>
+</ul>
+<p><br><br></p>
+</div>
+</div>
+    <div id="outbreaker2-110-2019-06-06" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.0">
+<a href="#outbreaker2-110-2019-06-06" class="anchor"></a>outbreaker2 1.1.0 (2019-06-06)<small> 2019-06-13 </small>
+</h1>
+<div id="bug-fixes-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes-2" class="anchor"></a>Bug fixes</h3>
+<ul>
 <li>The genetic likelihood of the <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003457">original <em>outbreaker</em> paper</a> was found to contain a minor mistake in accounting for unobserved generations of infection. As of June 7th 2019, <em>outbreaker2</em> will use the correct genetic likelihood published <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006930">here</a>.</li>
 </ul>
 </div>
-<div id="new-features" class="section level3">
+<div id="new-features-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New features</h3>
+<a href="#new-features-1" class="anchor"></a>New features</h3>
 <ul>
 <li>
 <em>outbreaker2</em> now accepts <code>epicontacts</code> objects for contact data</li>
@@ -151,9 +194,9 @@
 <p><br><br></p>
 </div>
 </div>
-    <div id="outbreaker2-1-0-1-2018-03-06" class="section level1">
-<h1 class="page-header">
-<a href="#outbreaker2-1-0-1-2018-03-06" class="anchor"></a>outbreaker2 1.0.1 (2018-03-06)<small> 2018-03-06 </small>
+    <div id="outbreaker2-101-2018-03-06" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.1">
+<a href="#outbreaker2-101-2018-03-06" class="anchor"></a>outbreaker2 1.0.1 (2018-03-06)<small> 2018-03-06 </small>
 </h1>
 <div id="minor-bug-fixes" class="section level3">
 <h3 class="hasAnchor">
@@ -165,9 +208,9 @@
 <p><br><br></p>
 </div>
 </div>
-    <div id="outbreaker2-1-0-0-2017-11-24" class="section level1">
-<h1 class="page-header">
-<a href="#outbreaker2-1-0-0-2017-11-24" class="anchor"></a>outbreaker2 1.0.0 (2017-11-24)<small> Unreleased </small>
+    <div id="outbreaker2-100-2017-11-24" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.0">
+<a href="#outbreaker2-100-2017-11-24" class="anchor"></a>outbreaker2 1.0.0 (2017-11-24)<small> Unreleased </small>
 </h1>
 <div id="first-version-of-outbreaker2" class="section level3">
 <h3 class="hasAnchor">
@@ -184,15 +227,10 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#outbreaker2-1-1-0-2019-06-06">1.1.0</a></li>
-        <li><a href="#outbreaker2-1-0-1-2018-03-06">1.0.1</a></li>
-        <li><a href="#outbreaker2-1-0-0-2017-11-24">1.0.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -204,7 +242,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

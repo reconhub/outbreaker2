@@ -1,6 +1,11 @@
 outbreaker2 1.1.2 (2021-01-25)
 ==================
 
+### New features
+* Custom likelihoods now support local likelihood calculations via the optional
+  `i` argument; this will speed up likelihood calculations by avoiding global
+  calculations where these are unnecessary
+
 ### Bug fixes
 
 * Random index shuffling in cpp_move_swap_cases to ensure correct mixing

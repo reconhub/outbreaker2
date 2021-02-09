@@ -43,7 +43,7 @@
 #'     \code{custom_likelihood}, each function implementing a customised
 #'     log-likelihood component of outbreaker. Functions which are not
 #'     customised will result in a list(NULL, 0) component. Any function with
-#'     arity 3 must have the third parameter default to NULL
+#'     arity 3 must have the third parameter default to NULL.
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
@@ -54,14 +54,14 @@
 #' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customizing-likelihood}{customization vignette} for detailed examples on how to customize likelihoods.
 #'
 #' @export
-#' 
+#'
 #' @examples
-#' 
+#'
 #' ## specify a null model by disabling all likelihood components
 #' f_null <- function(data, param) {
 #'   return(0.0)
 #' }
-#' 
+#'
 #' null_model <- custom_likelihoods(genetic = f_null,
 #'                                 timing_sampling = f_null,
 #'                                 timing_infections = f_null,
@@ -75,7 +75,7 @@
 #' ## load data
 #' x <- fake_outbreak
 #' data <- outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
-#' 
+#'
 #' res_null <- outbreaker(data = data,
 #'                        config = null_config,
 #'                        likelihoods = null_model)
@@ -141,13 +141,18 @@ custom_likelihoods <- function(...) {
         stop(msg)
     }
 
-    # If the arity of the likelihood functions is three, the last argumen should
+    # If the arity of the likelihood functions is three, the last argument should
     # be the (1-based) indices of the cases we're currently perturbing. This
     # allows us to calculate the local likelihood delta, rather than having to
     # calculate the likelihood of the entire tree twice for every single
     # perturbation we make.
     if (!all(is_list_function_or_null)) {
-        likelihoods <- lapply(likelihoods, function(x) { if (is.null(x)) return(list(x, 0)); list(x, length(methods::formalArgs(x))) })
+      likelihoods <- lapply(
+        likelihoods,
+        function(x) {
+          if (is.null(x)) return(list(x, 0)); list(x, length(methods::formalArgs(x)))
+        }
+      )
     }
 
     arity_two_or_three <- function(x) {
@@ -160,7 +165,7 @@ custom_likelihoods <- function(...) {
     legal_arity <- vapply(likelihoods, arity_two_or_three, logical(1))
 
     if (!all(legal_arity)) {
-        culprits <- likelihood_names[!legal_arity]
+        culprits <- likelihoods_names[!legal_arity]
         msg <- paste0("The following likelihoods do not have arity two or three: ",
                       paste(culprits, collapse=", "))
         stop(msg)

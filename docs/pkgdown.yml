@@ -1,9 +1,10 @@
-pandoc: '2.3'
-pkgdown: 1.4.1
+pandoc: 2.9.2.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  Rcpp_API: Rcpp_API.html
   customisation: customisation.html
   introduction: introduction.html
   overview: overview.html
+  Rcpp_API: Rcpp_API.html
+last_built: 2021-02-09T11:38Z
 

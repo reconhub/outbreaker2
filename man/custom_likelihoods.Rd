@@ -15,10 +15,11 @@ custom_likelihoods(...)
 \item{x}{an \code{outbreaker_config} object as returned by \code{create_config}.}
 }
 \value{
-A named list of functions with the class \code{custom_likelihood}, each
-    implementing a customised log-likelihood components of
-    outbreaker. Functions which are not customised will result in a NULL
-    component.
+A named list of list(function, arity) pairs with the class
+    \code{custom_likelihood}, each function implementing a customised
+    log-likelihood component of outbreaker. Functions which are not
+    customised will result in a list(NULL, 0) component. Any function with
+    arity 3 must have the third parameter default to NULL.
 
 a list of named functions
 }

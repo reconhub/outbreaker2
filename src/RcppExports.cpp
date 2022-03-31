@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // cpp_are_possible_ancestors
 std::vector<int> cpp_are_possible_ancestors(Rcpp::IntegerVector t_inf, size_t i);
 RcppExport SEXP _outbreaker2_cpp_are_possible_ancestors(SEXP t_infSEXP, SEXP iSEXP) {

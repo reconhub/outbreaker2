@@ -7,7 +7,7 @@
 #'
 #' @aliases outbreaker_palettes chains_pal
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail_com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
 #' @param n a number of colors to be created
 #'
@@ -35,7 +35,7 @@ cases_pal <- function(n) {
     ## This one is taken from epicontacts
     cols <- c("#ccddff", "#79d2a6", "#ffb3b3", "#a4a4c1","#ffcc00", "#ff9f80",
               "#ccff99", "#df9fbf","#ffcc99", "#cdcdcd")
-    
+
     colorRampPalette(cols)(n)
-                
+
 }

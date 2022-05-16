@@ -34,7 +34,8 @@ Suggests:
     knitr,
     rmarkdown,
     igraph,
-    epicontacts
+    epicontacts,
+    adegenet
 Depends:
     R (>= 3.0.0)
 Imports:
@@ -50,6 +51,6 @@ Imports:
 LazyData: true
 LinkingTo: Rcpp
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 SystemRequirements: C++11
 VignetteBuilder: knitr

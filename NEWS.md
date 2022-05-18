@@ -1,3 +1,16 @@
+outbreaker2 1.1.3 (2022-05-18)
+==================
+
+### Bug fixes
+
+* Email addresses fixed
+* Adegenet added to Suggests
+
+
+
+<br>
+<br>
+
 outbreaker2 1.1.2 (2021-01-25)
 ==================
 

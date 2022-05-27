@@ -265,7 +265,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       labs(x = 'To', y = 'From', size = 'Posterior\nfrequency') +
       tmp$alpha_color +
       scale_size_area() +
-      guides(colour = FALSE)
+      guides(colour = "none")
   }
 
   if (type == "t_inf") {
@@ -293,7 +293,8 @@ plot.outbreaker_chains <- function(x, y = "post",
     out_dat <- data.frame(cases = factor(cases), dates = dates)
     out <- ggplot(out_dat) +
       geom_violin(aes(x = cases, y = dates, fill = cases)) +
-      coord_flip() + guides(fill = FALSE) +
+      coord_flip() + 
+      guides(fill = "none") +
       labs(y = 'Infection time', x = NULL) +
       tmp$t_inf_color +
       scale_x_discrete(labels = tmp$t_inf_lab)
@@ -322,7 +323,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
       scale_y_discrete(labels = get_kappa_lab(labels)) +
-      guides(colour = FALSE) +
+      guides(colour = "none") +
       labs(title = "number of generations between cases",
            x = "number of generations to ancestor",
            y = NULL)

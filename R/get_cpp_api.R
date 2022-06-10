@@ -7,7 +7,7 @@
 #'
 #' @export
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @return
 #'
@@ -17,11 +17,11 @@
 #'
 #' \itemize{
 #'
-#' \item 'prior': prior computation
+#' \item 'prior': prior computation.
 #'
-#' \item 'll':  likelihood computation
+#' \item 'll':  likelihood computation.
 #'
-#' \item 'move': movement of parameters or augmented data
+#' \item 'move': movement of parameters or augmented data.
 #'
 #' }
 #'
@@ -29,38 +29,38 @@
 #'
 #' \itemize{
 #'
-#' \item 'mu': (parameter) mutation rate
+#' \item 'mu': (parameter) mutation rate.
 #'
-#' \item 'pi': (parameter) reporting probability
+#' \item 'pi': (parameter) reporting probability.
 #'
-#' \item 'lambda': (parameter) non-infectious contact rate
+#' \item 'lambda': (parameter) non-infectious contact rate.
 #'
-#' \item 'eps': (parameter) contact reporting coverage
+#' \item 'eps': (parameter) contact reporting coverage.
 #' 
-#' \item 'alpha': (augmented data) ancestries of the cases
+#' \item 'alpha': (augmented data) ancestries of the cases.
 #'
 #' \item 'kappa': (augmented data) generation between cases on transmission
-#' chains
+#' chains.
 #'
-#' \item 't_inf': (augmented data) dates of infections
+#' \item 't_inf': (augmented data) dates of infections.
 #'
 #' \item 'timing_infections': (likelihood component) timing between infectors and
-#' infectees
+#' infectees.
 #'
 #' \item 'timing_sampling': (likelihood component) timing between infection and
-#' reporting / isolation
+#' reporting / isolation.
 #'
-#' \item 'timing': (likelihood component) sum of the two timing components
+#' \item 'timing': (likelihood component) sum of the two timing components.
 #' 
 #' \item 'genetic': (likelihood component) genetic diversity accumulated along
-#' transmission chains
+#' transmission chains.
 #' 
-#' \item 'reporting': (likelihood component) reporting of cases
+#' \item 'reporting': (likelihood component) reporting of cases.
 #' 
-#' \item 'all': (likelihood component) sum of all likelihood components
+#' \item 'all': (likelihood component) sum of all likelihood components.
 #'
 #' \item 'swap_cases': (type of movement) swap infectors and infectees on a
-#' transmission tree 
+#' transmission tree.
 #'
 #' }
 #'

@@ -22,7 +22,7 @@
 #' columns, indicating a reported contact between the two individuals whose ids
 #' are provided in a given row of the data, or an epicontacts object. In the case
 #' of the latter, linelist IDs will be used for matching dates and DNA
-#' sequences}
+#' sequences.}
 #'
 #' \item{w_dens}{a vector of numeric values indicating the generation time
 #' distribution, reflecting the infectious potential of a case t = 1, 2, ...
@@ -34,11 +34,11 @@
 #' of the colonization time, i_e. time interval during which the pathogen can
 #' be sampled from the patient.}}
 #'
-#' @param ... a list of data items to be processed (see description)
+#' @param ... a list of data items to be processed (see description).
 #'
 #' @param data optionally, an existing list of data item as returned by \code{outbreaker_data}.
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @export
 #'

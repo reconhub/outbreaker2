@@ -32,16 +32,16 @@
 #' reporting/symptoms distribution, and the dates of reporting/symptoms,
 #' provided in \code{data}.}
 #'
-#' \item{init_mu}{initial value for the mutation rates}
+#' \item{init_mu}{initial value for the mutation rates.}
 #'
-#' \item{init_pi}{initial value for the reporting probability}
+#' \item{init_pi}{initial value for the reporting probability.}
 #'
-#' \item{init_eps}{initial value for the contact reporting coverage}
+#' \item{init_eps}{initial value for the contact reporting coverage.}
 #'
-#' \item{init_lambda}{initial value for the non-infectious contact rate}
+#' \item{init_lambda}{initial value for the non-infectious contact rate.}
 #'
 #' \item{n_iter}{an integer indicating the number of iterations in the MCMC,
-#' including the burnin period}
+#' including the burnin period.}
 #'
 #'
 #' \item{move_alpha}{a vector of logicals indicating, for each case, if the
@@ -73,70 +73,70 @@
 #' \item{move_pi}{a logical indicating whether the reporting probability
 #' should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
 #'
-#' \item{n_iter}{the number of iterations of the MCMC}
+#' \item{n_iter}{the number of iterations of the MCMC.}
 #'
 #' \item{sample_every}{the frequency at which MCMC samples are retained for the
-#' output}
+#' output.}
 #'
 #' \item{sd_mu}{the standard deviation for the Normal proposal for the mutation
-#' rates}
+#' rates.}
 #'
 #' \item{sd_pi}{the standard deviation for the Normal proposal for the reporting
-#' probability}
+#' probability.}
 #'
 #' \item{sd_eps}{the standard deviation for the Normal proposal for the
-#' contact reporting coverage}
+#' contact reporting coverage.}
 #'
 #' \item{sd_lambda}{the standard deviation for the Normal proposal for the
-#' non-infectious contact rate}
+#' non-infectious contact rate.}
 #'
 #' \item{prop_alpha_move}{the proportion of ancestries to move at each iteration
-#' of the MCMC}
+#' of the MCMC.}
 #'
 #' \item{prop_t_inf_move}{the proportion of infection dates to move at each
-#' iteration of the MCMC}
+#' iteration of the MCMC.}
 
-#' \item{batch_size}{the size of the batch of random number pre-generated}
+#' \item{batch_size}{the size of the batch of random number pre-generated.}
 #'
 #' \item{paranoid}{a logical indicating if the paranoid mode should be used;
 #' this mode is used for performing additional tests during outbreaker; it makes
 #' computations substantially slower and is mostly used for debugging purposes.}
 #'
 #' \item{min_date}{earliest infection date possible, expressed as days since the
-#' first sampling}
+#' first sampling.}
 #'
 #' \item{max_kappa}{an integer indicating the largest number of generations
-#' between any two linked cases; defaults to 5}
+#' between any two linked cases; defaults to 5.}
 #'
 #' \item{prior_mu}{a numeric value indicating the rate of the exponential prior
-#' for the mutation rate 'mu'}
+#' for the mutation rate 'mu'.}
 #'
 #' \item{prior_pi}{a numeric vector of length 2 indicating the first and second
-#' parameter of the beta prior for the reporting probability 'pi'}
+#' parameter of the beta prior for the reporting probability 'pi'.}
 #'
 #' \item{prior_eps}{a numeric vector of length 2 indicating the first and second
-#' parameter of the beta prior for the contact reporting coverage 'eps'}
+#' parameter of the beta prior for the contact reporting coverage 'eps'.}
 #'
 #' \item{prior_lambda}{a numeric vector of length 2 indicating the first and
 #' second parameter of the beta prior for the non-infectious contact rate
-#' 'lambda'}
+#' 'lambda'.}
 #'
 #' \item{ctd_directed}{a logical indicating if the contact tracing data is
 #' directed or not. If yes, the first column represents the infector and the
 #' second column the infectee. If ctd is provided as an epicontacts objects,
 #' directionality will be taken from there.}
 #'
-#' \item{pb}{a logical indicating if a progress bar should be displayed}
+#' \item{pb}{a logical indicating if a progress bar should be displayed.}
 #'
 #' }
 #'
 #' @param data an optional list of data items as returned by
 #'     \code{outbreaker_data}; if provided, this allows for further checks of
-#'     the outbreaker setings.
+#'     the outbreaker settings.
 #'
-#' @seealso \code{\link{outbreaker_data}} to check and process data for outbreaker
+#' @seealso \code{\link{outbreaker_data}} to check and process data for outbreaker.
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @export
 #'
@@ -706,7 +706,7 @@ create_config <- function(..., data = NULL) {
 #'
 #' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
 #'
-#' @param ... further arguments to be passed to other methods
+#' @param ... further arguments to be passed to other methods.
 
 print.outbreaker_config <- function(x, ...) {
   cat("\n\n ///// outbreaker settings ///\n")

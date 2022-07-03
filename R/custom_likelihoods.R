@@ -30,10 +30,10 @@
 #' \itemize{
 #'
 #' \item \code{data}: a list of named items containing input data as returned by
-#' \code{\link{outbreaker_data}}
+#' \code{\link{outbreaker_data}}.
 #'
 #' \item \code{param}: a list of parameters with the class
-#' \code{\link{create_param}}
+#' \code{\link{create_param}}.
 #'
 #' }
 #'
@@ -45,7 +45,7 @@
 #'     customised will result in a list(NULL, 0) component. Any function with
 #'     arity 3 must have the third parameter default to NULL.
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @param ... a named list of functions, each computing a log-likelihood component.
 #'

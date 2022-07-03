@@ -2,7 +2,7 @@
 #'
 #' This function creates initial outputs and parameter states for outbreaker.
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @param data A list of data items as returned by \code{outbreaker_data}, or
 #' arguments passed to this function.

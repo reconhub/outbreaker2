@@ -18,7 +18,7 @@
 #'
 #' @rdname outbreaker
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @references Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 #'     N (2014).  Bayesian reconstruction of disease outbreaks by combining
@@ -28,36 +28,36 @@
 #'     \code{\link{create_config}} to process/set up parameters
 #'
 #' @param data a list of named items containing input data as returned by
-#'     \code{\link{outbreaker_data}}
+#'     \code{\link{outbreaker_data}}.
 #'
-#' @param config a set of settings as returned by \code{\link{create_config}}
+#' @param config a set of settings as returned by \code{\link{create_config}}.
 #'
 #' @param likelihoods a set of log-likelihood functions as returned by
-#'     \code{\link{custom_likelihoods}}
+#'     \code{\link{custom_likelihoods}}.
 #'
 #' @param priors a set of log-prior functions as returned by
-#'     \code{\link{custom_priors}}
+#'     \code{\link{custom_priors}}.
 #'
 #' @param moves a set of movement functions as returned by
-#'     \code{\link{custom_moves}}
+#'     \code{\link{custom_moves}}.
 
 #' @seealso
 #'
 #' \itemize{
 #'
-#' \item \code{\link{outbreaker_data}}: function to process input data
+#' \item \code{\link{outbreaker_data}}: function to process input data.
 #'
 #' \item \code{\link{create_config}}: function to create default and customise
-#' configuration settings
+#' configuration settings.
 #'
 #' \item \code{\link{custom_priors}}: function to specify customised prior
-#' functions
+#' functions.
 #'
 #' \item \code{\link{custom_likelihoods}}: function to specify customised likelihoods
-#' functions
+#' functions.
 #'
 #' \item \code{\link{custom_moves}}: function to create default and customise movement
-#' functions
+#' functions.
 #'
 #' }
 #'

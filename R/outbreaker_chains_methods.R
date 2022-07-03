@@ -9,12 +9,12 @@
 #' @aliases outbreaker_chains print.outbreaker_chains plot.outbreaker_chains
 #'   summary.outbreaker_chains
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @param x an \code{outbreaker_chains} object as returned by \code{outbreaker}.
 #' @param n_row the number of rows to display in head and tail; defaults to 3.
 #' @param n_col the number of columns to display; defaults to 8.
-#' @param ... further arguments to be passed to other methods
+#' @param ... further arguments to be passed to other methods.
 #'
 #' @export
 #' @importFrom utils head tail
@@ -55,24 +55,24 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @rdname outbreaker_chains
 #'
 #' @param y a character string indicating which element of an
-#'   \code{outbreaker_chains} object to plot
+#'   \code{outbreaker_chains} object to plot.
 #'
-#' @param type a character string indicating the kind of plot to be used (see details)
+#' @param type a character string indicating the kind of plot to be used (see details).
 #' 
 #' @param group a vector of character strings indicating the parameters to display, 
 #' or "all" to display all global parameters (non node-specific parameters).
 #'
-#' @param burnin the number of iterations to be discarded as burnin
+#' @param burnin the number of iterations to be discarded as burnin.
 #'
 #' @param min_support a number between 0 and 1 indicating the minimum support of
-#' ancestries to be plotted; only used if 'type' is 'network'
+#' ancestries to be plotted; only used if 'type' is 'network'.
 #'
 #' @param labels a vector of length N indicating the case labels (must be
-#'   provided in the same order used for dates of symptom onset)
+#'   provided in the same order used for dates of symptom onset).
 #'
 ## #' @param dens_all a logical indicating if the overal density computed over
 ## all runs should be displayed; defaults to TRUE #' @param col the colors to be
-## used for different runs
+## used for different runs.
 #'
 #' @export
 #'

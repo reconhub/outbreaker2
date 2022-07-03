@@ -11,7 +11,7 @@
 #' @param ... Named arguments to bind to the function's environment.
 #' 
 #' @author Initial code by Rich FitzJohn (see 'references') with some
-#' adaptations by Thibaut Jombart
+#' adaptations by Thibaut Jombart.
 #'
 #' @references Initial code comes from the \code{partially_apply} function in
 #' the 'rodeint' package \code{richfitz/rodeint}.

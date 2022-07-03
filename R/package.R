@@ -13,26 +13,26 @@
 #' The main functions of the package are:
 #' \itemize{
 #'
-#' \item \code{\link{outbreaker}}: main function to run analyses
+#' \item \code{\link{outbreaker}}: main function to run analyses.
 #'
-#' \item \code{\link{outbreaker_data}}: function to process input data
+#' \item \code{\link{outbreaker_data}}: function to process input data.
 #'
 #' \item \code{\link{create_config}}: function to create default and customise
-#' configuration settings
+#' configuration settings.
 #'
 #' \item \code{\link{custom_priors}}: function to specify customised prior
-#' functions
+#' functions.
 #'
 #' \item \code{\link{custom_likelihoods}}: function to specify customised likelihoods
-#' functions
+#' functions.
 #'
 #' \item \code{\link{custom_moves}}: function to create default and customise movement
-#' functions
+#' functions.
 #'
 #' }
 #'
 #'
-#' @author Thibaut Jombart \email{thibautjombart@@gmail.com}
+#' @author Thibaut Jombart \email{thibautjombart@@gmail.com}.
 #'
 #' @name outbreaker_package
 #'

@@ -271,7 +271,7 @@ plot(res_null, "mu")
 
 ```
 
-By typical MCMC standards, these traces look appaling, as they haven't reach
+By typical MCMC standards, these traces look appalling, as they haven't reach
 stationarity (i.e. same mean and variance over time), and are grossly
 autocorrelated in parts. Fair enough, as these are only the first 500 iterations
 of the MCMC, so that autocorrelation is expected. In fact, what we observe here
@@ -311,7 +311,7 @@ plot(net_null, layout = layout.circle,
 
 ```
 
-We can derive similar diagnostics for the number of generations betweens cases
+We can derive similar diagnostics for the number of generations between cases
 (`kappa`), only constrained by default settings to be between 1 and 5, and for
 the infection dates (*t_inf*):
 
@@ -493,7 +493,7 @@ To handle this difficulty, *outbreaker2* transforms every movement function
 before running the MCMC into a new function with a single parameter `param`,
 attaching all other required argument to the function's environment. The
 function achieving this transformation is called `bind_moves`. This function
-'knows' what these components are for known moves listed aboves. For new,
+'knows' what these components are for known moves listed above. For new,
 unknown moves, it attaches the following components, provided they are used as
 arguments of the new function:
 

@@ -111,12 +111,15 @@ outbreaker_data <- function(..., data = list(...)) {
     }
 
 
-    ## Remove trailing zeroes to prevent starting with -Inf temporal loglike
-    if(data$w_dens[length(data$w_dens)] < 1e-15) {
-      final_index <- max(which(data$w_dens > 1e-15))
-      data$w_dens <- data$w_dens[1:final_index]
+    ## Replace any 0s with minimum value in w_dens
+    if(any(!is.finite(log(data$w_dens)))){
+      is_positive <- is.finite(log(data$w_dens))
+      to_replace <- !is_positive
+      val_replace <- min(data$w_dens[is_positive])
+      data$w_dens[to_replace] <- val_replace
     }
-
+    
+    
     ## add an exponential tail summing to 1e-4 to 'w'
     ## to cover the span of the outbreak
     ## (avoids starting with -Inf temporal loglike)

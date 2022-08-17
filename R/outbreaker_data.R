@@ -113,6 +113,9 @@ outbreaker_data <- function(..., data = list(...)) {
 
     ## Replace any 0s with minimum value in w_dens
     if(any(!is.finite(log(data$w_dens)))){
+      msg <- paste("Non-positive values in `w_dens` have been replaced with small probabilities.",
+                   "See `?outbreaker_data` of details", sep = "\n")
+      warning(msg)
       is_positive <- is.finite(log(data$w_dens))
       to_replace <- !is_positive
       val_replace <- min(data$w_dens[is_positive])

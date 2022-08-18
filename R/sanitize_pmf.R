@@ -20,9 +20,11 @@ sanitize_pmf <- function(dens){
   
   to_replace <- !is_positive #finds non positive values
   
-  val_replace <- min(dens[is_positive]) #finds the minimum probability
+  min_val <- min(dens[is_positive]) #finds the minimum probability
   
-  dens[to_replace] <- val_replace  #replaces non positive values with the minimum value in dens
+  val_replace <- 1e-4*min_val #generate a smaller probability than the min_val
+  
+  dens[to_replace] <- val_replace  #replaces non positive values with a tiny probability 
   
   dens <- dens / sum(dens) # rescale density to one
   

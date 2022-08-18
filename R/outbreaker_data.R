@@ -109,27 +109,31 @@ outbreaker_data <- function(..., data = list(...)) {
     if (any(!is.finite(data$w_dens))) {
       stop("non-finite values detected in w_dens")
     }
+    
+    ## Replace starting or ending 0s with exponential values
+    if (is.finite(log(data$w_dens))[1] == FALSE | is.finite(log(data$w_dens))[length(data$w_dens)]==FALSE) {
+      
+      data$w_dens <- tails_pmf(data$w_dens)
+    }
 
 
-    ## Replace any 0s with minimum value in w_dens
+    ## Replace any inner 0s with a small probability
     if(any(!is.finite(log(data$w_dens)))){
       msg <- paste("Non-positive values in `w_dens` have been replaced with small probabilities.",
                    "See `?outbreaker_data` of details", sep = "\n")
       warning(msg)
-      is_positive <- is.finite(log(data$w_dens))
-      to_replace <- !is_positive
-      val_replace <- min(data$w_dens[is_positive])
-      data$w_dens[to_replace] <- val_replace
+      data$w_dens <- sanitize_pmf(data$w_dens)
     }
     
     
-    ## add an exponential tail summing to 1e-4 to 'w'
+    ## add an exponential tail to w_dens
     ## to cover the span of the outbreak
     ## (avoids starting with -Inf temporal loglike)
     if (length(data$w_dens) < data$max_range) {
       length_to_add <- (data$max_range-length(data$w_dens)) + 10 # +10 to be on the safe side
+      min_dens <- min(data$w_dens) 
       val_to_add <- stats::dexp(seq_len(length_to_add), 1)
-      val_to_add <- 1e-4*(val_to_add/sum(val_to_add))
+      val_to_add <- (min_dens*1e-4)*(val_to_add/sum(val_to_add)) # sum of the tail probability to a value smaller than any other value in w_dens
       data$w_dens <- c(data$w_dens, val_to_add)
     }
 
@@ -153,6 +157,20 @@ outbreaker_data <- function(..., data = list(...)) {
 
     data$f_dens <- data$f_dens / sum(data$f_dens)
     data$log_f_dens <- log(data$f_dens)
+  }
+  
+  ## Replace starting or ending 0s with exponential values
+  if (is.finite(log(data$f_dens))[1] == FALSE | is.finite(log(data$f_dens))[length(data$f_dens)]==FALSE) {
+    
+    data$f_dens <- tails_pmf(data$f_dens)
+  }
+  
+  ## Replace any 0s with minimum value in f_dens
+  if(any(!is.finite(log(data$f_dens)))){
+    msg <- paste("Non-positive values in `f_dens` have been replaced with small probabilities.",
+                 "See `?outbreaker_data` of details", sep = "\n")
+    warning(msg)
+    data$f_dens <- sanitize_pmf(data$f_dens)
   }
 
   ## CHECK POTENTIAL ANCESTRIES

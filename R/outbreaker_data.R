@@ -111,7 +111,7 @@ outbreaker_data <- function(..., data = list(...)) {
     }
     
     ## Replace starting or ending 0s with exponential values
-    if (is.finite(log(data$w_dens))[1] == FALSE | is.finite(log(data$w_dens))[length(data$w_dens)]==FALSE) {
+    if (isFALSE(is.finite(log(data$w_dens))[1]) | isFALSE(is.finite(log(data$w_dens))[length(data$w_dens)]) ) {
       
       data$w_dens <- tails_pmf(data$w_dens)
     }
@@ -160,7 +160,7 @@ outbreaker_data <- function(..., data = list(...)) {
   }
   
   ## Replace starting or ending 0s with exponential values
-  if (is.finite(log(data$f_dens))[1] == FALSE | is.finite(log(data$f_dens))[length(data$f_dens)]==FALSE) {
+  if (isFALSE(is.finite(log(data$f_dens))[1]) | isFALSE(is.finite(log(data$w_dens))[length(data$f_dens)])) {
     
     data$f_dens <- tails_pmf(data$f_dens)
   }

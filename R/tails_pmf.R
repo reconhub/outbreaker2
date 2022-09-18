@@ -19,16 +19,16 @@ tails_pmf <- function(dens){
   
   is_positive <- is.finite(log(dens)) # finds positive values
   
-  first_positive <- min(which(is_positive==TRUE)) # fist positive index
+  first_positive <- min(which(is.element(is_positive, TRUE))) # fist positive index
   
-  last_positive <- max(which(is_positive==TRUE)) # last positive index
+  last_positive <- max(which(is.element(is_positive, TRUE))) # last positive index
   
   min_val <- min(dens[is_positive]) #finds minimum value
   
   
   
   ## starting 0s 
-  if( is_positive[1] == FALSE){ #if the 1st value is 0
+  if( isFALSE(is_positive[1]) ){ #if the 1st value is 0
     
     starting_indices <- seq_len(first_positive - 1) # finds starting 0s indices 
     
@@ -42,7 +42,7 @@ tails_pmf <- function(dens){
     
   }
   ## ending 0s
-  if( is_positive[length(is_positive)] == FALSE){ #if the last index returns 0
+  if( isFALSE(is_positive[length(is_positive)]) ){ #if the last index returns 0
     
     ending_indices <- (last_positive+1) : length(dens) # finds ending 0s indices 
     
@@ -60,5 +60,3 @@ tails_pmf <- function(dens){
   
   return(dens)
 }
-
-

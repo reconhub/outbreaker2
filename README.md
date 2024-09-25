@@ -27,7 +27,7 @@ $$\mu^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(
 
 The corrected genetic likelihood is:
 
-$$(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}$$
+$$(\kappa_i\mu)^{d(s_i,s_{\alpha_i})}(1-\kappa_i\mu)^{l(s_i,s_{\alpha_i})-d(s_i,s_{\alpha_i})}$$
 
 <br>
 

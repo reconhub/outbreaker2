@@ -150,6 +150,10 @@ outbreaker_data <- function(..., data = list(...)) {
   }
 
   ## CHECK POTENTIAL ANCESTRIES
+  ## Only if not provided 
+
+  if(is.null(data$can_be_ances)){
+
   if(!is.null(data$dates)) {
     ## get temporal ordering constraint:
     ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
@@ -175,6 +179,7 @@ outbreaker_data <- function(..., data = list(...)) {
                                SI = SI) # strict < is needed as we impose w(0)=0
     diag(data$can_be_ances) <- FALSE
   }
+}
 
   ## CHECK DNA
 
@@ -260,4 +265,4 @@ outbreaker_data <- function(..., data = list(...)) {
   ## output is a list of checked data
   return(data)
 
-}
+  }

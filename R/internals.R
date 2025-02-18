@@ -246,7 +246,7 @@ log_sum_vec <- function(w)
 {
   total=w[1]
   if (length(w)<2) return(total)
-  
+
   for (i in 2:length(w)){
     total <- log_sum(total, w[i]);
   }
@@ -256,7 +256,7 @@ log_sum_vec <- function(w)
 convolve_log <- function(x, y) {
   n <- length(x)
   m <- length(y)
-  
+
   r <- lapply(1:(n+m-1), function(k){
     i <- 1:max(m,n)
     i <- i[((i<=m) & ((k-m+i) <= n)) & ((k-m+i) > 0)]
@@ -271,7 +271,7 @@ convolve_log <- function(x, y) {
 add_convolutions <- function(data, config) {
   ## COMPUTE CONVOLUTIONS IF NEEDED ##
   if (config$max_kappa>1) {
-    
+
     ## first compute convolutions on natural scale
     for (i in 2:config$max_kappa) {
       data$log_w_dens <- rbind(data$log_w_dens,
@@ -281,7 +281,7 @@ add_convolutions <- function(data, config) {
       )
     }
   }
-  
+
   ## name rows/columns (useful if internal debugging needed)
   rownames(data$log_w_dens) <- paste("kappa",
                                      seq_len(nrow(data$log_w_dens)),
@@ -293,7 +293,10 @@ add_convolutions <- function(data, config) {
                                   t(data$contacts) == 1)
     data$C_combn <- data$C_combn/2
   }
-  
+
+  ## pass config information required in likelihood
+  data$negative_si <- config$negative_si
+
   return(data)
 }
 
@@ -367,13 +370,13 @@ add_convolutions <- function(data, config) {
 
     ## Restart loop from leaf with updated alpha
     alpha <- .clean_cycles(leaf, leaf, alpha, NULL)
-    
+
     ## If no loop, move onwards
   } else {
-    
+
     cycle_elements <- rbind(cycle_elements, to_keep)
     alpha <- .clean_cycles(to_keep$from, leaf, alpha, cycle_elements)
-    
+
   }
 
   return(alpha)
@@ -409,7 +412,7 @@ add_convolutions <- function(data, config) {
   from <- as.vector(alpha_mat)
   to <- as.vector(col(alpha_mat))
   from[is.na(from)] <- 0
-  
+
   alpha <- matrix(apply(data.frame(xyTable(from,to)), 2, as.numeric), ncol = 3)
   alpha[,3] <- alpha[,3]/nrow(alpha_mat)
   alpha <- by(alpha, alpha[,2], get_top, n = n)
@@ -417,7 +420,7 @@ add_convolutions <- function(data, config) {
   names(alpha) <- c("from", "to", "support")
   rownames(alpha) <- NULL
   alpha$from[alpha$from == 0] <- NA
-  
+
   for(i in 1:N) {
     alpha <- .clean_cycles(i,
                           leaf = i,
@@ -429,7 +432,7 @@ add_convolutions <- function(data, config) {
   consensus <- do.call(rbind, consensus)
 
   return(consensus)
-  
+
 }
 
 

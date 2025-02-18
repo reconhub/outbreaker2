@@ -126,6 +126,10 @@
 #' second column the infectee. If ctd is provided as an epicontacts objects,
 #' directionality will be taken from there.}
 #'
+#' \item{negative_si}{a logical indicating whether negative serial
+#' intervals are epidemiologically possible. If not, ancestries with
+#' negative serial intervals are discarded.}
+#'
 #' \item{pb}{a logical indicating if a progress bar should be displayed.}
 #'
 #' }
@@ -195,6 +199,7 @@ create_config <- function(..., data = NULL) {
                    prior_eps = c(1,1),
                    prior_lambda = c(1,1),
                    ctd_directed = FALSE,
+                   negative_si = TRUE,
                    pb = FALSE)
 
   ## MODIFY CONFIG WITH ARGUMENTS ##

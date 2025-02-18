@@ -218,6 +218,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
     Rcpp::IntegerVector dates = data["dates"];
     Rcpp::NumericMatrix w_dens = data["log_w_dens"];
     size_t K = w_dens.nrow();
+    bool negative_si = data["negative_si"];
 
     double out = 0.0;
 
@@ -232,7 +233,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
 	  if (delay_inf < 1 || delay_inf > w_dens.ncol()) {
 	    return  R_NegInf;
 	  }
-	  if (delay_ons < 1) {
+	  if (!negative_si && delay_ons < 0) {
 	    return  R_NegInf;
 	  }
 	  if (kappa[j] < 1 || kappa[j] > K) {
@@ -256,7 +257,7 @@ double cpp_ll_timing_infections(Rcpp::List data, Rcpp::List param, SEXP i,
 	  if (delay_inf < 1 || delay_inf > w_dens.ncol()) {
 	    return  R_NegInf;
 	  }
-	  if (delay_ons < 1) {
+	  if (!negative_si && delay_ons < 0) {
 	    return  R_NegInf;
 	  }
 	  if (kappa[j] < 1 || kappa[j] > K) {

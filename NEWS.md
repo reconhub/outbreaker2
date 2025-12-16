@@ -3,8 +3,7 @@ outbreaker2 1.1.4 (2022-12-16)
 
 ### Bug fixes
 
-* Fixed index out of bounds error when `negative_si` parameter is not specified in data list
-* Updated CITATION file to use `bibentry()` instead of deprecated `citEntry()`
+* Added `negative_si` option to `create_config` to allow ancestries with negative serial intervals to be immediately discarded.
 * Removed C++11 SystemRequirements specification (R 4.0+ defaults to C++11)
 
 

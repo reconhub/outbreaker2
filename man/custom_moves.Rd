@@ -66,16 +66,16 @@ movements (i.e. none of the names specified above), the closure will contain:
 \itemize{
 
 \item \code{data}: a list of named items containing input data as returned by
-\code{\link{outbreaker_data}}
+\code{\link{outbreaker_data}}.
 
 \item \code{config}:  a list of named items containing input data as returned by
-\code{\link{create_config}}
+\code{\link{create_config}}.
 
 \item \code{likelihoods}: a list of named custom likelihood functions as returned by
-\code{\link{custom_likelihoods}}
+\code{\link{custom_likelihoods}}.
 
 \item \code{priors}: a list of named custom prior functions as returned by
-\code{\link{custom_priors}}
+\code{\link{custom_priors}}.
 
 }
 }

@@ -29,23 +29,23 @@
 
 \item{n_col}{the number of columns to display; defaults to 8.}
 
-\item{...}{further arguments to be passed to other methods}
+\item{...}{further arguments to be passed to other methods.}
 
 \item{y}{a character string indicating which element of an
-\code{outbreaker_chains} object to plot}
+\code{outbreaker_chains} object to plot.}
 
-\item{type}{a character string indicating the kind of plot to be used (see details)}
+\item{type}{a character string indicating the kind of plot to be used (see details).}
 
 \item{group}{a vector of character strings indicating the parameters to display, 
 or "all" to display all global parameters (non node-specific parameters).}
 
-\item{burnin}{the number of iterations to be discarded as burnin}
+\item{burnin}{the number of iterations to be discarded as burnin.}
 
 \item{min_support}{a number between 0 and 1 indicating the minimum support of
-ancestries to be plotted; only used if 'type' is 'network'}
+ancestries to be plotted; only used if 'type' is 'network'.}
 
 \item{labels}{a vector of length N indicating the case labels (must be
-provided in the same order used for dates of symptom onset)}
+provided in the same order used for dates of symptom onset).}
 
 \item{object}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
 
@@ -89,5 +89,5 @@ ancestor/infector
 See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette} for detailed examples on how to visualise \code{outbreaker_chains} objects.
 }
 \author{
-Thibaut Jombart (\email{thibautjombart@gmail.com})
+Thibaut Jombart (\email{thibautjombart@gmail.com}).
 }

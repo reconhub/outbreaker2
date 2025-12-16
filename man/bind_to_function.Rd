@@ -24,5 +24,5 @@ the 'rodeint' package \code{richfitz/rodeint}.
 }
 \author{
 Initial code by Rich FitzJohn (see 'references') with some
-adaptations by Thibaut Jombart
+adaptations by Thibaut Jombart.
 }

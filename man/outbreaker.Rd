@@ -14,18 +14,18 @@ outbreaker(
 }
 \arguments{
 \item{data}{a list of named items containing input data as returned by
-\code{\link{outbreaker_data}}}
+\code{\link{outbreaker_data}}.}
 
-\item{config}{a set of settings as returned by \code{\link{create_config}}}
+\item{config}{a set of settings as returned by \code{\link{create_config}}.}
 
 \item{priors}{a set of log-prior functions as returned by
-\code{\link{custom_priors}}}
+\code{\link{custom_priors}}.}
 
 \item{likelihoods}{a set of log-likelihood functions as returned by
-\code{\link{custom_likelihoods}}}
+\code{\link{custom_likelihoods}}.}
 
 \item{moves}{a set of movement functions as returned by
-\code{\link{custom_moves}}}
+\code{\link{custom_moves}}.}
 }
 \description{
 The function \code{outbreaker} is the main function of the package. It runs
@@ -71,22 +71,22 @@ Jombart T, Cori A, Didelot X, Cauchemez S, Fraser C and Ferguson
 
 \itemize{
 
-\item \code{\link{outbreaker_data}}: function to process input data
+\item \code{\link{outbreaker_data}}: function to process input data.
 
 \item \code{\link{create_config}}: function to create default and customise
-configuration settings
+configuration settings.
 
 \item \code{\link{custom_priors}}: function to specify customised prior
-functions
+functions.
 
 \item \code{\link{custom_likelihoods}}: function to specify customised likelihoods
-functions
+functions.
 
 \item \code{\link{custom_moves}}: function to create default and customise movement
-functions
+functions.
 
 }
 }
 \author{
-Thibaut Jombart (\email{thibautjombart@gmail.com})
+Thibaut Jombart (\email{thibautjombart@gmail.com}).
 }

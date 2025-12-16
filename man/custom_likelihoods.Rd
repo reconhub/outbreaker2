@@ -54,10 +54,10 @@ order:
 \itemize{
 
 \item \code{data}: a list of named items containing input data as returned by
-\code{\link{outbreaker_data}}
+\code{\link{outbreaker_data}}.
 
 \item \code{param}: a list of parameters with the class
-\code{\link{create_param}}
+\code{\link{create_param}}.
 
 }
 }
@@ -93,5 +93,5 @@ plot(res_null, type = "alpha")
 See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customizing-likelihood}{customization vignette} for detailed examples on how to customize likelihoods.
 }
 \author{
-Thibaut Jombart (\email{thibautjombart@gmail.com})
+Thibaut Jombart (\email{thibautjombart@gmail.com}).
 }

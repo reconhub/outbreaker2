@@ -52,5 +52,4 @@ LazyData: true
 LinkingTo: Rcpp
 Encoding: UTF-8
 RoxygenNote: 7.1.2
-SystemRequirements: C++11
 VignetteBuilder: knitr

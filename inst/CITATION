@@ -1,16 +1,17 @@
-citHeader("To cite outbreaker2:")
-
 bibentry(
   bibtype = "Article",
   title = "Bayesian reconstruction of disease outbreaks by combining epidemiologic and genomic data",
   journal = "PLoS Computational Biology",
   year = "2014",
-  author = c(person("Thibaut", "Jombart"),
-             person("Anne", "Cori"),
-             person("Xavier", "Didelot"),
-             person("Simon", "Cauchemez"),
-             person("Christophe", "Fraser"),
-             person("Neil", "Ferguson")),
+  author = c(
+    person("Thibaut", "Jombart"),
+    person("Anne", "Cori"),
+    person("Xavier", "Didelot"),
+    person("Simon", "Cauchemez"),
+    person("Christophe", "Fraser"),
+    person("Neil", "Ferguson")
+  ),
+  header = "To cite outbreaker2:",
   volume = "10",
   number = "11",
   pages = "e1003457",

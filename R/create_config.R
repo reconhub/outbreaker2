@@ -1002,8 +1002,12 @@ create_config <- function(..., data = NULL) {
       config$init_t_inf <- as.integer(data$dates - max_like_delay)
     }
 
-    ## recycle move_alpha
-    config$move_alpha <- rep(config$move_alpha, length.out = data$N)
+    ## recycle move_alpha only when a single value is passed; otherwise use as-is
+    if (length(config$move_alpha) == 1L) {
+      config$move_alpha <- rep(config$move_alpha, length.out = data$N)
+    } else if (length(config$move_alpha) != data$N) {
+      stop("move_alpha must be of length 1 or N (number of cases)")
+    }
 
     ## recycle move_t_inf
     config$move_t_inf <- rep(config$move_t_inf, length.out = data$N)

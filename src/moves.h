@@ -22,7 +22,7 @@ Rcpp::List cpp_move_lambda(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 			  Rcpp::RObject list_custom_ll = R_NilValue);
 
-Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data,
+Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 			  Rcpp::RObject list_custom_ll = R_NilValue);
 
 Rcpp::List cpp_move_joint(Rcpp::List param, Rcpp::List data, Rcpp::List config,

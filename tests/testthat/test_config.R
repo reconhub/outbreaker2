@@ -56,3 +56,26 @@ test_that("validation does not alter valide objects", {
     c2 <- create_config(c1)
     expect_identical(c1, c2)
 })
+
+test_that("move_alpha recycles only when length 1, else must match N", {
+    skip_on_cran()
+    x <- fake_outbreak
+    dat <- outbreaker_data(dates = x$sample, dna = x$dna, w_dens = x$w)
+    ## single value recycles to N
+    config1 <- create_config(data = dat, move_alpha = TRUE)
+    expect_length(config1$move_alpha, dat$N)
+    expect_true(all(config1$move_alpha))
+    config1b <- create_config(data = dat, move_alpha = FALSE)
+    expect_length(config1b$move_alpha, dat$N)
+    expect_false(any(config1b$move_alpha))
+    ## full vector of length N is used as-is (no recycle); imports still set FALSE
+    move_alpha_N <- rep(c(TRUE, FALSE), length.out = dat$N)
+    config2 <- create_config(data = dat, move_alpha = move_alpha_N)
+    expect_length(config2$move_alpha, dat$N)
+    ## non-imports keep the supplied value; imports are forced FALSE later in create_config
+    non_import <- !is.na(config2$init_alpha)
+    expect_equal(config2$move_alpha[non_import], move_alpha_N[non_import])
+    ## wrong length errors
+    expect_error(create_config(data = dat, move_alpha = c(TRUE, FALSE)),
+                 "move_alpha must be of length 1 or N")
+})

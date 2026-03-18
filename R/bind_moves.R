@@ -100,6 +100,7 @@ bind_moves <- function(moves = custom_moves(), config, data,
   } else {
     out$alpha <- bind_to_function(out$alpha,
                                   data = data,
+                                  config = config,
                                   list_custom_ll = likelihoods
                                   )
   }

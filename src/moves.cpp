@@ -687,12 +687,13 @@ Rcpp::List cpp_move_t_inf(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 // is on the scale 1:N.
 
 // [[Rcpp::export(rng = true)]]
-Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data,
+Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 			  Rcpp::RObject list_custom_ll = R_NilValue) {
   Rcpp::List new_param = clone(param);
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
   Rcpp::IntegerVector new_alpha = new_param["alpha"];
+  Rcpp::LogicalVector move_alpha = config["move_alpha"];
 
   // Genetic sequence model
   std::string genetic_model = Rcpp::as<std::string>(data["genetic_model"]);
@@ -715,8 +716,8 @@ Rcpp::List cpp_move_alpha(Rcpp::List param, Rcpp::List data,
 
   for (size_t i = 0; i < N; i++) {
 
-    // only non-NA ancestries are moved, if there is at least 1 choice
-    if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
+    // only non-NA ancestries are moved when move_alpha[i] is TRUE, if at least 1 choice
+    if (alpha[i] != NA_INTEGER && move_alpha[i] && sum(t_inf < t_inf[i]) > 0) {
 
       // loglike with current value
       old_loglike = cpp_ll_all(data, param, i+1, list_custom_ll); // offset
@@ -787,6 +788,7 @@ Rcpp::List cpp_move_model(Rcpp::List param, Rcpp::List data, Rcpp::List config,
 
   // Only propose a model swap prop_model_move % of the time
   double prop_model_move = config["prop_model_move"];
+  Rcpp::LogicalVector move_alpha = config["move_alpha"];
   
   Rcpp::IntegerVector alpha = param["alpha"]; // pointer to param$alpha
   Rcpp::IntegerVector t_inf = param["t_inf"]; // pointer to param$t_inf
@@ -828,8 +830,8 @@ Rcpp::List cpp_move_model(Rcpp::List param, Rcpp::List data, Rcpp::List config,
   
   for (size_t i = 0; i < N; i++) {
 
-    // only non-NA ancestries are moved, if there is at least 1 choice
-    if (alpha[i] != NA_INTEGER &&
+    // only non-NA ancestries are moved when move_alpha[i] is TRUE, if at least 1 choice
+    if (alpha[i] != NA_INTEGER && move_alpha[i] &&
 	sum(t_inf < t_inf[i]) > 0 &&
 	prop_model_move < unif_rand()) {
 
@@ -997,6 +999,7 @@ Rcpp::List cpp_move_joint(Rcpp::List param, Rcpp::List data, Rcpp::List config,
   
   size_t N = static_cast<size_t>(data["N"]);
   size_t K = static_cast<size_t>(config["max_kappa"]);
+  Rcpp::LogicalVector move_alpha = config["move_alpha"];
 
   Rcpp::IntegerVector N_place = data["N_place"];
   double prop_alpha_move = config["prop_alpha_move"];
@@ -1013,8 +1016,8 @@ Rcpp::List cpp_move_joint(Rcpp::List param, Rcpp::List data, Rcpp::List config,
     
   for (size_t i = 0; i < N; i++) {
 
-    // only non-NA ancestries are moved, if there is at least 1 choice
-    if (alpha[i] != NA_INTEGER && sum(t_inf < t_inf[i]) > 0) {
+    // only non-NA ancestries are moved when move_alpha[i] is TRUE, if at least 1 choice
+    if (alpha[i] != NA_INTEGER && move_alpha[i] && sum(t_inf < t_inf[i]) > 0) {
 
       // loglike with current value
 
@@ -1171,6 +1174,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data, Rcpp::List con
   size_t N = static_cast<size_t>(data["N"]);
 
   double prop_alpha_move = config["prop_alpha_move"];
+  Rcpp::LogicalVector move_alpha = config["move_alpha"];
 
   double old_loglike = 0.0, new_loglike = 0.0, p_accept = 0.0;
 
@@ -1185,8 +1189,8 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data, Rcpp::List con
 
     size_t i = (size_t)idx[j];
     
-    // only non-NA ancestries are moved, if there is at least 1 choice
-    if (alpha[i] != NA_INTEGER &&
+    // only non-NA ancestries are moved when move_alpha[i] is TRUE, if at least 1 choice
+    if (alpha[i] != NA_INTEGER && move_alpha[i] &&
 	sum(t_inf < t_inf[i]) > 0 &&
 	unif_rand() < prop_alpha_move) {
 

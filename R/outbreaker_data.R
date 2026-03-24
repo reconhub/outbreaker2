@@ -434,10 +434,12 @@ outbreaker_data <- function(..., data = list(...)) {
     if (inherits(data$ctd_timed[,3], "Date")) {
       data$ctd_timed[,3] <- data$ctd_timed[,3] - min_date
       data$ctd_timed[,4] <- data$ctd_timed[,4] - min_date
-    }
-    if (inherits(data$ctd_timed, "POSIXct")) {
+    } else if (inherits(data$ctd_timed[,3], "POSIXct")) {
       data$ctd_timed[,3] <- difftime(data$ctd_timed[,3], min_date, units="days")
       data$ctd_timed[,4] <- difftime(data$ctd_timed[,4], min_date, units="days")
+    } else if (inherits(data$ctd_timed[,3], "numeric")) {
+      data$ctd_timed[,3] <- data$ctd_timed[,3] - min_date
+      data$ctd_timed[,4] <- data$ctd_timed[,4] - min_date
     }
     data$ctd_timed[,3] <- as.integer(round(data$ctd_timed[,3]))
     data$ctd_timed[,4] <- as.integer(round(data$ctd_timed[,4]))

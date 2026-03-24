@@ -882,12 +882,17 @@ double cpp_ll_timeline(Rcpp::List data, Rcpp::List param, SEXP i,
 	    w1 = static_cast<int>(timeline(j, ind1));
 	    w2 = static_cast<int>(timeline(alpha[j] - 1, ind2));
 	    if(w1 != -1 && w2 != -1) {
+	      // if(j+1 == 3) {
+	      // 	std::printf("YESCORRECT: t_inf = %i | ind1 = %i | i = %i | alpha_i = %i | w1 = %i | w2 = %i | ind = %i | ll = %f\n", t_inf[j], ind1, j+1, alpha[j], w1, w2, m, log(trans_mat(N_place*N_place*(kappa[j]-1) + N_place*(w1) + w2)));
+	      // }
 	      out += log(trans_mat(N_place*N_place*(kappa[j]-1) + N_place*(w1) + w2));
 	    } else {
+	      // if(j+1 == 3) {
+	      // 	std::printf("INCORRECT: t_inf = %i | ind1 = %i | i = %i | alpha_i = %i | w1 = %i | w2 = %i | ind = %i | ll  %f\n", t_inf[j], ind1, j+1, alpha[j], w1, w2, m, log(p_wrong));
+	      // }
 	      out +=  log(p_wrong);
 	    }
 	  } else {
-	    // std::printf("t_inf = %i | ind1 = %i | i = %i | alpha_i = %i | w1 = %i | w2 = %i | ind = %i\n", t_inf[j], ind1, j+1, alpha[j], w1, w2, m);
 	    out +=  log(p_wrong);
 	  }
 	}

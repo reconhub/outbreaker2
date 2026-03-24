@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <Rmath.h>
-#include <algorithm>		// std::random_shuffle
+#include <algorithm>
+#include <random> 
 #include "internals.h"
 #include "likelihoods.h"
 #include "priors.h"
@@ -1183,7 +1184,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data, Rcpp::List con
 
   // Shuffle indices to make equal cases equally likely
   Rcpp::IntegerVector idx = Rcpp::seq(0, N-1);
-  std::random_shuffle (idx.begin(), idx.end());
+  std::shuffle(idx.begin(), idx.end(), std::mt19937(std::random_device{}()));
 
   for (size_t j = 0; j < N; j++) {
 

@@ -349,6 +349,10 @@ plot.outbreaker_chains <- function(
     tmp <- get_lab_color(labels, ...)
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
+    min_date <- attr(x, "min_date")
+    if (!is.null(min_date)) {
+      dates <- min_date + dates
+    }
     out_dat <- data.frame(cases = factor(cases), dates = dates)
     out <- ggplot(out_dat) +
       geom_violin(aes(x = cases, y = dates, fill = cases)) +

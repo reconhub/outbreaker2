@@ -150,7 +150,7 @@ outbreaker <- function(data = outbreaker_data(),
   ## and puts everything back together as a single data.frame; augmented data
   ## stored as vectors (e_g. 'alpha') become numbered columns of the
   ## data.frame (e_g. 'alpha_1', 'alpha_2' etc.)
-  out <- outbreaker_mcmc_shape(param_store, data)
+  out <- outbreaker_mcmc_shape(param_store, data, config)
 
   return(out)
 }

@@ -245,7 +245,8 @@ create_config <- function(..., data = NULL) {
                    ctd_directed = FALSE,
                    negative_si = TRUE,
                    genetic_model = "default",
-                   pb = TRUE)
+                   pb = TRUE,
+                   return_ids = FALSE)
 
   ## MODIFY CONFIG WITH ARGUMENTS ##
   config <- modify_defaults(defaults, config)

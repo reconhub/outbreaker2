@@ -1183,8 +1183,7 @@ Rcpp::List cpp_move_swap_cases(Rcpp::List param, Rcpp::List data, Rcpp::List con
   size_t n_mat = ctd_timed_matrix_list.size();
 
   // Shuffle indices to make equal cases equally likely
-  Rcpp::IntegerVector idx = Rcpp::seq(0, N-1);
-  std::shuffle(idx.begin(), idx.end(), std::mt19937(std::random_device{}()));
+  Rcpp::IntegerVector idx = Rcpp::sample(N, N, false) - 1;
 
   for (size_t j = 0; j < N; j++) {
 

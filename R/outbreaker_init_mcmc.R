@@ -4,13 +4,21 @@
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
 #'
-#' @param param a list of data items as returned by \code{create_param}
+#' @param data a list of data items as returned by \code{outbreaker_data}.
+#'
+#' @param param_current a list of current parameter states as returned by
+#'   \code{create_param}.
+#'
+#' @param param_store a list of stored parameter states for MCMC output.
 #'
 #' @param loglike a list of loglikelihood functions with enclosed data
-#'   as returned by \code{custom_likelihood}
+#'   as returned by \code{custom_likelihoods}.
 #'
 #' @param priors a list of prior functions with enclosed parameters as
-#'   returned by \code{custom_priors}
+#'   returned by \code{custom_priors}.
+#'
+#' @param config a list of configuration settings as returned by
+#'   \code{create_config}.
 #'
 #' @export
 #'

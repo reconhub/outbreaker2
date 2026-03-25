@@ -23,7 +23,7 @@
 #' \item \code{contact}: the likelihood of the contact tracing data; by default,
 #' the function \code{cpp_ll_contact} is used.
 #'
-#'#' \item \code{timeline}: the likelihood of the timeline data; by default,
+#' \item \code{timeline}: the likelihood of the timeline data; by default,
 #' the function \code{cpp_ll_timeline} is used.
 #' }
 #'
@@ -51,8 +51,6 @@
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
 #' @param ... a named list of functions, each computing a log-likelihood component.
-#'
-#' @return a list of named functions
 #'
 #' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customizing-likelihood}{customization vignette} for detailed examples on how to customize likelihoods.
 #'
@@ -86,7 +84,6 @@
 #' ## visualise ancestries to see if all transmission trees have been explored
 #' plot(res_null, type = "alpha")
 
-
 ## USING CUSTOM LIKELIHOOD FUNCTIONS
 
 ## Likelihood functions in outbreaker2 are implemented using Rcpp. However,
@@ -104,26 +101,23 @@
 ## - loglikelihood of the entire tree is calculated.
 
 custom_likelihoods <- function(...) {
-
     ll_functions <- list(...)
 
     if (length(ll_functions) == 1L && is.list(ll_functions[[1]])) {
         ll_functions <- ll_functions[[1]]
     }
 
+    defaults <- list(
+        genetic = NULL,
+        reporting = NULL,
+        timing_infections = NULL,
+        timing_sampling = NULL,
+        contact = NULL,
+        timeline = NULL
+    )
 
-    defaults <- list(genetic = NULL,
-                     reporting = NULL,
-                     timing_infections = NULL,
-                     timing_sampling = NULL,
-                     contact = NULL,
-                     timeline = NULL
-                     )
-
-    likelihoods <-  modify_defaults(defaults, ll_functions, FALSE)
+    likelihoods <- modify_defaults(defaults, ll_functions, FALSE)
     likelihoods_names <- names(likelihoods)
-
-
 
     ## check all likelihoods are functions
 
@@ -135,13 +129,19 @@ custom_likelihoods <- function(...) {
     }
 
     # Ensure that custom_likelihoods(l) == custom_likelihoods(custom_likelihoods(l))
-    is_list_function_or_null <- vapply(likelihoods, list_function_or_null, logical(1))
+    is_list_function_or_null <- vapply(
+        likelihoods,
+        list_function_or_null,
+        logical(1)
+    )
     is_function_or_null <- vapply(likelihoods, function_or_null, logical(1))
 
     if (!all(is_function_or_null) & !all(is_list_function_or_null)) {
         culprits <- likelihoods_names[!is_function_or_null]
-        msg <- paste0("The following likelihoods are not functions: ",
-                      paste(culprits, collapse = ", "))
+        msg <- paste0(
+            "The following likelihoods are not functions: ",
+            paste(culprits, collapse = ", ")
+        )
         stop(msg)
     }
 
@@ -151,17 +151,20 @@ custom_likelihoods <- function(...) {
     # calculate the likelihood of the entire tree twice for every single
     # perturbation we make.
     if (!all(is_list_function_or_null)) {
-      likelihoods <- lapply(
-        likelihoods,
-        function(x) {
-          if (is.null(x)) return(list(x, 0)); list(x, length(methods::formalArgs(x)))
-        }
-      )
+        likelihoods <- lapply(
+            likelihoods,
+            function(x) {
+                if (is.null(x)) {
+                    return(list(x, 0))
+                }
+                list(x, length(methods::formalArgs(x)))
+            }
+        )
     }
 
     arity_two_or_three <- function(x) {
         if (is.function(x[[1]])) {
-            return (x[[2]] == 2L | x[[2]] == 3L)
+            return(x[[2]] == 2L | x[[2]] == 3L)
         }
         return(T)
     }
@@ -170,8 +173,10 @@ custom_likelihoods <- function(...) {
 
     if (!all(legal_arity)) {
         culprits <- likelihoods_names[!legal_arity]
-        msg <- paste0("The following likelihoods do not have arity two or three: ",
-                      paste(culprits, collapse=", "))
+        msg <- paste0(
+            "The following likelihoods do not have arity two or three: ",
+            paste(culprits, collapse = ", ")
+        )
         stop(msg)
     }
 
@@ -181,18 +186,13 @@ custom_likelihoods <- function(...) {
 }
 
 
-
-
-
-
-
 #' @rdname custom_likelihoods
 #'
 #' @export
 #'
 #' @aliases print.custom_likelihoods
 #'
-#' @param x an \code{outbreaker_config} object as returned by \code{create_config}.
+#' @param x a \code{custom_likelihoods} object as returned by \code{custom_likelihoods}.
 #'
 
 print.custom_likelihoods <- function(x, ...) {
@@ -202,13 +202,11 @@ print.custom_likelihoods <- function(x, ...) {
 
     is_custom <- !vapply(x, is.null, FALSE)
 
-
     names_default <- names(x)[!is_custom]
     if (length(names_default) > 0) {
         cat("/// custom likelihoods set to NULL (default used) //\n")
         print(x[!is_custom])
     }
-
 
     names_custom <- names(x)[is_custom]
     if (length(names_custom) > 0) {
@@ -217,5 +215,4 @@ print.custom_likelihoods <- function(x, ...) {
     }
 
     return(invisible(NULL))
-
 }

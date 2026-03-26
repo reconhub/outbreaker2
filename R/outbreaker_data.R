@@ -311,10 +311,15 @@ outbreaker_data <- function(..., data = list(...)) {
   if(sum(data$has_dna) > 1) {
     data$has_dna_ind <- which(data$has_dna)
     data$dna_combn <- t(combn(data$has_dna_ind, 2))
-    # add distance
+    # add distance (D rows follow sequence order, not case index 1:N)
+    ri <- data$id_in_dna[data$dna_combn[, 1]]
+    rj <- data$id_in_dna[data$dna_combn[, 2]]
+    if (anyNA(ri) || anyNA(rj)) {
+      stop("Internal error: dna_combn references cases without sequence data")
+    }
     data$dna_combn <- cbind(
       data$dna_combn,
-      data$D[matrix(data$ids[data$dna_combn], ncol = 2)]
+      data$D[cbind(ri, rj)]
     )
   } else {
     data$dna_combn <- matrix(0, 0, 0)
@@ -384,13 +389,18 @@ outbreaker_data <- function(..., data = list(...)) {
     }
 
     # generate pairwise binary contact matrices, indexed to data$ids
+    # rows = potential infectee, cols = potential infector (see cpp_ll_contact)
     data$ctd_matrix <- lapply(
       levels(data$ctd[, 3]),
       function(contact_type) {
         mat <- matrix(0, nrow = data$N, ncol = data$N)
-        mat[
-          apply(data$ctd[data$ctd[,3] == contact_type, 1:2], 2, match, data$ids)
-        ] <- 1
+        sub <- data$ctd[data$ctd[, 3] == contact_type, 1:2, drop = FALSE]
+        ridx <- match(sub[, 2], data$ids)
+        cidx <- match(sub[, 1], data$ids)
+        if (anyNA(ridx) || anyNA(cidx)) {
+          stop("Contact IDs not found in data$ids when building ctd_matrix")
+        }
+        mat[cbind(ridx, cidx)] <- 1
         return(mat)
       }
     )
@@ -664,6 +674,11 @@ outbreaker_data <- function(..., data = list(...)) {
         data$N_times <-
           data$N_place_unobserved <- numeric()
     data$has_ctd_timed <- FALSE
+  }
+
+  ## C++ likelihoods expect this after outbreaker_data (see update_data_with_config)
+  if (is.null(data$genetic_model)) {
+    data$genetic_model <- "default"
   }
 
   ## output is a list of checked data

@@ -18,8 +18,9 @@ test_that("test: data are processed fine", {
   expect_equal(out$max_range, 11)
   expect_equal(out_nodna$L, 0)
   expect_equal(out$L, 1e4)
-  expect_equal(out$w_dens, out$f_dens)
-  expect_equal(out$log_w_dens[1,], out$log_f_dens)
+  ## f_dens is stored as a matrix (e.g. one column "default"); values match w
+  expect_equal(out$w_dens, as.vector(out$f_dens))
+  expect_equal(out$log_w_dens[1, ], as.vector(out$log_f_dens))
   expect_error(outbreaker_data(dates = 1, w_dens = c(0,-1)),
                "w_dens has negative entries")
 
@@ -76,13 +77,14 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     ## test recursiveness
     data <- outbreaker_data(data = data)
 
-    ## check correct contacts are labelled as 1 in matrix
+    ## Pairwise contacts live in ctd_matrix (one matrix per contact type)
+    cmat <- data$ctd_matrix[[1]]
     ctd_ind <- apply(ctd, 2, match, ids)
-    expect_equal(rep(1, nrow(ctd)), data$contacts[ctd_ind[,c(2, 1)]])
-    expect_equal(rep(0, nrow(ctd)), data$contacts[ctd_ind])
+    expect_equal(rep(1, nrow(ctd)), cmat[ctd_ind[, c(2, 1)]])
+    expect_equal(rep(0, nrow(ctd)), cmat[ctd_ind])
 
-    ## check directionality is being passed
-    config <- create_config(data = data)
+    ## Directionality is a config option (not inferred from epicontacts alone)
+    config <- create_config(ctd_directed = TRUE, data = data)
 
     ## check ids are carried through
     expect_equal(data$ids, epi_c$linelist$id)
@@ -91,14 +93,20 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     expect_true(config$ctd_directed)
 
 
-    ## case labelling via dates
+    ## case labelling via dates (named dates need f_dens columns per group name)
     dates <- x$onset
     names(dates) <- ids
+    wf <- x$w / sum(x$w)
+    f_by_id <- matrix(rep(wf, length(ids)), nrow = length(wf), ncol = length(ids))
+    colnames(f_by_id) <- ids
 
-    data <- outbreaker_data(dates = dates,
-                            dna = x$dna,
-                            ctd = ctd,
-                            w_dens = x$w)
+    data <- outbreaker_data(
+      dates = dates,
+      dna = x$dna,
+      ctd = ctd,
+      w_dens = x$w,
+      f_dens = f_by_id
+    )
 
     ## test recursiveness
     data <- outbreaker_data(data = data)
@@ -117,13 +125,16 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     expect_true(config$ctd_directed)
 
     ## check the number of contacts are correct
-    expect_equal(nrow(ctd), sum(data$contacts))
+    expect_equal(nrow(ctd), sum(data$ctd_matrix[[1]]))
 
-    ## toggle directionality
-    data <- outbreaker_data(dates = dates,
-                            dna = x$dna,
-                            ctd = ctd,
-                            w_dens = x$w)
+    ## toggle directionality (named dates still need per-id f_dens columns)
+    data <- outbreaker_data(
+      dates = dates,
+      dna = x$dna,
+      ctd = ctd,
+      w_dens = x$w,
+      f_dens = f_by_id
+    )
 
     data <- outbreaker_data(data = data)
 
@@ -131,13 +142,13 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
 
     data <- add_convolutions(data, config)
 
-    ## check the number of contacts are correct
-    expect_equal(2*nrow(ctd), sum(data$contacts))
+    ## check the number of contacts are correct (undirected: both (i,j) and (j,i))
+    expect_equal(2 * nrow(ctd), sum(data$ctd_matrix[[1]]))
 
     ## check correct contacts are labelled as 1 in matrix
     ctd_ind <- apply(ctd, 2, match, ids)
-    ctd_ind <- rbind(ctd_ind, ctd_ind[,c(2, 1)])
-    expect_equal(rep(1, 2*nrow(ctd)), data$contacts[ctd_ind])
+    ctd_ind <- rbind(ctd_ind, ctd_ind[, c(2, 1)])
+    expect_equal(rep(1, 2 * nrow(ctd)), data$ctd_matrix[[1]][ctd_ind])
 
     ## make sure directionality is carried through
     expect_false(config$ctd_directed)
@@ -146,12 +157,17 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     wrong_dna <- x$dna
     rownames(wrong_dna) <- 1:length(x$onset)
 
-    expect_error(data <- outbreaker_data(dates = dates,
-                                         dna = wrong_dna,
-                                         ctd = ctd,
-                                         w_dens = x$w,
-                                         ctd_directed = TRUE),
-                 "DNA sequence labels don't match case ids")
+    expect_error(
+      data <- outbreaker_data(
+        dates = dates,
+        dna = wrong_dna,
+        ctd = ctd,
+        w_dens = x$w,
+        f_dens = f_by_id,
+        ctd_directed = TRUE
+      ),
+      "DNA sequence labels don't match case ids"
+    )
 
   }
 

@@ -19,8 +19,10 @@ test_that("test: settings are processed fine", {
     expect_is(create_config(), "outbreaker_config")
     expect_is(create_config(data = dat), "list")
     expect_is(create_config(data = dat), "outbreaker_config")
-    expect_equal(create_config(init_tree="star", data = dat)$init_alpha,
-                 c(NA, rep(1,29)))
+    expect_equal(
+      unname(create_config(init_tree = "star", data = dat)$init_alpha),
+      c(NA, rep(1, 29))
+    )
     expect_equal(create_config(init_tree = alpha)$init_tree,
                  create_config(init_tree = alpha)$init_alpha)
     expect_equal(length(create_config(init_tree="random",data = dat)$init_alpha), dat$N)
@@ -64,7 +66,10 @@ test_that("move_alpha recycles only when length 1, else must match N", {
     ## single value recycles to N
     config1 <- create_config(data = dat, move_alpha = TRUE)
     expect_length(config1$move_alpha, dat$N)
-    expect_true(all(config1$move_alpha))
+    ## Root / import cases (NA in init_alpha) do not move alpha
+    root <- is.na(config1$init_alpha)
+    expect_false(any(config1$move_alpha[root]))
+    expect_true(all(config1$move_alpha[!root]))
     config1b <- create_config(data = dat, move_alpha = FALSE)
     expect_length(config1b$move_alpha, dat$N)
     expect_false(any(config1b$move_alpha))

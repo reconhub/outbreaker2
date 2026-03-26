@@ -40,18 +40,27 @@ test_that("Sum of priors is consistent.", {
 
 
     ## generate data
-    param <- list(mu = 0.000123, pi = 0.789, eps = 0.21342, lambda = 0.0123)
+    param <- list(
+      mu = 0.000123,
+      pi = 0.789,
+      eps = 0.21342,
+      lambda = 0.0123,
+      eta = 0.9,
+      tau = 0.5
+    )
     config <- create_config()
 
     p_mu <- cpp_prior_mu(param, config)
     p_pi <- cpp_prior_pi(param, config)
     p_eps <- cpp_prior_eps(param, config)
     p_lambda <- cpp_prior_lambda(param, config)
-    p_all<- cpp_prior_all(param, config)
+    p_tau <- cpp_prior_tau(param, config)
+    p_eta <- cpp_prior_eta(param, config)
+    p_all <- cpp_prior_all(param, config)
 
 
-    ## checks
-    expect_equal(p_mu + p_pi + p_eps + p_lambda, p_all)
+    ## checks (cpp_prior_all also adds tau and eta when those moves are on)
+    expect_equal(p_mu + p_pi + p_eps + p_lambda + p_tau + p_eta, p_all)
 
 })
 
@@ -74,8 +83,8 @@ test_that("Prior customisation.", {
     msg <- "The following priors are not functions: mu"
     expect_error(custom_priors(mu = "Chtulhu"), msg)
 
-    msg <- "The following priors dont' have a single argument: mu"
-    expect_error(custom_priors(mu = plot), msg)
+    msg <- "The following priors don't have a single argument: mu"
+    expect_error(custom_priors(mu = function(x, y) 0), msg)
 
 
     ## custom prior parameters

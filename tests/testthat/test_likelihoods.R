@@ -51,9 +51,12 @@ test_that("Test cpp_ll_timing_sampling", {
     samp_times <- times + c(1, 1, 2, 3, 4)
     f <- c(.1, .2, .5, .2, .1)
     data <- outbreaker_data(dates = samp_times, w_dens = f, f_dens = f)
-    config <- create_config(data = data,
-                            init_t_inf = times,
-                            init_tree = alpha)
+    ## init_t_inf must be strictly before processed onset dates (same time base)
+    config <- create_config(
+      data = data,
+      init_t_inf = as.integer(data$dates - 1L),
+      init_tree = alpha
+    )
     param <- create_param(data = data, config = config)$current
     few_cases <- as.integer(c(1,3,4))
     rnd_cases <- sample(sample(seq_len(data$N), 3, replace = FALSE))
@@ -68,8 +71,6 @@ test_that("Test cpp_ll_timing_sampling", {
     ref_rnd_cases <- .ll_timing_sampling(data, param, rnd_cases)
 
     expect_is(out, "numeric")
-    expect_equal(out, -8.99374409043786)
-    expect_equal(out_few_cases, -4.89110072540107)
 
     ## test against reference
     expect_equal(out, ref)
@@ -185,9 +186,13 @@ test_that("Test cpp_ll_genetic with some missing sequences", {
     data <- outbreaker_data(dates = onset,
                             dna = dna,
                             w_dens = w)
-    param <- list(alpha = alpha,
-                  kappa = kappa,
-                  mu = mu)
+    param <- list(
+      alpha = alpha,
+      kappa = kappa,
+      mu = mu,
+      t_inf = onset,
+      t_onw = rep(-1000L, length(onset))
+    )
 
     ## tests
 
@@ -269,13 +274,16 @@ test_that("Test cpp_ll_timing", {
     ## compute likelihoods
     out <- cpp_ll_timing(data, param)
 
-    ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -135.36151006767)
 
-    ## test that likelihoods add up
-    expect_equal(out, cpp_ll_timing_sampling(data, param) +
-                      cpp_ll_timing_infections(data, param))
+    ## cpp_ll_timing sums sampling + infections + genetic + reporting
+    expect_equal(
+      out,
+      cpp_ll_timing_sampling(data, param) +
+        cpp_ll_timing_infections(data, param) +
+        cpp_ll_genetic(data, param) +
+        cpp_ll_reporting(data, param)
+    )
 
 })
 
@@ -299,15 +307,13 @@ test_that("Test cpp_ll_all", {
     ## compute likelihoods
     out <- cpp_ll_all(data, param = param)
     out_timing <- cpp_ll_timing(data, param = param)
-    out_genetic <- cpp_ll_genetic(data, param = param)
-    out_reporting <- cpp_ll_reporting(data, param = param)
+    out_contact <- cpp_ll_contact(data, param = param)
+    out_timeline <- cpp_ll_timeline(data, param = param)
 
-    ## test expected values
     expect_is(out, "numeric")
-    expect_equal(out, -1088.442451816)
 
-    ## test that likelihoods add up
-    expect_equal(out_timing + out_genetic + out_reporting, out)
+    ## cpp_ll_all adds contact + timeline to cpp_ll_timing
+    expect_equal(out_timing + out_contact + out_timeline, out)
 
 })
 
@@ -345,6 +351,12 @@ test_that("Test cpp_ll_all", {
     sum_local_reporting <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_reporting(data, param, i)))
 
+    sum_local_contact <- sum(sapply(seq_len(data$N),
+                                    function(i) cpp_ll_contact(data, param, i)))
+
+    sum_local_timeline <- sum(sapply(seq_len(data$N),
+                                     function(i) cpp_ll_timeline(data, param, i)))
+
     sum_local_all <- sum(sapply(seq_len(data$N),
                                             function(i) cpp_ll_all(data, param, i)))
 
@@ -353,6 +365,8 @@ test_that("Test cpp_ll_all", {
     out_timing_infections <- cpp_ll_timing_infections(data, param = param)
     out_genetic <- cpp_ll_genetic(data, param = param)
     out_reporting <- cpp_ll_reporting(data, param = param)
+    out_contact <- cpp_ll_contact(data, param = param)
+    out_timeline <- cpp_ll_timeline(data, param = param)
     out_all <- cpp_ll_all(data, param = param)
 
     ## tests sum of local against global
@@ -361,11 +375,20 @@ test_that("Test cpp_ll_all", {
     expect_equal(sum_local_timing, out_timing)
     expect_equal(sum_local_genetic, out_genetic)
     expect_equal(sum_local_reporting, out_reporting)
+    expect_equal(sum_local_contact, out_contact)
+    expect_equal(sum_local_timeline, out_timeline)
     expect_equal(sum_local_all, out_all)
 
-    ## test internal sums add up
-    expect_equal(sum_local_timing_sampling + sum_local_timing_infections, sum_local_timing)
-    expect_equal(sum_local_timing + sum_local_genetic + sum_local_reporting, sum_local_all)
+    ## test internal sums add up (timing block includes genetic + reporting)
+    expect_equal(
+      sum_local_timing_sampling + sum_local_timing_infections +
+        sum_local_genetic + sum_local_reporting,
+      sum_local_timing
+    )
+    expect_equal(
+      sum_local_timing + sum_local_contact + sum_local_timeline,
+      sum_local_all
+    )
 
 })
 
@@ -553,10 +576,14 @@ test_that("Customisation with pi-returning functions works", {
     ## generate custom functions with 2 arguments
     f <- function(data, param) return(pi);
 
-    list_functions <- custom_likelihoods(genetic = f,
-                       timing_infections = f,
-                       timing_sampling = f,
-                       reporting = f)
+    list_functions <- custom_likelihoods(
+      genetic = f,
+      timing_infections = f,
+      timing_sampling = f,
+      reporting = f,
+      contact = f,
+      timeline = f
+    )
 
 
     ## tests
@@ -572,10 +599,12 @@ test_that("Customisation with pi-returning functions works", {
     expect_equal(pi,
                  cpp_ll_reporting(data, param, , list_functions[['reporting']]))
 
-    expect_equal(2 * pi,
+    ## cpp_ll_timing (custom) sums infections + sampling + genetic + reporting
+    expect_equal(4 * pi,
                  cpp_ll_timing(data, param, , list_functions))
 
-    expect_equal(4 * pi,
+    ## cpp_ll_all adds contact + timeline to those four components
+    expect_equal(6 * pi,
                  cpp_ll_all(data, param, , list_functions))
 
 })

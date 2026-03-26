@@ -103,16 +103,17 @@ outbreaker_find_imports <- function(moves, data, param_current,
   if (eps_strict || tau_strict) {
     n_u <- length(data$ctd_matrix)
     for (i in seq_along(data$p_trans)) {
-      ini_param$current$trans_mat[[i]] <-
-        param_current$transition_mat <- get_transition_mat(
-          data$pp_trans_adj[[i]],
-          data$pp_place[[i]],
-          data$pp_place_adj[[i]],
-          ini_param$current$eps[i + n_u],
-          ini_param$current$tau[i],
-          data$prop_place_observed[i],
-          config$max_kappa
-        )
+      tm <- get_transition_mat(
+        data$pp_trans_adj[[i]],
+        data$pp_place[[i]],
+        data$pp_place_adj[[i]],
+        ini_param$current$eps[i + n_u],
+        ini_param$current$tau[i],
+        data$prop_place_observed[i],
+        config$max_kappa
+      )
+      ini_param$current$trans_mat[[i]] <- tm
+      param_current$trans_mat[[i]] <- tm
     }
   }
 
@@ -129,9 +130,9 @@ outbreaker_find_imports <- function(moves, data, param_current,
   threshold <- mean_influence * config$outlier_threshold
   outliers <- mean_influences > threshold | is.infinite(timeline_ll)
 
-  ## Take over tree state from import run that fixes timeline
-  ## likelihood
-  if (eps_strict || tau_strict || config$p_wrong == 0) {
+  ## Take over tree state from import run that fixes timeline likelihood
+  ## (only when eps/tau are fixed; p_wrong == 0 alone must not force this path)
+  if (eps_strict || tau_strict) {
     ini_param$store$alpha[[1]] <-
       ini_param$current$alpha <- param_current$alpha
     ini_param$store$t_inf[[1]] <-

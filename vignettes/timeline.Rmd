@@ -1,0 +1,222 @@
+---
+title: "Timeline-informed outbreak reconstruction"
+subtitle: "A nosocomial outbreak example"
+author: "Cyril Geismar; Finlay Campbell"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette:
+     toc: true
+     toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Timeline-informed outbreak reconstruction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5,
+  fig.path = "figs-timeline/"
+)
+```
+
+# Introduction
+
+Hospital outbreaks generate rich data that community outbreaks typically do not: ward admission and discharge records tell us **where** each patient was and **when**. The timeline extension to *outbreaker2* exploits these data to constrain transmission tree reconstruction. The core principle is simple: **for case** $i$ to have infected case $j$, they must have been in the same place at the right time.
+
+This vignette explains the timeline model and demonstrates its use on the `fake_outbreak` dataset shipped with the package. We proceed in two stages:
+
+1.  A **basic analysis** where every transmission is direct (one generation between infector and infectee), with known ward-reporting coverage.
+2.  An **extended analysis** that allows for **unobserved intermediate cases** between observed infector--infectee pairs.
+
+# The data: timed location records
+
+The timeline extension accepts a new data source, `ctd_timed`, which records when each case occupied each ward. The format is a data frame with four columns:
+
+| Column  | Description            |
+|---------|------------------------|
+| `id`    | Case identifier        |
+| `place` | Location name          |
+| `start` | Start date of the stay |
+| `end`   | End date of the stay   |
+
+A single case can appear in multiple rows if they moved between wards. Here is an excerpt from the simulated outbreak:
+
+```{r data_overview}
+library(outbreaker2)
+set.seed(42)
+head(fake_outbreak$ctd_timed)
+```
+
+Internally, `outbreaker_data()` converts these records into a **timeline matrix** of dimension $N \times T$, where $N$ is the number of cases and $T$ is the total time span. Entry $(i, t)$ stores the ward index of case $i$ at time $t$, or $-1$ if no ward is recorded for that day. This matrix is what the likelihood function queries at each MCMC step.
+
+# The timeline model
+
+The timeline likelihood evaluates whether a proposed infector--infectee pair were co-located at the time of infection. For each case $j$ with proposed infector $\alpha(j)$, the model looks up the ward of both cases at the time of infection and computes the probability of that ward combination under a transition matrix derived from the ward-stay data. When transmission is direct ($\kappa = 1$), both wards are looked up at $t_{\text{inf}}(j)$. When there are unobserved intermediate cases ($\kappa > 1$), the infector's ward is looked up at $t_{\text{onw}}(j)$ (the time they infected the first unobserved case) and the infectee's ward at $t_{\text{inf}}(j)$, with the transition probability raised to the appropriate power to account for the chain of unobserved generations.
+
+| Parameter | Symbol | Description | Default prior |
+|-----------|--------|-------------|---------------|
+| Contact reporting coverage | $\varepsilon$ (`eps`) | Probability that a transmission pair shares an observed ward | Beta(1, 1) |
+| Ward persistence | $\tau$ (`tau`) | Probability that an unobserved intermediate case stays on the same ward as the previous case in the chain | Beta(2, 2) |
+| Unobserved generations | $\kappa$ (`kappa`) | Number of generations between observed infector and infectee; $\kappa = 1$ means direct transmission | — |
+| Onward infection time | $t_{\text{onw}}$ | Date at which the infector passes infection to the first unobserved intermediate case; only used when $\kappa > 1$ | — |
+| Proportion places observed | `prop_place_observed` | Fraction of all wards represented in the data; set in `outbreaker_data()` | 1 |
+
+When `ctd_timed` is provided, `create_config()` automatically enables the relevant MCMC moves: `move_tau`, `move_joint` (jointly proposes changes to ancestry, $\kappa$, and $t_{\text{onw}}$), and `move_model` (reversible-jump moves that switch individual cases between $\kappa = 1$ and $\kappa > 1$).
+
+
+# Example 1: direct transmission only
+
+We start with the simplest scenario: every transmission is direct ($\kappa = 1$), and we assume perfect ward-reporting coverage ($\varepsilon = 1$, fixed). Under these settings, transmission is only allowed between cases that shared a ward on the day of infection.
+
+```{r basic_data}
+data <- outbreaker_data(
+  dates = fake_outbreak$sample,
+  w_dens = fake_outbreak$w,
+  ctd_timed = fake_outbreak$ctd_timed
+)
+```
+
+We fix $\varepsilon = 1$ (all transmissions happen on observed wards) and $\tau = 1$ (moot here since $\kappa = 1$), and disable their estimation:
+
+```{r basic_config}
+config_basic <- create_config(
+  n_iter = 5000,
+  sample_every = 50,
+  init_eps = 1,
+  init_tau = 1,
+  move_eps = FALSE,
+  move_tau = FALSE,
+  move_model = FALSE,
+  n_iter_import = 2000
+)
+```
+
+```{r basic_run, cache = TRUE}
+res_basic <- outbreaker(data, config_basic)
+```
+
+The trace plot of the posterior log-likelihood gives a first check that the chain has converged:
+
+```{r basic_trace}
+plot(res_basic)
+```
+
+
+```{r basic_alpha}
+plot(res_basic, type = "alpha", burnin = 500)
+plot(res_basic, type = "kappa", burnin = 500)
+```
+
+With $\varepsilon = 1$ the model is very strict: only infectors who were on the same ward at the right time are considered. This rules out many impossible transmission pairs and typically improves accuracy over a model that ignores location data.
+
+# Example 2: allowing unobserved intermediate cases
+
+In real outbreaks, transmission chains often include cases that were never observed. To model this, we allow $\kappa > 1$ and let the MCMC estimate $\tau$. We also relax $\varepsilon$ to allow for imperfect ward reporting.
+
+```{r kappa_config}
+config_kappa <- create_config(
+  n_iter = 10000,
+  sample_every = 50,
+  move_kappa = TRUE,
+  max_kappa = 3,
+  move_eps = TRUE,
+  move_tau = TRUE,
+  n_iter_import = 2000
+)
+```
+
+```{r kappa_run, cache = TRUE}
+res_kappa <- outbreaker(data, config_kappa)
+```
+
+We can now inspect the posterior distributions of the new parameters:
+
+```{r kappa_eps}
+plot(res_kappa, "eps", burnin = 1000)
+```
+
+The posterior of $\varepsilon$ tells us how often transmission pairs shared an observed ward. Values close to 1 suggest the ward data captures most transmission events.
+
+```{r kappa_tau}
+plot(res_kappa, "tau_1", burnin = 1000)
+```
+
+The posterior of $\tau$ tells us about the mobility of unobserved intermediate cases. Values near 1 suggest unobserved cases tended to stay on the same ward as the preceding case; lower values indicate more movement between wards.
+
+
+```{r kappa_kappa}
+plot(res_kappa, type = "kappa", burnin = 1000)
+```
+The distribution of $\kappa$ across cases shows how many unobserved generations the model infers. Most pairs will have $\kappa = 1$ (direct transmission), but some may require unobserved intermediaries.
+
+
+# Analysing the results
+
+*outbreaker2* provides several summary functions to retrieve key epidemiological quantities from the posterior distribution of trees.
+
+The **serial interval** summarises the time between onset in an infector and their infectee.
+
+```{r si}
+get_si(res_kappa, data, burnin = 1000) |> 
+  ggplot(aes(x, mean))+
+  geom_col(width =0.8)+
+  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.2)+
+  labs(x = "Serial interval (days)", y = "Proportion of transmissions", 
+        title = "Posterior serial interval distribution")
+  
+```
+
+The **offspring distribution** summarises how many secondary cases each case generated:
+
+```{r offspring}
+get_offspring(res_kappa, burnin = 1000) |> 
+  ggplot(aes(x = as.factor(x), y = mean))+
+  geom_col(width = 0.8)+
+  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.2)+
+  labs(x = "Number of secondary cases", y = "Proportion of cases", 
+        title = "Posterior offspring distribution")
+```
+
+**Ri** is the case reproduction number, the expected number of secondary cases generated by each case:
+```{r ri}
+get_Ri(res_kappa, burnin = 1000) |> 
+  ggplot(aes(x = mean, y = reorder(id, mean))) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0.2) +
+  labs(x = "Ri", y = "Case ID", title = "Posterior case reproduction numbers")
+```
+
+**Accuracy** can be evaluated when the true transmission tree is known, as in our simulated data. Accuracy can be measured in two ways:
+1. By case: the proportion of MCMC samples in which the true infector of a given case is correctly identified. This indicates which cases are well-resolved.
+2. By MCMC step: the proportion of cases correctly assigned in each sampled tree. This reflects the overall quality of the posterior tree.
+
+```{r accuracy}
+acc_by_case <- get_accuracy(res_kappa, fake_outbreak$ances, burnin = 1000) |> sort()
+barplot(acc,
+        horiz = TRUE,
+        xlab = "Accuracy",
+        ylab = "Case ID",
+        las = 1,          
+        cex.names = 0.7)
+
+acc_by_step <- get_accuracy(res_kappa, fake_outbreak$ances, by_case = FALSE, burnin = 1000)
+plot(acc_by_step, type = "l", xlab = "MCMC step", ylab = "Accuracy", 
+     main = "Proportion of trees with correct infector at each MCMC step")
+```
+
+**Entropy** measures the uncertainty in the infector assignment for each case. Low entropy means high confidence; high entropy means many plausible infectors:
+
+```{r entropy}
+ent <- get_entropy(res_kappa, burnin = 1000) |> sort()
+barplot(ent,
+        horiz = TRUE,
+        xlab = "Entropy",
+        ylab = "Case ID",
+        las = 1,          
+        cex.names = 0.7)
+```
+

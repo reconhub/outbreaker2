@@ -1,27 +1,32 @@
-#' Initialises outputs for outbreaker
+#' Initialise MCMC storage for outbreaker
 #'
-#' This function creates initial outputs and parameter states for outbreaker.
+#' Computes the initial log-likelihood, log-prior, and log-posterior for the
+#' starting parameter state and writes them into \code{param_store}.
 #'
-#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com})
+#' @param data A list of data items as returned by \code{\link{outbreaker_data}}.
 #'
-#' @param data a list of data items as returned by \code{outbreaker_data}.
+#' @param param_current A list of current parameter states as returned by
+#'   \code{\link{create_param}}.
 #'
-#' @param param_current a list of current parameter states as returned by
-#'   \code{create_param}.
+#' @param param_store A list of stored parameter states for MCMC output.
 #'
-#' @param param_store a list of stored parameter states for MCMC output.
+#' @param loglike A list of log-likelihood components as returned by
+#'   \code{\link{custom_likelihoods}}.
 #'
-#' @param loglike a list of loglikelihood functions with enclosed data
-#'   as returned by \code{custom_likelihoods}.
+#' @param priors A list of prior functions as returned by
+#'   \code{\link{custom_priors}}.
 #'
-#' @param priors a list of prior functions with enclosed parameters as
-#'   returned by \code{custom_priors}.
+#' @param config A list of configuration settings as returned by
+#'   \code{\link{create_config}}.
 #'
-#' @param config a list of configuration settings as returned by
-#'   \code{create_config}.
+#' @return The \code{param_store} list, with \code{like[1]}, \code{prior[1]},
+#'   and \code{post[1]} filled.
+#'
+#' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
+#'
+#' @seealso \code{\link{outbreaker}}, \code{\link{create_param}}.
 #'
 #' @export
-#'
 outbreaker_init_mcmc <- function(data, param_current, param_store,
                                  loglike, priors, config) {
 

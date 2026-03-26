@@ -20,7 +20,9 @@
 #'   \code{raw = TRUE}, a data frame with columns \code{step}, \code{x},
 #'   \code{y}.
 #'
-#' @author Cy Geismar
+#' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
+#'
+#' @seealso \code{\link{get_trees}}, \code{\link{outbreaker_chains}}.
 #'
 #' @importFrom stats aggregate quantile
 #'

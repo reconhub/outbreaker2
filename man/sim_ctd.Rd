@@ -7,22 +7,25 @@
 sim_ctd(tTree, eps, lambda)
 }
 \arguments{
-\item{tTree}{a dataframe or matrix of two columns, with each row providing
-the ids (numerical or as characters) of a transmission pair}
+\item{tTree}{A data frame or matrix with two columns, each row giving the IDs
+(numeric or character) of a transmission pair.}
 
-\item{eps}{the contact reporting coverage, defined as the probability of
-reporting a contact (transmission pair or not)}
+\item{eps}{Contact reporting coverage: probability of reporting a contact
+(whether or not the pair is a transmission pair).}
 
-\item{lambda}{the non-infectious contact rate, defined as the probability
-of contact between a non-transmission pair.}
+\item{lambda}{Non-infectious contact rate: probability of contact between a
+non-transmission pair.}
+}
+\value{
+A data frame with columns \code{i} and \code{j} containing simulated
+  contact pairs.
 }
 \description{
-This function simulates contact data from a transmission tree. The
-model assumes that all transmission pairs have experienced contact, and that
-there is no false-positive reporting of contacts. The probability of contact
-occuring between a non-transmision pair is given by the parameter lambda. The
-probability of reporting a contact (transmission pair or not) is given by the
-parameters eps.
+Simulates contact data from a transmission tree. The model assumes that all
+transmission pairs may be observed as contacts and that there is no
+false-positive reporting of contacts. The probability of contact occurring
+between a non-transmission pair is given by \code{lambda}. The probability of
+reporting a contact (transmission pair or not) is given by \code{eps}.
 }
 \examples{
 
@@ -38,5 +41,6 @@ ctd <- outbreaker2:::sim_ctd(tTree, eps = 0.8, lambda = 0.1)
 head(ctd)
 }
 \author{
-Finlay Campbell (\email{finlaycampbell93@gmail.com})
+Finlay Campbell (\email{finlaycampbell93@gmail.com}).
 }
+\keyword{internal}

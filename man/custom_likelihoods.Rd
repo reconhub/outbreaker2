@@ -12,7 +12,7 @@ custom_likelihoods(...)
 \arguments{
 \item{...}{a named list of functions, each computing a log-likelihood component.}
 
-\item{x}{an \code{outbreaker_config} object as returned by \code{create_config}.}
+\item{x}{a \code{custom_likelihoods} object as returned by \code{custom_likelihoods}.}
 }
 \value{
 A named list of list(function, arity) pairs with the class
@@ -20,8 +20,6 @@ A named list of list(function, arity) pairs with the class
     log-likelihood component of outbreaker. Functions which are not
     customised will result in a list(NULL, 0) component. Any function with
     arity 3 must have the third parameter default to NULL.
-
-a list of named functions
 }
 \description{
 This function is used to specify customised likelihood functions for
@@ -47,7 +45,7 @@ the function \code{cpp_ll_reporting} is used.
 \item \code{contact}: the likelihood of the contact tracing data; by default,
 the function \code{cpp_ll_contact} is used.
 
-#' \item \code{timeline}: the likelihood of the timeline data; by default,
+\item \code{timeline}: the likelihood of the timeline data; by default,
 the function \code{cpp_ll_timeline} is used.
 }
 

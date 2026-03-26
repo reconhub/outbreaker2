@@ -12,7 +12,7 @@ references). 'outbreaker2' extends and replaces 'outbreaker'. \cr
 \details{
 The emphasis of 'outbreaker2' is on modularity, which enables customisation
 of priors, likelihoods and even movements of parameters and augmented data by
-the user. This the dedicated vignette on this topic
+the user. See the dedicated vignette on this topic:
 \code{vignette("outbreaker2_custom")}.\cr
 
 The main functions of the package are:
@@ -33,6 +33,10 @@ functions.
 
 \item \code{\link{custom_moves}}: function to create default and customise movement
 functions.
+
+\item \code{\link{get_trees}}, \code{\link{get_Ri}}, \code{\link{get_offspring}},
+\code{\link{get_si}}, \code{\link{get_entropy}}, \code{\link{get_accuracy}}:
+summarise posterior transmission trees and quantities derived from them.
 
 }
 }

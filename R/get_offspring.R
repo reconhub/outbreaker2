@@ -20,7 +20,8 @@
 #'
 #' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
 #'
-#' @seealso \code{\link{get_Ri}} for per-case reproduction numbers.
+#' @seealso \code{\link{get_Ri}} for per-case reproduction numbers;
+#'   \code{\link{get_trees}}; \code{\link{outbreaker_chains}}.
 #'
 #' @importFrom stats aggregate quantile
 #'

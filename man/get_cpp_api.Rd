@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_cpp_api.R
 \name{get_cpp_api}
 \alias{get_cpp_api}
-\title{Access internal C++ rountines used in outbreaker2}
+\title{Access internal C++ routines used in outbreaker2}
 \usage{
 get_cpp_api()
 }
@@ -64,9 +64,8 @@ For a description of the arguments of these functions, see the Rcpp_API
 vignette (\code{vignette("Rcpp_API", package = "outbreaker2")}).
 }
 \description{
-This function returns an environment containing all C++ functions (bound to R
-using Rcpp) used for priors, likelihoods, and movements of parameters in
-outbreaker2.
+Returns an environment containing C++ functions (exposed via Rcpp) used for
+priors, likelihoods, and MCMC moves in outbreaker2.
 }
 \examples{
 

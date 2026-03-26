@@ -18,6 +18,9 @@
 #'
 #' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
 #'
+#' @seealso \code{\link{get_accuracy}}, \code{\link{get_Ri}},
+#'   \code{\link{get_offspring}}, \code{\link{outbreaker_chains}}.
+#'
 #' @examples
 #' \dontrun{
 #' data(fake_outbreak)

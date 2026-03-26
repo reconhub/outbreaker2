@@ -58,8 +58,11 @@ support is pruned and the tree recalculated.}
 }
 \description{
 Several methods are defined for instances of the class
-\code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including:
-\code{print}, \code{plot}, \code{summary}
+\code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including
+\code{print}, \code{plot}, and \code{summary}. For extracting trees and
+summaries from chains, see \code{\link{get_trees}}, \code{\link{get_Ri}},
+\code{\link{get_offspring}}, \code{\link{get_si}}, \code{\link{get_entropy}},
+and \code{\link{get_accuracy}}.
 }
 \details{
 \code{type} indicates the type of graphic to plot:

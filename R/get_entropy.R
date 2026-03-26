@@ -7,12 +7,14 @@
 #' @param out An object of class \code{outbreaker_chains}.
 #' @param burnin The number of iterations to be discarded as burnin.
 #' @param normalise Logical. If \code{TRUE} (default), entropy is normalised
-#'   to [0, 1] by dividing by \code{log(K)} where \code{K} is the number of
-#'   distinct inferred infectors.
+#'   to \eqn{[0, 1]} by dividing by \code{log(K)}, where \code{K} is the number
+#'   of distinct inferred infectors.
 #'
 #' @return A named numeric vector of entropy values, one per case.
 #'
 #' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
+#'
+#' @seealso \code{\link{get_Ri}}, \code{\link{outbreaker_chains}}.
 #'
 #' @examples
 #' \dontrun{

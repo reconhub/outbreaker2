@@ -1,11 +1,8 @@
 
-#' Access internal C++ rountines used in outbreaker2
+#' Access internal C++ routines used in outbreaker2
 #'
-#' This function returns an environment containing all C++ functions (bound to R
-#' using Rcpp) used for priors, likelihoods, and movements of parameters in
-#' outbreaker2.
-#'
-#' @export
+#' Returns an environment containing C++ functions (exposed via Rcpp) used for
+#' priors, likelihoods, and MCMC moves in outbreaker2.
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
@@ -85,7 +82,8 @@
 #' api$cpp_prior_mu(list(mu = 0.00123), config)
 #' 
 #' dexp(0.00123, rate = config$prior_mu, log = TRUE)
-#' 
+#'
+#' @export
 get_cpp_api <- function() {
     pkg_env <- asNamespace("outbreaker2")
     regxp <- "^cpp_(ll|prior|move)"

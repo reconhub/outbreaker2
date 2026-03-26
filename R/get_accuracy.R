@@ -8,10 +8,12 @@
 #'   representing the true transmission tree.
 #' @param burnin The number of iterations to be discarded as burnin.
 #'
-#' @return A numeric vector of accuracy values (0 to 1), one per posterior
-#'   sample.
+#' @return A numeric vector of accuracy values (between 0 and 1), one per
+#'   posterior sample.
 #'
 #' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
+#'
+#' @seealso \code{\link{get_trees}}, \code{\link{outbreaker_chains}}.
 #'
 #' @examples
 #' \dontrun{

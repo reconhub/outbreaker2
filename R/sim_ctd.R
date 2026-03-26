@@ -1,24 +1,28 @@
 #' Simulate contact data from a transmission tree
 #'
-#' This function simulates contact data from a transmission tree. The
-#' model assumes that all transmission pairs have experienced contact, and that
-#' there is no false-positive reporting of contacts. The probability of contact
-#' occuring between a non-transmision pair is given by the parameter lambda. The
-#' probability of reporting a contact (transmission pair or not) is given by the
-#' parameters eps.
+#' Simulates contact data from a transmission tree. The model assumes that all
+#' transmission pairs may be observed as contacts and that there is no
+#' false-positive reporting of contacts. The probability of contact occurring
+#' between a non-transmission pair is given by \code{lambda}. The probability of
+#' reporting a contact (transmission pair or not) is given by \code{eps}.
+#'
+#' @param tTree A data frame or matrix with two columns, each row giving the IDs
+#'   (numeric or character) of a transmission pair.
+#'
+#' @param eps Contact reporting coverage: probability of reporting a contact
+#'   (whether or not the pair is a transmission pair).
+#'
+#' @param lambda Non-infectious contact rate: probability of contact between a
+#'   non-transmission pair.
+#'
+#' @return A data frame with columns \code{i} and \code{j} containing simulated
+#'   contact pairs.
+#'
+#' @author Finlay Campbell (\email{finlaycampbell93@@gmail.com}).
+#'
+#' @keywords internal
 #'
 #' @importFrom magrittr %>%
-#'
-#' @param tTree a dataframe or matrix of two columns, with each row providing
-#'     the ids (numerical or as characters) of a transmission pair
-#'
-#' @param eps the contact reporting coverage, defined as the probability of
-#'     reporting a contact (transmission pair or not)
-#'
-#' @param lambda the non-infectious contact rate, defined as the probability
-#'     of contact between a non-transmission pair.
-#'
-#' @author Finlay Campbell (\email{finlaycampbell93@@gmail.com})
 #'
 #' @examples
 #'

@@ -1,24 +1,24 @@
-#' Encloses argument in a function's environment
+#' Enclose arguments in a function environment
 #'
-#' This function takes a function \code{f} and a series of named arguments, and
-#' returns a closure of \code{f} which will only rely on one single argument
-#' 'param'. This is used to reduce the number of arguments passed around to
-#' likelihood or movement functions. This functionality is used internally when
-#' creating closures of custom moves in \code{bind_moves}.
-#' 
+#' Takes a function \code{f} and named arguments, and returns a closure of
+#' \code{f} that depends on a single argument \code{param}. Used internally when
+#' building custom move closures in \code{bind_moves}.
+#'
 #' @param f The function to which arguments are bound.
-#' 
-#' @param ... Named arguments to bind to the function's environment.
-#' 
-#' @author Initial code by Rich FitzJohn (see 'references') with some
-#' adaptations by Thibaut Jombart.
+#'
+#' @param ... Named arguments to bind into the closure environment.
+#'
+#' @return A function with a single formal argument \code{param}.
+#'
+#' @author Initial code by Rich FitzJohn (see references), adapted by Thibaut
+#'   Jombart.
 #'
 #' @references Initial code comes from the \code{partially_apply} function in
-#' the 'rodeint' package \code{richfitz/rodeint}.
+#'   the \code{rodeint} package (\code{richfitz/rodeint}).
 #'
-#' 
+#' @seealso \code{\link{custom_moves}}.
+#'
 #' @export
-#' 
 bind_to_function <- function(f, ...) {
 
     ## We isolate the arguments of 'f' and identify those without defaults,

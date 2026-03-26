@@ -18,6 +18,9 @@
 #'
 #' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
 #'
+#' @seealso \code{\link{get_offspring}}, \code{\link{get_trees}},
+#'   \code{\link{outbreaker_chains}}.
+#'
 #' @importFrom stats aggregate quantile
 #'
 #' @examples

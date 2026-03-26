@@ -234,8 +234,6 @@ create_config()
 ## change defaults
 create_config(move_alpha = FALSE, n_iter = 2e5, sample_every = 1000)
 
-
-
 }
 \seealso{
 \code{\link{outbreaker_data}} to check and process data for outbreaker.

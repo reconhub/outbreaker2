@@ -69,25 +69,26 @@
 #'
 #' \dontrun{
 #' ## run outbreaker
-#' out <- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = dat$w),
-#' config = list(n_iter = 2e4, sample_every = 200))
+#' out <- outbreaker(
+#'   data = list(dna = dat$dna, dates = dat$onset, w_dens = dat$w),
+#'   config = list(n_iter = 2e4, sample_every = 200)
+#' )
 #' plot(out)
 #' as.data.frame(out)
 #'
 #' ## run outbreaker, no DNA sequences
-#' out2 <- outbreaker(data = list(dates = dat$onset, w_dens = w),
-#' config = list(n_iter = 2e4, sample_every = 200))
+#' out2 <- outbreaker(
+#'   data = list(dates = dat$onset, w_dens = w),
+#'   config = list(n_iter = 2e4, sample_every = 200)
+#' )
 #' plot(out2)
 #' as.data.frame(out2)
-#'
 #' }
 outbreaker <- function(data = outbreaker_data(),
                        config = create_config(),
                        priors = custom_priors(),
                        likelihoods = custom_likelihoods(),
-                       moves = custom_moves()
-                       ) {
-
+                       moves = custom_moves()) {
   ## CHECKS / PROCESS DATA ##
   data <- outbreaker_data(data = data)
 
@@ -105,15 +106,19 @@ outbreaker <- function(data = outbreaker_data(),
   temp <- create_param(data = data, config = config)
   param_store <- temp$store
   param_current <- temp$current
-  param_store <- outbreaker_init_mcmc(data, param_current, param_store,
-                                      loglike, priors, config)
+  param_store <- outbreaker_init_mcmc(
+    data, param_current, param_store,
+    loglike, priors, config
+  )
 
   ## here we create a list of function for moving parameters
-  moves <- bind_moves(moves = moves,
-                      config = config,
-                      data = data,
-                      likelihoods = loglike,
-                      priors = priors)
+  moves <- bind_moves(
+    moves = moves,
+    config = config,
+    data = data,
+    likelihoods = loglike,
+    priors = priors
+  )
 
 
   ## IMPORTS
@@ -122,12 +127,14 @@ outbreaker <- function(data = outbreaker_data(),
   ## the MCMC, then computing the average 'global influence' (-loglike) of
   ## each data point, identifying outliers (based on fixed threshold) and
   ## marking outliers down as 'imported cases'.
-  temp <- outbreaker_find_imports(moves = moves,
-                                  data = data,
-                                  param_current = param_current,
-                                  param_store = param_store,
-                                  config = config,
-                                  likelihoods = loglike)
+  temp <- outbreaker_find_imports(
+    moves = moves,
+    data = data,
+    param_current = param_current,
+    param_store = param_store,
+    config = config,
+    likelihoods = loglike
+  )
   param_current <- temp$param_current
   param_store <- temp$param_store
   config <- temp$config
@@ -135,13 +142,15 @@ outbreaker <- function(data = outbreaker_data(),
   ## PERFORM MCMC
 
   ## procedure is the same as before, with some cases fixed as 'imported'
-  param_store <- outbreaker_move(moves = moves,
-                                 data = data,
-                                 param_current = param_current,
-                                 param_store = param_store,
-                                 config = config,
-                                 likelihoods = loglike,
-                                 priors = priors)
+  param_store <- outbreaker_move(
+    moves = moves,
+    data = data,
+    param_current = param_current,
+    param_store = param_store,
+    config = config,
+    likelihoods = loglike,
+    priors = priors
+  )
 
 
   ## SHAPE RESULTS
@@ -154,4 +163,3 @@ outbreaker <- function(data = outbreaker_data(),
 
   return(out)
 }
-

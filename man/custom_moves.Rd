@@ -83,7 +83,8 @@ movements (i.e. none of the names specified above), the closure will contain:
 }
 }
 \seealso{
-See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-movements}{customization vignette} for detailed examples on how to customise movement functions.
+For examples on customising movements, see
+  \url{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-movements}.
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com}).

@@ -28,7 +28,5 @@
 #' @examples
 #' names(fake_outbreak)
 #' fake_outbreak
-#' 
+#'
 "fake_outbreak"
-
-

@@ -83,8 +83,10 @@ custom_priors()
 ## SPECIFYING PRIOR PARAMETERS
 ## - this will need to be passed to outbreaker
 default_config <- create_config()
-new_config <- create_config(prior_mu = 1e-5,
-                        prior_pi = c(2, 1))
+new_config <- create_config(
+  prior_mu = 1e-5,
+  prior_pi = c(2, 1)
+)
 
 ## - to check the prior manually, default settings:
 param <- list(mu = 0.001, pi = 0.9)
@@ -102,19 +104,22 @@ dbeta(0.9, 2, 1, log = TRUE)
 ## SPECIFYING A PRIOR FUNCTION
 
 ## flat prior for pi between 0.5 and 1
-f <- function(x) {ifelse(x$pi > 0.5, log(2), log(0))}
+f <- function(x) {
+  ifelse(x$pi > 0.5, log(2), log(0))
+}
 priors <- custom_priors(pi = f)
 priors # this should be passed to outbreaker
 
 ## test the prior manually
-priors$pi(list(pi=1))
-priors$pi(list(pi=.6))
-priors$pi(list(pi=.2))
-priors$pi(list(pi=.49))
+priors$pi(list(pi = 1))
+priors$pi(list(pi = .6))
+priors$pi(list(pi = .2))
+priors$pi(list(pi = .49))
 
 }
 \seealso{
-See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors}{customization vignette} for detailed examples on how to customize priors.
+For examples on customizing priors, see
+  \url{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors}.
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com}).

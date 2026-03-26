@@ -143,8 +143,9 @@ outbreaker_find_imports <- function(moves, data, param_current,
       ini_param$current$t_onw <- param_current$t_onw
     param_current$alpha[outliers] <- NA
     param_current$kappa[outliers] <- NA
-    if (is.infinite(cpp_ll_all(data, param_current)))
+    if (is.infinite(cpp_ll_all(data, param_current))) {
       stop("Likelihood of starting tree is -Inf")
+    }
   }
 
   ## All outliers are considered as introductions, so that ancestries

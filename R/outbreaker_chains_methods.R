@@ -33,8 +33,10 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
     if (length(ids) <= 6) {
       cat("\ncase ids:", paste(ids, collapse = ", "))
     } else {
-      cat("\ncase ids:", paste(c(head(ids, 5), "..."), collapse = ", "),
-          paste0("(", length(ids), " cases)"))
+      cat(
+        "\ncase ids:", paste(c(head(ids, 5), "..."), collapse = ", "),
+        paste0("(", length(ids), " cases)")
+      )
     }
   }
 
@@ -96,7 +98,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #'
 #' @export
 #'
-#' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette} for detailed examples on how to visualise \code{outbreaker_chains} objects.
+#' @seealso See
+#'   \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette}
+#'   for detailed examples on how to visualise \code{outbreaker_chains} objects.
 #'
 #' @details \code{type} indicates the type of graphic to plot:
 #'
@@ -166,17 +170,17 @@ plot.outbreaker_chains <- function(
   ## check group
   if (!is.null(group)) {
     if (length(group) == 1L && group == "all") {
-      ##remove _[digit] vars
-      y_vars = names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
+      ## remove _[digit] vars
+      y_vars <- names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
     } else if (all(group %in% names(x))) {
-      y_vars = c("step", group)
+      y_vars <- c("step", group)
     } else {
       stop("grouping variables not found in outbreaker object")
     }
     ## get only relevant data
-    x_sub = as.data.frame(x)[, y_vars]
+    x_sub <- as.data.frame(x)[, y_vars]
     ## switch it to long format to use in ggplot
-    x_long = reshape(
+    x_long <- reshape(
       x_sub,
       idvar = "step",
       ids = x_sub$step,
@@ -282,9 +286,9 @@ plot.outbreaker_chains <- function(
       if (is.null(labels)) {
         labels <- seq_len(ncol(alpha))
       }
-      if (axis == 'x') {
+      if (axis == "x") {
         return(labels)
-      } else if (axis == 'y') {
+      } else if (axis == "y") {
         return(c("Import", labels))
       }
     }
@@ -300,8 +304,8 @@ plot.outbreaker_chains <- function(
     ## to two functions with different arguments
     get_lab_color <- function(labels = NULL, color = NULL) {
       list(
-        alpha_lab_x = get_alpha_lab('x', labels),
-        alpha_lab_y = get_alpha_lab('y', labels),
+        alpha_lab_x = get_alpha_lab("x", labels),
+        alpha_lab_y = get_alpha_lab("y", labels),
         alpha_color = get_alpha_color(color)
       )
     }
@@ -317,7 +321,7 @@ plot.outbreaker_chains <- function(
       geom_point(aes(x = to, y = from, size = frequency, color = to)) +
       scale_x_discrete(drop = FALSE, labels = tmp$alpha_lab_x) +
       scale_y_discrete(drop = FALSE, labels = tmp$alpha_lab_y) +
-      labs(x = 'To', y = 'From', size = 'Posterior\nfrequency') +
+      labs(x = "To", y = "From", size = "Posterior\nfrequency") +
       tmp$alpha_color +
       scale_size_area() +
       guides(colour = "none")
@@ -361,19 +365,12 @@ plot.outbreaker_chains <- function(
       geom_violin(aes(x = cases, y = dates, fill = cases)) +
       coord_flip() +
       guides(fill = "none") +
-      labs(y = 'Infection time', x = NULL) +
+      labs(y = "Infection time", x = NULL) +
       tmp$t_inf_color +
       scale_x_discrete(labels = tmp$t_inf_lab)
   }
 
   if (type == "kappa") {
-    get_kappa_lab <- function(labels = NULL) {
-      N <- ncol(kappa)
-      if (is.null(labels)) {
-        labels <- 1:N
-      }
-      return(labels)
-    }
     kappa <- as.matrix(x[, grep("kappa", names(x))])
     generations <- as.vector(kappa)
     cases <- as.vector(col(kappa))
@@ -530,7 +527,7 @@ summary.outbreaker_chains <- function(
 
   method <- match.arg(method)
 
-  if (method == 'mpa') {
+  if (method == "mpa") {
     ## function to get most frequent item
     if (return_ids) {
       f1 <- function(x) {
@@ -543,17 +540,10 @@ summary.outbreaker_chains <- function(
     }
     out$tree$from <- apply(alpha, 2, f1)
     out$tree$to <- if (return_ids) attr(x, "ids") else seq_len(ncol(alpha))
-
-    ## function to get frequency of most frequent item
-    f2 <- function(x) {
-      (sort(table(x), decreasing = TRUE) / length(x))[1]
-    }
-    support <- apply(alpha, 2, f2)
-  } else if (method == 'decycle') {
+  } else if (method == "decycle") {
     cons <- .decycle_tree(x)
     out$tree$from <- cons$from
     out$tree$to <- cons$to
-    support <- cons$support
   }
 
   ## summary of t_inf ##
@@ -575,22 +565,6 @@ summary.outbreaker_chains <- function(
     (sort(table(x), decreasing = TRUE) / length(x))[1]
   }
   out$tree$support <- apply(alpha, 2, f2)
-
-  ## Returns NA if %NA > 50%, otherwise returns median
-  f3 <- function(x) {
-    if (any(is.na(x))) {
-      tab <- sort(table(x, exclude = NULL), decreasing = TRUE)
-      nam <- as.integer(names(tab))
-      if (tab[is.na(nam)] > sum(tab[!is.na(nam)])) {
-        out <- NA
-      } else {
-        out <- ceiling(median(x, na.rm = TRUE))
-      }
-    } else {
-      out <- ceiling(median(x, na.rm = TRUE))
-    }
-    return(out)
-  }
 
   ## summary of kappa ##
   kappa <- as.matrix(x[, grep("kappa", names(x))])

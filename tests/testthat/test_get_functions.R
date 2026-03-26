@@ -2,8 +2,8 @@ context("Test get_* functions")
 
 ## shared setup
 get_short_chain <- function() {
-  data(fake_outbreak)
-  x <- fake_outbreak
+  utils::data("fake_outbreak", package = "outbreaker2", envir = environment())
+  x <- get("fake_outbreak", envir = environment(), inherits = FALSE)
   data <- list(dna = x$dna, dates = x$onset, w_dens = x$w)
   config <- list(n_iter = 50, sample_every = 5, find_import = FALSE)
   outbreaker(data, config)

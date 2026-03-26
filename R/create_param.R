@@ -114,7 +114,7 @@
 create_param <- function(data = outbreaker_data(),
                          config = create_config()) {
   ## CREATE EMPTY OUTPUT VECTORS ##
-  size <- round(config$n_iter/config$sample_every)
+  size <- round(config$n_iter / config$sample_every)
   step <- integer(size)
   post <- prior <- like <- mu <- pi <- tau <- double(size)
   eps <- as.list(integer(size))
@@ -139,8 +139,9 @@ create_param <- function(data = outbreaker_data(),
 
   # Set values for p_wrong, eps and lambda away from 0 and 1 to
   # prevent -Inf likelihood in initialisation phase
-  is_equal <- function(x, val)
+  is_equal <- function(x, val) {
     isTRUE(all.equal(x, val, tolerance = 1e-16))
+  }
   eps_one <- vapply(current_eps, is_equal, TRUE, 1)
   if (any(eps_one)) current_eps[eps_one] <- 1 - 1e-15
   tau_one <- vapply(current_tau, is_equal, TRUE, 1)
@@ -152,7 +153,7 @@ create_param <- function(data = outbreaker_data(),
     current_t_inf <- t_inf[[1]] <- config$init_t_inf
   }
   if (is.null(config$init_t_onw)) {
-    tmp_t_onw <- round(config$init_t_inf - sum(data$w_dens*seq_along(data$w_dens))/2)
+    tmp_t_onw <- round(config$init_t_inf - sum(data$w_dens * seq_along(data$w_dens)) / 2)
     tmp_t_onw[config$init_kappa == 1] <- -1000
     current_t_onw <- t_onw[[1]] <- as.integer(tmp_t_onw)
   } else {
@@ -166,21 +167,23 @@ create_param <- function(data = outbreaker_data(),
     trans_mat <- list()
     ## number of untimed contact types for indexing
     n_u <- length(data$ctd_matrix)
-    for(i in seq_along(data$p_trans)) {
-      trans_mat[[i]] <- get_transition_mat(data$pp_trans_adj[[i]],
-                                           data$pp_place[[i]],
-                                           data$pp_place_adj[[i]],
-                                           current_eps[i+n_u],
-                                           current_tau[i],
-                                           data$prop_place_observed[i],
-                                           config$max_kappa)
+    for (i in seq_along(data$p_trans)) {
+      trans_mat[[i]] <- get_transition_mat(
+        data$pp_trans_adj[[i]],
+        data$pp_place[[i]],
+        data$pp_place_adj[[i]],
+        current_eps[i + n_u],
+        current_tau[i],
+        data$prop_place_observed[i],
+        config$max_kappa
+      )
     }
   } else {
     trans_mat <- list()
   }
 
   ## ## Calculate initial ancestor tree if genetic sequences provided
-  if(!is.null(data$dna) & config$genetic_model == "mrca") {
+  if (!is.null(data$dna) && config$genetic_model == "mrca") {
     ancestors <- matrix(0, data$N, data$N)
     ancestors <- cpp_find_ancestors(current_alpha, ancestors, NULL)
     mrca <- t(apply(
@@ -204,18 +207,19 @@ create_param <- function(data = outbreaker_data(),
 
   class(store) <- c("outbreaker_store", "list")
 
-  current  <- list(alpha = current_alpha, t_inf = current_t_inf,
-                   t_onw = current_t_onw, mu = current_mu,
-                   kappa = current_kappa, pi = current_pi, tau = current_tau,
-                   eps = current_eps, eta = current_eta,
-                   lambda = current_lambda,
-                   trans_mat = trans_mat,
-                   ancestors = ancestors, mrca = mrca)
+  current <- list(
+    alpha = current_alpha, t_inf = current_t_inf,
+    t_onw = current_t_onw, mu = current_mu,
+    kappa = current_kappa, pi = current_pi, tau = current_tau,
+    eps = current_eps, eta = current_eta,
+    lambda = current_lambda,
+    trans_mat = trans_mat,
+    ancestors = ancestors, mrca = mrca
+  )
   class(current) <- c("outbreaker_param", "list")
 
 
   ## SHAPE CHAIN ##
   out <- list(store = store, current = current)
   return(out)
-
 }

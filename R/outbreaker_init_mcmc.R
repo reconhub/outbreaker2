@@ -29,7 +29,6 @@
 #' @export
 outbreaker_init_mcmc <- function(data, param_current, param_store,
                                  loglike, priors, config) {
-
   ## COMPUTE INITIAL LIKE/PRIOR/POST ##
   param_store$like[1] <- cpp_ll_all(data, param_current, NULL, loglike)
   param_store$prior[1] <- cpp_prior_all(param_current, config, priors)
@@ -40,5 +39,4 @@ outbreaker_init_mcmc <- function(data, param_current, param_store,
   }
 
   return(param_store)
-
 }

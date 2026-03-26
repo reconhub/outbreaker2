@@ -89,7 +89,9 @@ ancestor/infector
 }
 }
 \seealso{
-See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette} for detailed examples on how to visualise \code{outbreaker_chains} objects.
+See
+  \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette}
+  for detailed examples on how to visualise \code{outbreaker_chains} objects.
 }
 \author{
 Thibaut Jombart (\email{thibautjombart@gmail.com}).

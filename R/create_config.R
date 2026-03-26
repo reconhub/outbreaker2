@@ -348,11 +348,6 @@ create_config <- function(..., data = NULL) {
   }
 
   ## check init_kappa
-  if (!is.null(config$init_alpha)) {
-    are_not_imports <- !is.na(config$init_alpha)
-  } else {
-    are_not_imports <- TRUE
-  }
   if (!is.numeric(config$init_kappa)) {
     stop("init_kappa is not a numeric value")
   }
@@ -407,7 +402,7 @@ create_config <- function(..., data = NULL) {
   if (n_both != 0 && !length(config$init_eps) %in% c(1, n_both)) {
     stop(sprintf("init_eps must be of length 1 or %d", n_both))
   }
-  if (n_both != 0 && length(config$init_eps) == 1 & n_both > 1) {
+  if (n_both != 0 && length(config$init_eps) == 1 && n_both > 1) {
     config$init_eps <- rep(config$init_eps[1], n_both)
   }
 
@@ -432,7 +427,7 @@ create_config <- function(..., data = NULL) {
   }
   if (
     length(data$ctd_matrix) != 0 &&
-      length(config$init_eta) == 1 &
+      length(config$init_eta) == 1 &&
       length(data$ctd_matrix) > 1
   ) {
     config$init_eta <- rep(config$init_eta[1], length(data$ctd_matrix))
@@ -463,7 +458,7 @@ create_config <- function(..., data = NULL) {
   }
   if (
     length(data$ctd_matrix) != 0 &&
-      length(config$init_lambda) == 1 &
+      length(config$init_lambda) == 1 &&
       length(data$ctd_matrix) > 1
   ) {
     config$init_lambda <- rep(config$init_lambda[1], length(data$ctd_matrix))
@@ -490,7 +485,7 @@ create_config <- function(..., data = NULL) {
   }
   if (
     n_timed != 0 &&
-      length(config$init_tau) == 1 &
+      length(config$init_tau) == 1 &&
       n_timed > 1
   ) {
     config$init_tau <- rep(config$init_tau[1], n_timed)
@@ -571,7 +566,7 @@ create_config <- function(..., data = NULL) {
   if (n_both != 0 && !length(config$move_eps) %in% c(1, n_both)) {
     stop(sprintf("move_eps must be of length 1 or %d", n_both))
   }
-  if (n_both != 0 && length(config$move_eps) == 1 & n_both > 1) {
+  if (n_both != 0 && length(config$move_eps) == 1 && n_both > 1) {
     config$move_eps <- rep(config$move_eps[1], n_both)
   }
 
@@ -585,7 +580,7 @@ create_config <- function(..., data = NULL) {
   if (n_timed != 0 && !length(config$move_tau) %in% c(1, n_timed)) {
     stop(sprintf("move_tau must be of length 1 or %d", n_timed))
   }
-  if (n_timed != 0 && length(config$move_tau) == 1 & n_timed > 1) {
+  if (n_timed != 0 && length(config$move_tau) == 1 && n_timed > 1) {
     config$move_tau <- rep(config$move_tau[1], n_timed)
   }
 
@@ -599,7 +594,7 @@ create_config <- function(..., data = NULL) {
   if (n_untimed != 0 && !length(config$move_eta) %in% c(1, n_untimed)) {
     stop(sprintf("move_eta must be of length 1 or %d", n_untimed))
   }
-  if (n_untimed != 0 && length(config$move_eta) == 1 & n_untimed > 1) {
+  if (n_untimed != 0 && length(config$move_eta) == 1 && n_untimed > 1) {
     config$move_eta <- rep(config$move_eta[1], n_untimed)
   }
 
@@ -614,7 +609,7 @@ create_config <- function(..., data = NULL) {
   if (n_untimed != 0 && !length(config$move_lambda) %in% c(1, n_untimed)) {
     stop(sprintf("move_lambda must be of length 1 or %d", n_untimed))
   }
-  if (n_untimed != 0 && length(config$move_lambda) == 1 & n_untimed > 1) {
+  if (n_untimed != 0 && length(config$move_lambda) == 1 && n_untimed > 1) {
     config$move_lambda <- rep(config$move_lambda[1], n_untimed)
   }
 
@@ -699,7 +694,7 @@ create_config <- function(..., data = NULL) {
   if (n_both != 0 && !length(config$sd_eps) %in% c(1, n_both)) {
     stop(sprintf("sd_eps must be of length 1 or %d", n_both))
   }
-  if (n_both != 0 && length(config$sd_eps) == 1 & n_both > 1) {
+  if (n_both != 0 && length(config$sd_eps) == 1 && n_both > 1) {
     config$sd_eps <- rep(config$sd_eps[1], n_both)
   }
 
@@ -716,7 +711,7 @@ create_config <- function(..., data = NULL) {
   if (n_timed != 0 && !length(config$sd_tau) %in% c(1, n_timed)) {
     stop(sprintf("sd_tau must be of length 1 or %d", n_timed))
   }
-  if (n_timed != 0 && length(config$sd_tau) == 1 & n_timed > 1) {
+  if (n_timed != 0 && length(config$sd_tau) == 1 && n_timed > 1) {
     config$sd_tau <- rep(config$sd_tau[1], n_timed)
   }
 
@@ -733,7 +728,7 @@ create_config <- function(..., data = NULL) {
   if (n_untimed != 0 && !length(config$sd_eta) %in% c(1, n_untimed)) {
     stop(sprintf("sd_eta must be of length 1 or %d", n_untimed))
   }
-  if (n_untimed != 0 && length(config$sd_eta) == 1 & n_untimed > 1) {
+  if (n_untimed != 0 && length(config$sd_eta) == 1 && n_untimed > 1) {
     config$sd_eta <- rep(config$sd_eta[1], n_untimed)
   }
 
@@ -751,7 +746,7 @@ create_config <- function(..., data = NULL) {
   if (n_untimed != 0 && !length(config$sd_lambda) %in% c(1, n_untimed)) {
     stop(sprintf("sd_lambda must be of length 1 or %d", n_untimed))
   }
-  if (n_untimed != 0 && length(config$sd_lambda) == 1 & n_untimed > 1) {
+  if (n_untimed != 0 && length(config$sd_lambda) == 1 && n_untimed > 1) {
     config$sd_lambda <- rep(config$sd_lambda[1], n_untimed)
   }
 
@@ -920,7 +915,7 @@ create_config <- function(..., data = NULL) {
   }
 
   ## check prior value for eps
-  if (is.numeric(config$prior_eps) | is.data.frame(config$prior_eps)) {
+  if (is.numeric(config$prior_eps) || is.data.frame(config$prior_eps)) {
     config$prior_eps <- matrix(config$prior_eps, ncol = 2)
   }
   if (any(!apply(config$prior_eps, 2, is.numeric))) {
@@ -944,7 +939,7 @@ create_config <- function(..., data = NULL) {
   }
 
   ## check prior value for tau
-  if (is.numeric(config$prior_tau) | is.data.frame(config$prior_tau)) {
+  if (is.numeric(config$prior_tau) || is.data.frame(config$prior_tau)) {
     config$prior_tau <- matrix(config$prior_tau, ncol = 2)
   }
   if (any(!apply(config$prior_tau, 2, is.numeric))) {
@@ -967,7 +962,7 @@ create_config <- function(..., data = NULL) {
   }
 
   ## check prior value for eta
-  if (is.numeric(config$prior_eta) | is.data.frame(config$prior_eta)) {
+  if (is.numeric(config$prior_eta) || is.data.frame(config$prior_eta)) {
     config$prior_eta <- matrix(config$prior_eta, ncol = 2)
   }
   if (any(!apply(config$prior_eta, 2, is.numeric))) {
@@ -990,7 +985,7 @@ create_config <- function(..., data = NULL) {
   }
 
   ## check prior value for lambda
-  if (is.numeric(config$prior_lambda) | is.data.frame(config$prior_lambda)) {
+  if (is.numeric(config$prior_lambda) || is.data.frame(config$prior_lambda)) {
     config$prior_lambda <- matrix(config$prior_lambda, ncol = 2)
   }
   if (any(!apply(config$prior_lambda, 2, is.numeric))) {
@@ -1138,7 +1133,7 @@ create_config <- function(..., data = NULL) {
       config$init_t_onw <- as.integer(round(init_t_onw))
     }
 
-    if (!is.null(config$init_t_onw) & !is.null(data$ctd_timed)) {
+    if (!is.null(config$init_t_onw) && !is.null(data$ctd_timed)) {
       ## check initial t_onw
       unobs <- which(config$init_kappa > 1)
       if (any(config$init_t_onw[unobs] >= data$dates[unobs], na.rm = TRUE)) {

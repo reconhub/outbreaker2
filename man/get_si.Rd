@@ -48,7 +48,8 @@ dat <- outbreaker_data(
   dna = fake_outbreak$dna,
   w_dens = fake_outbreak$w
 )
-out <- outbreaker(data = dat,
+out <- outbreaker(
+  data = dat,
   config = create_config(n_iter = 500, sample_every = 50)
 )
 get_si(out, dat)

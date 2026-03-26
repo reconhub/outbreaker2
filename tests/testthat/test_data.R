@@ -21,28 +21,26 @@ test_that("test: data are processed fine", {
   ## f_dens is stored as a matrix (e.g. one column "default"); values match w
   expect_equal(out$w_dens, as.vector(out$f_dens))
   expect_equal(out$log_w_dens[1, ], as.vector(out$log_f_dens))
-  expect_error(outbreaker_data(dates = 1, w_dens = c(0,-1)),
-               "w_dens has negative entries")
+  expect_error(
+    outbreaker_data(dates = 1, w_dens = c(0, -1)),
+    "w_dens has negative entries"
+  )
 
-  expect_error(outbreaker_data(dates = 1, w_dens = c(0,1), f_dens = c(0,-1)),
-               "f_dens has negative entries")
+  expect_error(
+    outbreaker_data(dates = 1, w_dens = c(0, 1), f_dens = c(0, -1)),
+    "f_dens has negative entries"
+  )
 
   wrong_lab_dna <- x$dna
   rownames(wrong_lab_dna) <- paste0("host_", seq_len(nrow(wrong_lab_dna)))
-  expect_error(outbreaker_data(dates = x$onset, dna = wrong_lab_dna, w_dens = x$w),
-               "DNA sequence labels don't match case ids")
-
-
+  expect_error(
+    outbreaker_data(dates = x$onset, dna = wrong_lab_dna, w_dens = x$w),
+    "DNA sequence labels don't match case ids"
+  )
 })
 
 
-
-
-
-
-
 test_that("outbreaker_data accepts epicontacts and case labelling", {
-
   ## skip on CRAN
   skip_on_cran()
 
@@ -53,26 +51,33 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
   ## get data
   x <- fake_outbreak
 
-  ids_char <- replicate(length(fake_outbreak$sample),
-                        paste(sample(letters, 5, TRUE), collapse = ""))
+  ids_char <- replicate(
+    length(fake_outbreak$sample),
+    paste(sample(letters, 5, TRUE), collapse = "")
+  )
 
   ids_num <- sample.int(1000, length(fake_outbreak$sample), FALSE)
 
   ## check for character and numeric ids
-  for(ids in list(ids_char, ids_num)) {
-
+  for (ids in list(ids_char, ids_num)) {
     ## make epi_contacts object
-    tTree <- data.frame(i = ids[x$ances],
-                        j = ids[1:length(x$ances)])
+    tTree <- data.frame(
+      i = ids[x$ances],
+      j = ids[seq_along(x$ances)]
+    )
     ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
-    epi_c <- suppressWarnings(epicontacts::make_epicontacts(linelist = data.frame(id = ids),
-                                                            contacts = ctd,
-                                                            directed = TRUE))
+    epi_c <- suppressWarnings(epicontacts::make_epicontacts(
+      linelist = data.frame(id = ids),
+      contacts = ctd,
+      directed = TRUE
+    ))
 
-    data <- outbreaker_data(dates = x$onset,
-                            dna = x$dna,
-                            ctd = epi_c,
-                            w_dens = x$w)
+    data <- outbreaker_data(
+      dates = x$onset,
+      dna = x$dna,
+      ctd = epi_c,
+      w_dens = x$w
+    )
 
     ## test recursiveness
     data <- outbreaker_data(data = data)
@@ -112,8 +117,10 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
     data <- outbreaker_data(data = data)
 
     ## check direcionality working
-    config <- create_config(ctd_directed = TRUE,
-                            data = data)
+    config <- create_config(
+      ctd_directed = TRUE,
+      data = data
+    )
 
     ## check contact numbers are being updated
     data <- add_convolutions(data, config)
@@ -155,7 +162,7 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
 
     ## identify non-matching labels
     wrong_dna <- x$dna
-    rownames(wrong_dna) <- 1:length(x$onset)
+    rownames(wrong_dna) <- seq_along(x$onset)
 
     expect_error(
       data <- outbreaker_data(
@@ -168,10 +175,5 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
       ),
       "DNA sequence labels don't match case ids"
     )
-
   }
-
 })
-
-
-

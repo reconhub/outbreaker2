@@ -47,17 +47,20 @@ dat <- fake_outbreak
 
 \dontrun{
 ## run outbreaker
-out <- outbreaker(data = list(dna = dat$dna, dates = dat$onset, w_dens = dat$w),
-config = list(n_iter = 2e4, sample_every = 200))
+out <- outbreaker(
+  data = list(dna = dat$dna, dates = dat$onset, w_dens = dat$w),
+  config = list(n_iter = 2e4, sample_every = 200)
+)
 plot(out)
 as.data.frame(out)
 
 ## run outbreaker, no DNA sequences
-out2 <- outbreaker(data = list(dates = dat$onset, w_dens = w),
-config = list(n_iter = 2e4, sample_every = 200))
+out2 <- outbreaker(
+  data = list(dates = dat$onset, w_dens = w),
+  config = list(n_iter = 2e4, sample_every = 200)
+)
 plot(out2)
 as.data.frame(out2)
-
 }
 }
 \references{

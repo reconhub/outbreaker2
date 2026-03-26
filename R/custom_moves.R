@@ -1,5 +1,3 @@
-
-
 #' Customise samplers for outbreaker
 #'
 #' This function is used to specify customised movement functions
@@ -65,8 +63,9 @@
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
-#' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-movements}{customization vignette} for detailed examples on how to customise movement functions.
-#' 
+#' @seealso For examples on customising movements, see
+#'   \url{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-movements}.
+#'
 #' @export
 #'
 #' @param ... A list or a series of named, comma-separated functions
@@ -76,76 +75,76 @@
 #'     class \code{outbreaker_moves}.
 
 custom_moves <- function(...) {
+  move_functions <- list(...)
 
-    move_functions <- list(...)
+  if (length(move_functions) == 1L && is.list(move_functions[[1]])) {
+    move_functions <- move_functions[[1]]
+  }
 
-    if (length(move_functions) == 1L && is.list(move_functions[[1]])) {
-        move_functions <- move_functions[[1]]
+
+  defaults <- list(
+    mu = cpp_move_mu,
+    pi = cpp_move_pi,
+    tau = cpp_move_tau,
+    eps = cpp_move_eps,
+    eta = cpp_move_eta,
+    lambda = cpp_move_lambda,
+    alpha = cpp_move_alpha,
+    joint = cpp_move_joint,
+    model = cpp_move_model,
+    swap_cases = cpp_move_swap_cases,
+    t_inf = cpp_move_t_inf,
+    kappa = cpp_move_kappa
+  )
+
+
+  moves <- modify_defaults(defaults, move_functions, FALSE)
+  moves_names <- names(moves)
+
+
+  ## check all moves are functions
+
+  function_or_null <- function(x) {
+    is.null(x) || is.function(x)
+  }
+
+  is_ok <- vapply(moves, function_or_null, logical(1))
+
+  if (!all(is_ok)) {
+    culprits <- moves_names[!is_ok]
+    msg <- paste0(
+      "The following moves are not functions: ",
+      paste(culprits, collapse = ", ")
+    )
+    stop(msg)
+  }
+
+
+  ## check they all have a 'param' argument
+
+  param_is_arg <- function(x) {
+    if (is.function(x)) {
+      return("param" %in% methods::formalArgs(x))
     }
 
+    return(TRUE)
+  }
 
-    defaults <- list(mu = cpp_move_mu,
-                     pi = cpp_move_pi,
-                     tau = cpp_move_tau,
-                     eps = cpp_move_eps,
-                     eta = cpp_move_eta,
-                     lambda = cpp_move_lambda,
-                     alpha = cpp_move_alpha,
-                     joint = cpp_move_joint,
-                     model = cpp_move_model,
-                     swap_cases = cpp_move_swap_cases,
-                     t_inf = cpp_move_t_inf,
-                     kappa = cpp_move_kappa
-                     )
+  param_ok <- vapply(moves, param_is_arg, logical(1))
 
-
-    moves <-  modify_defaults(defaults, move_functions, FALSE)
-    moves_names <- names(moves)
+  if (!all(param_ok)) {
+    culprits <- moves_names[!param_ok]
+    msg <- paste0(
+      "The following moves dont' have a 'param' argument: ",
+      paste(culprits, collapse = ", ")
+    )
+    stop(msg)
+  }
 
 
-
-    ## check all moves are functions
-
-    function_or_null <- function(x) {
-        is.null(x) || is.function(x)
-    }
-
-    is_ok <- vapply(moves, function_or_null, logical(1))
-
-    if (!all(is_ok)) {
-        culprits <- moves_names[!is_ok]
-        msg <- paste0("The following moves are not functions: ",
-                      paste(culprits, collapse = ", "))
-        stop(msg)
-    }
-
-
-    ## check they all have a 'param' argument
-
-    param_is_arg <- function(x) {
-        if(is.function(x)) {
-            return ("param" %in% methods::formalArgs(x))
-        }
-
-        return(TRUE)
-    }
-
-    param_ok <- vapply(moves, param_is_arg, logical(1))
-
-    if (!all(param_ok)) {
-        culprits <- moves_names[!param_ok]
-        msg <- paste0("The following moves dont' have a 'param' argument: ",
-                      paste(culprits, collapse = ", "))
-        stop(msg)
-    }
-
-
-    class(moves) <- c("outbreaker_moves", "list")
-    return(moves)
+  class(moves) <- c("outbreaker_moves", "list")
+  return(moves)
 }
-
-
-
 
 
 #' @rdname custom_moves
@@ -158,29 +157,28 @@ custom_moves <- function(...) {
 #'
 
 print.outbreaker_moves <- function(x, ...) {
-    cat("\n\n ///// outbreaker movement functions ///\n")
-    cat("\nclass:", class(x))
-    cat("\nnumber of items:", length(x))
+  cat("\n\n ///// outbreaker movement functions ///\n")
+  cat("\nclass:", class(x))
+  cat("\nnumber of items:", length(x))
 
-    cat("\n\n/// movement functions //\n")
-    print(x[])
-
-
-    ##  is_custom <- !vapply(x, is.null, FALSE)
-
-    ##  names_default <- names(x)[!is_custom]
-    ##  if (length(names_default) > 0) {
-    ##      cat("/// custom priors set to NULL (default used) //\n")
-    ##      print(x[!is_custom])
-    ## }
+  cat("\n\n/// movement functions //\n")
+  print(x[])
 
 
-    ##  names_custom <- names(x)[is_custom]
-    ##  if (length(names_custom) > 0) {
-    ##      cat("/// custom priors //\n")
-    ##      print(x[is_custom])
-    ##  }
+  ##  is_custom <- !vapply(x, is.null, FALSE)
 
-    return(invisible(NULL))
+  ##  names_default <- names(x)[!is_custom]
+  ##  if (length(names_default) > 0) {
+  ##      cat("/// custom priors set to NULL (default used) //\n")
+  ##      print(x[!is_custom])
+  ## }
+
+
+  ##  names_custom <- names(x)[is_custom]
+  ##  if (length(names_custom) > 0) {
+  ##      cat("/// custom priors //\n")
+  ##      print(x[is_custom])
+  ##  }
+
+  return(invisible(NULL))
 }
-

@@ -36,7 +36,7 @@ outbreaker_mcmc_shape <- function(param, data, config = NULL) {
     if (ncol(eps) > 1) {
       colnames(eps) <- paste0("eps_", seq_len(ncol(eps)))
     } else {
-      colnames(eps) <- 'eps'
+      colnames(eps) <- "eps"
     }
 
     if (!is.null(data$ctd)) {
@@ -50,7 +50,7 @@ outbreaker_mcmc_shape <- function(param, data, config = NULL) {
       if (ncol(eta) > 1) {
         colnames(eta) <- paste0("eta_", seq_len(ncol(eta)))
       } else {
-        colnames(eta) <- 'eta'
+        colnames(eta) <- "eta"
       }
 
       ## unfold lambdailon estimates ##
@@ -63,7 +63,7 @@ outbreaker_mcmc_shape <- function(param, data, config = NULL) {
       if (ncol(lambda) > 1) {
         colnames(lambda) <- paste0("lambda_", seq_len(ncol(lambda)))
       } else {
-        colnames(lambda) <- 'lambda'
+        colnames(lambda) <- "lambda"
       }
     }
   }

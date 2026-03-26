@@ -1,4 +1,3 @@
-
 #' Customise priors for outbreaker
 #'
 #' Priors can be specified in several ways in outbreaker2 (see details and
@@ -66,8 +65,9 @@
 #'     set to \code{NULL} will be ignored and default functions will be used
 #'     instead.
 #'
-#' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors}{customization vignette} for detailed examples on how to customize priors.
-#' 
+#' @seealso For examples on customizing priors, see
+#'   \url{http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html#customising-priors}.
+#'
 #' @examples
 #'
 #' ## BASIC CONFIGURATION
@@ -77,8 +77,10 @@
 #' ## SPECIFYING PRIOR PARAMETERS
 #' ## - this will need to be passed to outbreaker
 #' default_config <- create_config()
-#' new_config <- create_config(prior_mu = 1e-5,
-#'                         prior_pi = c(2, 1))
+#' new_config <- create_config(
+#'   prior_mu = 1e-5,
+#'   prior_pi = c(2, 1)
+#' )
 #'
 #' ## - to check the prior manually, default settings:
 #' param <- list(mu = 0.001, pi = 0.9)
@@ -96,101 +98,99 @@
 #' ## SPECIFYING A PRIOR FUNCTION
 #'
 #' ## flat prior for pi between 0.5 and 1
-#' f <- function(x) {ifelse(x$pi > 0.5, log(2), log(0))}
+#' f <- function(x) {
+#'   ifelse(x$pi > 0.5, log(2), log(0))
+#' }
 #' priors <- custom_priors(pi = f)
 #' priors # this should be passed to outbreaker
 #'
 #' ## test the prior manually
-#' priors$pi(list(pi=1))
-#' priors$pi(list(pi=.6))
-#' priors$pi(list(pi=.2))
-#' priors$pi(list(pi=.49))
+#' priors$pi(list(pi = 1))
+#' priors$pi(list(pi = .6))
+#' priors$pi(list(pi = .2))
+#' priors$pi(list(pi = .49))
 #'
-
 custom_priors <- function(...) {
+  ## This function returns a list of functions with the class
+  ## 'outbreaker_priors'. It is used to process custom priors passed by the
+  ## user. Each item of the list will be a prior function. If not provided,
+  ## the default value is 'NULL', in which case c++ priors will have the
+  ## default behaviour. This function tests some basic properties of the prior
+  ## functions:
 
-    ## This function returns a list of functions with the class
-    ## 'outbreaker_priors'. It is used to process custom priors passed by the
-    ## user. Each item of the list will be a prior function. If not provided,
-    ## the default value is 'NULL', in which case c++ priors will have the
-    ## default behaviour. This function tests some basic properties of the prior
-    ## functions:
+  ## 1) that if not NULL, the prior is a function
 
-    ## 1) that if not NULL, the prior is a function
-
-    ## 2) that if a function, it has a single argument called 'param'
-
+  ## 2) that if a function, it has a single argument called 'param'
 
 
-    ## Get user-specified prior functions
+  ## Get user-specified prior functions
 
-    priors <- list(...)
-    if (length(priors) == 1L && is.list(priors[[1]])) {
-        priors <- priors[[1]]
+  priors <- list(...)
+  if (length(priors) == 1L && is.list(priors[[1]])) {
+    priors <- priors[[1]]
+  }
+
+
+  ## Use user-provided priors where provided, default otherwise. The default
+  ## for a prior is NULL, in which case the movement functions in C++ will use
+  ## C++ versions.
+
+  defaults <- list(
+    mu = NULL, # mutation rate
+    pi = NULL, # reporting probability
+    tau = NULL,
+    eps = NULL, # contact reporting coverage
+    eta = NULL, # contact sensitivity
+    lambda = NULL # non-infectious contact rate
+  )
+
+  priors <- modify_defaults(defaults, priors, FALSE)
+  priors_names <- names(priors)
+
+
+  ## check all priors are functions
+
+  function_or_null <- function(x) {
+    is.null(x) || is.function(x)
+  }
+
+  is_ok <- vapply(priors, function_or_null, logical(1))
+
+  if (!all(is_ok)) {
+    culprits <- priors_names[!is_ok]
+    msg <- paste0(
+      "The following priors are not functions: ",
+      paste(culprits, collapse = ", ")
+    )
+    stop(msg)
+  }
+
+
+  ## check they all have a single argument
+
+  with_one_arg <- function(x) {
+    if (is.function(x)) {
+      return(length(methods::formalArgs(x)) == 1L)
     }
 
+    return(TRUE)
+  }
 
-    ## Use user-provided priors where provided, default otherwise. The default
-    ## for a prior is NULL, in which case the movement functions in C++ will use
-    ## C++ versions.
+  one_arg <- vapply(priors, with_one_arg, logical(1))
 
-    defaults <- list(mu = NULL, # mutation rate
-                     pi = NULL, # reporting probability
-                     tau = NULL,
-                     eps = NULL, # contact reporting coverage
-                     eta = NULL, # contact sensitivity
-                     lambda = NULL # non-infectious contact rate
-                     )
-
-    priors <- modify_defaults(defaults, priors, FALSE)
-    priors_names <- names(priors)
+  if (!all(one_arg)) {
+    culprits <- priors_names[!one_arg]
+    msg <- paste0(
+      "The following priors don't have a single argument: ",
+      paste(culprits, collapse = ", ")
+    )
+    stop(msg)
+  }
 
 
-
-    ## check all priors are functions
-
-    function_or_null <- function(x) {
-        is.null(x) || is.function(x)
-    }
-
-    is_ok <- vapply(priors, function_or_null, logical(1))
-
-    if (!all(is_ok)) {
-        culprits <- priors_names[!is_ok]
-        msg <- paste0("The following priors are not functions: ",
-                      paste(culprits, collapse = ", "))
-        stop(msg)
-    }
-
-
-    ## check they all have a single argument
-
-    with_one_arg <- function(x) {
-        if(is.function(x)) {
-            return (length(methods::formalArgs(x)) == 1L)
-        }
-
-        return(TRUE)
-    }
-
-    one_arg <- vapply(priors, with_one_arg, logical(1))
-
-    if (!all(one_arg)) {
-        culprits <- priors_names[!one_arg]
-        msg <- paste0("The following priors don't have a single argument: ",
-                      paste(culprits, collapse = ", "))
-        stop(msg)
-    }
-
-
-    class(priors) <- c("custom_priors", "list")
-    return(priors)
+  class(priors) <- c("custom_priors", "list")
+  return(priors)
 }
-
-
-
-
-
 
 
 #' @rdname custom_priors
@@ -203,27 +203,25 @@ custom_priors <- function(...) {
 #'
 
 print.custom_priors <- function(x, ...) {
-    cat("\n\n ///// outbreaker custom priors ///\n")
-    cat("\nclass:", class(x))
-    cat("\nnumber of items:", length(x), "\n\n")
+  cat("\n\n ///// outbreaker custom priors ///\n")
+  cat("\nclass:", class(x))
+  cat("\nnumber of items:", length(x), "\n\n")
 
-    is_custom <- !vapply(x, is.null, FALSE)
-
-
-    names_default <- names(x)[!is_custom]
-    if (length(names_default) > 0) {
-        cat("/// custom priors set to NULL (default used) //\n")
-        print(x[!is_custom])
-   }
+  is_custom <- !vapply(x, is.null, FALSE)
 
 
-    names_custom <- names(x)[is_custom]
-    if (length(names_custom) > 0) {
-        cat("/// custom priors //\n")
-        print(x[is_custom])
-    }
+  names_default <- names(x)[!is_custom]
+  if (length(names_default) > 0) {
+    cat("/// custom priors set to NULL (default used) //\n")
+    print(x[!is_custom])
+  }
 
-    return(invisible(NULL))
 
+  names_custom <- names(x)[is_custom]
+  if (length(names_custom) > 0) {
+    cat("/// custom priors //\n")
+    print(x[is_custom])
+  }
+
+  return(invisible(NULL))
 }
-

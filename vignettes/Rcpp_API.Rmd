@@ -21,7 +21,7 @@ likelihoods and movements are not visible to the user, as they are not exported
 by the package. However, advanced users can access these functions using `get_cpp_api()`, which returns an environment with all relevant functions:
 
 ```{r}
-library(outbreaker2) 
+library(outbreaker2)
 
 ## get all functions in an environment
 x <- get_cpp_api()
@@ -32,7 +32,6 @@ ls(x)
 
 ## all functions are Rcpp bindings to a C++ function
 x$cpp_ll_all
-
 ```
 
 
@@ -41,10 +40,8 @@ x$cpp_ll_all
 
 These functions take the following arguments:
 ```{r, arguments}
-
 list_args <- lapply(x, args)[ls(x)]
 list_args
-
 ```
 
 Arguments are detailed in the next section.
@@ -55,11 +52,9 @@ Arguments are detailed in the next section.
 
 Arguments of the Rcpp-bound C++ functions are:
 ```{r}
-
 list_formals <- lapply(x, formals)
 args <- sort(unique(unlist(lapply(list_formals, names))))
 args
-
 ```
 
 - **`alpha`**: a vector of integers of length 'N' (number of cases), indicating
@@ -77,10 +72,8 @@ args
 `custom_function`, named according to the priors; currently available names are:
 
 ```{r, echo = FALSE} 
-
 temp <- sub("cpp_prior_", "", ls(x, pattern = "cpp_prior.*"))
-setdiff(temp, "all") 
-
+setdiff(temp, "all")
 ```
 
 - **`custom_ll`**: a R function for a custom likelihood, taking two arguments:
@@ -97,7 +90,7 @@ setdiff(temp, "all")
 
 ```{r, echo = FALSE}
 temp <- sub("cpp_ll_", "", ls(x, pattern = "cpp_ll.*"))
-setdiff(temp, c("timing", "all"))	    
+setdiff(temp, c("timing", "all"))
 ```
 
 - **`param`**: a list containing parameters and augmented data with the class

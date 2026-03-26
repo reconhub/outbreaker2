@@ -34,7 +34,8 @@
 #'   dna = fake_outbreak$dna,
 #'   w_dens = fake_outbreak$w
 #' )
-#' out <- outbreaker(data = dat,
+#' out <- outbreaker(
+#'   data = dat,
 #'   config = create_config(n_iter = 500, sample_every = 50)
 #' )
 #' get_si(out, dat)
@@ -53,7 +54,6 @@ get_si <- function(
     upr = function(x) quantile(x, 0.975, na.rm = TRUE)
   )
 ) {
-
   if (!inherits(out, "outbreaker_chains")) {
     stop("'out' must be an 'outbreaker_chains' object.")
   }
@@ -82,8 +82,9 @@ get_si <- function(
 
   all_si <- unlist(si_list)
   x_range <- seq(floor(min(all_si, na.rm = TRUE)),
-                 ceiling(max(all_si, na.rm = TRUE)),
-                 by = 1)
+    ceiling(max(all_si, na.rm = TRUE)),
+    by = 1
+  )
   steps <- out$step
 
   si_pmf <- do.call(

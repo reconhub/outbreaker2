@@ -1,12 +1,9 @@
-
-
 ## This function creates a named list of movement functions taking a single
 ## argument 'param'; all the rest (e.g. likelihood, prior, posterior functions,
 ## config, etc) is enclosed in the functions.
 
 bind_moves <- function(moves = custom_moves(), config, data,
                        likelihoods, priors) {
-
   out <- custom_moves(moves)
 
 
@@ -22,11 +19,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$mu <- NULL
   } else {
     out$mu <- bind_to_function(out$mu,
-                               data = data,
-                               config = config,
-                               custom_ll = likelihoods$genetic,
-                               custom_prior = priors$mu
-                               )
+      data = data,
+      config = config,
+      custom_ll = likelihoods$genetic,
+      custom_prior = priors$mu
+    )
   }
 
 
@@ -35,11 +32,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$pi <- NULL
   } else {
     out$pi <- bind_to_function(out$pi,
-                               data = data,
-                               config = config,
-                               custom_ll = likelihoods$reporting,
-                               custom_prior = priors$pi
-                               )
+      data = data,
+      config = config,
+      custom_ll = likelihoods$reporting,
+      custom_prior = priors$pi
+    )
   }
 
 
@@ -48,11 +45,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$tau <- NULL
   } else {
     out$tau <- bind_to_function(out$tau,
-                                data = data,
-                                config = config,
-                                custom_ll = likelihoods$timeline,
-                                custom_prior = priors$tau
-                                )
+      data = data,
+      config = config,
+      custom_ll = likelihoods$timeline,
+      custom_prior = priors$tau
+    )
   }
 
 
@@ -61,11 +58,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$eps <- NULL
   } else {
     out$eps <- bind_to_function(out$eps,
-                                data = data,
-                                config = config,
-                                list_custom_ll = likelihoods,
-                                custom_prior = priors$eps
-                                )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods,
+      custom_prior = priors$eps
+    )
   }
 
 
@@ -74,11 +71,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$eta <- NULL
   } else {
     out$eta <- bind_to_function(out$eta,
-                                data = data,
-                                config = config,
-                                custom_ll = likelihoods$contact,
-                                custom_prior = priors$eta
-                                )
+      data = data,
+      config = config,
+      custom_ll = likelihoods$contact,
+      custom_prior = priors$eta
+    )
   }
 
   ## remove move$lambda if disabled
@@ -86,11 +83,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$lambda <- NULL
   } else {
     out$lambda <- bind_to_function(out$lambda,
-                                   data = data,
-                                   config = config,
-                                   custom_ll = likelihoods$contact,
-                                   custom_prior = priors$lambda
-                                   )
+      data = data,
+      config = config,
+      custom_ll = likelihoods$contact,
+      custom_prior = priors$lambda
+    )
   }
 
 
@@ -99,10 +96,10 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$alpha <- NULL
   } else {
     out$alpha <- bind_to_function(out$alpha,
-                                  data = data,
-                                  config = config,
-                                  list_custom_ll = likelihoods
-                                  )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods
+    )
   }
 
 
@@ -111,12 +108,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$joint <- NULL
   } else {
     out$joint <- bind_to_function(out$joint,
-                                  data = data,
-                                  config = config,
-                                  list_custom_ll = likelihoods
-                                  )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods
+    )
   }
-
 
 
   ## remove move$model if no ancestry can be moved
@@ -124,12 +120,11 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$model <- NULL
   } else {
     out$model <- bind_to_function(out$model,
-                                  data = data,
-                                  config = config,
-                                  list_custom_ll = likelihoods
-                                  )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods
+    )
   }
-
 
 
   ## remove move$t_inf if disabled
@@ -137,10 +132,10 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$t_inf <- NULL
   } else {
     out$t_inf <- bind_to_function(out$t_inf,
-                                  data = data,
-                                  config = config,
-                                  list_custom_ll = likelihoods
-                                  )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods
+    )
   }
 
   ## remove swap if disabled
@@ -148,10 +143,10 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$swap_cases <- NULL
   } else {
     out$swap_cases <- bind_to_function(out$swap_cases,
-                                       data = data,
-                                       config = config,
-                                       list_custom_ll = likelihoods
-                                       )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods
+    )
   }
 
 
@@ -160,10 +155,10 @@ bind_moves <- function(moves = custom_moves(), config, data,
     out$kappa <- NULL
   } else {
     out$kappa <- bind_to_function(out$kappa,
-                                  data = data,
-                                  config = config,
-                                  list_custom_ll = likelihoods
-                                  )
+      data = data,
+      config = config,
+      list_custom_ll = likelihoods
+    )
   }
 
 
@@ -174,17 +169,15 @@ bind_moves <- function(moves = custom_moves(), config, data,
     for (i in seq_along(out)) {
       if (new_moves[i]) {
         out[[i]] <- bind_to_function(out[[i]],
-                                     data = data,
-                                     config = config,
-                                     likelihoods = likelihoods,
-                                     priors = priors
-                                     )
+          data = data,
+          config = config,
+          likelihoods = likelihoods,
+          priors = priors
+        )
       }
     }
   }
 
   ## the output is a list of movement functions with enclosed objects ##
   return(out)
-
 }
-

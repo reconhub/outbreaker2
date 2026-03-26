@@ -1,4 +1,3 @@
-
 ## ON THE PURPOSE OF THESE FUNCTIONS
 
 ## These functions are no longer used in outbreaker2, but were part of the
@@ -6,20 +5,12 @@
 ## that Rcpp versions give identical results.
 
 
-
-
-
-
 ## We use an exponential prior for the mutation rate; the prior rate, which does
 ## not change in the MCMC, is enclosed in the returned function.
 
 .prior_mu <- function(param, rate) {
-    stats::dexp(param$mu, rate, log = TRUE)
+  stats::dexp(param$mu, rate, log = TRUE)
 }
-
-
-
-
 
 
 ## We use a beta prior for the reporting probability (which contrains it to lie
@@ -27,7 +18,7 @@
 ## are enclosed in the returned function.
 
 .prior_pi <- function(param, shape1, shape2) {
-    stats::dbeta(param$pi, shape1, shape2, log = TRUE)
+  stats::dbeta(param$pi, shape1, shape2, log = TRUE)
 }
 
 
@@ -36,9 +27,8 @@
 ## are enclosed in the returned function.
 
 .prior_eps <- function(param, shape1, shape2) {
-    stats::dbeta(param$eps, shape1, shape2, log = TRUE)
+  stats::dbeta(param$eps, shape1, shape2, log = TRUE)
 }
-
 
 
 ## We use a beta prior for the non-infectious contact rate (which contrains it
@@ -46,5 +36,5 @@
 ## MCMC, are enclosed in the returned function.
 
 .prior_lambda <- function(param, shape1, shape2) {
-    stats::dbeta(param$lambda, shape1, shape2, log = TRUE)
+  stats::dbeta(param$lambda, shape1, shape2, log = TRUE)
 }

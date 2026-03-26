@@ -1,4 +1,3 @@
-
 #' Access internal C++ routines used in outbreaker2
 #'
 #' Returns an environment containing C++ functions (exposed via Rcpp) used for
@@ -33,7 +32,7 @@
 #' \item 'lambda': (parameter) non-infectious contact rate.
 #'
 #' \item 'eps': (parameter) contact reporting coverage.
-#' 
+#'
 #' \item 'alpha': (augmented data) ancestries of the cases.
 #'
 #' \item 'kappa': (augmented data) generation between cases on transmission
@@ -48,12 +47,12 @@
 #' reporting / isolation.
 #'
 #' \item 'timing': (likelihood component) sum of the two timing components.
-#' 
+#'
 #' \item 'genetic': (likelihood component) genetic diversity accumulated along
 #' transmission chains.
-#' 
+#'
 #' \item 'reporting': (likelihood component) reporting of cases.
-#' 
+#'
 #' \item 'all': (likelihood component) sum of all likelihood components.
 #'
 #' \item 'swap_cases': (type of movement) swap infectors and infectees on a
@@ -64,7 +63,7 @@
 #' For a description of the arguments of these functions, see the Rcpp_API
 #' vignette (\code{vignette("Rcpp_API", package = "outbreaker2")}).
 #'
-#' 
+#'
 #' @examples
 #'
 #' ## get functions in an environment
@@ -80,21 +79,21 @@
 #' config <- create_config()
 #'
 #' api$cpp_prior_mu(list(mu = 0.00123), config)
-#' 
+#'
 #' dexp(0.00123, rate = config$prior_mu, log = TRUE)
 #'
 #' @export
 get_cpp_api <- function() {
-    pkg_env <- asNamespace("outbreaker2")
-    regxp <- "^cpp_(ll|prior|move)"
-    names_cpp_functions <- sort(ls(envir = pkg_env, pattern = regxp))
+  pkg_env <- asNamespace("outbreaker2")
+  regxp <- "^cpp_(ll|prior|move)"
+  names_cpp_functions <- sort(ls(envir = pkg_env, pattern = regxp))
 
-    out_env <- new.env()
-    
-    for (e in names_cpp_functions) {
-        f <- get(e, envir = pkg_env)
-        assign(e, f, envir = out_env)
-    }
+  out_env <- new.env()
 
-    return(out_env)
+  for (e in names_cpp_functions) {
+    f <- get(e, envir = pkg_env)
+    assign(e, f, envir = out_env)
+  }
+
+  return(out_env)
 }

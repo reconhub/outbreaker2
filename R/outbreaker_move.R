@@ -20,7 +20,6 @@
 outbreaker_move <- function(moves, data, param_current,
                             param_store, config,
                             likelihoods, priors) {
-
   # ensure p_wrong is set correctly after initialisation
   if (config$p_wrong == 0) data$p_wrong <- 0
 
@@ -37,10 +36,8 @@ outbreaker_move <- function(moves, data, param_current,
 
   ## RUN MCMC ##
   for (i in seq.int(2, config$n_iter, 1)) {
-
     ## move parameters / augmented data
     for (j in seq_len(J)) {
-
       ## move parameters
       param_current <- moves[[j]](param_current)
 
@@ -50,8 +47,14 @@ outbreaker_move <- function(moves, data, param_current,
         if (!diagnostic$pass) {
           stop(paste0(
             "\n\n PARANOID MODE DETECTED AN ERROR WHILE FINDING IMPORTS:\n",
-            sprintf("at iteration %d, movement %d (%s) with the following diagnostics:\n%s\n",
-                    i, j, names(moves)[j], diagnostic$msg)))
+            sprintf(
+              paste(
+                "at iteration %d, movement %d (%s) with the",
+                "following diagnostics:\n%s\n"
+              ),
+              i, j, names(moves)[j], diagnostic$msg
+            )
+          ))
         }
       }
     }
@@ -61,10 +64,11 @@ outbreaker_move <- function(moves, data, param_current,
       if (config$pb) {
         utils::setTxtProgressBar(pb, i)
       }
-      param_store <- outbreaker_mcmc_store(param_current, param_store, data,
-                                           config, likelihoods, priors, i)
+      param_store <- outbreaker_mcmc_store(
+        param_current, param_store, data,
+        config, likelihoods, priors, i
+      )
     }
-
   } # end of the chain
 
   if (config$pb) {

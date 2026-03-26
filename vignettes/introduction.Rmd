@@ -17,10 +17,10 @@ vignette: >
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>", 
-  fig.width=8, 
-  fig.height=5, 
-  fig.path="figs-introduction/"
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5,
+  fig.path = "figs-introduction/"
 )
 ```
 
@@ -47,13 +47,13 @@ fake_outbreak
 
 Here, we will use the dates of case isolation `$sample`, DNA sequences `$dna`, contact tracing data `$ctd` and the empirical distribution of the generation time `$w`, which can be visualised as:
 ```{r, w}
-
-plot(fake_outbreak$w, type = "h", xlim = c(0, 5), 
-     lwd = 30, col = col, lend = 2, 
-     xlab = "Days after infection", 
-     ylab = "p(new case)", 
-     main = "Generation time distribution")
-
+plot(fake_outbreak$w,
+  type = "h", xlim = c(0, 5),
+  lwd = 30, col = col, lend = 2,
+  xlab = "Days after infection",
+  ylab = "p(new case)",
+  main = "Generation time distribution"
+)
 ```
 
 
@@ -81,7 +81,6 @@ vignette.
 Let us run the analysis with default settings:
 
 ```{r, first_run, cache = TRUE}
-
 dna <- fake_outbreak$dna
 dates <- fake_outbreak$sample
 ctd <- fake_outbreak$ctd
@@ -92,7 +91,6 @@ data <- outbreaker_data(dna = dna, dates = dates, ctd = ctd, w_dens = w)
 set.seed(1)
 
 res <- outbreaker(data = data)
-
 ```
 
 This analysis will take around 40 seconds on a modern computer. Note that
@@ -105,11 +103,9 @@ it requires far less iterations.
 
 Results are stored in a `data.frame` with the special class `outbreaker_chains`:
 ```{r}
-
 class(res)
 dim(res)
 res
-
 ```
 
 Each row of `res` contains a sample from the MCMC. For each, informations about
@@ -121,9 +117,7 @@ case]`, and number of generations between cases and their infector / ancestor by
 `kappa_[index of the case]`:
 
 ```{r}
-
 names(res)
-
 ```
 
 
@@ -140,29 +134,23 @@ basic plot shows the trace of the log-posterior values, which is useful to
 assess mixing:
 
 ```{r, basic_trace}
-
 plot(res)
-
 ```
 
 The second argument of `plot` can be used to visualise traces of any
 other column in `res`:
 
 ```{r, traces}
-
 plot(res, "prior")
 plot(res, "mu")
 plot(res, "t_inf_15")
-
 ```
 
 `burnin` can be used to discard the first iterations prior to mixing:
 
 ```{r, basic_trace_burn}
-
 ## compare this to plot(res)
 plot(res, burnin = 2000)
-
 ```
 
 `type` indicates the type of graphic to plot; roughly:
@@ -182,7 +170,6 @@ plot(res, burnin = 2000)
 Here are a few examples:
 
 ```{r, many_plots}
-
 plot(res, "mu", "hist", burnin = 2000)
 
 plot(res, "mu", "density", burnin = 2000)
@@ -194,7 +181,6 @@ plot(res, type = "t_inf", burnin = 2000)
 plot(res, type = "kappa", burnin = 2000)
 
 plot(res, type = "network", burnin = 2000, min_support = 0.01)
-
 ```
 
 
@@ -208,9 +194,7 @@ infector / ancestor in the posterior samples. The corresponding frequencies are
 reported as 'support'. The most frequent value of kappa is also reported as 'generations':
 
 ```{r, summary}
-
 summary(res)
-
 ```
 
 
@@ -235,19 +219,19 @@ In the following, we make the following changes to the defaults:
 
 
 ```{r, config2, cache = TRUE}
-
-config2 <- create_config(n_iter = 3e4,
-                         sample_every = 20,
-		         init_tree ="star",
-			 move_kappa = FALSE,
-			 prior_mu = 10)
+config2 <- create_config(
+  n_iter = 3e4,
+  sample_every = 20,
+  init_tree = "star",
+  move_kappa = FALSE,
+  prior_mu = 10
+)
 
 set.seed(1)
 
 res2 <- outbreaker(data, config2)
 plot(res2)
 plot(res2, burnin = 2000)
-
 ```
 
 We can see that the burnin is around 2,500 iterations (i.e. after the initial
@@ -255,25 +239,23 @@ step corresponding to a local optimum).  We get the consensus tree from the new
 results, and compare the inferred tree to the actual ancestries stored in the
 dataset (`fake_outbreak$ances`):
 ```{r, res2}
-
 summary(res2, burnin = 3000)
 tree2 <- summary(res2, burnin = 3000)$tree
 
-comparison <- data.frame(case = 1:30,
-                       	 inferred = paste(tree2$from),
-			 true = paste(fake_outbreak$ances),
-			 stringsAsFactors = FALSE)
-			 
+comparison <- data.frame(
+  case = 1:30,
+  inferred = paste(tree2$from),
+  true = paste(fake_outbreak$ances),
+  stringsAsFactors = FALSE
+)
+
 comparison$correct <- comparison$inferred == comparison$true
 comparison
 mean(comparison$correct)
-
 ```
 
 Let's visualise the posterior trees:
 
 ```{r, net2}
-
 plot(res2, type = "network", burnin = 3000, min_support = 0.01)
-
 ```

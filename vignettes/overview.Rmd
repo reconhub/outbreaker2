@@ -71,7 +71,7 @@ The main functions of the package include:
 
 ```{r, list_functions}
 env <- asNamespace("outbreaker2")
-ls(envir = env, pattern = "^cpp")  
+ls(envir = env, pattern = "^cpp")
 ```
 
 See the vignette on [Rcpp API](Rcpp_API.html) for a detail of these functions.

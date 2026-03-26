@@ -61,11 +61,11 @@ test_that("outbreaker_data accepts epicontacts and case labelling", {
   ## check for character and numeric ids
   for (ids in list(ids_char, ids_num)) {
     ## make epi_contacts object
-    tTree <- data.frame(
+    ttree <- data.frame(
       i = ids[x$ances],
       j = ids[seq_along(x$ances)]
     )
-    ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
+    ctd <- sim_ctd(ttree, eps = 0.9, lambda = 0.1)
     epi_c <- suppressWarnings(epicontacts::make_epicontacts(
       linelist = data.frame(id = ids),
       contacts = ctd,

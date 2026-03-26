@@ -129,12 +129,12 @@ test_that("results ok: time, ctd, DNA", {
   suppressWarnings(RNGversion("3.5.2"))
   set.seed(1)
 
-  tTree <- data.frame(
+  ttree <- data.frame(
     i = x$ances,
     j = seq_along(x$ances)
   )
 
-  ctd <- sim_ctd(tTree, eps = 0.9, lambda = 0.1)
+  ctd <- sim_ctd(ttree, eps = 0.9, lambda = 0.1)
 
   data <- list(
     dates = x$onset, w_dens = x$w,

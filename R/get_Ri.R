@@ -7,19 +7,18 @@
 #' @param out An object of class \code{outbreaker_chains}.
 #' @param burnin The number of iterations to be discarded as burnin.
 #' @param raw Logical. If \code{TRUE}, returns a long-format data frame with
-#'   columns \code{step}, \code{case}, and \code{ri}. If \code{FALSE}
+#'   columns \code{step}, \code{id}, and \code{ri}. If \code{FALSE}
 #'   (default), returns summary statistics per case.
 #' @param stats A named list of summary functions applied across steps.
 #'   Ignored when \code{raw = TRUE}.
 #'
-#' @return When \code{raw = FALSE}, a data frame with columns \code{case},
+#' @return When \code{raw = FALSE}, a data frame with columns \code{id},
 #'   \code{mean}, \code{lwr}, \code{upr}. When \code{raw = TRUE}, a data
-#'   frame with columns \code{step}, \code{case}, \code{ri}.
+#'   frame with columns \code{step}, \code{id}, \code{ri}.
 #'
 #' @author Cyril Geismar (\email{c.geismar21@@imperial.ac.uk}).
 #'
-#' @seealso \code{\link{get_offspring}}, \code{\link{get_trees}},
-#'   \code{\link{outbreaker_chains}}.
+#' @seealso \code{\link{get_offspring}}, \code{\link{outbreaker_chains}}.
 #'
 #' @importFrom stats aggregate quantile
 #'
@@ -59,17 +58,17 @@ get_Ri <- function(
   out <- out[out$step > burnin, , drop = FALSE]
 
   alpha_cols <- grep("^alpha_", names(out), value = TRUE)
-  case_ids <- sub("^alpha_", "", alpha_cols)
+  ids <- sub("^alpha_", "", alpha_cols)
   alpha_mat <- as.matrix(out[, alpha_cols])
 
   Ri_mat <- t(apply(alpha_mat, 1, function(row) {
-    as.integer(table(factor(row, levels = case_ids)))
+    as.integer(table(factor(row, levels = ids)))
   }))
-  colnames(Ri_mat) <- case_ids
+  colnames(Ri_mat) <- ids
 
   ri_long <- data.frame(
-    step = rep(out$step, each = length(case_ids)),
-    case = rep(case_ids, times = nrow(out)),
+    step = rep(out$step, each = length(ids)),
+    case = rep(ids, times = nrow(out)),
     ri = as.vector(t(Ri_mat)),
     stringsAsFactors = FALSE
   )
@@ -79,10 +78,10 @@ get_Ri <- function(
     return(ri_long)
   }
 
-  result <- data.frame(case = case_ids, stringsAsFactors = FALSE)
+  result <- data.frame(id = ids, stringsAsFactors = FALSE)
   for (stat_name in names(stats)) {
     stat_values <- stats::aggregate(ri ~ case, ri_long, stats[[stat_name]])
-    result[[stat_name]] <- stat_values$ri[match(case_ids, stat_values$case)]
+    result[[stat_name]] <- stat_values$ri[match(ids, stat_values$case)]
   }
 
   result

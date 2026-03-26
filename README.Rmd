@@ -1,5 +1,5 @@
 [![Checks](https://github.com/reconhub/outbreaker2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/reconhub/outbreaker2/actions/workflows/R-CMD-check.yaml)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/yj449x0yqhphvcrt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2/branch/master)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/yj449x0yqhphvcrt/branch/timeline?svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2/branch/timeline)
 [![Codecov](https://codecov.io/gh/reconhub/outbreaker2/graph/badge.svg)](https://app.codecov.io/gh/reconhub/outbreaker2)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
 [![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/outbreaker2)](https://www.r-pkg.org:443/pkg/outbreaker2)

@@ -29,6 +29,7 @@ Description: Bayesian reconstruction of disease outbreaks using epidemiological
 License: MIT + file LICENSE
 Suggests:
     coda,
+    covr,
     microbenchmark,
     testthat,
     knitr,

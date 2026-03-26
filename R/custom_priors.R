@@ -177,7 +177,7 @@ custom_priors <- function(...) {
 
     if (!all(one_arg)) {
         culprits <- priors_names[!one_arg]
-        msg <- paste0("The following priors dont' have a single argument: ",
+        msg <- paste0("The following priors don't have a single argument: ",
                       paste(culprits, collapse = ", "))
         stop(msg)
     }

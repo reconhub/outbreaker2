@@ -60,7 +60,7 @@ provided in \code{data}.}
 
 \item{init_tau}{initial value for the mobility paramter of unobserved cases}
 
-\item{init_lambda}{initial value for the non-infectious contact rate.}
+\item{init_lambda}{initial value for the non-infectious contact rate}
 
 \item{init_eta}{initial value for the contact sensitivity (e.g. the
 proportion of transmission that have this type of contact)}
@@ -98,11 +98,6 @@ TRUE.}
 between two successive cases should be estimated ('moved' in the MCMC), or
 not, all defaulting to TRUE.}
 
-\item{move_pi}{a logical indicating whether the reporting probability
-should be estimated ('moved' in the MCMC), or not, all defaulting to TRUE.}
-
-\item{n_iter}{the number of iterations of the MCMC.}
-
 \item{sample_every}{the frequency at which MCMC samples are retained for the
 output.}
 
@@ -114,28 +109,23 @@ probability.}
 
 \item{sd_eps}{the standard deviation for the Normal proposal for the
 contact reporting coverage.}
-<<<<<<< HEAD
 
 \item{sd_eta}{the standard deviation for the Normal proposal for the
 contact sensitivity}
-=======
->>>>>>> master
 
 \item{sd_lambda}{the standard deviation for the Normal proposal for the
 non-infectious contact rate.}
 
 \item{prop_alpha_move}{the proportion of ancestries to move at each iteration
 of the MCMC.}
-<<<<<<< HEAD
 
 \item{prop_eps_move}{the proportion of iterations at which eps is moved}
 
 \item{prop_tau_move}{the proportion of iterations at which tau is moved}
-=======
->>>>>>> master
 
 \item{prop_t_inf_move}{the proportion of infection dates to move at each
 iteration of the MCMC.}
+
 \item{batch_size}{the size of the batch of random number pre-generated.}
 
 \item{paranoid}{a logical indicating if the paranoid mode should be used;
@@ -156,12 +146,9 @@ parameter of the beta prior for the reporting probability 'pi'.}
 
 \item{prior_eps}{a numeric vector of length 2 indicating the first and second
 parameter of the beta prior for the contact reporting coverage 'eps'.}
-<<<<<<< HEAD
 
 \item{prior_eta}{a numeric vector of length 2 indicating the first and second
 parameter of the beta prior for the contact sensitivity 'eta'}
-=======
->>>>>>> master
 
 \item{prior_lambda}{a numeric vector of length 2 indicating the first and
 second parameter of the beta prior for the non-infectious contact rate
@@ -176,7 +163,67 @@ directionality will be taken from there.}
 intervals are epidemiologically possible. If not, ancestries with
 negative serial intervals are discarded.}
 
+\item{genetic_model}{a character string indicating which genetic
+model to use: one of "default", "mrca" or "phylogeny".}
+
 \item{pb}{a logical indicating if a progress bar should be displayed.}
+
+\item{init_t_onw}{initial value for the date of onward transmission;
+defaults to \code{NULL}.}
+
+\item{init_place}{initial value for the place of infection;
+defaults to \code{NULL}.}
+
+\item{move_swap_cases}{a logical indicating whether cases should be
+swapped in the MCMC; defaults to TRUE.}
+
+\item{move_joint}{a logical indicating whether joint moves should be
+used in the MCMC; defaults to TRUE if timed contact data are provided,
+FALSE otherwise.}
+
+\item{move_model}{a logical indicating whether model moves should be
+used in the MCMC; defaults to TRUE if timed contact data are provided,
+FALSE otherwise.}
+
+\item{move_tau}{a logical indicating whether the mobility parameter
+should be estimated ('moved' in the MCMC); defaults to TRUE if
+timed contact data are provided, FALSE otherwise.}
+
+\item{swap_place}{a logical indicating whether places should be
+swapped in the MCMC; defaults to TRUE.}
+
+\item{sd_tau}{the standard deviation for the Normal proposal for the
+mobility parameter; defaults to 0.1.}
+
+\item{sd_t_inf}{the standard deviation for the Normal proposal for
+the infection dates; defaults to 1.}
+
+\item{sd_t_onw}{the standard deviation for the Normal proposal for
+the onward transmission dates; defaults to 5.}
+
+\item{prop_model_move}{the proportion of iterations at which the model
+is moved; defaults to 0.1.}
+
+\item{find_import}{a logical indicating whether imported cases should
+be identified; defaults to TRUE.}
+
+\item{outlier_threshold}{a numeric threshold used as a multiplier of
+the mean influence to identify outliers (imported cases); defaults
+to 5.}
+
+\item{n_iter_import}{the number of MCMC iterations used for import
+detection; defaults to 5000.}
+
+\item{sample_every_import}{the sampling frequency for the import
+detection step; defaults to 50.}
+
+\item{p_wrong}{the probability of error; defaults to 0.}
+
+\item{prior_tau}{a numeric vector of length 2 indicating the first and
+second parameter of the beta prior for the mobility parameter 'tau'.}
+
+\item{return_ids}{a logical indicating whether to return case IDs;
+defaults to FALSE.}
 
 }
 }

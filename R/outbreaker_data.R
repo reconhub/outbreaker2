@@ -115,6 +115,10 @@ outbreaker_data <- function(..., data = list(...)) {
     }
     data$dates <- setNames(as.integer(round(data$dates)), names(data$dates))
     data$dates <- data$dates - min(data$dates)
+    ## store the first date for downstream use (e.g. converting t_inf back)
+    if (inherits(min_date, "Date") || inherits(min_date, "POSIXct")) {
+      data$min_date <- as.Date(min_date)
+    }
     ## assign 'default' name for mapping to f_dens
     if(is.null(names(data$dates))) {
       names(data$dates) <- rep("default", length(data$dates))

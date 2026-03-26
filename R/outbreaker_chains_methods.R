@@ -126,7 +126,7 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' }
 #'
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
-#'   geom_violin aes aes_string coord_flip labs guides scale_size_area
+#'   geom_violin aes coord_flip labs guides scale_size_area
 #'   scale_x_discrete scale_y_discrete scale_color_manual scale_fill_manual
 #'   scale_x_continuous scale_y_continuous theme_bw facet_wrap
 #'
@@ -157,7 +157,7 @@ plot.outbreaker_chains <- function(
   ## THIS IS JUST TO APPEASE R CMD check
 
   ## hopefully cran will avoid spurious warnings along the lines of "no
-  ## visible binding for global variable" when using ggplot2::aes(...)
+  ## visible binding for global variable" when using ggplot2::aes(!!rlang::sym(), ...)
 
   frequency <- NULL
 
@@ -197,13 +197,13 @@ plot.outbreaker_chains <- function(
   if (type == "trace") {
     if (!is.null(group)) {
       out <- ggplot(x_long) +
-        geom_line(aes_string(x = "step", y = "y")) +
+        geom_line(aes(x = !!rlang::sym("step"), y = !!rlang::sym("y"))) +
         scale_x_continuous(name = "Iteration") +
         scale_y_continuous(name = NULL) +
         facet_wrap(~Parameters, scales = "free")
     } else {
       out <- ggplot(x) +
-        geom_line(aes_string(x = "step", y = y)) +
+        geom_line(aes(x = !!rlang::sym("step"), y = !!rlang::sym(y))) +
         labs(x = "Iteration", y = y, title = paste("trace:", y))
     }
   }
@@ -211,9 +211,9 @@ plot.outbreaker_chains <- function(
   if (type == "hist") {
     if (!is.null(group)) {
       out <- ggplot(x_long) +
-        geom_histogram(aes_string(x = "y")) +
+        geom_histogram(aes(x = !!rlang::sym("y"))) +
         geom_point(
-          aes_string(x = "y", y = 0),
+          aes(x = !!rlang::sym("y"), y = 0),
           shape = "|",
           alpha = 0.5,
           size = 3
@@ -223,9 +223,9 @@ plot.outbreaker_chains <- function(
         facet_wrap(~Parameters, scales = "free")
     } else {
       out <- ggplot(x) +
-        geom_histogram(aes_string(x = y)) +
+        geom_histogram(aes(x = !!rlang::sym(y))) +
         geom_point(
-          aes_string(x = y, y = 0),
+          aes(x = !!rlang::sym(y), y = 0),
           shape = "|",
           alpha = 0.5,
           size = 3
@@ -237,9 +237,9 @@ plot.outbreaker_chains <- function(
   if (type == "density") {
     if (!is.null(group)) {
       out <- ggplot(x_long) +
-        geom_density(aes_string(x = "y")) +
+        geom_density(aes(x = !!rlang::sym("y"))) +
         geom_point(
-          aes_string(x = "y", y = 0),
+          aes(x = !!rlang::sym("y"), y = 0),
           shape = "|",
           alpha = 0.5,
           size = 3
@@ -249,9 +249,9 @@ plot.outbreaker_chains <- function(
         facet_wrap(~Parameters, scales = "free")
     } else {
       out <- ggplot(x) +
-        geom_density(aes_string(x = y)) +
+        geom_density(aes(x = !!rlang::sym(y))) +
         geom_point(
-          aes_string(x = y, y = 0),
+          aes(x = !!rlang::sym(y), y = 0),
           shape = "|",
           alpha = 0.5,
           size = 3

@@ -110,13 +110,14 @@ test_that("get_accuracy", {
   out <- get_short_chain()
   data(fake_outbreak)
 
-  true_tree <- data.frame(
-    from = as.character(fake_outbreak$ances),
-    to = as.character(seq_along(fake_outbreak$onset)),
-    stringsAsFactors = FALSE
-  )
-
-  acc <- get_accuracy(out, true_tree)
-  expect_equal(length(acc), nrow(out))
+  ## by_case = TRUE: one value per case (alpha column)
+  acc <- get_accuracy(out, fake_outbreak$ances)
+  n_cases <- length(grep("^alpha_", names(out)))
+  expect_equal(length(acc), n_cases)
   expect_true(all(acc >= 0 & acc <= 1))
+
+  ## by_case = FALSE: one value per retained MCMC row
+  acc_step <- get_accuracy(out, fake_outbreak$ances, by_case = FALSE)
+  expect_equal(length(acc_step), nrow(out))
+  expect_true(all(acc_step >= 0 & acc_step <= 1))
 })

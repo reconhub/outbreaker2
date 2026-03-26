@@ -4,23 +4,39 @@
 \alias{get_accuracy}
 \title{Compute accuracy of outbreak reconstruction}
 \usage{
-get_accuracy(out, true_tree, burnin = 0)
+get_accuracy(out, ances, burnin = 0, by_case = TRUE)
 }
 \arguments{
 \item{out}{An object of class \code{outbreaker_chains}.}
 
-\item{true_tree}{A data frame with \code{from} and \code{to} columns
-representing the true transmission tree.}
+\item{ances}{A vector of true infectors, where \code{ances[i]} is the
+infector of case \code{i} and \code{NA} indicates an imported case. Must
+be the same length and order as the cases used in \code{\link{outbreaker}}.}
 
 \item{burnin}{The number of iterations to be discarded as burnin.}
+
+\item{by_case}{Logical. If \code{TRUE} (default), returns one accuracy
+value per case. If \code{FALSE}, returns one accuracy value per MCMC step.}
 }
 \value{
-A numeric vector of accuracy values (between 0 and 1), one per
-  posterior sample.
+A numeric vector of values between 0 and 1. Named by case
+  identifier when \code{by_case = TRUE}.
 }
 \description{
-Computes the proportion of correctly assigned infectors in each posterior
-tree compared to a known true tree. Only useful in simulation studies.
+Compares posterior transmission trees to a known true ancestry vector.
+Correctly inferred imports (both true and inferred infectors are \code{NA})
+count as correct.
+}
+\details{
+Two modes are available:
+\itemize{
+  \item \code{by_case = TRUE} (default): for each case, what proportion of
+    MCMC steps correctly identified its infector? This tells you which cases
+    are well-resolved.
+  \item \code{by_case = FALSE}: for each MCMC step, what proportion of cases
+    had their infector correctly assigned? This tells you how good the
+    overall tree is across the posterior.
+}
 }
 \examples{
 \dontrun{
@@ -33,16 +49,10 @@ out <- outbreaker(
   ),
   config = create_config(n_iter = 500, sample_every = 50)
 )
-true_tree <- data.frame(
-  from = as.character(fake_outbreak$ances),
-  to = as.character(seq_along(fake_outbreak$onset))
-)
-get_accuracy(out, true_tree)
+get_accuracy(out, fake_outbreak$ances)
+get_accuracy(out, fake_outbreak$ances, by_case = FALSE)
 }
 
-}
-\seealso{
-\code{\link{get_trees}}, \code{\link{outbreaker_chains}}.
 }
 \author{
 Cyril Geismar (\email{c.geismar21@imperial.ac.uk}).

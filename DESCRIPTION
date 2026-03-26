@@ -49,6 +49,7 @@ Imports:
     ape,
     ggplot2,
     magrittr,
+    rlang,
     visNetwork
 LazyData: true
 LinkingTo: Rcpp, RcppEigen

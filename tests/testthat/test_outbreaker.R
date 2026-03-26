@@ -1,5 +1,9 @@
 context("Test outbreaker")
-current_R_version <- gsub("R version ([0-9.]+) .+$", "\\1", R.version.string)
+## RNGversion() needs "x.y" or "x.y.z"; regex on R.version.string fails when
+## there is no trailing " (date)" suffix, and >3 components can be malformed.
+## numeric_version is a list: use unclass (as.integer(getRversion()) errors on R 4.x).
+rv <- unclass(getRversion())[[1L]]
+current_R_version <- paste(rv[seq_len(min(3L, length(rv)))], collapse = ".")
 
 ## test output format ##
 test_that("outbreaker's output have expected format", {

@@ -193,7 +193,7 @@ create_config <- function(..., data = NULL) {
   have_ctd <- !is.null(data$ctd_timed)
 
   ## SET DEFAULTS
-  defaults <- list(init_tree = c("seqTrack","star","random"),
+  defaults <- list(init_tree = c("seqTrack", "star", "random"),
                    init_mu = 1e-4,
                    init_alpha = NULL,
                    init_kappa = 1,
@@ -208,8 +208,8 @@ create_config <- function(..., data = NULL) {
                    move_alpha = TRUE,
                    move_swap_cases = TRUE,
                    move_t_inf = TRUE,
-                   move_joint = ifelse(have_ctd, TRUE, FALSE),
-                   move_model = ifelse(have_ctd, TRUE, FALSE),
+                   move_joint = TRUE,
+                   move_model = TRUE,
                    move_mu = TRUE,
                    move_kappa = TRUE,
                    move_pi = TRUE,
@@ -1065,13 +1065,16 @@ create_config <- function(..., data = NULL) {
     ## disable moves for eps and lambda if no CTD is provided
     have_ctd <- !(is.null(data$ctd)) || !(is.null(data$ctd_timed))
     have_ctd_timed <- !(is.null(data$ctd_timed) || nrow(data$ctd_timed) < 1)
-    if(!have_ctd & !have_ctd_timed) {
-      config$move_eps <- config$move_eta <- config$move_lambda <- config$move_tau <- FALSE
-    } else if(!have_ctd & have_ctd_timed) {
+    if (!have_ctd && !have_ctd_timed) {
+      config$move_eps <- config$move_eta <-
+        config$move_lambda <- config$move_tau <- FALSE
+    } else if (!have_ctd && have_ctd_timed) {
       config$move_lambda <- FALSE
-    } else if(have_ctd & !have_ctd_timed) {
+    } else if (have_ctd && !have_ctd_timed) {
       config$move_tau <- FALSE
     }
+    if (!have_ctd_timed)
+      config$move_joint <- config$move_model <- FALSE
 
   }
 

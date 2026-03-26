@@ -323,7 +323,9 @@ plot.outbreaker_chains <- function(x, y = "post",
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
-      scale_y_discrete(labels = get_kappa_lab(labels)) +
+      # this labelling produces incorrect results so has been removed
+      # for now
+      # scale_y_discrete(labels = get_kappa_lab(labels)) +
       guides(colour = "none") +
       labs(title = "number of generations between cases",
            x = "number of generations to ancestor",

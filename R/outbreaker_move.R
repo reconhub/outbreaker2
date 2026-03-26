@@ -21,6 +21,9 @@ outbreaker_move <- function(moves, data, param_current,
                             param_store, config,
                             likelihoods, priors) {
 
+  # ensure p_wrong is set correctly after initialisation
+  if (config$p_wrong == 0) data$p_wrong <- 0
+
   ## get number of moves ##
   J <- length(moves)
 

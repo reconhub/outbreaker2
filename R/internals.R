@@ -294,6 +294,11 @@ update_data_with_config <- function(data, config) {
   data$move_tau <- config$move_tau
   data$swap_place <- config$swap_place
 
+  # Prevent -Inf likelihood upon initialisation
+  if (isTRUE(all.equal(config$p_wrong, 0, tolerance = 1e-16)))
+    data$p_wrong <- 1e-15
+  else data$p_wrong <- config$p_wrong
+
   # name rows/columns (useful if internal debugging needed)
   rownames(data$log_w_dens) <- paste(
     "kappa", seq_len(nrow(data$log_w_dens)), sep = "="

@@ -137,6 +137,15 @@ create_param <- function(data = outbreaker_data(),
   current_eta <- eta[[1]] <- config$init_eta
   current_lambda <- lambda[[1]] <- config$init_lambda
 
+  # Set values for p_wrong, eps and lambda away from 0 and 1 to
+  # prevent -Inf likelihood in initialisation phase
+  is_equal <- function(x, val)
+    isTRUE(all.equal(x, val, tolerance = 1e-16))
+  eps_one <- vapply(current_eps, is_equal, TRUE, 1)
+  if (any(eps_one)) current_eps[eps_one] <- 1 - 1e-15
+  tau_one <- vapply(current_tau, is_equal, TRUE, 1)
+  if (any(tau_one)) current_tau[tau_one] <- 1 - 1e-15
+
   if (is.null(config$init_t_inf)) {
     current_t_inf <- t_inf[[1]] <- data$dates - which.max(data$f_dens) + 1L
   } else {

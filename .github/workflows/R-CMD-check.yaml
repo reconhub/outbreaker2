@@ -5,7 +5,7 @@ on:
     branches: [main, master, timeline]
   pull_request:
 
-name: R-CMD-check.yaml
+name: Checks
 
 permissions: read-all
 

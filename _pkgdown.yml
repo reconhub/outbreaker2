@@ -1,0 +1,9 @@
+# https://pkgdown.r-lib.org/articles/customise.html#home-sidebar
+home:
+  sidebar:
+    structure:
+      - links
+      - community
+      - citation
+      - authors
+      - dev

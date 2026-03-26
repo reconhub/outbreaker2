@@ -40,8 +40,6 @@
 #'
 #' @author Thibaut Jombart (\email{thibautjombart@@gmail.com}).
 #'
-#' @importFrom magrittr %>%
-#'
 #' @export
 #'
 #' @examples

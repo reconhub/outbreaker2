@@ -6,7 +6,7 @@ test_that("return_ids = TRUE produces same alpha values as FALSE", {
   data(fake_outbreak)
 
   o2_data <- outbreaker_data(
-    dates = fake_outbreak$sample |> as.Date(origin = "2020-01-01"),
+    dates = as.Date(fake_outbreak$sample, origin = "2020-01-01"),
     ids = paste0("Case_", 1:30),
     w_dens = fake_outbreak$w
   )

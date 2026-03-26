@@ -51,11 +51,10 @@ sim_ctd <- function(ttree, eps, lambda) {
 
   ## Sort ttree by value or alphabetically, This ensures A:B and B:A are both
   ## recognised when querying the contacts dataframe for transmission pairs
-  ttree <- ttree |>
-    stats::na.omit() |>
-    apply(1, sort, decreasing = FALSE) |>
-    t() |>
-    as.data.frame(stringsAsFactors = FALSE)
+  ttree <- stats::na.omit(ttree)
+  ttree <- apply(ttree, 1, sort, decreasing = FALSE)
+  ttree <- t(ttree)
+  ttree <- as.data.frame(ttree, stringsAsFactors = FALSE)
 
   ttree <- ttree[order(ttree[, 1]), ]
   names(ttree) <- c("V1", "V2")

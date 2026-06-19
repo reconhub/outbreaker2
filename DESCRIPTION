@@ -48,6 +48,7 @@ Imports:
     ggplot2,
     magrittr,
     visNetwork
+BugReports: https://github.com/reconhub/outbreaker2/issues
 LazyData: true
 LinkingTo: Rcpp
 Encoding: UTF-8
